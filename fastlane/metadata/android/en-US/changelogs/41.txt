@@ -1,0 +1,1 @@
+Built for Android 14 and runs on Android 10 and newer. Opt-in crash and usage reports, off unless you turn them on, kept on the unit for you to share. Managed settings let fleets lock the level and features. Settings text is now in Android string files for translators. Radio stations that stream over plain http keep playing.

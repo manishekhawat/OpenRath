@@ -62,15 +62,15 @@ final class Extras {
             AudioManager am = (AudioManager) a.getSystemService(android.content.Context.AUDIO_SERVICE);
             if (am.isMusicActive()) return;   // the unit already carried on by itself
             if ("fm".equals(what)) {
-                Cards.MediaCard.owner = "radio";
+                MediaCard.owner = "radio";
                 String err = Fm.play(p, a.hub.xt, a.hub.fm, true);
                 a.startRadioService();
                 if (err != null) a.startRadio();   // fall back to opening the radio app, which tunes in
             } else if (Player.WEB.equals(what) || Player.FILES.equals(what)) {
-                Cards.MediaCard.owner = Player.WEB.equals(what) ? "radio" : "music";
+                MediaCard.owner = Player.WEB.equals(what) ? "radio" : "music";
                 Player.send(a, Player.PLAY, what);
             } else if (what.startsWith("app:")) {
-                Cards.MediaCard.owner = "music";
+                MediaCard.owner = "music";
                 key(a, KeyEvent.KEYCODE_MEDIA_PLAY);
             }
             Toast.makeText(a, "Carrying on where you left off", Toast.LENGTH_SHORT).show();
@@ -94,7 +94,7 @@ final class Extras {
             Player.send(a, "toggle".equals(action) ? Player.TOGGLE : "next".equals(action) ? Player.NEXT : Player.PREV, Player.mode);
             return;
         }
-        if ("radio".equals(Cards.MediaCard.owner) && h.xt != null && h.xt.ready()) {
+        if ("radio".equals(MediaCard.owner) && h.xt != null && h.xt.ready()) {
             if ("next".equals(action)) h.xt.next();
             else if ("prev".equals(action)) h.xt.prev();
             else {
@@ -616,16 +616,22 @@ final class Extras {
         for (final Features.F f : Features.ALL) {
             if (!Features.shown(p, f)) continue;   // another level's, or developer mode's
             boolean on = Features.on(p, f.id);
-            r.add(new SettingsView.Row("Features", f.name, f.about, new Runnable() {
+            final boolean locked = Managed.lockedTo(p, f.id) != null;
+            r.add(new SettingsView.Row("Features", f.name, locked ? Managed.NOTE : f.about, new Runnable() {
                 @Override
                 public void run() {
+                    if (locked) {
+                        android.widget.Toast.makeText(a, Managed.NOTE, android.widget.Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Features.set(p, f.id, !Features.on(p, f.id));
+                    if ("reports".equals(f.id) && !Features.on(p, f.id)) Reports.clear();
                     featuresChanged(a);
                 }
             }).toggle(on, f.id));
         }
 
-        Cab.rows(a, r);
+        CabSettings.rows(a, r);
 
         // ---- Dashboard extras
         if (Features.on(p, "pages")) {
@@ -931,7 +937,7 @@ final class Extras {
             @Override
             public void run() {
                 a.closeSettings();
-                Cards.MapCard m = a.mapCard();
+                MapCard m = a.mapCard();
                 if (m != null) m.js("restStop('fuel')");
             }
         }));
@@ -1210,7 +1216,7 @@ final class Extras {
             @Override
             public void run() {
                 a.closeSettings();
-                Cards.MapCard m = a.mapCard();
+                MapCard m = a.mapCard();
                 if (m != null) m.js("serviceCentres()");
                 else android.widget.Toast.makeText(a, "Put the map on the dashboard first", android.widget.Toast.LENGTH_LONG).show();
             }
@@ -1448,6 +1454,14 @@ final class Extras {
                 About.crashes(a);
             }
         }));
+        if (Features.on(p, "reports")) {
+            r.add(new SettingsView.Row(g, "Usage report", p.str("reportUrl", "").isEmpty() ? "see it and share it" : "also sent daily to your organisation", new Runnable() {
+                @Override
+                public void run() {
+                    About.usage(a);
+                }
+            }));
+        }
     }
 
     static void featuresChanged(HomeActivity a) {

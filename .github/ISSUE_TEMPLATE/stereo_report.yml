@@ -1,0 +1,67 @@
+name: Stereo report
+description: Tell us how OpenRath runs on your unit, so others with the same stereo know what to expect.
+labels: [stereo]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Reports from real units are the most useful help of all. Fill in what you can.
+  - type: input
+    id: unit
+    attributes:
+      label: Stereo make and model
+      description: As written on the box or in the stereo's About screen.
+      placeholder: Topway TS7, FYT UIS7862, Joying JY-..., Teyes CC3...
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Android version
+      placeholder: "10"
+    validations:
+      required: true
+  - type: input
+    id: screen
+    attributes:
+      label: Screen size and resolution
+      placeholder: 10.1 inch, 1280 x 720
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: OpenRath version
+      placeholder: "1.32"
+    validations:
+      required: true
+  - type: checkboxes
+    id: works
+    attributes:
+      label: What works
+      description: Tick what you tried and found working.
+      options:
+        - label: Home screen fits the screen
+        - label: Speed, weather and map
+        - label: FM radio in the radio box
+        - label: Music and online radio
+        - label: Bluetooth calls (call, answer, end, caller's number)
+        - label: Reverse gear (reverse lines or camera)
+        - label: Headlights in the car picture
+        - label: Steering-wheel buttons
+        - label: Voice commands
+        - label: Spoken voice (read aloud, guidance)
+        - label: Starts after switching the car on
+  - type: textarea
+    id: notworking
+    attributes:
+      label: What doesn't work
+      description: Anything you tried that didn't work, and what happened.
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics photo
+      description: |
+        Attach a photo of Settings > Troubleshooting > Diagnostics. If Troubleshooting isn't shown, tap Version in Settings > Backup and about seven times.
+    validations:
+      required: true

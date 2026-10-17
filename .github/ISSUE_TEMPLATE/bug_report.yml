@@ -1,0 +1,57 @@
+name: Bug report
+description: Something in OpenRath doesn't work as it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting this. Security problems go privately to the maintainer instead (see SECURITY.md).
+  - type: input
+    id: version
+    attributes:
+      label: OpenRath version
+      description: Settings > Backup and about > Version.
+      placeholder: "1.32"
+    validations:
+      required: true
+  - type: input
+    id: unit
+    attributes:
+      label: Stereo make and model
+      placeholder: Topway TS7, Joying 10.1", Teyes CC3...
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Android version
+      description: OpenRath needs Android 10 or newer.
+      placeholder: "10"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to make it happen again
+      placeholder: |
+        1. Open ...
+        2. Tap ...
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics photo
+      description: |
+        Attach a photo of Settings > Troubleshooting > Diagnostics. If Troubleshooting isn't shown, tap Version in Settings > Backup and about seven times.
+  - type: textarea
+    id: crash
+    attributes:
+      label: Crash report
+      description: If the app crashed, paste or attach the report from Settings > Troubleshooting > Crash reports (use Share).
+      render: text

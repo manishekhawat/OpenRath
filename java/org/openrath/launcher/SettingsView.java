@@ -373,6 +373,7 @@ final class SettingsView extends FrameLayout {
         row.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Reports.count(r.title);
                 r.action.run();
                 refresh();
             }

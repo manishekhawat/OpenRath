@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The words of the Settings screens. Translations go in values-<language>/ui.xml with the same names;
+     anything left out stays in English. The ui_strings list ties each one to the English the code uses. -->
+<resources>
+    <string name="ui_back_to_the_dashboard" formatted="false">"‹  Back to the dashboard"</string>
+    <string name="ui_search_settings" formatted="false">Search settings</string>
+    <string name="ui_turn_on_or_off" formatted="false">Turn on or off</string>
+    <string name="ui_search" formatted="false">Search</string>
+    <string name="ui_not_set" formatted="false">not set</string>
+    <string name="ui_not_chosen" formatted="false">not chosen</string>
+    <string name="ui_not_set_up" formatted="false">not set up</string>
+    <string name="ui_set_up" formatted="false">set up</string>
+    <string name="ui_on" formatted="false">on</string>
+    <string name="ui_off" formatted="false">off</string>
+    <string name="ui_openrath_level" formatted="false">OpenRath level</string>
+    <string name="ui_simple_full_or_custom" formatted="false">Simple, Full or Custom</string>
+    <string name="ui_how_much_openrath_shows" formatted="false">How much OpenRath shows</string>
+    <string name="ui_every_switch" formatted="false">Every switch</string>
+    <string name="ui_developer_mode" formatted="false">Developer mode</string>
+    <string name="ui_language" formatted="false">Language</string>
+    <string name="ui_home_screen" formatted="false">Home screen</string>
+    <string name="ui_boxes_pages_night_mode_voice" formatted="false">Boxes, pages, night mode, voice</string>
+    <string name="ui_boxes_and_layout" formatted="false">Boxes and layout</string>
+    <string name="ui_voice_commands" formatted="false">Voice commands</string>
+    <string name="ui_look" formatted="false">Look</string>
+    <string name="ui_layouts_themes_car_picture_buttons_bar" formatted="false">Layouts, themes, car picture, buttons bar</string>
+    <string name="ui_screen_layout" formatted="false">Screen layout</string>
+    <string name="ui_themes" formatted="false">Themes</string>
+    <string name="ui_car_picture" formatted="false">Car picture</string>
+    <string name="ui_buttons_bar" formatted="false">Buttons bar</string>
+    <string name="ui_radio_and_music" formatted="false">Radio and music</string>
+    <string name="ui_fm_online_radio_sound" formatted="false">FM, online radio, sound</string>
+    <string name="ui_phone_and_messages" formatted="false">Phone and messages</string>
+    <string name="ui_favourites_message_ticker" formatted="false">Favourites, message ticker</string>
+    <string name="ui_phone" formatted="false">Phone</string>
+    <string name="ui_messages" formatted="false">Messages</string>
+    <string name="ui_driving" formatted="false">Driving</string>
+    <string name="ui_map_alerts_trips_fuel_dashcam" formatted="false">Map, alerts, trips, fuel, dashcam</string>
+    <string name="ui_map_and_navigation" formatted="false">Map and navigation</string>
+    <string name="ui_trips_fuel_and_alerts" formatted="false">Trips, fuel and alerts</string>
+    <string name="ui_monsoon" formatted="false">Monsoon</string>
+    <string name="ui_family" formatted="false">Family</string>
+    <string name="ui_valet_child_lock_drivers" formatted="false">Valet, child-lock, drivers</string>
+    <string name="ui_kids_or_valet_mode" formatted="false">Kids or valet mode</string>
+    <string name="ui_child_lock_and_drivers" formatted="false">Child-lock and drivers</string>
+    <string name="ui_car" formatted="false">Car</string>
+    <string name="ui_service_engine_lights_buttons" formatted="false">Service, engine, lights, buttons</string>
+    <string name="ui_service_reminders" formatted="false">Service reminders</string>
+    <string name="ui_engine_and_tyres" formatted="false">Engine and tyres</string>
+    <string name="ui_lights_indicators_and_reverse" formatted="false">Lights, indicators and reverse</string>
+    <string name="ui_steering_wheel_buttons" formatted="false">Steering-wheel buttons</string>
+    <string name="ui_cab_driver" formatted="false">Cab driver</string>
+    <string name="ui_earnings_fare_meter_sos_papers" formatted="false">Earnings, fare meter, SOS, papers</string>
+    <string name="ui_backup_and_about" formatted="false">Backup and about</string>
+    <string name="ui_backup_privacy_version" formatted="false">Backup, privacy, version</string>
+    <string name="ui_backup" formatted="false">Backup</string>
+    <string name="ui_about" formatted="false">About</string>
+    <string name="ui_troubleshooting" formatted="false">Troubleshooting</string>
+    <string name="ui_tests_and_reports_if_something_fails" formatted="false">Tests and reports if something fails</string>
+    <string name="ui_reports" formatted="false">Reports</string>
+    <string name="ui_cab_driver_tools_are_off" formatted="false">Cab driver tools are off</string>
+    <string name="ui_cab_box" formatted="false">Cab box</string>
+    <string name="ui_daily_target" formatted="false">Daily target</string>
+    <string name="ui_break_reminder_after" formatted="false">Break reminder after</string>
+    <string name="ui_fare_meter_rates" formatted="false">Fare meter rates</string>
+    <string name="ui_upi_id_for_fares" formatted="false">UPI id for fares</string>
+    <string name="ui_quiet_ride_volume" formatted="false">Quiet ride volume</string>
+    <string name="ui_quiet_ride_with_the_meter" formatted="false">Quiet ride with the meter</string>
+    <string name="ui_sos_contacts" formatted="false">SOS contacts</string>
+    <string name="ui_vehicle_number" formatted="false">Vehicle number</string>
+    <string name="ui_papers_due_dates" formatted="false">Papers due dates</string>
+    <string name="ui_phrases_in" formatted="false">Phrases in</string>
+    <string name="ui_clear_the_earnings_log" formatted="false">Clear the earnings log</string>
+    <string name="ui_number_of_pages" formatted="false">Number of pages</string>
+    <string name="ui_clock_screensaver_after" formatted="false">Clock screensaver after</string>
+    <string name="ui_screen_off_now" formatted="false">Screen off now</string>
+    <string name="ui_obd_ii_adapter" formatted="false">OBD-II adapter</string>
+    <string name="ui_read_fault_codes" formatted="false">Read fault codes</string>
+    <string name="ui_clear_fault_codes" formatted="false">Clear fault codes</string>
+    <string name="ui_warn_when_the_coolant_is_above" formatted="false">Warn when the coolant is above</string>
+    <string name="ui_tyre_sensors" formatted="false">Tyre sensors</string>
+    <string name="ui_tyre_pressure_units" formatted="false">Tyre pressure units</string>
+    <string name="ui_warn_when_a_tyre_is_below" formatted="false">Warn when a tyre is below</string>
+    <string name="ui_learn_a_button" formatted="false">Learn a button</string>
+    <string name="ui_buttons_work_in_other_apps_too" formatted="false">Buttons work in other apps too</string>
+    <string name="ui_ticker_shows" formatted="false">Ticker shows</string>
+    <string name="ui_read_aloud" formatted="false">Read aloud</string>
+    <string name="ui_apps_to_listen_to" formatted="false">Apps to listen to</string>
+    <string name="ui_notification_access" formatted="false">Notification access</string>
+    <string name="ui_try_the_ticker" formatted="false">Try the ticker</string>
+    <string name="ui_petrol_price" formatted="false">Petrol price</string>
+    <string name="ui_mileage_coach" formatted="false">Mileage coach</string>
+    <string name="ui_find_a_rest_stop_now" formatted="false">Find a rest stop now</string>
+    <string name="ui_volume_limit" formatted="false">Volume limit</string>
+    <string name="ui_speed_warning_above" formatted="false">Speed warning above</string>
+    <string name="ui_listen_mainly_for" formatted="false">Listen mainly for</string>
+    <string name="ui_try_a_voice_command" formatted="false">Try a voice command</string>
+    <string name="ui_mic_over_other_apps" formatted="false">Mic over other apps</string>
+    <string name="ui_what_you_can_say" formatted="false">What you can say</string>
+    <string name="ui_preview_night_drive_mode" formatted="false">Preview night-drive mode</string>
+    <string name="ui_petrol_left" formatted="false">Petrol left</string>
+    <string name="ui_tank_size" formatted="false">Tank size</string>
+    <string name="ui_warn_when_the_petrol_is_below" formatted="false">Warn when the petrol is below</string>
+    <string name="ui_commute_insights" formatted="false">Commute insights</string>
+    <string name="ui_send_the_parking_spot_to_your_phone" formatted="false">Send the parking spot to your phone</string>
+    <string name="ui_share_the_trip" formatted="false">Share the trip</string>
+    <string name="ui_split_the_cost" formatted="false">Split the cost</string>
+    <string name="ui_your_upi_id" formatted="false">Your UPI id</string>
+    <string name="ui_paid_parking_reminder" formatted="false">Paid parking reminder</string>
+    <string name="ui_pause_parked_music_after" formatted="false">Pause parked music after</string>
+    <string name="ui_air_quality_now" formatted="false">Air quality now</string>
+    <string name="ui_start_up_summary" formatted="false">Start-up summary</string>
+    <string name="ui_car_washed_today" formatted="false">Car washed today</string>
+    <string name="ui_wash_reminder_every" formatted="false">Wash reminder every</string>
+    <string name="ui_this_week_s_report" formatted="false">This week\'s report</string>
+    <string name="ui_last_parking_photo" formatted="false">Last parking photo</string>
+    <string name="ui_speed_breakers_learnt" formatted="false">Speed breakers learnt</string>
+    <string name="ui_stops_learnt" formatted="false">Stops learnt</string>
+    <string name="ui_guest_wi_fi" formatted="false">Guest Wi-Fi</string>
+    <string name="ui_change_the_hotspot_name_and_password" formatted="false">Change the hotspot name and password</string>
+    <string name="ui_fog_mode_now" formatted="false">Fog mode now</string>
+    <string name="ui_speed_in_fog" formatted="false">Speed in fog</string>
+    <string name="ui_emergency_contact" formatted="false">Emergency contact</string>
+    <string name="ui_try_accident_help" formatted="false">Try accident help</string>
+    <string name="ui_holidays_ahead" formatted="false">Holidays ahead</string>
+    <string name="ui_mark_a_waterlogging_spot_here" formatted="false">Mark a waterlogging spot here</string>
+    <string name="ui_marked_spots" formatted="false">Marked spots</string>
+    <string name="ui_dashcam" formatted="false">Dashcam</string>
+    <string name="ui_camera" formatted="false">Camera</string>
+    <string name="ui_space_for_recordings" formatted="false">Space for recordings</string>
+    <string name="ui_save_the_clip_now" formatted="false">Save the clip now</string>
+    <string name="ui_car_documents" formatted="false">Car documents</string>
+    <string name="ui_your_service_centre" formatted="false">Your service centre</string>
+    <string name="ui_trip_games_for_children" formatted="false">Trip games for children</string>
+    <string name="ui_apps_locked_while_moving" formatted="false">Apps locked while moving</string>
+    <string name="ui_who_s_driving" formatted="false">Who\'s driving</string>
+    <string name="ui_resume_after_switch_on" formatted="false">Resume after switch-on</string>
+    <string name="ui_louder_with_speed" formatted="false">Louder with speed</string>
+    <string name="ui_quiet_hours" formatted="false">Quiet hours</string>
+    <string name="ui_quiet_hours_end_at" formatted="false">Quiet hours end at</string>
+    <string name="ui_quiet_hours_volume" formatted="false">Quiet-hours volume</string>
+    <string name="ui_equalizer" formatted="false">Equalizer</string>
+    <string name="ui_0_100_km_h" formatted="false">0–100 km/h</string>
+    <string name="ui_export_routes_as_gpx" formatted="false">Export routes as GPX</string>
+    <string name="ui_delete_recorded_routes" formatted="false">Delete recorded routes</string>
+    <string name="ui_back_up_now" formatted="false">Back up now</string>
+    <string name="ui_restore_from_a_backup" formatted="false">Restore from a backup</string>
+    <string name="ui_daily_automatic_backup" formatted="false">Daily automatic backup</string>
+    <string name="ui_about_and_licences" formatted="false">About and licences</string>
+    <string name="ui_privacy" formatted="false">Privacy</string>
+    <string name="ui_crash_reports" formatted="false">Crash reports</string>
+    <string name="ui_show_on_this_layout" formatted="false">Show on this layout</string>
+    <string name="ui_details_in_the_list" formatted="false">Details in the list</string>
+    <string name="ui_order_of_the_details" formatted="false">Order of the details</string>
+    <string name="ui_driver_s_name" formatted="false">Driver\'s name</string>
+    <string name="ui_moving_road_lines" formatted="false">Moving road lines</string>
+    <string name="ui_phone_mirroring_button" formatted="false">Phone mirroring button</string>
+    <string name="ui_background_movement" formatted="false">Background movement</string>
+    <string name="ui_background_picture" formatted="false">Background picture</string>
+    <string name="ui_clear_the_favourite_apps" formatted="false">Clear the favourite apps</string>
+    <string name="ui_move_boxes" formatted="false">Move boxes</string>
+    <string name="ui_size_of_text_and_boxes" formatted="false">Size of text and boxes</string>
+    <string name="ui_screen_way_up" formatted="false">Screen way up</string>
+    <string name="ui_news_box_shows" formatted="false">News box shows</string>
+    <string name="ui_columns" formatted="false">Columns</string>
+    <string name="ui_welcome_name" formatted="false">Welcome name</string>
+    <string name="ui_night_dimming" formatted="false">Night dimming</string>
+    <string name="ui_how_dark_at_night" formatted="false">How dark at night</string>
+    <string name="ui_reset_the_layout" formatted="false">Reset the layout</string>
+    <string name="ui_accent_colour_car_paint" formatted="false">Accent colour (car paint)</string>
+    <string name="ui_boot_logo_and_animation" formatted="false">Boot logo and animation</string>
+    <string name="ui_make_your_own_theme" formatted="false">Make your own theme</string>
+    <string name="ui_import_a_theme_from_download" formatted="false">Import a theme from Download</string>
+    <string name="ui_brand_model_and_fuel" formatted="false">Brand, model and fuel</string>
+    <string name="ui_360_view_of_your_car" formatted="false">360 view of your car</string>
+    <string name="ui_stereo_s_360_camera_app" formatted="false">Stereo\'s 360 camera app</string>
+    <string name="ui_car_name" formatted="false">Car name</string>
+    <string name="ui_use_the_built_in_pictures_again" formatted="false">Use the built-in pictures again</string>
+    <string name="ui_tip" formatted="false">Tip</string>
+    <string name="ui_position" formatted="false">Position</string>
+    <string name="ui_use_the_built_in_icons_again" formatted="false">Use the built-in icons again</string>
+    <string name="ui_what_each_button_opens" formatted="false">What each button opens</string>
+    <string name="ui_radio_plays" formatted="false">Radio plays</string>
+    <string name="ui_online_radio_station" formatted="false">Online radio station</string>
+    <string name="ui_fm_radio_app" formatted="false">FM radio app</string>
+    <string name="ui_fm_radio_test_find_how_this_unit_starts" formatted="false">FM radio test (find how this unit starts FM)</string>
+    <string name="ui_built_in_fm_tuner_without_the_stock_radi" formatted="false">Built-in FM tuner (without the stock radio app)</string>
+    <string name="ui_fm_frequency_to_start_on" formatted="false">FM frequency to start on</string>
+    <string name="ui_music_plays" formatted="false">Music plays</string>
+    <string name="ui_choose_a_song" formatted="false">Choose a song</string>
+    <string name="ui_look_for_music_files_again" formatted="false">Look for music files again</string>
+    <string name="ui_music_app" formatted="false">Music app</string>
+    <string name="ui_track_and_station_info" formatted="false">Track and station info</string>
+    <string name="ui_map_kept_for_no_internet" formatted="false">Map kept for no internet</string>
+    <string name="ui_guide_without_internet_in" formatted="false">Guide without internet in</string>
+    <string name="ui_spoken_voice" formatted="false">Spoken voice</string>
+    <string name="ui_voice_without_internet" formatted="false">Voice without internet</string>
+    <string name="ui_guide_routes_in" formatted="false">Guide routes in</string>
+    <string name="ui_navigation_button_opens" formatted="false">Navigation button opens</string>
+    <string name="ui_save_the_parking_spot_here" formatted="false">Save the parking spot here</string>
+    <string name="ui_speed_limit_and_camera_alerts" formatted="false">Speed limit and camera alerts</string>
+    <string name="ui_warn_above_a_speed_anywhere" formatted="false">Warn above a speed anywhere</string>
+    <string name="ui_start_today_s_trip_again" formatted="false">Start today\'s trip again</string>
+    <string name="ui_fuel_log" formatted="false">Fuel log</string>
+    <string name="ui_add_a_fill_up" formatted="false">Add a fill-up</string>
+    <string name="ui_trip_history" formatted="false">Trip history</string>
+    <string name="ui_driving_score_today" formatted="false">Driving score today</string>
+    <string name="ui_add_a_toll_payment" formatted="false">Add a toll payment</string>
+    <string name="ui_toll_estimate_per_plaza" formatted="false">Toll estimate per plaza</string>
+    <string name="ui_odometer" formatted="false">Odometer</string>
+    <string name="ui_phone_app" formatted="false">Phone app</string>
+    <string name="ui_car_picture_headlights" formatted="false">Car picture headlights</string>
+    <string name="ui_headlight_times" formatted="false">Headlight times</string>
+    <string name="ui_in_reverse" formatted="false">In reverse</string>
+    <string name="ui_rear_camera_app" formatted="false">Rear camera app</string>
+    <string name="ui_preview_the_reverse_guide_lines" formatted="false">Preview the reverse guide lines</string>
+    <string name="ui_headlight_setup" formatted="false">Headlight setup</string>
+    <string name="ui_headlight_setup_deep_search" formatted="false">Headlight setup, deep search</string>
+    <string name="ui_indicator_setup" formatted="false">Indicator setup</string>
+    <string name="ui_diagnostics" formatted="false">Diagnostics</string>
+    <string name="ui_how_the_stock_launcher_does_it" formatted="false">How the stock launcher does it</string>
+    <string name="ui_copy_the_stock_launcher" formatted="false">Copy the stock launcher</string>
+    <string name="ui_unit_report" formatted="false">Unit report</string>
+    <string name="ui_clear_the_crash_note" formatted="false">Clear the crash note</string>
+    <string name="ui_android_settings" formatted="false">Android settings</string>
+    <string name="ui_version" formatted="false">Version</string>
+    <string name="ui_moving_road_under_the_car" formatted="false">Moving road under the car</string>
+    <string name="ui_dashes_move_with_your_speed" formatted="false">Dashes move with your speed</string>
+    <string name="ui_turn_indicator_arrows" formatted="false">Turn indicator arrows</string>
+    <string name="ui_needs_the_indicator_setup_in_car_signals" formatted="false">Needs the indicator setup in Car signals</string>
+    <string name="ui_weather" formatted="false">Weather</string>
+    <string name="ui_open_meteo_every_15_minutes" formatted="false">Open-Meteo, every 15 minutes</string>
+    <string name="ui_news_box" formatted="false">News box</string>
+    <string name="ui_top_5_headlines_from_google_news_read_al" formatted="false">Top 5 headlines from Google News, read aloud on a tap</string>
+    <string name="ui_rain_warnings" formatted="false">Rain warnings</string>
+    <string name="ui_rain_here_or_along_your_route_in_the_wea" formatted="false">Rain here, or along your route, in the weather box</string>
+    <string name="ui_extra_dashboard_pages" formatted="false">Extra dashboard pages</string>
+    <string name="ui_swipe_sideways_for_a_second_and_third_se" formatted="false">Swipe sideways for a second and third set of boxes</string>
+    <string name="ui_widgets_from_other_apps" formatted="false">Widgets from other apps</string>
+    <string name="ui_put_another_app_s_widget_in_a_box" formatted="false">Put another app\'s widget in a box</string>
+    <string name="ui_clock_screensaver" formatted="false">Clock screensaver</string>
+    <string name="ui_big_clock_after_a_few_idle_minutes_while" formatted="false">Big clock after a few idle minutes while parked</string>
+    <string name="ui_notification_ticker" formatted="false">Notification ticker</string>
+    <string name="ui_messages_slide_in_along_the_top" formatted="false">Messages slide in along the top</string>
+    <string name="ui_read_messages_aloud" formatted="false">Read messages aloud</string>
+    <string name="ui_says_who_sent_a_message_or_the_whole_mes" formatted="false">Says who sent a message, or the whole message</string>
+    <string name="ui_night_drive_mode" formatted="false">Night-drive mode</string>
+    <string name="ui_after_sunset_while_driving_big_red_speed" formatted="false">After sunset while driving: big red speed, dim red map, nothing else</string>
+    <string name="ui_voice_commands_hindi_and_english" formatted="false">Voice commands (Hindi and English)</string>
+    <string name="ui_floating_mic_button" formatted="false">Floating mic button</string>
+    <string name="ui_drag_it_anywhere_on_the_home_screen_tap" formatted="false">Drag it anywhere on the home screen; tap for a voice command</string>
+    <string name="ui_share_the_trip_by_qr_code" formatted="false">Share the trip by QR code</string>
+    <string name="ui_a_code_family_scan_to_see_where_you_are" formatted="false">A code family scan to see where you are and the route; nothing is sent online</string>
+    <string name="ui_the_floating_mic_stays_on_top_of_maps_an" formatted="false">The floating mic stays on top of maps and music; needs the \"Display over other apps\" permission</string>
+    <string name="ui_performance_box" formatted="false">Performance box</string>
+    <string name="ui_frames_per_second_cpu_use_and_temperatur" formatted="false">Frames per second, CPU use and temperature in a corner</string>
+    <string name="ui_speaks_and_beeps_near_cameras_and_over_t" formatted="false">Speaks and beeps near cameras and over the limit</string>
+    <string name="ui_remember_where_you_parked" formatted="false">Remember where you parked</string>
+    <string name="ui_saves_the_spot_after_90_seconds_standing" formatted="false">Saves the spot after 90 seconds standing still</string>
+    <string name="ui_driving_score" formatted="false">Driving score</string>
+    <string name="ui_harsh_braking_hard_starts_and_speeding" formatted="false">Harsh braking, hard starts and speeding</string>
+    <string name="ui_0_100_km_h_timer" formatted="false">0–100 km/h timer</string>
+    <string name="ui_times_every_standing_start" formatted="false">Times every standing start</string>
+    <string name="ui_record_routes_gpx_export" formatted="false">Record routes (GPX export)</string>
+    <string name="ui_kept_60_days_on_the_unit_only" formatted="false">Kept 60 days on the unit only</string>
+    <string name="ui_toll_estimates_on_routes" formatted="false">Toll estimates on routes</string>
+    <string name="ui_toll_plazas_on_a_planned_route_in_rupees" formatted="false">Toll plazas on a planned route, in rupees</string>
+    <string name="ui_reverse_guide_lines" formatted="false">Reverse guide lines</string>
+    <string name="ui_shown_when_reverse_gear_is_engaged" formatted="false">Shown when reverse gear is engaged</string>
+    <string name="ui_petrol_cost_of_trips" formatted="false">Petrol cost of trips</string>
+    <string name="ui_today_s_cost_from_your_city_s_petrol_pri" formatted="false">Today\'s cost from your city\'s petrol price</string>
+    <string name="ui_which_drives_used_extra_fuel_and_why" formatted="false">Which drives used extra fuel, and why</string>
+    <string name="ui_break_reminder_and_rest_stops" formatted="false">Break reminder and rest stops</string>
+    <string name="ui_after_2_hours_at_the_wheel_dhabas_and_pu" formatted="false">After 2 hours at the wheel, dhabas and pumps ahead</string>
+    <string name="ui_dashcam_2" formatted="false">Dashcam</string>
+    <string name="ui_records_a_usb_camera_in_1_minute_clips_a" formatted="false">Records a USB camera in 1-minute clips; a jolt keeps the clip</string>
+    <string name="ui_parking_spot_to_your_phone" formatted="false">Parking spot to your phone</string>
+    <string name="ui_a_qr_code_that_opens_the_spot_in_google" formatted="false">A QR code that opens the spot in Google Maps</string>
+    <string name="ui_monsoon_mode" formatted="false">Monsoon mode</string>
+    <string name="ui_in_rain_warns_before_the_waterlogging_sp" formatted="false">In rain, warns before the waterlogging spots you\'ve marked</string>
+    <string name="ui_fuel_low_planner" formatted="false">Fuel-low planner</string>
+    <string name="ui_how_far_the_petrol_will_go_pumps_ahead_w" formatted="false">How far the petrol will go; pumps ahead when it\'s low</string>
+    <string name="ui_the_quickest_time_to_leave_for_your_usua" formatted="false">The quickest time to leave for your usual drives</string>
+    <string name="ui_wrong_way_warning" formatted="false">Wrong-way warning</string>
+    <string name="ui_warns_if_you_seem_to_drive_against_a_one" formatted="false">Warns if you seem to drive against a one-way street</string>
+    <string name="ui_school_and_hospital_alerts" formatted="false">School and hospital alerts</string>
+    <string name="ui_slow_down_near_schools_at_school_times_n" formatted="false">Slow down near schools at school times; no horn near hospitals</string>
+    <string name="ui_hill_ghat_road_tips" formatted="false">Hill (ghat) road tips</string>
+    <string name="ui_on_a_long_steep_climb_or_descent_lower_g" formatted="false">On a long steep climb or descent: lower gear, engine braking, who gives way</string>
+    <string name="ui_overtaking_warning" formatted="false">Overtaking warning</string>
+    <string name="ui_on_two_way_roads_says_when_a_bend_just_a" formatted="false">On two-way roads, says when a bend just ahead hides oncoming traffic</string>
+    <string name="ui_air_quality_alerts" formatted="false">Air quality alerts</string>
+    <string name="ui_open_meteo_when_the_air_is_poor_a_remind" formatted="false">Open-Meteo; when the air is poor, a reminder to set the AC to recirculate</string>
+    <string name="ui_highway_mode" formatted="false">Highway mode</string>
+    <string name="ui_above_75_km_h_for_two_minutes_message_po" formatted="false">Above 75 km/h for two minutes: message pop-ups wait, a slim highway strip shows</string>
+    <string name="ui_battery_saver_for_parked_music" formatted="false">Battery saver for parked music</string>
+    <string name="ui_engine_off_and_music_on_pauses_it_after" formatted="false">Engine off and music on: pauses it after 20 minutes (reminds once without OBD)</string>
+    <string name="ui_split_the_cost_by_upi" formatted="false">Split the cost by UPI</string>
+    <string name="ui_a_upi_qr_code_for_each_person_s_share_of" formatted="false">A UPI QR code for each person\'s share of the petrol or tolls</string>
+    <string name="ui_a_qr_code_that_puts_a_reminder_on_your_p" formatted="false">A QR code that puts a reminder on your phone before the parking runs out</string>
+    <string name="ui_once_a_day_weather_air_petrol_range_serv" formatted="false">Once a day: weather, air, petrol range, service due and holidays</string>
+    <string name="ui_headlight_reminder" formatted="false">Headlight reminder</string>
+    <string name="ui_after_sunset_once_a_drive_if_the_headlig" formatted="false">After sunset, once a drive, if the headlights look off (or can\'t be seen)</string>
+    <string name="ui_door_and_seat_belt_reminders" formatted="false">Door and seat-belt reminders</string>
+    <string name="ui_a_voice_instead_of_beeps_needs_the_door" formatted="false">A voice instead of beeps; needs the door or belt setup in Car signals</string>
+    <string name="ui_wait_time_memory" formatted="false">Wait-time memory</string>
+    <string name="ui_learns_how_long_you_wait_at_signals_and" formatted="false">Learns how long you wait at signals and toll plazas, and tells you as you approach</string>
+    <string name="ui_speed_breaker_learning" formatted="false">Speed-breaker learning</string>
+    <string name="ui_a_spot_where_you_brake_hard_on_three_dri" formatted="false">A spot where you brake hard on three drives gets a warning next time</string>
+    <string name="ui_music_dips_for_voice_prompts" formatted="false">Music dips for voice prompts</string>
+    <string name="ui_music_lowers_while_the_car_speaks_a_turn" formatted="false">Music lowers while the car speaks a turn or a warning</string>
+    <string name="ui_parking_photo" formatted="false">Parking photo</string>
+    <string name="ui_a_camera_photo_when_you_park_to_find_the" formatted="false">A camera photo when you park, to find the car in a big lot (needs a camera)</string>
+    <string name="ui_weekly_report" formatted="false">Weekly report</string>
+    <string name="ui_on_sundays_km_time_petrol_tolls_score_be" formatted="false">On Sundays: km, time, petrol, tolls, score, best and worst drive</string>
+    <string name="ui_a_qr_code_passengers_scan_to_join_the_un" formatted="false">A QR code passengers scan to join the unit\'s hotspot</string>
+    <string name="ui_stereo_maker_s_services" formatted="false">Stereo maker\'s services</string>
+    <string name="ui_sound_profiles" formatted="false">Sound profiles</string>
+    <string name="ui_city_highway_and_night_equalizer_and_vol" formatted="false">City, highway and night: equalizer and volume switch by themselves</string>
+    <string name="ui_fog_mode" formatted="false">Fog mode</string>
+    <string name="ui_in_thick_fog_big_speed_a_slow_guide_and" formatted="false">In thick fog: big speed, a slow guide and the next bend ahead</string>
+    <string name="ui_accident_help" formatted="false">Accident help</string>
+    <string name="ui_after_a_crash_like_stop_calls_your_emerg" formatted="false">After a crash-like stop, calls your emergency contact unless you tap I\'m OK</string>
+    <string name="ui_holiday_traffic_warning" formatted="false">Holiday traffic warning</string>
+    <string name="ui_before_festival_and_long_weekend_drives" formatted="false">Before festival and long-weekend drives, warns of busy highways</string>
+    <string name="ui_your_car_in_3d_in_its_shape_colour_and_n" formatted="false">Your car in 3D in its shape, colour and number plate, from any side; opens the stereo\'s 360 camera app when it has one</string>
+    <string name="ui_360_camera_on_turn_signals" formatted="false">360 camera on turn signals</string>
+    <string name="ui_below_15_km_h_the_indicator_opens_the_st" formatted="false">Below 15 km/h the indicator opens the stereo\'s 360 camera app (needs the indicators set up in Car signals)</string>
+    <string name="ui_oil_tyres_service_insurance_and_puc" formatted="false">Oil, tyres, service, insurance and PUC</string>
+    <string name="ui_fuel_leak_or_theft_check" formatted="false">Fuel leak or theft check</string>
+    <string name="ui_after_a_full_tank_warns_if_the_mileage_d" formatted="false">After a full tank: warns if the mileage dropped sharply</string>
+    <string name="ui_car_wash_reminder" formatted="false">Car wash reminder</string>
+    <string name="ui_every_two_weeks_or_as_you_set_only_when" formatted="false">Every two weeks or as you set, only when no rain is due</string>
+    <string name="ui_obd_ii_engine_data" formatted="false">OBD-II engine data</string>
+    <string name="ui_needs_a_bluetooth_elm327_adapter" formatted="false">Needs a Bluetooth ELM327 adapter</string>
+    <string name="ui_tyre_pressure_sensors_tpms" formatted="false">Tyre pressure sensors (TPMS)</string>
+    <string name="ui_bluetooth_valve_cap_sensors" formatted="false">Bluetooth valve-cap sensors</string>
+    <string name="ui_your_own_action_for_each_button" formatted="false">Your own action for each button</string>
+    <string name="ui_service_centre_finder" formatted="false">Service centre finder</string>
+    <string name="ui_nearest_workshops_for_your_car_s_brand_w" formatted="false">Nearest workshops for your car\'s brand, with a call button</string>
+    <string name="ui_service_booking_reminder" formatted="false">Service booking reminder</string>
+    <string name="ui_when_a_service_is_near_offers_to_call_yo" formatted="false">When a service is near, offers to call your service centre</string>
+    <string name="ui_car_documents_wallet" formatted="false">Car documents wallet</string>
+    <string name="ui_photos_of_the_rc_insurance_puc_and_licen" formatted="false">Photos of the RC, insurance, PUC and licence, shown offline</string>
+    <string name="ui_child_lock_for_apps" formatted="false">Child-lock for apps</string>
+    <string name="ui_chosen_apps_can_t_be_opened_while_moving" formatted="false">Chosen apps can\'t be opened while moving</string>
+    <string name="ui_driver_profiles" formatted="false">Driver profiles</string>
+    <string name="ui_each_driver_s_own_boxes_theme_volume_and" formatted="false">Each driver\'s own boxes, theme, volume and alerts</string>
+    <string name="ui_spot_the_colour_number_plates_and_how_fa" formatted="false">Spot the colour, number plates, and how far to go</string>
+    <string name="ui_plays_what_was_on_at_the_same_volume" formatted="false">Plays what was on, at the same volume</string>
+    <string name="ui_volume_rises_with_speed" formatted="false">Volume rises with speed</string>
+    <string name="ui_louder_on_the_highway_back_down_in_town" formatted="false">Louder on the highway, back down in town</string>
+    <string name="ui_bass_treble_and_presets_for_the_app_s_ow" formatted="false">Bass, treble and presets for the app\'s own sound</string>
+    <string name="ui_late_at_night_music_turned_down_no_alert" formatted="false">Late at night: music turned down, no alert beeps</string>
+    <string name="ui_map_without_internet" formatted="false">Map without internet</string>
+    <string name="ui_keeps_the_map_of_places_you_ve_seen_for" formatted="false">Keeps the map of places you\'ve seen, for when there\'s no Wi-Fi</string>
+    <string name="ui_uses_the_offline_speech_pack_when_there" formatted="false">Uses the offline speech pack when there\'s no Wi-Fi</string>
+    <string name="ui_boot_logo_and_animation_maker" formatted="false">Boot logo and animation maker</string>
+    <string name="ui_your_car_s_badge_and_name_for_the_stereo" formatted="false">Your car\'s badge and name for the stereo\'s start-up screens</string>
+    <string name="ui_settings_fuel_log_and_trips_to_openrath" formatted="false">Settings, fuel log and trips to OpenRath/backup</string>
+    <string name="ui_cab_driver_tools" formatted="false">Cab driver tools</string>
+    <string name="ui_earnings_fare_meter_sos_and_more_adds_th" formatted="false">Earnings, fare meter, SOS and more; adds the Cab box and the Cab menu</string>
+    <string name="ui_earnings_log" formatted="false">Earnings log</string>
+    <string name="ui_rides_and_costs_today_s_and_this_week_s" formatted="false">Rides and costs; today\'s and this week\'s net in the Cab box</string>
+    <string name="ui_fare_meter" formatted="false">Fare meter</string>
+    <string name="ui_distance_waiting_and_night_charge_for_th" formatted="false">Distance, waiting and night charge for the passenger, with a UPI QR to pay</string>
+    <string name="ui_ride_app_switch" formatted="false">Ride app switch</string>
+    <string name="ui_uber_ola_rapido_indrive_and_namma_yatri" formatted="false">Uber, Ola, Rapido, inDrive and Namma Yatri one tap away</string>
+    <string name="ui_permit_and_badge_reminders" formatted="false">Permit and badge reminders</string>
+    <string name="ui_permit_fitness_badge_road_tax_insurance" formatted="false">Permit, fitness, badge, road tax, insurance and PUC, 15 days ahead</string>
+    <string name="ui_cng_finder_and_fill_log" formatted="false">CNG finder and fill log</string>
+    <string name="ui_nearest_cng_stations_and_km_per_kg_from" formatted="false">Nearest CNG stations, and km per kg from your fills</string>
+    <string name="ui_pickup_hotspots" formatted="false">Pickup hotspots</string>
+    <string name="ui_where_you_got_the_most_rides_at_this_hou" formatted="false">Where you got the most rides at this hour</string>
+    <string name="ui_daily_target_and_duty_hours" formatted="false">Daily target and duty hours</string>
+    <string name="ui_a_target_bar_and_a_break_reminder_after" formatted="false">A target bar, and a break reminder after long duty</string>
+    <string name="ui_one_tap_sos" formatted="false">One-tap SOS</string>
+    <string name="ui_texts_your_location_to_two_contacts_or_c" formatted="false">Texts your location to two contacts (or calls, without a SIM)</string>
+    <string name="ui_quiet_ride" formatted="false">Quiet ride</string>
+    <string name="ui_passenger_in_music_down_messages_not_rea" formatted="false">Passenger in: music down, messages not read aloud</string>
+    <string name="ui_ride_notes_and_lost_items" formatted="false">Ride notes and lost items</string>
+    <string name="ui_quick_notes_and_a_photo_of_anything_left" formatted="false">Quick notes, and a photo of anything left in the car</string>
+    <string name="ui_phrases_for_passengers" formatted="false">Phrases for passengers</string>
+    <string name="ui_seat_belt_otp_ac_payment_spoken_in_hindi" formatted="false">Seat belt, OTP, AC, payment: spoken in Hindi, English or your language</string>
+    <string name="ui_toll_plaza_countdown" formatted="false">Toll plaza countdown</string>
+    <string name="ui_toll_in_2_km_about_100_with_a_fastag_lan" formatted="false">\"Toll in 2 km, about ₹100\", with a FASTag lane reminder</string>
+    <string name="ui_fm_91_1_call_mom_from_the_map_s_mic" formatted="false">\"FM 91.1\", \"call Mom\", \"घर ले चलो\" from the map\'s mic</string>
+    <string name="ui_crash_and_usage_reports" formatted="false">Crash and usage reports</string>
+    <string-array name="ui_strings">
+        <item>@string/ui_back_to_the_dashboard</item>
+        <item>@string/ui_search_settings</item>
+        <item>@string/ui_turn_on_or_off</item>
+        <item>@string/ui_search</item>
+        <item>@string/ui_not_set</item>
+        <item>@string/ui_not_chosen</item>
+        <item>@string/ui_not_set_up</item>
+        <item>@string/ui_set_up</item>
+        <item>@string/ui_on</item>
+        <item>@string/ui_off</item>
+        <item>@string/ui_openrath_level</item>
+        <item>@string/ui_simple_full_or_custom</item>
+        <item>@string/ui_how_much_openrath_shows</item>
+        <item>@string/ui_every_switch</item>
+        <item>@string/ui_developer_mode</item>
+        <item>@string/ui_language</item>
+        <item>@string/ui_home_screen</item>
+        <item>@string/ui_boxes_pages_night_mode_voice</item>
+        <item>@string/ui_boxes_and_layout</item>
+        <item>@string/ui_voice_commands</item>
+        <item>@string/ui_look</item>
+        <item>@string/ui_layouts_themes_car_picture_buttons_bar</item>
+        <item>@string/ui_screen_layout</item>
+        <item>@string/ui_themes</item>
+        <item>@string/ui_car_picture</item>
+        <item>@string/ui_buttons_bar</item>
+        <item>@string/ui_radio_and_music</item>
+        <item>@string/ui_fm_online_radio_sound</item>
+        <item>@string/ui_phone_and_messages</item>
+        <item>@string/ui_favourites_message_ticker</item>
+        <item>@string/ui_phone</item>
+        <item>@string/ui_messages</item>
+        <item>@string/ui_driving</item>
+        <item>@string/ui_map_alerts_trips_fuel_dashcam</item>
+        <item>@string/ui_map_and_navigation</item>
+        <item>@string/ui_trips_fuel_and_alerts</item>
+        <item>@string/ui_monsoon</item>
+        <item>@string/ui_family</item>
+        <item>@string/ui_valet_child_lock_drivers</item>
+        <item>@string/ui_kids_or_valet_mode</item>
+        <item>@string/ui_child_lock_and_drivers</item>
+        <item>@string/ui_car</item>
+        <item>@string/ui_service_engine_lights_buttons</item>
+        <item>@string/ui_service_reminders</item>
+        <item>@string/ui_engine_and_tyres</item>
+        <item>@string/ui_lights_indicators_and_reverse</item>
+        <item>@string/ui_steering_wheel_buttons</item>
+        <item>@string/ui_cab_driver</item>
+        <item>@string/ui_earnings_fare_meter_sos_papers</item>
+        <item>@string/ui_backup_and_about</item>
+        <item>@string/ui_backup_privacy_version</item>
+        <item>@string/ui_backup</item>
+        <item>@string/ui_about</item>
+        <item>@string/ui_troubleshooting</item>
+        <item>@string/ui_tests_and_reports_if_something_fails</item>
+        <item>@string/ui_reports</item>
+        <item>@string/ui_cab_driver_tools_are_off</item>
+        <item>@string/ui_cab_box</item>
+        <item>@string/ui_daily_target</item>
+        <item>@string/ui_break_reminder_after</item>
+        <item>@string/ui_fare_meter_rates</item>
+        <item>@string/ui_upi_id_for_fares</item>
+        <item>@string/ui_quiet_ride_volume</item>
+        <item>@string/ui_quiet_ride_with_the_meter</item>
+        <item>@string/ui_sos_contacts</item>
+        <item>@string/ui_vehicle_number</item>
+        <item>@string/ui_papers_due_dates</item>
+        <item>@string/ui_phrases_in</item>
+        <item>@string/ui_clear_the_earnings_log</item>
+        <item>@string/ui_number_of_pages</item>
+        <item>@string/ui_clock_screensaver_after</item>
+        <item>@string/ui_screen_off_now</item>
+        <item>@string/ui_obd_ii_adapter</item>
+        <item>@string/ui_read_fault_codes</item>
+        <item>@string/ui_clear_fault_codes</item>
+        <item>@string/ui_warn_when_the_coolant_is_above</item>
+        <item>@string/ui_tyre_sensors</item>
+        <item>@string/ui_tyre_pressure_units</item>
+        <item>@string/ui_warn_when_a_tyre_is_below</item>
+        <item>@string/ui_learn_a_button</item>
+        <item>@string/ui_buttons_work_in_other_apps_too</item>
+        <item>@string/ui_ticker_shows</item>
+        <item>@string/ui_read_aloud</item>
+        <item>@string/ui_apps_to_listen_to</item>
+        <item>@string/ui_notification_access</item>
+        <item>@string/ui_try_the_ticker</item>
+        <item>@string/ui_petrol_price</item>
+        <item>@string/ui_mileage_coach</item>
+        <item>@string/ui_find_a_rest_stop_now</item>
+        <item>@string/ui_volume_limit</item>
+        <item>@string/ui_speed_warning_above</item>
+        <item>@string/ui_listen_mainly_for</item>
+        <item>@string/ui_try_a_voice_command</item>
+        <item>@string/ui_mic_over_other_apps</item>
+        <item>@string/ui_what_you_can_say</item>
+        <item>@string/ui_preview_night_drive_mode</item>
+        <item>@string/ui_petrol_left</item>
+        <item>@string/ui_tank_size</item>
+        <item>@string/ui_warn_when_the_petrol_is_below</item>
+        <item>@string/ui_commute_insights</item>
+        <item>@string/ui_send_the_parking_spot_to_your_phone</item>
+        <item>@string/ui_share_the_trip</item>
+        <item>@string/ui_split_the_cost</item>
+        <item>@string/ui_your_upi_id</item>
+        <item>@string/ui_paid_parking_reminder</item>
+        <item>@string/ui_pause_parked_music_after</item>
+        <item>@string/ui_air_quality_now</item>
+        <item>@string/ui_start_up_summary</item>
+        <item>@string/ui_car_washed_today</item>
+        <item>@string/ui_wash_reminder_every</item>
+        <item>@string/ui_this_week_s_report</item>
+        <item>@string/ui_last_parking_photo</item>
+        <item>@string/ui_speed_breakers_learnt</item>
+        <item>@string/ui_stops_learnt</item>
+        <item>@string/ui_guest_wi_fi</item>
+        <item>@string/ui_change_the_hotspot_name_and_password</item>
+        <item>@string/ui_fog_mode_now</item>
+        <item>@string/ui_speed_in_fog</item>
+        <item>@string/ui_emergency_contact</item>
+        <item>@string/ui_try_accident_help</item>
+        <item>@string/ui_holidays_ahead</item>
+        <item>@string/ui_mark_a_waterlogging_spot_here</item>
+        <item>@string/ui_marked_spots</item>
+        <item>@string/ui_dashcam</item>
+        <item>@string/ui_camera</item>
+        <item>@string/ui_space_for_recordings</item>
+        <item>@string/ui_save_the_clip_now</item>
+        <item>@string/ui_car_documents</item>
+        <item>@string/ui_your_service_centre</item>
+        <item>@string/ui_trip_games_for_children</item>
+        <item>@string/ui_apps_locked_while_moving</item>
+        <item>@string/ui_who_s_driving</item>
+        <item>@string/ui_resume_after_switch_on</item>
+        <item>@string/ui_louder_with_speed</item>
+        <item>@string/ui_quiet_hours</item>
+        <item>@string/ui_quiet_hours_end_at</item>
+        <item>@string/ui_quiet_hours_volume</item>
+        <item>@string/ui_equalizer</item>
+        <item>@string/ui_0_100_km_h</item>
+        <item>@string/ui_export_routes_as_gpx</item>
+        <item>@string/ui_delete_recorded_routes</item>
+        <item>@string/ui_back_up_now</item>
+        <item>@string/ui_restore_from_a_backup</item>
+        <item>@string/ui_daily_automatic_backup</item>
+        <item>@string/ui_about_and_licences</item>
+        <item>@string/ui_privacy</item>
+        <item>@string/ui_crash_reports</item>
+        <item>@string/ui_show_on_this_layout</item>
+        <item>@string/ui_details_in_the_list</item>
+        <item>@string/ui_order_of_the_details</item>
+        <item>@string/ui_driver_s_name</item>
+        <item>@string/ui_moving_road_lines</item>
+        <item>@string/ui_phone_mirroring_button</item>
+        <item>@string/ui_background_movement</item>
+        <item>@string/ui_background_picture</item>
+        <item>@string/ui_clear_the_favourite_apps</item>
+        <item>@string/ui_move_boxes</item>
+        <item>@string/ui_size_of_text_and_boxes</item>
+        <item>@string/ui_screen_way_up</item>
+        <item>@string/ui_news_box_shows</item>
+        <item>@string/ui_columns</item>
+        <item>@string/ui_welcome_name</item>
+        <item>@string/ui_night_dimming</item>
+        <item>@string/ui_how_dark_at_night</item>
+        <item>@string/ui_reset_the_layout</item>
+        <item>@string/ui_accent_colour_car_paint</item>
+        <item>@string/ui_boot_logo_and_animation</item>
+        <item>@string/ui_make_your_own_theme</item>
+        <item>@string/ui_import_a_theme_from_download</item>
+        <item>@string/ui_brand_model_and_fuel</item>
+        <item>@string/ui_360_view_of_your_car</item>
+        <item>@string/ui_stereo_s_360_camera_app</item>
+        <item>@string/ui_car_name</item>
+        <item>@string/ui_use_the_built_in_pictures_again</item>
+        <item>@string/ui_tip</item>
+        <item>@string/ui_position</item>
+        <item>@string/ui_use_the_built_in_icons_again</item>
+        <item>@string/ui_what_each_button_opens</item>
+        <item>@string/ui_radio_plays</item>
+        <item>@string/ui_online_radio_station</item>
+        <item>@string/ui_fm_radio_app</item>
+        <item>@string/ui_fm_radio_test_find_how_this_unit_starts</item>
+        <item>@string/ui_built_in_fm_tuner_without_the_stock_radi</item>
+        <item>@string/ui_fm_frequency_to_start_on</item>
+        <item>@string/ui_music_plays</item>
+        <item>@string/ui_choose_a_song</item>
+        <item>@string/ui_look_for_music_files_again</item>
+        <item>@string/ui_music_app</item>
+        <item>@string/ui_track_and_station_info</item>
+        <item>@string/ui_map_kept_for_no_internet</item>
+        <item>@string/ui_guide_without_internet_in</item>
+        <item>@string/ui_spoken_voice</item>
+        <item>@string/ui_voice_without_internet</item>
+        <item>@string/ui_guide_routes_in</item>
+        <item>@string/ui_navigation_button_opens</item>
+        <item>@string/ui_save_the_parking_spot_here</item>
+        <item>@string/ui_speed_limit_and_camera_alerts</item>
+        <item>@string/ui_warn_above_a_speed_anywhere</item>
+        <item>@string/ui_start_today_s_trip_again</item>
+        <item>@string/ui_fuel_log</item>
+        <item>@string/ui_add_a_fill_up</item>
+        <item>@string/ui_trip_history</item>
+        <item>@string/ui_driving_score_today</item>
+        <item>@string/ui_add_a_toll_payment</item>
+        <item>@string/ui_toll_estimate_per_plaza</item>
+        <item>@string/ui_odometer</item>
+        <item>@string/ui_phone_app</item>
+        <item>@string/ui_car_picture_headlights</item>
+        <item>@string/ui_headlight_times</item>
+        <item>@string/ui_in_reverse</item>
+        <item>@string/ui_rear_camera_app</item>
+        <item>@string/ui_preview_the_reverse_guide_lines</item>
+        <item>@string/ui_headlight_setup</item>
+        <item>@string/ui_headlight_setup_deep_search</item>
+        <item>@string/ui_indicator_setup</item>
+        <item>@string/ui_diagnostics</item>
+        <item>@string/ui_how_the_stock_launcher_does_it</item>
+        <item>@string/ui_copy_the_stock_launcher</item>
+        <item>@string/ui_unit_report</item>
+        <item>@string/ui_clear_the_crash_note</item>
+        <item>@string/ui_android_settings</item>
+        <item>@string/ui_version</item>
+        <item>@string/ui_moving_road_under_the_car</item>
+        <item>@string/ui_dashes_move_with_your_speed</item>
+        <item>@string/ui_turn_indicator_arrows</item>
+        <item>@string/ui_needs_the_indicator_setup_in_car_signals</item>
+        <item>@string/ui_weather</item>
+        <item>@string/ui_open_meteo_every_15_minutes</item>
+        <item>@string/ui_news_box</item>
+        <item>@string/ui_top_5_headlines_from_google_news_read_al</item>
+        <item>@string/ui_rain_warnings</item>
+        <item>@string/ui_rain_here_or_along_your_route_in_the_wea</item>
+        <item>@string/ui_extra_dashboard_pages</item>
+        <item>@string/ui_swipe_sideways_for_a_second_and_third_se</item>
+        <item>@string/ui_widgets_from_other_apps</item>
+        <item>@string/ui_put_another_app_s_widget_in_a_box</item>
+        <item>@string/ui_clock_screensaver</item>
+        <item>@string/ui_big_clock_after_a_few_idle_minutes_while</item>
+        <item>@string/ui_notification_ticker</item>
+        <item>@string/ui_messages_slide_in_along_the_top</item>
+        <item>@string/ui_read_messages_aloud</item>
+        <item>@string/ui_says_who_sent_a_message_or_the_whole_mes</item>
+        <item>@string/ui_night_drive_mode</item>
+        <item>@string/ui_after_sunset_while_driving_big_red_speed</item>
+        <item>@string/ui_voice_commands_hindi_and_english</item>
+        <item>@string/ui_floating_mic_button</item>
+        <item>@string/ui_drag_it_anywhere_on_the_home_screen_tap</item>
+        <item>@string/ui_share_the_trip_by_qr_code</item>
+        <item>@string/ui_a_code_family_scan_to_see_where_you_are</item>
+        <item>@string/ui_the_floating_mic_stays_on_top_of_maps_an</item>
+        <item>@string/ui_performance_box</item>
+        <item>@string/ui_frames_per_second_cpu_use_and_temperatur</item>
+        <item>@string/ui_speaks_and_beeps_near_cameras_and_over_t</item>
+        <item>@string/ui_remember_where_you_parked</item>
+        <item>@string/ui_saves_the_spot_after_90_seconds_standing</item>
+        <item>@string/ui_driving_score</item>
+        <item>@string/ui_harsh_braking_hard_starts_and_speeding</item>
+        <item>@string/ui_0_100_km_h_timer</item>
+        <item>@string/ui_times_every_standing_start</item>
+        <item>@string/ui_record_routes_gpx_export</item>
+        <item>@string/ui_kept_60_days_on_the_unit_only</item>
+        <item>@string/ui_toll_estimates_on_routes</item>
+        <item>@string/ui_toll_plazas_on_a_planned_route_in_rupees</item>
+        <item>@string/ui_reverse_guide_lines</item>
+        <item>@string/ui_shown_when_reverse_gear_is_engaged</item>
+        <item>@string/ui_petrol_cost_of_trips</item>
+        <item>@string/ui_today_s_cost_from_your_city_s_petrol_pri</item>
+        <item>@string/ui_which_drives_used_extra_fuel_and_why</item>
+        <item>@string/ui_break_reminder_and_rest_stops</item>
+        <item>@string/ui_after_2_hours_at_the_wheel_dhabas_and_pu</item>
+        <item>@string/ui_dashcam_2</item>
+        <item>@string/ui_records_a_usb_camera_in_1_minute_clips_a</item>
+        <item>@string/ui_parking_spot_to_your_phone</item>
+        <item>@string/ui_a_qr_code_that_opens_the_spot_in_google</item>
+        <item>@string/ui_monsoon_mode</item>
+        <item>@string/ui_in_rain_warns_before_the_waterlogging_sp</item>
+        <item>@string/ui_fuel_low_planner</item>
+        <item>@string/ui_how_far_the_petrol_will_go_pumps_ahead_w</item>
+        <item>@string/ui_the_quickest_time_to_leave_for_your_usua</item>
+        <item>@string/ui_wrong_way_warning</item>
+        <item>@string/ui_warns_if_you_seem_to_drive_against_a_one</item>
+        <item>@string/ui_school_and_hospital_alerts</item>
+        <item>@string/ui_slow_down_near_schools_at_school_times_n</item>
+        <item>@string/ui_hill_ghat_road_tips</item>
+        <item>@string/ui_on_a_long_steep_climb_or_descent_lower_g</item>
+        <item>@string/ui_overtaking_warning</item>
+        <item>@string/ui_on_two_way_roads_says_when_a_bend_just_a</item>
+        <item>@string/ui_air_quality_alerts</item>
+        <item>@string/ui_open_meteo_when_the_air_is_poor_a_remind</item>
+        <item>@string/ui_highway_mode</item>
+        <item>@string/ui_above_75_km_h_for_two_minutes_message_po</item>
+        <item>@string/ui_battery_saver_for_parked_music</item>
+        <item>@string/ui_engine_off_and_music_on_pauses_it_after</item>
+        <item>@string/ui_split_the_cost_by_upi</item>
+        <item>@string/ui_a_upi_qr_code_for_each_person_s_share_of</item>
+        <item>@string/ui_a_qr_code_that_puts_a_reminder_on_your_p</item>
+        <item>@string/ui_once_a_day_weather_air_petrol_range_serv</item>
+        <item>@string/ui_headlight_reminder</item>
+        <item>@string/ui_after_sunset_once_a_drive_if_the_headlig</item>
+        <item>@string/ui_door_and_seat_belt_reminders</item>
+        <item>@string/ui_a_voice_instead_of_beeps_needs_the_door</item>
+        <item>@string/ui_wait_time_memory</item>
+        <item>@string/ui_learns_how_long_you_wait_at_signals_and</item>
+        <item>@string/ui_speed_breaker_learning</item>
+        <item>@string/ui_a_spot_where_you_brake_hard_on_three_dri</item>
+        <item>@string/ui_music_dips_for_voice_prompts</item>
+        <item>@string/ui_music_lowers_while_the_car_speaks_a_turn</item>
+        <item>@string/ui_parking_photo</item>
+        <item>@string/ui_a_camera_photo_when_you_park_to_find_the</item>
+        <item>@string/ui_weekly_report</item>
+        <item>@string/ui_on_sundays_km_time_petrol_tolls_score_be</item>
+        <item>@string/ui_a_qr_code_passengers_scan_to_join_the_un</item>
+        <item>@string/ui_stereo_maker_s_services</item>
+        <item>@string/ui_sound_profiles</item>
+        <item>@string/ui_city_highway_and_night_equalizer_and_vol</item>
+        <item>@string/ui_fog_mode</item>
+        <item>@string/ui_in_thick_fog_big_speed_a_slow_guide_and</item>
+        <item>@string/ui_accident_help</item>
+        <item>@string/ui_after_a_crash_like_stop_calls_your_emerg</item>
+        <item>@string/ui_holiday_traffic_warning</item>
+        <item>@string/ui_before_festival_and_long_weekend_drives</item>
+        <item>@string/ui_your_car_in_3d_in_its_shape_colour_and_n</item>
+        <item>@string/ui_360_camera_on_turn_signals</item>
+        <item>@string/ui_below_15_km_h_the_indicator_opens_the_st</item>
+        <item>@string/ui_oil_tyres_service_insurance_and_puc</item>
+        <item>@string/ui_fuel_leak_or_theft_check</item>
+        <item>@string/ui_after_a_full_tank_warns_if_the_mileage_d</item>
+        <item>@string/ui_car_wash_reminder</item>
+        <item>@string/ui_every_two_weeks_or_as_you_set_only_when</item>
+        <item>@string/ui_obd_ii_engine_data</item>
+        <item>@string/ui_needs_a_bluetooth_elm327_adapter</item>
+        <item>@string/ui_tyre_pressure_sensors_tpms</item>
+        <item>@string/ui_bluetooth_valve_cap_sensors</item>
+        <item>@string/ui_your_own_action_for_each_button</item>
+        <item>@string/ui_service_centre_finder</item>
+        <item>@string/ui_nearest_workshops_for_your_car_s_brand_w</item>
+        <item>@string/ui_service_booking_reminder</item>
+        <item>@string/ui_when_a_service_is_near_offers_to_call_yo</item>
+        <item>@string/ui_car_documents_wallet</item>
+        <item>@string/ui_photos_of_the_rc_insurance_puc_and_licen</item>
+        <item>@string/ui_child_lock_for_apps</item>
+        <item>@string/ui_chosen_apps_can_t_be_opened_while_moving</item>
+        <item>@string/ui_driver_profiles</item>
+        <item>@string/ui_each_driver_s_own_boxes_theme_volume_and</item>
+        <item>@string/ui_spot_the_colour_number_plates_and_how_fa</item>
+        <item>@string/ui_plays_what_was_on_at_the_same_volume</item>
+        <item>@string/ui_volume_rises_with_speed</item>
+        <item>@string/ui_louder_on_the_highway_back_down_in_town</item>
+        <item>@string/ui_bass_treble_and_presets_for_the_app_s_ow</item>
+        <item>@string/ui_late_at_night_music_turned_down_no_alert</item>
+        <item>@string/ui_map_without_internet</item>
+        <item>@string/ui_keeps_the_map_of_places_you_ve_seen_for</item>
+        <item>@string/ui_uses_the_offline_speech_pack_when_there</item>
+        <item>@string/ui_boot_logo_and_animation_maker</item>
+        <item>@string/ui_your_car_s_badge_and_name_for_the_stereo</item>
+        <item>@string/ui_settings_fuel_log_and_trips_to_openrath</item>
+        <item>@string/ui_cab_driver_tools</item>
+        <item>@string/ui_earnings_fare_meter_sos_and_more_adds_th</item>
+        <item>@string/ui_earnings_log</item>
+        <item>@string/ui_rides_and_costs_today_s_and_this_week_s</item>
+        <item>@string/ui_fare_meter</item>
+        <item>@string/ui_distance_waiting_and_night_charge_for_th</item>
+        <item>@string/ui_ride_app_switch</item>
+        <item>@string/ui_uber_ola_rapido_indrive_and_namma_yatri</item>
+        <item>@string/ui_permit_and_badge_reminders</item>
+        <item>@string/ui_permit_fitness_badge_road_tax_insurance</item>
+        <item>@string/ui_cng_finder_and_fill_log</item>
+        <item>@string/ui_nearest_cng_stations_and_km_per_kg_from</item>
+        <item>@string/ui_pickup_hotspots</item>
+        <item>@string/ui_where_you_got_the_most_rides_at_this_hou</item>
+        <item>@string/ui_daily_target_and_duty_hours</item>
+        <item>@string/ui_a_target_bar_and_a_break_reminder_after</item>
+        <item>@string/ui_one_tap_sos</item>
+        <item>@string/ui_texts_your_location_to_two_contacts_or_c</item>
+        <item>@string/ui_quiet_ride</item>
+        <item>@string/ui_passenger_in_music_down_messages_not_rea</item>
+        <item>@string/ui_ride_notes_and_lost_items</item>
+        <item>@string/ui_quick_notes_and_a_photo_of_anything_left</item>
+        <item>@string/ui_phrases_for_passengers</item>
+        <item>@string/ui_seat_belt_otp_ac_payment_spoken_in_hindi</item>
+        <item>@string/ui_toll_plaza_countdown</item>
+        <item>@string/ui_toll_in_2_km_about_100_with_a_fastag_lan</item>
+        <item>@string/ui_fm_91_1_call_mom_from_the_map_s_mic</item>
+        <item>@string/ui_crash_and_usage_reports</item>
+    </string-array>
+</resources>

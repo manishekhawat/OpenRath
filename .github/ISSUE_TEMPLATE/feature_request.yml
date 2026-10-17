@@ -1,0 +1,30 @@
+name: Feature request
+description: An idea for something OpenRath could do.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What do you want to do?
+      description: Tell us what you need while driving, not only the solution you have in mind.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How could it work?
+      description: What you would tap or say, and what you would see or hear.
+  - type: input
+    id: unit
+    attributes:
+      label: Stereo make and model
+      description: Some features depend on the unit. Leave empty if it doesn't matter.
+  - type: textarea
+    id: other
+    attributes:
+      label: Anything else
+      description: Other apps that do this, pictures, or links.
+  - type: markdown
+    attributes:
+      value: |
+        Every new feature gets its own switch, so it can be turned off. OpenRath uses only free services that need no account or key.

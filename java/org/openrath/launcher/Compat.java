@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * What changes with the Android version the stereo runs: receiver flags (Android 13+), the
  * permissions to ask for at first start, and all-files access for the OpenRath folder (Android 11+).
- * OpenRath targets Android 14 and runs on Android 8.1 and newer (MIN_SDK in build.py).
+ * OpenRath targets Android 14 and runs on Android 10 and newer (MIN_SDK in build.py).
  */
 final class Compat {
 
@@ -44,7 +44,7 @@ final class Compat {
             l.add("android.permission.POST_NOTIFICATIONS");
         } else {
             l.add("android.permission.READ_EXTERNAL_STORAGE");
-            if (sdk < 29) l.add("android.permission.WRITE_EXTERNAL_STORAGE");
+            if (sdk < 30) l.add("android.permission.WRITE_EXTERNAL_STORAGE");   // Android 10 with legacy storage still needs it
         }
         if (sdk >= 31) {
             l.add("android.permission.BLUETOOTH_CONNECT");
