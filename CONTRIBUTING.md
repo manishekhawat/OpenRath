@@ -8,7 +8,7 @@ Everyone taking part is expected to follow the [Code of Conduct](CODE_OF_CONDUCT
 
 Use the issue forms on GitHub: a bug report, a feature request, or a stereo report to tell us how OpenRath runs on your unit. Include these:
 
-- The unit's make and model, and its Android version. OpenRath needs Android 10 or newer.
+- The unit's make and model, and its Android version. OpenRath needs Android 8.0 or newer.
 - What you did, what you expected, and what happened.
 - A photo of **Settings → Troubleshooting → Diagnostics**. If Troubleshooting isn't shown, tap **Version** in **Settings → Backup and about** seven times to turn on developer mode.
 - If the app crashed, the report from **Settings → Troubleshooting → Crash reports** (use **Share**).
@@ -32,11 +32,11 @@ THEME_TOOLS=/path/to/tools python3 build.py test      # unit tests
 THEME_TOOLS=/path/to/tools python3 build.py androidtest out   # out/openrath-test.apk, the on-device tests
 ```
 
-To run the on-device tests, install both APKs on a unit or emulator and run `adb shell am instrument -w org.openrath.launcher.test/org.openrath.launcher.Smoke`. GitHub runs them on Android 10 and 14 emulators for every pull request.
+To run the on-device tests, install both APKs on a unit or emulator and run `adb shell am instrument -w org.openrath.launcher.test/org.openrath.launcher.Smoke`. GitHub runs them on Android 8.0 and 14 emulators for every pull request.
 
 The argument is the output folder, so `python3 build.py out` builds `out/openrath.apk`. Without `signing.json` the APK is signed with a throwaway debug key. Add `OPENRATH_PUBLIC=1` to leave out any brand packs, for an APK to share.
 
-The APK installs on Android 10 (API 29) and newer, and targets Android 14 (API 34). How releases are made and signed is in [RELEASING.md](RELEASING.md). Settings text lives in Android string files ([docs/TRANSLATING.md](docs/TRANSLATING.md)), and fleets can lock settings ([docs/MANAGED.md](docs/MANAGED.md)).
+The APK installs on Android 8.0 (API 26) and newer, and targets Android 14 (API 34). How releases are made and signed is in [RELEASING.md](RELEASING.md). Settings text lives in Android string files ([docs/TRANSLATING.md](docs/TRANSLATING.md)), and fleets can lock settings ([docs/MANAGED.md](docs/MANAGED.md)).
 
 ## Code style
 

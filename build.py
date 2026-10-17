@@ -84,8 +84,8 @@ def white(polys, size):
     return im
 X = 2.4   # images are drawn for a 600 px tall screen times X, then scaled down on the unit
 VERSION_CODE, VERSION_NAME = 42, '1.34'
-# Oldest Android the APK installs on (29 = Android 10). It targets Android 14.
-MIN_SDK = 29
+# Oldest Android the APK installs on (26 = Android 8.0). It targets Android 14.
+MIN_SDK = 26
 
 
 def wheel_mask(height):
