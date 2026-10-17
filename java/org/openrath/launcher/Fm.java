@@ -105,10 +105,10 @@ final class Fm {
     }
 
     static String label(String cmd) {
-        if ("mcu".equals(cmd)) return "Topway MCU link (no radio service)";
-        if (cmd.startsWith("launch:")) return "Open the radio app, then back to the dashboard";
-        if (cmd.startsWith("svc:")) return "Radio app's service " + cmd.substring(cmd.lastIndexOf('.') + 1);
-        if (opensApp(cmd)) return label0(cmd) + ", then back to the dashboard";
+        if ("mcu".equals(cmd)) return Hindi.t("Topway MCU link (no radio service)");
+        if (cmd.startsWith("launch:")) return Hindi.t("Open the radio app, then back to the dashboard");
+        if (cmd.startsWith("svc:")) return Hindi.f("Radio app's service %1$s", cmd.substring(cmd.lastIndexOf('.') + 1));
+        if (opensApp(cmd)) return Hindi.f("%1$s, then back to the dashboard", label0(cmd));
         return label0(cmd);
     }
 
@@ -203,7 +203,7 @@ final class Fm {
         String cur = p.fmCmd(stop ? "stop" : "play");
         for (int i = 0; i < names.length; i++) names[i] = (all.get(i).equals(cur) ? "✓  " : "") + label(all.get(i));
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(stop ? "Start FM first, then try each until FM stops" : "Try each until FM starts playing")
+                .setTitle(stop ? Hindi.t("Start FM first, then try each until FM stops") : Hindi.t("Try each until FM starts playing"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int which) {
@@ -211,13 +211,13 @@ final class Fm {
                         String err = run(cmd, xt, fm, !stop);
                         if (err != null) {
                             new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                                    .setMessage(label(cmd) + " didn't run: " + err)
-                                    .setPositiveButton("Try another", new DialogInterface.OnClickListener() {
+                                    .setMessage(Hindi.f("%1$s didn't run: %2$s", label(cmd), Hindi.t(err)))
+                                    .setPositiveButton(Hindi.t("Try another"), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface d2, int w) {
                                             test(a, p, xt, fm, stop);
                                         }
-                                    }).setNegativeButton("Close", null).show();
+                                    }).setNegativeButton(Hindi.t("Close"), null).show();
                             return;
                         }
                         new Handler().postDelayed(new Runnable() {
@@ -226,15 +226,15 @@ final class Fm {
                                 if (a.isFinishing()) return;
                                 new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                         .setTitle(label(cmd))
-                                        .setMessage(stop ? "Did the FM radio stop?" : "Is the FM radio playing now, with the dashboard still in front?")
-                                        .setPositiveButton("Yes, use this", new DialogInterface.OnClickListener() {
+                                        .setMessage(stop ? Hindi.t("Did the FM radio stop?") : Hindi.t("Is the FM radio playing now, with the dashboard still in front?"))
+                                        .setPositiveButton(Hindi.t("Yes, use this"), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface d2, int w) {
                                                 p.setFmCmd(stop ? "stop" : "play", cmd);
                                                 if (!stop) test(a, p, xt, fm, true);
                                             }
                                         })
-                                        .setNegativeButton("No, try another", new DialogInterface.OnClickListener() {
+                                        .setNegativeButton(Hindi.t("No, try another"), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface d2, int w) {
                                                 test(a, p, xt, fm, stop);
@@ -244,7 +244,7 @@ final class Fm {
                         }, 2500);
                     }
                 })
-                .setNegativeButton("Close", null).show();
+                .setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     static String freqOf(float mhz) {

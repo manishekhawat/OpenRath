@@ -58,11 +58,11 @@ final class ThemeGallery extends LinearLayout {
             tile.setBackground(bg);
             tile.addView(new Preview(c, p, Theme.Look.of(p.json, paintAccent, paintEdge)), new LayoutParams(-1, -2));
             TextView name = Ui.text(c, 17, Ui.SILVER, "sans-serif-medium", Gravity.LEFT);
-            name.setText(on ? p.name + "   ✓ in use" : p.name);
+            name.setText(on ? Hindi.f("%1$s   ✓ in use", p.name) : p.name);
             name.setPadding(Ui.px(6), Ui.px(10), Ui.px(6), 0);
             tile.addView(name);
-            String about = p.description;
-            if (!p.builtIn() && !p.author.isEmpty()) about = (about.isEmpty() ? "" : about + "  ·  ") + "by " + p.author;
+            String about = p.builtIn() ? Hindi.t(p.description) : p.description;   // a built-in theme's words are translated
+            if (!p.builtIn() && !p.author.isEmpty()) about = (about.isEmpty() ? "" : about + "  ·  ") + Hindi.f("by %1$s", p.author);
             if (!p.builtIn()) about = (about.isEmpty() ? "" : about + "  ·  ") + "OpenRath/themes/" + p.dir.getName();
             TextView desc = Ui.text(c, 13, Ui.SILVER_DIM, "sans-serif", Gravity.LEFT);
             desc.setSingleLine(false);
@@ -200,16 +200,16 @@ final class ThemeGallery extends LinearLayout {
             text(c, look.text, 38 * s, "sans-serif-light", 405 * s, 62 * s, false);
             c.drawText("62", 382 * s, 62 * s, text);
             text(c, look.accent, 12 * s, "sans-serif-medium", 0, 0, false).setLetterSpacing(0.18f);
-            c.drawText("LIGHTS ON", 128 * s, 272 * s, text);
+            c.drawText(Hindi.t("LIGHTS ON"), 128 * s, 272 * s, text);
             c.drawText("FM1", 534 * s, 480 * s, text);
             text.setLetterSpacing(0);
             // clock, weather, radio
             centre(c, "17:31", look.text, 58 * s, "sans-serif-light", 303 * s, 372 * s);
-            centre(c, "Sunday 11 October", look.textDim, 15 * s, "sans-serif", 303 * s, 408 * s);
+            centre(c, Hindi.t("Sunday 11 October"), look.textDim, 15 * s, "sans-serif", 303 * s, 408 * s);
             text(c, look.text, 42 * s, "sans-serif-light", 0, 0, false);
             c.drawText("28°", 210 * s, 520 * s, text);
             text(c, look.text, 16 * s, "sans-serif-medium", 0, 0, true);
-            c.drawText("Cloudy", 475 * s, 505 * s, text);
+            c.drawText(Hindi.t("Cloudy"), 475 * s, 505 * s, text);
             text(c, look.textDim, 13 * s, "sans-serif", 0, 0, true);
             c.drawText("New Delhi", 475 * s, 535 * s, text);
             text.setTextAlign(Paint.Align.LEFT);

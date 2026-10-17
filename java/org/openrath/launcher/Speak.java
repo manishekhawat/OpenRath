@@ -221,7 +221,7 @@ final class Speak {
         main().post(new Runnable() {
             @Override
             public void run() {
-                if (app != null) android.widget.Toast.makeText(app, s, android.widget.Toast.LENGTH_LONG).show();
+                if (app != null) android.widget.Toast.makeText(app, Hindi.t(s), android.widget.Toast.LENGTH_LONG).show();
             }
         });
     }

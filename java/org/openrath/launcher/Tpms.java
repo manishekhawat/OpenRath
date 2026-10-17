@@ -35,7 +35,7 @@ final class Tpms {
     static final Tyre[] tyres = new Tyre[4];
     /** Every sensor heard recently, by address, for the setup screen. */
     static final Map<String, Tyre> heard = new LinkedHashMap<>();
-    static volatile String status = "Off";
+    static volatile String status = Hindi.t("Off");
 
     private static ScanCallback cb;
 
@@ -44,12 +44,12 @@ final class Tpms {
         try {
             BluetoothAdapter a = BluetoothAdapter.getDefaultAdapter();
             if (a == null || !a.isEnabled()) {
-                status = "Bluetooth is off";
+                status = Hindi.t("Bluetooth is off");
                 return;
             }
             BluetoothLeScanner sc = a.getBluetoothLeScanner();
             if (sc == null) {
-                status = "This unit can't scan for Bluetooth LE";
+                status = Hindi.t("This unit can't scan for Bluetooth LE");
                 return;
             }
             final Context app = c.getApplicationContext();
@@ -73,13 +73,13 @@ final class Tpms {
 
                 @Override
                 public void onScanFailed(int code) {
-                    status = "Scan failed (" + code + ")";
+                    status = Hindi.f("Scan failed (%1$s)", code);
                 }
             };
             sc.startScan(null, new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_POWER).build(), cb);
-            status = "Listening";
+            status = Hindi.t("Listening");
         } catch (Throwable e) {
-            status = "Can't scan: " + e.getMessage();
+            status = Hindi.f("Can't scan: %1$s", e.getMessage());
             cb = null;
         }
     }
@@ -91,7 +91,7 @@ final class Tpms {
         } catch (Throwable ignored) {
         }
         cb = null;
-        status = "Off";
+        status = Hindi.t("Off");
     }
 
     /** One sensor's reading from a raw advertisement, or null if it isn't a TPMS cap. */
@@ -152,9 +152,9 @@ final class Tpms {
         Tyre t = tyres[w];
         if (t == null || t.kpa < 0) return "";
         if (System.currentTimeMillis() - t.at > 15 * 60 * 1000) return "";
-        if (psi(t.kpa) < p.num("tpmsLow", 28)) return WHEELS[w] + " tyre low";
-        if (t.tempC > p.num("tpmsHot", 75)) return WHEELS[w] + " tyre hot";
-        if (t.battery >= 0 && t.battery < 10) return WHEELS[w] + " sensor battery low";
+        if (psi(t.kpa) < p.num("tpmsLow", 28)) return Hindi.f("%1$s tyre low", WHEELS[w]);
+        if (t.tempC > p.num("tpmsHot", 75)) return Hindi.f("%1$s tyre hot", WHEELS[w]);
+        if (t.battery >= 0 && t.battery < 10) return Hindi.f("%1$s sensor battery low", WHEELS[w]);
         return "";
     }
 

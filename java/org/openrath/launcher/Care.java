@@ -90,13 +90,13 @@ final class Care {
     static String describe(Prefs p, int i) {
         if (byDate(i)) {
             long d = daysLeft(p, i);
-            if (d == Long.MIN_VALUE) return "due date not set";
+            if (d == Long.MIN_VALUE) return Hindi.t("due date not set");
             String due = p.str("care:" + ITEMS[i] + ":due", "");
-            return d < 0 ? "overdue since " + due : d == 0 ? "due today" : "due " + due + " (" + d + " days)";
+            return d < 0 ? Hindi.f("overdue since %1$s", due) : d == 0 ? Hindi.t("due today") : Hindi.f("due %1$s (%2$s days)", due, d);
         }
         long k = kmLeft(p, i);
-        if (k == Long.MIN_VALUE) return "every " + every(p, i) + " km; last one not set";
-        return k < 0 ? "overdue by " + (-k) + " km" : "in " + k + " km (every " + every(p, i) + " km)";
+        if (k == Long.MIN_VALUE) return Hindi.f("every %1$s km; last one not set", every(p, i));
+        return k < 0 ? Hindi.f("overdue by %1$s km", -k) : Hindi.f("in %1$s km (every %2$s km)", k, every(p, i));
     }
 
     /** The most urgent reminder for the car box, or "" when nothing is close. */
@@ -159,13 +159,13 @@ final class Care {
                     done.run();
                 }
             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
-            d.setTitle(NAMES[i] + ": next due date");
+            d.setTitle(Hindi.f("%1$s: next due date", Hindi.t(NAMES[i])));
             d.show();
             return;
         }
-        String[] opts = {"Done today (at " + odo(p) + " km)", "Last done at a different km", "Change how often (now every " + every(p, i) + " km)"};
+        String[] opts = {Hindi.f("Done today (at %1$s km)", odo(p)), Hindi.t("Last done at a different km"), Hindi.f("Change how often (now every %1$s km)", every(p, i))};
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(NAMES[i])
+                .setTitle(Hindi.t(NAMES[i]))
                 .setItems(opts, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dlg, int w) {
@@ -190,7 +190,7 @@ final class Care {
                             });
                         }
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     // ------------------------------------------------------------------ tolls
@@ -256,11 +256,10 @@ final class Care {
         period(b, "Last week", lastWeek, weekStart, days, fuel, toll);
         period(b, "This month", monthStart, tomorrow, days, fuel, toll);
         period(b, "Last month", lastMonth, monthStart, days, fuel, toll);
-        b.append("Today's driving score: ").append(Drive.score()).append(" / 100 (")
-                .append(Drive.todayBrakes).append(" harsh brakes, ").append(Drive.todayAccels).append(" hard starts, ")
-                .append(Drive.todaySpeedSec / 60).append(" min over the limit)");
+        b.append(Hindi.f("Today's driving score: %1$s / 100 (%2$s harsh brakes, %3$s hard starts, %4$s min over the limit)",
+                Drive.score(), Drive.todayBrakes, Drive.todayAccels, Drive.todaySpeedSec / 60));
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Trip history").setMessage(b.toString()).setPositiveButton("OK", null).show();
+                .setTitle(Hindi.t("Trip history")).setMessage(b.toString()).setPositiveButton(Hindi.t("OK"), null).show();
     }
 
     private static void period(StringBuilder b, String name, Calendar from, Calendar to, JSONObject days, JSONArray fuel, JSONArray toll) {
@@ -283,10 +282,10 @@ final class Care {
         }
         long t0 = from.getTimeInMillis(), t1 = to.getTimeInMillis();
         double rsFuel = spent(fuel, t0, t1), rsToll = spent(toll, t0, t1);
-        b.append(name).append(": ").append(Fuel.fmt(km)).append(" km, ").append(sec / 3600).append(" h ").append(sec % 3600 / 60).append(" min");
-        if (rsFuel > 0) b.append(", fuel ₹").append(Math.round(rsFuel));
-        if (rsToll > 0) b.append(", tolls ₹").append(Math.round(rsToll));
-        if (scored > 0) b.append(", score ").append(scoreSum / scored);
+        b.append(Hindi.t(name)).append(": ").append(Hindi.f("%1$s km, %2$s h %3$s min", Fuel.fmt(km), sec / 3600, sec % 3600 / 60));
+        if (rsFuel > 0) b.append(Hindi.f(", fuel ₹%1$s", Math.round(rsFuel)));
+        if (rsToll > 0) b.append(Hindi.f(", tolls ₹%1$s", Math.round(rsToll)));
+        if (scored > 0) b.append(Hindi.f(", score %1$s", scoreSum / scored));
         b.append("\n\n");
     }
 
@@ -325,8 +324,8 @@ final class Care {
         e.setText(value);
         e.setSelectAllOnFocus(true);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(title).setView(e)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setTitle(Hindi.t(title)).setView(e)
+                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         try {
@@ -334,7 +333,7 @@ final class Care {
                         } catch (Exception ignored) {
                         }
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private Care() {

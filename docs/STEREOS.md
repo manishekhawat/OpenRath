@@ -6,7 +6,7 @@ Checked on 14 Oct 2026 against the OpenRath 1.21 code, not on the real units. On
 
 - **Size:** OpenRath scales everything by `min(height/600, width/1024)`, and the user can adjust it from 80% to 130% with the "Size of text and boxes" setting.
 - **Tall screens:** when the screen is taller than it is wide, the dashboard boxes stack.
-- **Android versions:** the app installs on Android 10 and newer (minSdk 29, targetSdk 34). Units on Android 9 or older can keep version 1.32.
+- **Android versions:** the app installs on Android 8.0 and newer (minSdk 26, targetSdk 34).
 - **Works on every Android stereo:** dashboard, map with offline tiles, music, voice (with Google speech services installed), car setup for any brand, backups, trip QR and boot logo files.
 - **Topway only:** FM tuner box, reverse camera hook and steering keys through `com.tw.service.xt`. On other stereos these rows are hidden and the stereo's own radio app is used.
 
@@ -14,7 +14,7 @@ Checked on 14 Oct 2026 against the OpenRath 1.21 code, not on the real units. On
 
 | Stereo family | Sizes | Resolution | Android | Works with OpenRath? |
 |---|---|---|---|---|
-| Topway TS7 / TS10 / TS18 (`com.tw.*`, seen on Tech's unit) | 7, 9, 10.1, 12.3" | 1024x600, 1280x720, 2000x1200 (u) | 8.1 to 14 | **Yes, fully** on Android 10 and newer (8.1 and 9: version 1.32). FM, reverse and keys included |
+| Topway TS7 / TS10 / TS18 (`com.tw.*`, seen on Tech's unit) | 7, 9, 10.1, 12.3" | 1024x600, 1280x720, 2000x1200 (u) | 8.1 to 14 | **Yes, fully.** FM, reverse and keys included |
 | FYT: Joying, Dasaita, Junsun, AliExpress units (`com.syu.ms`) | 7, 9, 10.1, 12.3" | 1024x600, 1280x720, 2000x1200, 1920x720 | 10 to 13 | **Yes.** No FM box yet, which needs a FYT adapter |
 | Teyes CC3 / CC3 2K / CC4 Pro | 9, 10.2, 10.36" (CC3 2K) | 1280x720, 2000x1200, 2K AMOLED (CC4 Pro) | 10 to 13 | **Yes.** No FM box |
 | MTCD / MTCE (PX5, PX6, PX30): Xtrons, Eonon, Pumpkin, older units (`android.microntek.*`) | 7, 9, 10.1" | 1024x600, 1280x720 (u) | 6 to 10 | **Yes.** No FM box; an MTC adapter is possible later |

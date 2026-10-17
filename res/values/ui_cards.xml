@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The words of the dashboard boxes, media and weather. Translations go in values-<language>/ui_cards.xml with the same names;
+     anything left out stays in English. The ui_cards list ties each one to the English the code uses. -->
+<resources>
+    <string name="ui_cards_offline" formatted="false">offline</string>
+    <string name="ui_cards_weather" formatted="false">Weather</string>
+    <string name="ui_cards_clear" formatted="false">Clear</string>
+    <string name="ui_cards_partly_cloudy" formatted="false">Partly cloudy</string>
+    <string name="ui_cards_cloudy" formatted="false">Cloudy</string>
+    <string name="ui_cards_fog" formatted="false">Fog</string>
+    <string name="ui_cards_drizzle" formatted="false">Drizzle</string>
+    <string name="ui_cards_rain" formatted="false">Rain</string>
+    <string name="ui_cards_snow" formatted="false">Snow</string>
+    <string name="ui_cards_showers" formatted="false">Showers</string>
+    <string name="ui_cards_snow_showers" formatted="false">Snow showers</string>
+    <string name="ui_cards_thunderstorm" formatted="false">Thunderstorm</string>
+    <string name="ui_cards_raining_now" formatted="false">Raining now</string>
+    <string name="ui_cards_rain_in_about_x_min" formatted="false">Rain in about %1$s min</string>
+    <string name="ui_cards_rain_likely_this_hour" formatted="false">Rain likely this hour</string>
+    <string name="ui_cards_rain_likely_within_2_hours" formatted="false">Rain likely within 2 hours</string>
+    <string name="ui_cards_offline_forecast_from_x_min_ago" formatted="false">Offline · forecast from %1$s min ago</string>
+    <string name="ui_cards_offline_forecast_from_x_h_ago" formatted="false">Offline · forecast from %1$s h ago</string>
+    <string name="ui_cards_offline_forecast_from_x_days_ago" formatted="false">Offline · forecast from %1$s days ago</string>
+    <string name="ui_cards_air_quality_x_aqi_x" formatted="false">Air quality: %1$s (AQI %2$s)</string>
+    <string name="ui_cards_unknown" formatted="false">unknown</string>
+    <string name="ui_cards_good" formatted="false">Good</string>
+    <string name="ui_cards_satisfactory" formatted="false">Satisfactory</string>
+    <string name="ui_cards_moderate" formatted="false">Moderate</string>
+    <string name="ui_cards_poor" formatted="false">Poor</string>
+    <string name="ui_cards_very_poor" formatted="false">Very poor</string>
+    <string name="ui_cards_severe" formatted="false">Severe</string>
+    <string name="ui_cards_read_aloud" formatted="false">"▶  Read aloud"</string>
+    <string name="ui_cards_stop" formatted="false">"■  Stop"</string>
+    <string name="ui_cards_top_news" formatted="false">TOP NEWS</string>
+    <string name="ui_cards_x_news" formatted="false">%1$s NEWS</string>
+    <string name="ui_cards_offline_2" formatted="false">, offline</string>
+    <string name="ui_cards_the_news_box_is_switched_off_in_settings_features" formatted="false">The news box is switched off in Settings > Features.</string>
+    <string name="ui_cards_getting_the_headlines" formatted="false">Getting the headlines…</string>
+    <string name="ui_cards_headlines_show_here_when_there_s_internet" formatted="false">Headlines show here when there\'s internet.</string>
+    <string name="ui_cards_top_stories" formatted="false">Top stories</string>
+    <string name="ui_cards_india" formatted="false">India</string>
+    <string name="ui_cards_world" formatted="false">World</string>
+    <string name="ui_cards_business" formatted="false">Business</string>
+    <string name="ui_cards_sports" formatted="false">Sports</string>
+    <string name="ui_cards_technology" formatted="false">Technology</string>
+    <string name="ui_cards_entertainment" formatted="false">Entertainment</string>
+    <string name="ui_cards_just_now" formatted="false">just now</string>
+    <string name="ui_cards_x_min_ago" formatted="false">%1$s min ago</string>
+    <string name="ui_cards_x_h_ago" formatted="false">%1$s h ago</string>
+    <string name="ui_cards_x_days_ago" formatted="false">%1$s days ago</string>
+    <string name="ui_cards_today" formatted="false">TODAY</string>
+    <string name="ui_cards_drive_time" formatted="false">DRIVE TIME</string>
+    <string name="ui_cards_avg_km_h" formatted="false">AVG KM/H</string>
+    <string name="ui_cards_parked_x" formatted="false">parked %1$s</string>
+    <string name="ui_cards_this_drive_x_km" formatted="false">This drive %1$s km</string>
+    <string name="ui_cards_x_petrol_today" formatted="false">₹%1$s petrol today</string>
+    <string name="ui_cards_score_x" formatted="false">score %1$s</string>
+    <string name="ui_cards_tolls_x_this_month" formatted="false">tolls ₹%1$s this month</string>
+    <string name="ui_cards_fuel" formatted="false">FUEL</string>
+    <string name="ui_cards_last_tank" formatted="false">LAST TANK</string>
+    <string name="ui_cards_average" formatted="false">AVERAGE</string>
+    <string name="ui_cards_last_tank_km_l" formatted="false">LAST TANK KM/L</string>
+    <string name="ui_cards_average_km_l" formatted="false">AVERAGE KM/L</string>
+    <string name="ui_cards_tap_to_add_your_first_fill_up" formatted="false">Tap to add your first fill-up</string>
+    <string name="ui_cards_mileage_shows_after_two_full_tank_fill_ups" formatted="false">Mileage shows after two full-tank fill-ups</string>
+    <string name="ui_cards_x_fill_ups_last_x" formatted="false">"%1$s fill-ups  ·  last %2$s"</string>
+    <string name="ui_cards_cab_today" formatted="false">"CAB  ·  TODAY"</string>
+    <string name="ui_cards_earned" formatted="false">EARNED</string>
+    <string name="ui_cards_rides" formatted="false">RIDES</string>
+    <string name="ui_cards_net" formatted="false">NET</string>
+    <string name="ui_cards_turn_on_cab_driver_tools_in_settings_cab_driver" formatted="false">Turn on Cab driver tools in Settings > Cab driver</string>
+    <string name="ui_cards_meter_x_x_km_x_min_waiting" formatted="false">"Meter %1$s  ·  %2$s km  ·  %3$s min waiting"</string>
+    <string name="ui_cards_target_x_reached" formatted="false">Target %1$s reached</string>
+    <string name="ui_cards_x_to_the_target" formatted="false">%1$s to the target</string>
+    <string name="ui_cards_on_duty_x" formatted="false">on duty %1$s</string>
+    <string name="ui_cards_tap_for_the_meter_rides_and_sos" formatted="false">Tap for the meter, rides and SOS</string>
+    <string name="ui_cards_quiet_ride" formatted="false">Quiet ride</string>
+    <string name="ui_cards_performance" formatted="false">PERFORMANCE</string>
+    <string name="ui_cards_temp_c" formatted="false">TEMP °C</string>
+    <string name="ui_cards_frame_ms" formatted="false">FRAME MS</string>
+    <string name="ui_cards_whole_unit_x_cpu_this_app_x" formatted="false">Whole unit %1$s%% CPU, this app %2$s%%</string>
+    <string name="ui_cards_cpu_is_this_app_s_share_android_hides_the_whole_un" formatted="false">CPU is this app\'s share; Android hides the whole unit\'s figure</string>
+    <string name="ui_cards_engine" formatted="false">ENGINE</string>
+    <string name="ui_cards_coolant_c" formatted="false">COOLANT °C</string>
+    <string name="ui_cards_battery_v" formatted="false">BATTERY V</string>
+    <string name="ui_cards_engine_data_is_off_in_settings_car" formatted="false">Engine data is off in Settings > Car</string>
+    <string name="ui_cards_tap_to_choose_your_obd_ii_bluetooth_adapter" formatted="false">Tap to choose your OBD-II Bluetooth adapter</string>
+    <string name="ui_cards_load_x" formatted="false">Load %1$s%%</string>
+    <string name="ui_cards_1_fault_code" formatted="false">1 fault code</string>
+    <string name="ui_cards_x_fault_codes" formatted="false">%1$s fault codes</string>
+    <string name="ui_cards_no_fault_codes" formatted="false">no fault codes</string>
+    <string name="ui_cards_tyres" formatted="false">TYRES</string>
+    <string name="ui_cards_front_l" formatted="false">FRONT L</string>
+    <string name="ui_cards_front_r" formatted="false">FRONT R</string>
+    <string name="ui_cards_rear_l" formatted="false">REAR L</string>
+    <string name="ui_cards_rear_r" formatted="false">REAR R</string>
+    <string name="ui_cards_tyres_x" formatted="false">"TYRES  ·  %1$s"</string>
+    <string name="ui_cards_tyre_sensors_are_off_in_settings_car" formatted="false">Tyre sensors are off in Settings > Car</string>
+    <string name="ui_cards_tap_to_find_your_tyre_sensors" formatted="false">Tap to find your tyre sensors</string>
+    <string name="ui_cards_front_left_x_c_x" formatted="false">"Front left %1$s°C  ·  %2$s"</string>
+    <string name="ui_cards_tap_to_choose_a_widget_from_another_app_long_press" formatted="false">Tap to choose a widget from another app\n(long-press for other box contents)</string>
+    <string name="ui_cards_widgets_are_off_in_settings_home_screen" formatted="false">Widgets are off in Settings > Home screen</string>
+    <string name="ui_cards_lights_off" formatted="false">LIGHTS OFF</string>
+    <string name="ui_cards_lights_on" formatted="false">LIGHTS ON</string>
+    <string name="ui_cards_lights_tap_to_set_up" formatted="false">LIGHTS: TAP TO SET UP</string>
+    <string name="ui_cards_welcome" formatted="false">WELCOME</string>
+    <string name="ui_cards_engine_hot_x_c" formatted="false">"ENGINE HOT  %1$s°C"</string>
+    <string name="ui_cards_speed_camera_x_m" formatted="false">"SPEED CAMERA  %1$s m"</string>
+    <string name="ui_cards_phone" formatted="false">PHONE</string>
+    <string name="ui_cards_phone_2" formatted="false">Phone</string>
+    <string name="ui_cards_answer" formatted="false">Answer</string>
+    <string name="ui_cards_end" formatted="false">End</string>
+    <string name="ui_cards_the_stereo_isn_t_ready" formatted="false">the stereo isn\'t ready</string>
+    <string name="ui_cards_calling_x" formatted="false">Calling %1$s…</string>
+    <string name="ui_cards_couldn_t_call_x" formatted="false">Couldn\'t call: %1$s</string>
+    <string name="ui_cards_phone_connected" formatted="false">"PHONE  ·  CONNECTED"</string>
+    <string name="ui_cards_phone_not_connected" formatted="false">"PHONE  ·  NOT CONNECTED"</string>
+    <string name="ui_cards_call" formatted="false">Call</string>
+    <string name="ui_cards_call_in_progress_or_ringing" formatted="false">Call in progress or ringing</string>
+    <string name="ui_cards_called_x" formatted="false">Called %1$s</string>
+    <string name="ui_cards_called_you_x" formatted="false">Called you %1$s</string>
+    <string name="ui_cards_last_call_x" formatted="false">Last call %1$s</string>
+    <string name="ui_cards_tap_to_call_back" formatted="false">tap to call back</string>
+    <string name="ui_cards_phone_connected_2" formatted="false">Phone connected</string>
+    <string name="ui_cards_no_phone_connected" formatted="false">No phone connected</string>
+    <string name="ui_cards_your_last_call_shows_here" formatted="false">Your last call shows here</string>
+    <string name="ui_cards_pair_your_phone_in_the_bluetooth_app" formatted="false">Pair your phone in the Bluetooth app</string>
+    <string name="ui_cards_scan" formatted="false">SCAN</string>
+    <string name="ui_cards_fm_didn_t_start_x" formatted="false">FM didn\'t start: %1$s</string>
+    <string name="ui_cards_online_radio" formatted="false">ONLINE RADIO</string>
+    <string name="ui_cards_fm_radio" formatted="false">FM RADIO</string>
+    <string name="ui_cards_music_files" formatted="false">MUSIC FILES</string>
+    <string name="ui_cards_music_app" formatted="false">MUSIC APP</string>
+    <string name="ui_cards_auto" formatted="false">AUTO</string>
+    <string name="ui_cards_online_radio_2" formatted="false">Online radio</string>
+    <string name="ui_cards_music_files_2" formatted="false">Music files</string>
+    <string name="ui_cards_connecting" formatted="false">Connecting…</string>
+    <string name="ui_cards_tap_play_for_indian_stations" formatted="false">Tap play for Indian stations</string>
+    <string name="ui_cards_tap_play_for_music_on_the_unit_or_usb" formatted="false">Tap play for music on the unit or USB</string>
+    <string name="ui_cards_fm_radio_2" formatted="false">FM radio</string>
+    <string name="ui_cards_music_app_2" formatted="false">Music app</string>
+    <string name="ui_cards_tap_to_open_the_radio" formatted="false">Tap to open the radio</string>
+    <string name="ui_cards_tap_to_open_the_music_app" formatted="false">Tap to open the music app</string>
+    <string name="ui_cards_can_t_play_this_one" formatted="false">Can\'t play this one</string>
+    <string name="ui_cards_station_unavailable_trying_the_next" formatted="false">Station unavailable, trying the next</string>
+    <string name="ui_cards_can_t_play_this_file_skipping" formatted="false">Can\'t play this file, skipping</string>
+    <string name="ui_cards_web_radio_unreachable" formatted="false">Web radio unreachable</string>
+    <string name="ui_cards_no_playable_music_files" formatted="false">No playable music files</string>
+    <string name="ui_cards_another_app_is_playing" formatted="false">Another app is playing</string>
+    <string name="ui_cards_finding_stations" formatted="false">Finding stations…</string>
+    <string name="ui_cards_looking_for_music" formatted="false">Looking for music…</string>
+    <string name="ui_cards_no_music_files_found" formatted="false">No music files found</string>
+    <string name="ui_cards_player" formatted="false">Player</string>
+    <string name="ui_cards_web_radio" formatted="false">Web radio</string>
+    <string name="ui_cards_music" formatted="false">Music</string>
+    <string name="ui_cards_topway_mcu_link_no_radio_service" formatted="false">Topway MCU link (no radio service)</string>
+    <string name="ui_cards_open_the_radio_app_then_back_to_the_dashboard" formatted="false">Open the radio app, then back to the dashboard</string>
+    <string name="ui_cards_radio_app_s_service_x" formatted="false">Radio app\'s service %1$s</string>
+    <string name="ui_cards_x_then_back_to_the_dashboard" formatted="false">%1$s, then back to the dashboard</string>
+    <string name="ui_cards_no_mcu_link_on_this_unit" formatted="false">no MCU link on this unit</string>
+    <string name="ui_cards_the_radio_app_isn_t_installed" formatted="false">the radio app isn\'t installed</string>
+    <string name="ui_cards_not_ready" formatted="false">not ready</string>
+    <string name="ui_cards_service_wasn_t_running" formatted="false">service wasn\'t running</string>
+    <string name="ui_cards_the_radio_app_refused" formatted="false">the radio app refused</string>
+    <string name="ui_cards_radio_service_not_connected" formatted="false">radio service not connected</string>
+    <string name="ui_cards_start_fm_first_then_try_each_until_fm_stops" formatted="false">Start FM first, then try each until FM stops</string>
+    <string name="ui_cards_try_each_until_fm_starts_playing" formatted="false">Try each until FM starts playing</string>
+    <string name="ui_cards_x_didn_t_run_x" formatted="false">%1$s didn\'t run: %2$s</string>
+    <string name="ui_cards_try_another" formatted="false">Try another</string>
+    <string name="ui_cards_close" formatted="false">Close</string>
+    <string name="ui_cards_did_the_fm_radio_stop" formatted="false">Did the FM radio stop?</string>
+    <string name="ui_cards_is_the_fm_radio_playing_now_with_the_dashboard_sti" formatted="false">Is the FM radio playing now, with the dashboard still in front?</string>
+    <string name="ui_cards_yes_use_this" formatted="false">Yes, use this</string>
+    <string name="ui_cards_no_try_another" formatted="false">No, try another</string>
+    <string name="ui_cards_midnight" formatted="false">midnight</string>
+    <string name="ui_cards_noon" formatted="false">noon</string>
+    <string name="ui_cards_x_am" formatted="false">%1$s am</string>
+    <string name="ui_cards_x_pm" formatted="false">%1$s pm</string>
+    <string name="ui_cards_flat" formatted="false">Flat</string>
+    <string name="ui_cards_bass" formatted="false">Bass</string>
+    <string name="ui_cards_vocal" formatted="false">Vocal</string>
+    <string name="ui_cards_rock" formatted="false">Rock</string>
+    <string name="ui_cards_pop" formatted="false">Pop</string>
+    <string name="ui_cards_classical" formatted="false">Classical</string>
+    <string name="ui_cards_custom" formatted="false">Custom</string>
+    <string name="ui_cards_city" formatted="false">City</string>
+    <string name="ui_cards_highway" formatted="false">Highway</string>
+    <string name="ui_cards_night" formatted="false">Night</string>
+    <string name="ui_cards_hour_night" formatted="false">%1$s at night</string>
+    <string name="ui_cards_hour_morning" formatted="false">%1$s in the morning</string>
+    <string name="ui_cards_hour_afternoon" formatted="false">%1$s in the afternoon</string>
+    <string name="ui_cards_hour_evening" formatted="false">%1$s in the evening</string>
+    <string name="ui_cards_no_webview" formatted="false">The map needs Android System WebView. Install or turn it on in Android\'s settings.</string>
+    <string-array name="ui_cards">
+        <item>@string/ui_cards_offline</item>
+        <item>@string/ui_cards_weather</item>
+        <item>@string/ui_cards_clear</item>
+        <item>@string/ui_cards_partly_cloudy</item>
+        <item>@string/ui_cards_cloudy</item>
+        <item>@string/ui_cards_fog</item>
+        <item>@string/ui_cards_drizzle</item>
+        <item>@string/ui_cards_rain</item>
+        <item>@string/ui_cards_snow</item>
+        <item>@string/ui_cards_showers</item>
+        <item>@string/ui_cards_snow_showers</item>
+        <item>@string/ui_cards_thunderstorm</item>
+        <item>@string/ui_cards_raining_now</item>
+        <item>@string/ui_cards_rain_in_about_x_min</item>
+        <item>@string/ui_cards_rain_likely_this_hour</item>
+        <item>@string/ui_cards_rain_likely_within_2_hours</item>
+        <item>@string/ui_cards_offline_forecast_from_x_min_ago</item>
+        <item>@string/ui_cards_offline_forecast_from_x_h_ago</item>
+        <item>@string/ui_cards_offline_forecast_from_x_days_ago</item>
+        <item>@string/ui_cards_air_quality_x_aqi_x</item>
+        <item>@string/ui_cards_unknown</item>
+        <item>@string/ui_cards_good</item>
+        <item>@string/ui_cards_satisfactory</item>
+        <item>@string/ui_cards_moderate</item>
+        <item>@string/ui_cards_poor</item>
+        <item>@string/ui_cards_very_poor</item>
+        <item>@string/ui_cards_severe</item>
+        <item>@string/ui_cards_read_aloud</item>
+        <item>@string/ui_cards_stop</item>
+        <item>@string/ui_cards_top_news</item>
+        <item>@string/ui_cards_x_news</item>
+        <item>@string/ui_cards_offline_2</item>
+        <item>@string/ui_cards_the_news_box_is_switched_off_in_settings_features</item>
+        <item>@string/ui_cards_getting_the_headlines</item>
+        <item>@string/ui_cards_headlines_show_here_when_there_s_internet</item>
+        <item>@string/ui_cards_top_stories</item>
+        <item>@string/ui_cards_india</item>
+        <item>@string/ui_cards_world</item>
+        <item>@string/ui_cards_business</item>
+        <item>@string/ui_cards_sports</item>
+        <item>@string/ui_cards_technology</item>
+        <item>@string/ui_cards_entertainment</item>
+        <item>@string/ui_cards_just_now</item>
+        <item>@string/ui_cards_x_min_ago</item>
+        <item>@string/ui_cards_x_h_ago</item>
+        <item>@string/ui_cards_x_days_ago</item>
+        <item>@string/ui_cards_today</item>
+        <item>@string/ui_cards_drive_time</item>
+        <item>@string/ui_cards_avg_km_h</item>
+        <item>@string/ui_cards_parked_x</item>
+        <item>@string/ui_cards_this_drive_x_km</item>
+        <item>@string/ui_cards_x_petrol_today</item>
+        <item>@string/ui_cards_score_x</item>
+        <item>@string/ui_cards_tolls_x_this_month</item>
+        <item>@string/ui_cards_fuel</item>
+        <item>@string/ui_cards_last_tank</item>
+        <item>@string/ui_cards_average</item>
+        <item>@string/ui_cards_last_tank_km_l</item>
+        <item>@string/ui_cards_average_km_l</item>
+        <item>@string/ui_cards_tap_to_add_your_first_fill_up</item>
+        <item>@string/ui_cards_mileage_shows_after_two_full_tank_fill_ups</item>
+        <item>@string/ui_cards_x_fill_ups_last_x</item>
+        <item>@string/ui_cards_cab_today</item>
+        <item>@string/ui_cards_earned</item>
+        <item>@string/ui_cards_rides</item>
+        <item>@string/ui_cards_net</item>
+        <item>@string/ui_cards_turn_on_cab_driver_tools_in_settings_cab_driver</item>
+        <item>@string/ui_cards_meter_x_x_km_x_min_waiting</item>
+        <item>@string/ui_cards_target_x_reached</item>
+        <item>@string/ui_cards_x_to_the_target</item>
+        <item>@string/ui_cards_on_duty_x</item>
+        <item>@string/ui_cards_tap_for_the_meter_rides_and_sos</item>
+        <item>@string/ui_cards_quiet_ride</item>
+        <item>@string/ui_cards_performance</item>
+        <item>@string/ui_cards_temp_c</item>
+        <item>@string/ui_cards_frame_ms</item>
+        <item>@string/ui_cards_whole_unit_x_cpu_this_app_x</item>
+        <item>@string/ui_cards_cpu_is_this_app_s_share_android_hides_the_whole_un</item>
+        <item>@string/ui_cards_engine</item>
+        <item>@string/ui_cards_coolant_c</item>
+        <item>@string/ui_cards_battery_v</item>
+        <item>@string/ui_cards_engine_data_is_off_in_settings_car</item>
+        <item>@string/ui_cards_tap_to_choose_your_obd_ii_bluetooth_adapter</item>
+        <item>@string/ui_cards_load_x</item>
+        <item>@string/ui_cards_1_fault_code</item>
+        <item>@string/ui_cards_x_fault_codes</item>
+        <item>@string/ui_cards_no_fault_codes</item>
+        <item>@string/ui_cards_tyres</item>
+        <item>@string/ui_cards_front_l</item>
+        <item>@string/ui_cards_front_r</item>
+        <item>@string/ui_cards_rear_l</item>
+        <item>@string/ui_cards_rear_r</item>
+        <item>@string/ui_cards_tyres_x</item>
+        <item>@string/ui_cards_tyre_sensors_are_off_in_settings_car</item>
+        <item>@string/ui_cards_tap_to_find_your_tyre_sensors</item>
+        <item>@string/ui_cards_front_left_x_c_x</item>
+        <item>@string/ui_cards_tap_to_choose_a_widget_from_another_app_long_press</item>
+        <item>@string/ui_cards_widgets_are_off_in_settings_home_screen</item>
+        <item>@string/ui_cards_lights_off</item>
+        <item>@string/ui_cards_lights_on</item>
+        <item>@string/ui_cards_lights_tap_to_set_up</item>
+        <item>@string/ui_cards_welcome</item>
+        <item>@string/ui_cards_engine_hot_x_c</item>
+        <item>@string/ui_cards_speed_camera_x_m</item>
+        <item>@string/ui_cards_phone</item>
+        <item>@string/ui_cards_phone_2</item>
+        <item>@string/ui_cards_answer</item>
+        <item>@string/ui_cards_end</item>
+        <item>@string/ui_cards_the_stereo_isn_t_ready</item>
+        <item>@string/ui_cards_calling_x</item>
+        <item>@string/ui_cards_couldn_t_call_x</item>
+        <item>@string/ui_cards_phone_connected</item>
+        <item>@string/ui_cards_phone_not_connected</item>
+        <item>@string/ui_cards_call</item>
+        <item>@string/ui_cards_call_in_progress_or_ringing</item>
+        <item>@string/ui_cards_called_x</item>
+        <item>@string/ui_cards_called_you_x</item>
+        <item>@string/ui_cards_last_call_x</item>
+        <item>@string/ui_cards_tap_to_call_back</item>
+        <item>@string/ui_cards_phone_connected_2</item>
+        <item>@string/ui_cards_no_phone_connected</item>
+        <item>@string/ui_cards_your_last_call_shows_here</item>
+        <item>@string/ui_cards_pair_your_phone_in_the_bluetooth_app</item>
+        <item>@string/ui_cards_scan</item>
+        <item>@string/ui_cards_fm_didn_t_start_x</item>
+        <item>@string/ui_cards_online_radio</item>
+        <item>@string/ui_cards_fm_radio</item>
+        <item>@string/ui_cards_music_files</item>
+        <item>@string/ui_cards_music_app</item>
+        <item>@string/ui_cards_auto</item>
+        <item>@string/ui_cards_online_radio_2</item>
+        <item>@string/ui_cards_music_files_2</item>
+        <item>@string/ui_cards_connecting</item>
+        <item>@string/ui_cards_tap_play_for_indian_stations</item>
+        <item>@string/ui_cards_tap_play_for_music_on_the_unit_or_usb</item>
+        <item>@string/ui_cards_fm_radio_2</item>
+        <item>@string/ui_cards_music_app_2</item>
+        <item>@string/ui_cards_tap_to_open_the_radio</item>
+        <item>@string/ui_cards_tap_to_open_the_music_app</item>
+        <item>@string/ui_cards_can_t_play_this_one</item>
+        <item>@string/ui_cards_station_unavailable_trying_the_next</item>
+        <item>@string/ui_cards_can_t_play_this_file_skipping</item>
+        <item>@string/ui_cards_web_radio_unreachable</item>
+        <item>@string/ui_cards_no_playable_music_files</item>
+        <item>@string/ui_cards_another_app_is_playing</item>
+        <item>@string/ui_cards_finding_stations</item>
+        <item>@string/ui_cards_looking_for_music</item>
+        <item>@string/ui_cards_no_music_files_found</item>
+        <item>@string/ui_cards_player</item>
+        <item>@string/ui_cards_web_radio</item>
+        <item>@string/ui_cards_music</item>
+        <item>@string/ui_cards_topway_mcu_link_no_radio_service</item>
+        <item>@string/ui_cards_open_the_radio_app_then_back_to_the_dashboard</item>
+        <item>@string/ui_cards_radio_app_s_service_x</item>
+        <item>@string/ui_cards_x_then_back_to_the_dashboard</item>
+        <item>@string/ui_cards_no_mcu_link_on_this_unit</item>
+        <item>@string/ui_cards_the_radio_app_isn_t_installed</item>
+        <item>@string/ui_cards_not_ready</item>
+        <item>@string/ui_cards_service_wasn_t_running</item>
+        <item>@string/ui_cards_the_radio_app_refused</item>
+        <item>@string/ui_cards_radio_service_not_connected</item>
+        <item>@string/ui_cards_start_fm_first_then_try_each_until_fm_stops</item>
+        <item>@string/ui_cards_try_each_until_fm_starts_playing</item>
+        <item>@string/ui_cards_x_didn_t_run_x</item>
+        <item>@string/ui_cards_try_another</item>
+        <item>@string/ui_cards_close</item>
+        <item>@string/ui_cards_did_the_fm_radio_stop</item>
+        <item>@string/ui_cards_is_the_fm_radio_playing_now_with_the_dashboard_sti</item>
+        <item>@string/ui_cards_yes_use_this</item>
+        <item>@string/ui_cards_no_try_another</item>
+        <item>@string/ui_cards_midnight</item>
+        <item>@string/ui_cards_noon</item>
+        <item>@string/ui_cards_x_am</item>
+        <item>@string/ui_cards_x_pm</item>
+        <item>@string/ui_cards_flat</item>
+        <item>@string/ui_cards_bass</item>
+        <item>@string/ui_cards_vocal</item>
+        <item>@string/ui_cards_rock</item>
+        <item>@string/ui_cards_pop</item>
+        <item>@string/ui_cards_classical</item>
+        <item>@string/ui_cards_custom</item>
+        <item>@string/ui_cards_city</item>
+        <item>@string/ui_cards_highway</item>
+        <item>@string/ui_cards_night</item>
+        <item>@string/ui_cards_hour_night</item>
+        <item>@string/ui_cards_hour_morning</item>
+        <item>@string/ui_cards_hour_afternoon</item>
+        <item>@string/ui_cards_hour_evening</item>
+        <item>@string/ui_cards_no_webview</item>
+    </string-array>
+</resources>

@@ -27,6 +27,19 @@ The tag must be `v` followed by `VERSION_NAME`, or the job stops. The job then:
 
 If something goes wrong, delete the release and the tag on GitHub, fix it, and tag again.
 
+## Signing offline
+
+The key can stay off GitHub altogether. Without the four secrets, the release workflow builds nothing and only leaves a note. Then, on the computer that holds the key (with `signing.json` beside `build.py`):
+
+```
+OPENRATH_PUBLIC=1 python3 build.py out
+mv out/openrath.apk openrath-vX.Y.apk
+git archive --format=zip --prefix=openrath/ -o openrath-vX.Y-source.zip vX.Y
+sha256sum openrath-vX.Y.apk openrath-vX.Y-source.zip > SHA256SUMS
+```
+
+Then on GitHub, open Releases > Draft a new release, pick the tag, paste the CHANGELOG section and the certificate's SHA-256 (`keytool -printcert -jarfile openrath-vX.Y.apk`), and attach the three files.
+
 ## The release key
 
 The release key is a Java keystore that belongs to the project. Every release must be signed with the same key, or Android won't install the update over the installed app.

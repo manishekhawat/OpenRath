@@ -20,7 +20,7 @@ final class CarCard extends Cards.Card {
     final LinearLayout brandRow = new LinearLayout(getContext());
     final TextView speed = Ui.text(getContext(), 40, Ui.SILVER, "sans-serif-light", Gravity.RIGHT);
     final TextView unit = Ui.text(getContext(), 13, Ui.SILVER_DIM, "sans-serif-medium", Gravity.LEFT);
-    final TextView lights = Ui.label(getContext(), "LIGHTS OFF");
+    final TextView lights = Ui.label(getContext(), Hindi.t("LIGHTS OFF"));
     final ChromeText welcome = new ChromeText(getContext()), hello = new ChromeText(getContext());
     final Arrow left = new Arrow(getContext(), true), right = new Arrow(getContext(), false);
     final TextView limit = Ui.text(getContext(), 14, 0xFF111111, "sans-serif-medium", Gravity.CENTER);
@@ -48,7 +48,7 @@ final class CarCard extends Cards.Card {
         addView(lights);
         addView(hello);
         addView(welcome);
-        hello.setText(Theme.text("welcomeTitle", "WELCOME"));
+        hello.setText(Theme.text("welcomeTitle", Hindi.t("WELCOME")));
         addView(left);
         addView(right);
         android.graphics.drawable.GradientDrawable sign = new android.graphics.drawable.GradientDrawable();
@@ -130,7 +130,7 @@ final class CarCard extends Cards.Card {
         }
         Prefs p = host.prefs();
         boolean learnt = p.lightSignal() != null || !"auto".equals(p.lights());
-        lights.setText(!learnt ? "LIGHTS: TAP TO SET UP" : on ? "LIGHTS ON" : "LIGHTS OFF");
+        lights.setText(Hindi.t(!learnt ? "LIGHTS: TAP TO SET UP" : on ? "LIGHTS ON" : "LIGHTS OFF"));
         lights.setTextColor(on ? Ui.SILVER : Ui.ACCENT);
         speed.setText(h.speed());
         String sp = h.speed();
@@ -138,20 +138,20 @@ final class CarCard extends Cards.Card {
         speed.setTextColor(Drive.over ? 0xFFFF5A4E : Ui.SILVER);
         limit.setText(String.valueOf(Drive.limit));
         limit.setVisibility(Drive.limit > 0 ? VISIBLE : GONE);
-        String care = Features.on(p, "care") ? Care.alert(p) : "";
+        String care = Features.on(p, "care") ? Hindi.t(Care.alert(p)) : "";
         // engine and tyre warnings come before service reminders
         if (Features.on(p, "tpms")) for (int w = 0; w < 4; w++) {
             String tw = Tpms.warning(p, w);
             if (!tw.isEmpty()) {
-                care = tw.toUpperCase(Locale.getDefault());
+                care = Hindi.t(tw).toUpperCase(Locale.getDefault());
                 break;
             }
         }
         if (Features.on(p, "obd") && Obd.connected && Obd.coolant >= p.num("obdHot", 105))
-            care = "ENGINE HOT  " + Obd.coolant + "°C";
+            care = Hindi.f("ENGINE HOT  %1$s°C", Obd.coolant);
         road.setVisibility(Ui.ROAD && Features.on(p, "road") ? VISIBLE : GONE);
         if (Drive.cameraM >= 0) {
-            camera.setText("SPEED CAMERA  " + (Drive.cameraM / 10 * 10) + " m");
+            camera.setText(Hindi.f("SPEED CAMERA  %1$s m", Drive.cameraM / 10 * 10));
             camera.setTextColor(0xFFFF5A4E);
         } else {
             camera.setText(care);

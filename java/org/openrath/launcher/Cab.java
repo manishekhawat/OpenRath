@@ -117,7 +117,7 @@ final class Cab {
 
     static String hm(long ms) {
         long m = Math.max(0, ms / 60000);
-        return m < 60 ? m + " min" : m / 60 + " h " + m % 60 + " min";
+        return m < 60 ? Hindi.f("%1$s min", m) : Hindi.f("%1$s h %2$s min", m / 60, m % 60);
     }
 
     // ================================================================== fare meter (pure part)
@@ -195,6 +195,14 @@ final class Cab {
         if (days < 0) return name + " expired " + (-days == 1 ? "yesterday" : -days + " days ago");
         if (days == 0) return name + " expires today";
         return name + " expires in " + days + (days == 1 ? " day" : " days");
+    }
+
+    /** dueText() for the screen, in the owner's language (dueText itself is also spoken). */
+    static String dueShow(String name, long days) {
+        String n = Hindi.t(name);
+        if (days < 0) return -days == 1 ? Hindi.f("%1$s expired yesterday", n) : Hindi.f("%1$s expired %2$s days ago", n, -days);
+        if (days == 0) return Hindi.f("%1$s expires today", n);
+        return days == 1 ? Hindi.f("%1$s expires in 1 day", n) : Hindi.f("%1$s expires in %2$s days", n, days);
     }
 
     // ================================================================== phrases
@@ -343,7 +351,7 @@ final class Cab {
         int target = p.num("cabTargetRs", 2000);
         if (on(p, "cabTarget") && target > 0 && before.net() < target && before.net() + rs >= target) {
             String t = "Target reached: " + rs(before.net() + rs) + " today. Well done!";
-            Toast.makeText(a, t, Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.f("Target reached: %1$s today. Well done!", rs(before.net() + rs)), Toast.LENGTH_LONG).show();
             if (!quiet) a.speak(t.replace("₹", "rupees "));
         }
     }
@@ -392,7 +400,7 @@ final class Cab {
             if (duty > 0 && warnH > 0 && h >= warnH && h > p.num("cabDutyTold", 0)) {
                 p.put("cabDutyTold", String.valueOf(h));
                 String t = "You've been on duty for " + h + " hours. Time for a proper break.";
-                Toast.makeText(c, t, Toast.LENGTH_LONG).show();
+                Toast.makeText(c, Hindi.f("You've been on duty for %1$s hours. Time for a proper break.", h), Toast.LENGTH_LONG).show();
                 if (!quiet) Speak.say(c, t, false);
             }
         }
@@ -401,14 +409,17 @@ final class Cab {
             String today = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date(now));
             if (!today.equals(p.str("cabPapersDay", "")) && now - Drive.fixAt < 600000) {
                 p.put("cabPapersDay", today);
-                List<String> due = new ArrayList<>();
+                List<String> due = new ArrayList<>(), shown = new ArrayList<>();
                 for (int i = 0; i < PAPERS.length; i++) {
                     long d = daysTo(p.str(paperKey(PAPERS[i]), ""), now);
-                    if (d != Long.MIN_VALUE && d <= 15) due.add(dueText(PAPER_NAMES[i], d));
+                    if (d != Long.MIN_VALUE && d <= 15) {
+                        due.add(dueText(PAPER_NAMES[i], d));
+                        shown.add(dueShow(PAPER_NAMES[i], d));
+                    }
                 }
                 if (!due.isEmpty()) {
                     String t = android.text.TextUtils.join(". ", due) + ".";
-                    Toast.makeText(c, t, Toast.LENGTH_LONG).show();
+                    Toast.makeText(c, android.text.TextUtils.join(". ", shown) + ".", Toast.LENGTH_LONG).show();
                     if (!quiet) Speak.say(c, t, false);
                 }
             }
@@ -431,14 +442,14 @@ final class Cab {
     static void menu(final HomeActivity a) {
         final Prefs p = a.prefs;
         if (!Features.on(p, "cab")) {
-            Toast.makeText(a, "Turn on Cab driver tools in Settings > Cab driver", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("Turn on Cab driver tools in Settings > Cab driver"), Toast.LENGTH_LONG).show();
             return;
         }
         final List<String> names = new ArrayList<>();
         final List<Runnable> acts = new ArrayList<>();
         if (on(p, "cabMeter")) {
             boolean running = p.longNum("cabMeterAt", 0) > 0;
-            names.add(running ? "Meter: " + rs(CabMeter.fareNow(p)) + "  (show it)" : "Start the fare meter");
+            names.add(running ? Hindi.f("Meter: %1$s  (show it)", rs(CabMeter.fareNow(p))) : Hindi.t("Start the fare meter"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
@@ -448,21 +459,21 @@ final class Cab {
             });
         }
         if (on(p, "cabEarnings")) {
-            names.add("Add a ride");
+            names.add(Hindi.t("Add a ride"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
                     CabEarnings.rideDialog(a, 0, 0, 0, 0, null);
                 }
             });
-            names.add("Add a cost (fuel, toll, food…)");
+            names.add(Hindi.t("Add a cost (fuel, toll, food…)"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
                     CabEarnings.costDialog(a);
                 }
             });
-            names.add("Earnings: today and this week");
+            names.add(Hindi.t("Earnings: today and this week"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
@@ -471,7 +482,7 @@ final class Cab {
             });
         }
         if (on(p, "cabApps")) {
-            names.add("Ride apps");
+            names.add(Hindi.t("Ride apps"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
@@ -480,7 +491,7 @@ final class Cab {
             });
         }
         if (on(p, "cabQuiet")) {
-            names.add(quiet ? "Quiet ride: on (tap to end)" : "Passenger in: quiet ride");
+            names.add(Hindi.t(quiet ? "Quiet ride: on (tap to end)" : "Passenger in: quiet ride"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
@@ -489,7 +500,7 @@ final class Cab {
             });
         }
         if (on(p, "cabPhrases")) {
-            names.add("Phrases for the passenger");
+            names.add(Hindi.t("Phrases for the passenger"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
@@ -498,7 +509,7 @@ final class Cab {
             });
         }
         if (on(p, "cabSpots")) {
-            names.add("Pickup hotspots now");
+            names.add(Hindi.t("Pickup hotspots now"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
@@ -507,14 +518,14 @@ final class Cab {
             });
         }
         if (on(p, "cabCng")) {
-            names.add("CNG stations near here");
+            names.add(Hindi.t("CNG stations near here"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
                     findCng(a);
                 }
             });
-            names.add("CNG fill-ups");
+            names.add(Hindi.t("CNG fill-ups"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
@@ -523,7 +534,7 @@ final class Cab {
             });
         }
         if (on(p, "cabNotes")) {
-            names.add("Ride notes and lost items");
+            names.add(Hindi.t("Ride notes and lost items"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
@@ -532,7 +543,7 @@ final class Cab {
             });
         }
         if (on(p, "cabPapers")) {
-            names.add("Papers due");
+            names.add(Hindi.t("Papers due"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
@@ -543,13 +554,13 @@ final class Cab {
         if (on(p, "cabTarget")) {
             long duty = p.longNum("cabDutyAt", 0);
             boolean onDuty = duty >= dayStart(System.currentTimeMillis());
-            names.add(onDuty ? "End duty (on for " + hm(System.currentTimeMillis() - duty) + ")" : "Start duty now");
+            names.add(onDuty ? Hindi.f("End duty (on for %1$s)", hm(System.currentTimeMillis() - duty)) : Hindi.t("Start duty now"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
                     long d = p.longNum("cabDutyAt", 0);
                     if (d >= dayStart(System.currentTimeMillis())) {
-                        Toast.makeText(a, "Duty ended after " + hm(System.currentTimeMillis() - d), Toast.LENGTH_LONG).show();
+                        Toast.makeText(a, Hindi.f("Duty ended after %1$s", hm(System.currentTimeMillis() - d)), Toast.LENGTH_LONG).show();
                         p.putLong("cabDutyAt", 0);
                         // stays ended for today unless started again from here
                         p.putLong("cabDutyEnded", System.currentTimeMillis());
@@ -562,7 +573,7 @@ final class Cab {
             });
         }
         if (on(p, "cabSos")) {
-            names.add("SOS: send my location");
+            names.add(Hindi.t("SOS: send my location"));
             acts.add(new Runnable() {
                 @Override
                 public void run() {
@@ -571,7 +582,7 @@ final class Cab {
             });
         }
         if (names.isEmpty()) {
-            Toast.makeText(a, "All the cab tools are switched off in Settings > Cab driver", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("All the cab tools are switched off in Settings > Cab driver"), Toast.LENGTH_LONG).show();
             return;
         }
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
@@ -582,13 +593,13 @@ final class Cab {
                         acts.get(w).run();
                         a.hub.notifyIfChanged(true);
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     private static String title(Prefs p) {
         long now = System.currentTimeMillis();
         Sum s = sum(log(p), dayStart(now), now + 1);
-        return "Cab  ·  today " + rs(s.net()) + " net, " + s.rides + (s.rides == 1 ? " ride" : " rides");
+        return s.rides == 1 ? Hindi.f("Cab  ·  today %1$s net, 1 ride", rs(s.net())) : Hindi.f("Cab  ·  today %1$s net, %2$s rides", rs(s.net()), s.rides);
     }
 
     // ================================================================== dialog helpers
@@ -655,19 +666,19 @@ final class Cab {
     static void rideApps(final HomeActivity a) {
         final List<String[]> apps = installedRideApps(a, a.prefs);
         if (apps.isEmpty()) {
-            Toast.makeText(a, "No ride apps found. Install Uber Driver, Ola Driver, Rapido Captain or another from the Play Store.", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("No ride apps found. Install Uber Driver, Ola Driver, Rapido Captain or another from the Play Store."), Toast.LENGTH_LONG).show();
             return;
         }
         String[] names = new String[apps.size()];
         for (int i = 0; i < names.length; i++) names[i] = apps.get(i)[0];
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Ride apps")
+                .setTitle(Hindi.t("Ride apps"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         openApp(a, apps.get(w)[1]);
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     static void openApp(HomeActivity a, String pkg) {
@@ -696,7 +707,7 @@ final class Cab {
         }
         quiet = yes;
         version++;
-        Toast.makeText(c, yes ? "Quiet ride: music down, messages not read aloud" : "Quiet ride ended", Toast.LENGTH_SHORT).show();
+        Toast.makeText(c, Hindi.t(yes ? "Quiet ride: music down, messages not read aloud" : "Quiet ride ended"), Toast.LENGTH_SHORT).show();
     }
 
     // ================================================================== phrases
@@ -709,7 +720,7 @@ final class Cab {
         for (String s : p.str("cabOwnPhrases", "").split("\n")) if (!s.trim().isEmpty()) list.add(s.trim());
         int li = java.util.Arrays.asList(LANGS).indexOf(lang);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Say to the passenger (" + LANG_NAMES[Math.max(0, li)] + ")")
+                .setTitle(Hindi.f("Say to the passenger (%1$s)", Hindi.t(LANG_NAMES[Math.max(0, li)])))
                 .setItems(list.toArray(new String[0]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -718,18 +729,18 @@ final class Cab {
                         Locale loc = own ? Locale.getDefault() : "en".equals(lang) ? new Locale("en", "IN") : new Locale(lang, "IN");
                         if (!own || !t.matches("[\\x00-\\x7F]*")) loc = own ? guess(t) : loc;
                         if (!Speak.sayIn(a, t, loc)) {
-                            Toast.makeText(a, "No " + loc.getDisplayLanguage(Locale.ENGLISH) + " voice on the unit, so here it is in English", Toast.LENGTH_LONG).show();
+                            Toast.makeText(a, Hindi.f("No %1$s voice on the unit, so here it is in English", loc.getDisplayLanguage(Locale.ENGLISH)), Toast.LENGTH_LONG).show();
                             if (!own) Speak.say(a, PHRASES[w][0], true);
                         }
                         Toast.makeText(a, t, Toast.LENGTH_LONG).show();
                     }
                 })
-                .setNeutralButton("Language", new DialogInterface.OnClickListener() {
+                .setNeutralButton(Hindi.t("Language"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                                .setTitle("Phrases in")
-                                .setItems(LANG_NAMES, new DialogInterface.OnClickListener() {
+                                .setTitle(Hindi.t("Phrases in"))
+                                .setItems(tr(LANG_NAMES), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface d2, int w2) {
                                         p.put("cabLang", LANGS[w2]);
@@ -738,14 +749,14 @@ final class Cab {
                                 }).show();
                     }
                 })
-                .setPositiveButton("Add your own", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Add your own"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         final EditText e = new EditText(a);
-                        e.setHint("Type it in any language");
+                        e.setHint(Hindi.t("Type it in any language"));
                         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                                .setTitle("Your own phrase").setView(e)
-                                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                .setTitle(Hindi.t("Your own phrase")).setView(e)
+                                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface d2, int w2) {
                                         String s = e.getText().toString().replace('\n', ' ').trim();
@@ -754,7 +765,7 @@ final class Cab {
                                         p.put("cabOwnPhrases", old.isEmpty() ? s : old + "\n" + s);
                                         phrases(a);
                                     }
-                                }).setNegativeButton("Cancel", null).show();
+                                }).setNegativeButton(Hindi.t("Cancel"), null).show();
                     }
                 }).show();
     }
@@ -782,27 +793,27 @@ final class Cab {
         final List<double[]> spots = hotspots(log(a.prefs), hour, 6);
         if (spots.isEmpty()) {
             new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                    .setTitle("Pickup hotspots")
-                    .setMessage("Not enough rides around this hour yet. Each ride you log (or meter) remembers where it started; "
-                            + "places with two or more rides around this time of day show here.")
-                    .setPositiveButton("OK", null).show();
+                    .setTitle(Hindi.t("Pickup hotspots"))
+                    .setMessage(Hindi.t("Not enough rides around this hour yet. Each ride you log (or meter) remembers where it started; "
+                            + "places with two or more rides around this time of day show here."))
+                    .setPositiveButton(Hindi.t("OK"), null).show();
             return;
         }
         String[] rows = new String[spots.size()];
         for (int i = 0; i < rows.length; i++) {
             double[] s = spots.get(i);
-            String far = Drive.latNow == 0 ? "" : String.format(Locale.US, "%.1f km away  ·  ",
-                    Geo.dist(Drive.latNow, Drive.lonNow, s[0], s[1]) / 1000);
-            rows[i] = far + Math.round(s[2]) + " rides around " + hour + ":00   (" + Rescue.where(s[0], s[1]) + ")";
+            String far = Drive.latNow == 0 ? "" : Hindi.f("%1$s km away  ·  ",
+                    String.format(Locale.US, "%.1f", Geo.dist(Drive.latNow, Drive.lonNow, s[0], s[1]) / 1000));
+            rows[i] = far + Hindi.f("%1$s rides around %2$s:00   (%3$s)", Math.round(s[2]), hour, Rescue.where(s[0], s[1]));
         }
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Where you got rides at this hour (tap to drive there)")
+                .setTitle(Hindi.t("Where you got rides at this hour (tap to drive there)"))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         a.navigate(spots.get(w)[0], spots.get(w)[1], "Pickup hotspot");
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     // ================================================================== CNG
@@ -813,7 +824,7 @@ final class Cab {
         try {
             a.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(q)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         } catch (Exception e) {
-            Toast.makeText(a, "Needs a map app (Google Maps, Organic Maps or OsmAnd)", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("Needs a map app (Google Maps, Organic Maps or OsmAnd)"), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -854,33 +865,33 @@ final class Cab {
             rows[i] = f.format(new Date(e.optLong("t"))) + "   " + Fuel.fmt(e.optDouble("kg")) + " kg   " + rs(e.optDouble("rs"))
                     + "   " + Math.round(e.optDouble("odo")) + " km";
         }
-        String head = st[1] > 0 ? "CNG  ·  " + Fuel.fmt(st[1]) + " km/kg average, " + Fuel.fmt(st[0]) + " last, ₹" + Fuel.fmt(st[2]) + " a km"
-                : rows.length == 0 ? "No CNG fills yet" : "CNG  ·  km/kg shows after two fills";
+        String head = st[1] > 0 ? Hindi.f("CNG  ·  %1$s km/kg average, %2$s last, ₹%3$s a km", Fuel.fmt(st[1]), Fuel.fmt(st[0]), Fuel.fmt(st[2]))
+                : Hindi.t(rows.length == 0 ? "No CNG fills yet" : "CNG  ·  km/kg shows after two fills");
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(head)
                 .setItems(rows, null)
-                .setPositiveButton("Add a fill", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Add a fill"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         addCng(a);
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     static void addCng(final HomeActivity a) {
         final Prefs p = a.prefs;
         LinearLayout box = box(a);
-        final EditText kg = number(box, "Kg", null);
-        final EditText rupees = number(box, "Amount paid (₹)", null);
-        final EditText odo = number(box, "Odometer (km)", String.valueOf(Care.odo(p)));
+        final EditText kg = number(box, Hindi.t("Kg"), null);
+        final EditText rupees = number(box, Hindi.t("Amount paid (₹)"), null);
+        final EditText odo = number(box, Hindi.t("Odometer (km)"), String.valueOf(Care.odo(p)));
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Add a CNG fill").setView(box)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setTitle(Hindi.t("Add a CNG fill")).setView(box)
+                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         double k = num(kg), r = num(rupees), o = num(odo);
                         if (k <= 0 || o <= 0) {
-                            Toast.makeText(a, "Enter the kg and the odometer as numbers", Toast.LENGTH_LONG).show();
+                            Toast.makeText(a, Hindi.t("Enter the kg and the odometer as numbers"), Toast.LENGTH_LONG).show();
                             return;
                         }
                         try {
@@ -898,7 +909,7 @@ final class Cab {
                         if (r > 0 && on(p, "cabEarnings")) addCost(p, r, "CNG");
                         a.hub.notifyIfChanged(true);
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     // ================================================================== notes and lost items
@@ -934,43 +945,43 @@ final class Cab {
             rows[i] = f.format(new Date(o.optLong("t"))) + "   " + (o.has("photo") ? "📷 " : "") + o.optString("text");
         }
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(rows.length == 0 ? "No notes yet" : "Ride notes")
+                .setTitle(Hindi.t(rows.length == 0 ? "No notes yet" : "Ride notes"))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         showNote(a, l.length() - 1 - w);
                     }
                 })
-                .setPositiveButton("Lost item photo", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Lost item photo"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         lostItem(a);
                     }
                 })
-                .setNeutralButton("Add a note", new DialogInterface.OnClickListener() {
+                .setNeutralButton(Hindi.t("Add a note"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         noteText(a, "", null);
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     private static void noteText(final HomeActivity a, String start, final String photo) {
         final EditText e = new EditText(a);
-        e.setHint("Passenger's name, what was left, a phone number…");
+        e.setHint(Hindi.t("Passenger's name, what was left, a phone number…"));
         e.setText(start);
         e.setSelection(start.length());
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(photo == null ? "Note" : "What was left, and by whom?").setView(e)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setTitle(Hindi.t(photo == null ? "Note" : "What was left, and by whom?")).setView(e)
+                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         String s = e.getText().toString().trim();
                         if (s.isEmpty() && photo == null) return;
-                        addNote(a.prefs, s.isEmpty() ? "Left in the car" : s, photo);
-                        Toast.makeText(a, "Saved in Ride notes", Toast.LENGTH_SHORT).show();
+                        addNote(a.prefs, s.isEmpty() ? Hindi.t("Left in the car") : s, photo);
+                        Toast.makeText(a, Hindi.t("Saved in Ride notes"), Toast.LENGTH_SHORT).show();
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     static void lostItem(final HomeActivity a) {
@@ -978,12 +989,12 @@ final class Cab {
         boolean shooting = Snap.photo(a, a.prefs, f, new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(a, "Photo saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(a, Hindi.t("Photo saved"), Toast.LENGTH_SHORT).show();
             }
         });
-        if (!shooting) Toast.makeText(a, "No camera free for a photo, so it's a note only", Toast.LENGTH_LONG).show();
-        else Toast.makeText(a, "Taking a photo with the car's camera…", Toast.LENGTH_SHORT).show();
-        noteText(a, "Left in the car: ", shooting ? f.getPath() : null);
+        if (!shooting) Toast.makeText(a, Hindi.t("No camera free for a photo, so it's a note only"), Toast.LENGTH_LONG).show();
+        else Toast.makeText(a, Hindi.t("Taking a photo with the car's camera…"), Toast.LENGTH_SHORT).show();
+        noteText(a, Hindi.t("Left in the car: "), shooting ? f.getPath() : null);
     }
 
     private static void showNote(final HomeActivity a, final int index) {
@@ -1007,8 +1018,8 @@ final class Cab {
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(new SimpleDateFormat("d MMM yyyy, HH:mm", Locale.getDefault()).format(new Date(o.optLong("t"))))
                 .setView(box)
-                .setPositiveButton("Close", null)
-                .setNeutralButton("Delete", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Close"), null)
+                .setNeutralButton(Hindi.t("Delete"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         JSONArray l = notesList(p), out = new JSONArray();
@@ -1026,11 +1037,11 @@ final class Cab {
         String[] rows = new String[PAPERS.length];
         for (int i = 0; i < rows.length; i++) {
             long d = daysTo(p.str(paperKey(PAPERS[i]), ""), now);
-            rows[i] = d == Long.MIN_VALUE ? PAPER_NAMES[i] + ": tap to set the expiry date" : dueText(PAPER_NAMES[i], d)
+            rows[i] = d == Long.MIN_VALUE ? Hindi.f("%1$s: tap to set the expiry date", Hindi.t(PAPER_NAMES[i])) : dueShow(PAPER_NAMES[i], d)
                     + "  (" + p.str(paperKey(PAPERS[i]), "") + ")";
         }
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Papers (reminded 15 days ahead)")
+                .setTitle(Hindi.t("Papers (reminded 15 days ahead)"))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, final int w) {
@@ -1045,7 +1056,14 @@ final class Cab {
                             }
                         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
+    }
+
+    /** A list of English words, each in the owner's language, for a dialog. */
+    static String[] tr(String[] en) {
+        String[] out = new String[en.length];
+        for (int i = 0; i < en.length; i++) out[i] = Hindi.t(en[i]);
+        return out;
     }
 
     private Cab() {

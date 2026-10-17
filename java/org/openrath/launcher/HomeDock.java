@@ -50,7 +50,7 @@ final class HomeDock {
                     if (pkg == null) pickWideApp(a, slot);
                     else {
                         if (ChildLock.blocked(a.prefs, pkg)) {
-                            Toast.makeText(a, ChildLock.SORRY, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(a, Hindi.t(ChildLock.SORRY), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         Intent in = a.getPackageManager().getLaunchIntentForPackage(pkg);
@@ -103,7 +103,7 @@ final class HomeDock {
     }
 
     private static void pickWideApp(final HomeActivity a, final int slot) {
-        AppPicker.show(a, "App for the bar", new AppPicker.Picked() {
+        AppPicker.show(a, Hindi.t("App for the bar"), new AppPicker.Picked() {
             @Override
             public void picked(String pkg) {
                 java.util.List<String> l = wideApps(a);
@@ -154,7 +154,7 @@ final class HomeDock {
                         return true;
                     }
                     final String key = dockKey(name);
-                    AppPicker.show(a, "App for " + label, new AppPicker.Picked() {
+                    AppPicker.show(a, Hindi.f("App for %1$s", Hindi.t(label)), new AppPicker.Picked() {
                         @Override
                         public void picked(String pkg) {
                             a.prefs.setApp(key, pkg);

@@ -127,10 +127,11 @@ final class Fuel {
     /** Where the price comes from, for Settings. */
     static String priceText(Prefs p) {
         double v = price(p);
-        if (v <= 0) return "not known yet: add a fill-up with the amount paid, or tap to enter it";
+        if (v <= 0) return Hindi.t("not known yet: add a fill-up with the amount paid, or tap to enter it");
         boolean own = !"0".equals(p.str("fuelPrice", "0")) && !p.str("fuelPrice", "0").isEmpty();
         String city = p.str("city", "");
-        return "₹" + fmt(v) + " a litre" + (own ? " (your figure)" : " (from your fill-ups" + (city.isEmpty() ? "" : ", " + city) + ")");
+        return own ? Hindi.f("₹%1$s a litre (your figure)", fmt(v)) : city.isEmpty() ? Hindi.f("₹%1$s a litre (from your fill-ups)", fmt(v))
+                : Hindi.f("₹%1$s a litre (from your fill-ups, %2$s)", fmt(v), city);
     }
 
     /** Petrol cost of driving this far, at the average mileage and today's price; 0 when unknown. */
@@ -154,18 +155,18 @@ final class Fuel {
         box.setOrientation(LinearLayout.VERTICAL);
         int pad = (int) (20 * a.getResources().getDisplayMetrics().density);
         box.setPadding(pad, pad / 2, pad, 0);
-        final EditText litres = field(a, box, "Litres", "");
+        final EditText litres = field(a, box, Hindi.t("Litres"), "");
         double pr = price(p);
-        final EditText rupees = field(a, box, pr > 0 ? "Amount paid (₹), or leave empty for ₹" + fmt(pr) + " a litre" : "Amount paid (₹)", "");
-        final EditText odo = field(a, box, "Odometer (km)", String.valueOf((long) suggestOdo(p)));
+        final EditText rupees = field(a, box, pr > 0 ? Hindi.f("Amount paid (₹), or leave empty for ₹%1$s a litre", fmt(pr)) : Hindi.t("Amount paid (₹)"), "");
+        final EditText odo = field(a, box, Hindi.t("Odometer (km)"), String.valueOf((long) suggestOdo(p)));
         final CheckBox full = new CheckBox(a);
-        full.setText("Filled the tank to full");
+        full.setText(Hindi.t("Filled the tank to full"));
         full.setChecked(true);
         box.addView(full);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Add a fill-up")
+                .setTitle(Hindi.t("Add a fill-up"))
                 .setView(box)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         try {
@@ -186,14 +187,14 @@ final class Fuel {
                             if (full.isChecked() && Features.on(p, "fuelCheck")) {
                                 String warn = Errands.fuelDrop(fullTankKmpl(l));
                                 if (warn != null) new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                                        .setTitle("Mileage dropped").setMessage(warn).setPositiveButton("OK", null).show();
+                                        .setTitle(Hindi.t("Mileage dropped")).setMessage(warn).setPositiveButton(Hindi.t("OK"), null).show();
                             }
                         } catch (Exception ex) {
-                            android.widget.Toast.makeText(a, "Enter the litres and the odometer as numbers", android.widget.Toast.LENGTH_LONG).show();
+                            android.widget.Toast.makeText(a, Hindi.t("Enter the litres and the odometer as numbers"), android.widget.Toast.LENGTH_LONG).show();
                         }
                     }
                 })
-                .setNegativeButton("Cancel", null).show();
+                .setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static EditText field(Activity a, LinearLayout box, String label, String value) {
@@ -214,16 +215,16 @@ final class Fuel {
         for (int i = 0; i < rows.length; i++) {
             JSONObject e = l.optJSONObject(l.length() - 1 - i);
             rows[i] = f.format(new Date(e.optLong("t"))) + "   " + fmt(e.optDouble("l")) + " L   ₹" + Math.round(e.optDouble("rs"))
-                    + "   " + Math.round(e.optDouble("odo")) + " km" + (e.optBoolean("full", true) ? "" : "   (part fill)");
+                    + "   " + Math.round(e.optDouble("odo")) + " km" + (e.optBoolean("full", true) ? "" : "   " + Hindi.t("(part fill)"));
         }
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(rows.length == 0 ? "No fill-ups yet" : "Fill-ups (tap one to delete it)")
+                .setTitle(rows.length == 0 ? Hindi.t("No fill-ups yet") : Hindi.t("Fill-ups (tap one to delete it)"))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, final int which) {
                         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                                .setMessage("Delete this fill-up?")
-                                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                                .setMessage(Hindi.t("Delete this fill-up?"))
+                                .setPositiveButton(Hindi.t("Delete"), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface d2, int w) {
                                         JSONArray out = new JSONArray();
@@ -233,16 +234,16 @@ final class Fuel {
                                         changed.run();
                                     }
                                 })
-                                .setNegativeButton("Keep", null).show();
+                                .setNegativeButton(Hindi.t("Keep"), null).show();
                     }
                 })
-                .setPositiveButton("Add a fill-up", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Add a fill-up"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         add(a, p, changed);
                     }
                 })
-                .setNegativeButton("Close", null).show();
+                .setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     static String fmt(double v) {

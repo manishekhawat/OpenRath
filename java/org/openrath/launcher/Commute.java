@@ -118,27 +118,27 @@ final class Commute {
     }
 
     static String describe(List<Route> routes) {
-        if (routes.isEmpty()) return "Not enough drives yet. After three or more drives between the same two places, "
-                + "this shows how long the drive takes depending on when you leave.";
+        if (routes.isEmpty()) return Hindi.t("Not enough drives yet. After three or more drives between the same two places, "
+                + "this shows how long the drive takes depending on when you leave.");
         StringBuilder s = new StringBuilder();
         for (Route r : routes) {
             if (s.length() > 0) s.append("\n\n");
-            s.append(String.format(Locale.US, "%s to %s: %d drives, about %.0f km", r.from, r.to, r.trips, r.km));
+            s.append(Hindi.f("%1$s to %2$s: %3$s drives, about %4$s km", Hindi.t(r.from), Hindi.t(r.to), r.trips, String.format(Locale.US, "%.0f", r.km)));
             for (Map.Entry<Integer, long[]> e : r.slots.entrySet()) {
                 long[] v = e.getValue();
-                s.append(String.format(Locale.US, "\n• Leaving %s–%s: %d min on average (%d %s)", time(e.getKey()),
-                        time(e.getKey() + 30), Math.round((double) v[0] / v[1]), v[1], v[1] == 1 ? "drive" : "drives"));
+                s.append("\n• ").append(Hindi.f(v[1] == 1 ? "Leaving %1$s–%2$s: %3$s min on average (%4$s drive)" : "Leaving %1$s–%2$s: %3$s min on average (%4$s drives)",
+                        time(e.getKey()), time(e.getKey() + 30), Math.round((double) v[0] / v[1]), v[1]));
             }
-            if (r.best >= 0) s.append("\nQuickest: leave between ").append(time(r.best)).append(" and ").append(time(r.best + 30)).append('.');
+            if (r.best >= 0) s.append('\n').append(Hindi.f("Quickest: leave between %1$s and %2$s.", time(r.best), time(r.best + 30)));
         }
         return s.toString();
     }
 
     static void show(Activity a, Prefs p) {
         String text = describe(learn(Coach.trips(p), places(p), java.util.TimeZone.getDefault()));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Commute insights")
-                .setMessage(text + "\n\nSave Home and Office on the map (the star) to see them named here.")
-                .setPositiveButton("OK", null).show();
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Commute insights"))
+                .setMessage(text + "\n\n" + Hindi.t("Save Home and Office on the map (the star) to see them named here."))
+                .setPositiveButton(Hindi.t("OK"), null).show();
     }
 
     private Commute() {

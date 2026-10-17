@@ -19,16 +19,16 @@ final class HomeDialogs {
         if (!HomeActivity.visible || !OverMic.wanted(a.prefs) || OverMic.allowed(a) || "yes".equals(a.prefs.str("overlayAsked", ""))) return;
         a.prefs.put("overlayAsked", "yes");
         new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Mic over other apps")
-                .setMessage("To keep the floating mic on top of maps and music, Android needs you to allow "
+                .setTitle(Hindi.t("Mic over other apps"))
+                .setMessage(Hindi.t("To keep the floating mic on top of maps and music, Android needs you to allow "
                         + "\"Display over other apps\" for OpenRath on the next page. You can turn the mic over other apps "
-                        + "off in Settings > Features.")
-                .setPositiveButton("Allow", new android.content.DialogInterface.OnClickListener() {
+                        + "off in Settings > Features."))
+                .setPositiveButton(Hindi.t("Allow"), new android.content.DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(android.content.DialogInterface d, int w) {
                         OverMic.ask(a);
                     }
-                }).setNegativeButton("Not now", null).show();
+                }).setNegativeButton(Hindi.t("Not now"), null).show();
     }
 
     /** First start: pick the unit's own radio app, so the radio box and dock button just work. */
@@ -67,19 +67,20 @@ final class HomeDialogs {
         final String[] mine = a.prefs.str("myService", "").split("\\|", -1);
         final boolean have = mine.length == 2 && !mine[1].isEmpty();
         long k = Care.kmLeft(a.prefs, i);
-        String when = k < 0 ? "is overdue by " + (-k) + " km" : "is due in " + k + " km";
+        String what = Hindi.t(Care.NAMES[i]);
+        String when = k < 0 ? Hindi.f("%1$s is overdue by %2$s km.", what, String.valueOf(-k)) : Hindi.f("%1$s is due in %2$s km.", what, String.valueOf(k));
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Book the service?")
-                .setMessage(Care.NAMES[i] + " " + when + "." + (have ? " Call " + mine[0] + " to book a slot?"
-                        : " Find your service centre on the map and tap Mine next to it, so next time it's one tap to call."))
-                .setPositiveButton(have ? "Call" : "Find one", new DialogInterface.OnClickListener() {
+                .setTitle(Hindi.t("Book the service?"))
+                .setMessage(when + (have ? Hindi.f(" Call %1$s to book a slot?", mine[0])
+                        : Hindi.t(" Find your service centre on the map and tap Mine next to it, so next time it's one tap to call.")))
+                .setPositiveButton(have ? Hindi.t("Call") : Hindi.t("Find one"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         if (have) a.call(mine[1]);
                         else HomeVoice.run(a, new Voice.Command("service", ""));
                     }
                 })
-                .setNegativeButton("Later", null).show();
+                .setNegativeButton(Hindi.t("Later"), null).show();
     }
 
     /** Once: ask for notification access, which is what lets the boxes see the track and play state. */
@@ -88,20 +89,20 @@ final class HomeDialogs {
         if (a.hub.mediaAccess || sp.getBoolean("askedTrackInfo", false)) return;
         sp.edit().putBoolean("askedTrackInfo", true).apply();
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Show what's playing")
-                .setMessage("To show the station, the track and the right play or pause button, OpenRath needs "
-                        + "notification access. On the next screen, turn on OpenRath.")
-                .setPositiveButton("Open", new DialogInterface.OnClickListener() {
+                .setTitle(Hindi.t("Show what's playing"))
+                .setMessage(Hindi.t("To show the station, the track and the right play or pause button, OpenRath needs "
+                        + "notification access. On the next screen, turn on OpenRath."))
+                .setPositiveButton(Hindi.t("Open"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         try {
                             a.startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
                         } catch (Exception e) {
-                            Toast.makeText(a, "This unit has no notification access screen", Toast.LENGTH_LONG).show();
+                            Toast.makeText(a, Hindi.t("This unit has no notification access screen"), Toast.LENGTH_LONG).show();
                         }
                     }
                 })
-                .setNegativeButton("Not now", null).show();
+                .setNegativeButton(Hindi.t("Not now"), null).show();
     }
 
     /** Long-press on a box: what it shows, and the way to all settings. */
@@ -122,15 +123,15 @@ final class HomeDialogs {
         }
         String cur = a.prefs.slot(slot);
         String[] items = new String[Prefs.CONTENTS.length + 2];
-        items[0] = "      Choose a widget from another app…";
+        items[0] = "      " + Hindi.t("Choose a widget from another app…");
         for (int i = 0; i < Prefs.CONTENTS.length; i++) {
-            items[i + 1] = (Prefs.CONTENTS[i].equals(cur) ? "✓  " : "      ") + "Show " + Prefs.CONTENT_NAMES[i].toLowerCase() + " here";
+            items[i + 1] = (Prefs.CONTENTS[i].equals(cur) ? "✓  " : "      ") + Hindi.f("Show %1$s here", Hindi.t(Prefs.CONTENT_NAMES[i]).toLowerCase());
         }
-        items[items.length - 1] = "      All settings…";
+        items[items.length - 1] = "      " + Hindi.t("All settings…");
         items = java.util.Arrays.copyOf(items, items.length + 1);
-        items[items.length - 1] = "      Move boxes (drag and drop)…";
+        items[items.length - 1] = "      " + Hindi.t("Move boxes (drag and drop)…");
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(slotName(a, slot))
+                .setTitle(Hindi.t(slotName(a, slot)))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int which) {
@@ -146,7 +147,7 @@ final class HomeDialogs {
                         }
                     }
                 })
-                .setNegativeButton("Close", null)
+                .setNegativeButton(Hindi.t("Close"), null)
                 .show();
     }
 
@@ -168,27 +169,25 @@ final class HomeDialogs {
 
     static String slotName(final HomeActivity a, int slot) {
         boolean left = (slot < 3) != a.prefs.swapped();
-        String side = left ? "left" : "right";
-        if (slot == 0) return "Big box, " + side;
-        if (slot == 1) return "Middle box, " + side;
-        if (slot == 2) return "Bottom box, " + side;
-        if (slot == 3) return "Big box, " + side;
-        return "Bottom box, " + side;
+        // whole names, so Settings and the box menu can look each one up in the translations
+        if (slot == 0 || slot == 3) return left ? "Big box, left" : "Big box, right";
+        if (slot == 1) return left ? "Middle box, left" : "Middle box, right";
+        return left ? "Bottom box, left" : "Bottom box, right";
     }
 
     /** Android 11+, once: the OpenRath folder (themes, backups, music, dashcam) needs all-files access. */
     static boolean askAllFiles(final HomeActivity a) {
         if (!a.prefs.str("askedAllFiles", "").isEmpty() || !Compat.needsAllFiles()) return false;
         a.prefs.put("askedAllFiles", "yes");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Allow the OpenRath folder")
-                .setMessage("On this Android version OpenRath needs \"Allow access to manage all files\" to keep its backups, "
-                        + "themes, dashcam clips and documents in the OpenRath folder, and to find music on USB sticks.")
-                .setPositiveButton("Open the setting", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Allow the OpenRath folder"))
+                .setMessage(Hindi.t("On this Android version OpenRath needs \"Allow access to manage all files\" to keep its backups, "
+                        + "themes, dashcam clips and documents in the OpenRath folder, and to find music on USB sticks."))
+                .setPositiveButton(Hindi.t("Open the setting"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         Compat.askAllFiles(a);
                     }
-                }).setNegativeButton("Not now", null).show();
+                }).setNegativeButton(Hindi.t("Not now"), null).show();
         return true;
     }
 
@@ -196,15 +195,15 @@ final class HomeDialogs {
     static boolean askVoice(final HomeActivity a) {
         if (!a.prefs.str("askedVoice", "").isEmpty() || !Speak.engines(a).isEmpty()) return false;
         a.prefs.put("askedVoice", "yes");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Get a spoken voice")
-                .setMessage("This stereo has no text-to-speech voice, so OpenRath can't speak alerts, turns or the news. "
-                        + "Get \"Speech Services by Google\" (free) from the Play Store? Later: Settings > Map and navigation > Spoken voice.")
-                .setPositiveButton("Open the Play Store", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Get a spoken voice"))
+                .setMessage(Hindi.t("This stereo has no text-to-speech voice, so OpenRath can't speak alerts, turns or the news. "
+                        + "Get \"Speech Services by Google\" (free) from the Play Store? Later: Settings > Map and navigation > Spoken voice."))
+                .setPositiveButton(Hindi.t("Open the Play Store"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         Speak.getVoice(a);
                     }
-                }).setNegativeButton("Not now", null).show();
+                }).setNegativeButton(Hindi.t("Not now"), null).show();
         return true;
     }
 

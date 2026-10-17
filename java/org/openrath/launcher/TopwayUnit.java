@@ -65,7 +65,7 @@ final class TopwayUnit extends Unit {
 
     @Override
     String phoneDown() {
-        return xt() == null ? "Topway's phone service isn't connected" : null;
+        return xt() == null ? Hindi.t("Topway's phone service isn't connected") : null;
     }
 
     @Override
@@ -152,7 +152,7 @@ final class TopwayUnit extends Unit {
             Tuner.readName();
             s.title = (Tuner.freqText().isEmpty() ? p.fmFreq() : Tuner.freqText()) + "  FM";
             s.playing = Tuner.on;
-            s.sub = !note.isEmpty() && Tuner.on ? note : !Tuner.name.isEmpty() ? Tuner.name : Tuner.on ? "FM radio" : "Tap play to listen";
+            s.sub = !note.isEmpty() && Tuner.on ? note : !Tuner.name.isEmpty() ? Tuner.name : Tuner.on ? Hindi.t("FM radio") : Hindi.t("Tap play to listen");
             return s;
         }
         Xt xt = xt();
@@ -163,20 +163,20 @@ final class TopwayUnit extends Unit {
             String now = Scan.freq(xt);
             if (!now.isEmpty() && !now.equals(p.fmFreq())) p.setFmFreq(now);
             String shown = xt.display(p.fmFreq());
-            s.title = shown.isEmpty() ? "FM radio" : shown.startsWith("Seek") ? shown : shown + "  FM";
+            s.title = shown.isEmpty() ? Hindi.t("FM radio") : shown.startsWith("Seek") ? shown : shown + "  FM";
             s.playing = xt.playing;
             boolean on = xt.playing != null ? xt.playing : localOn;
-            s.sub = !note.isEmpty() && on ? note : !xt.name.isEmpty() ? xt.name : on ? "FM radio" : "Tap play to listen";
+            s.sub = !note.isEmpty() && on ? note : !xt.name.isEmpty() ? xt.name : on ? Hindi.t("FM radio") : Hindi.t("Tap play to listen");
             return s;
         }
         if (fm == null) {
-            s.sub = !note.isEmpty() ? note : "Tap play to start the radio";
+            s.sub = !note.isEmpty() ? note : Hindi.t("Tap play to start the radio");
             return s;
         }
         String f = fm.frequency();
-        s.title = f.isEmpty() ? "FM radio" : f + (fm.band == 2 ? "" : "  FM");
-        s.sub = !note.isEmpty() && !fm.seen ? note : !fm.seen ? "Tap play to switch the tuner on" : !fm.name.isEmpty() ? fm.name
-                : fm.on ? "Playing" : "Tap play to listen";
+        s.title = f.isEmpty() ? Hindi.t("FM radio") : f + (fm.band == 2 ? "" : "  FM");
+        s.sub = !note.isEmpty() && !fm.seen ? note : !fm.seen ? Hindi.t("Tap play to switch the tuner on") : !fm.name.isEmpty() ? fm.name
+                : fm.on ? Hindi.t("Playing") : Hindi.t("Tap play to listen");
         s.playing = fm.on;
         return s;
     }

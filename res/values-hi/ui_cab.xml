@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hindi for the cab driver tools, family and car screens. Machine-drafted: a native speaker should check it (docs/TRANSLATING.md). -->
+<resources>
+    <string name="ui_cab_min" formatted="false">%1$s मिनट</string>
+    <string name="ui_cab_h_min" formatted="false">%1$s घंटे %2$s मिनट</string>
+    <string name="ui_cab_expired_yesterday" formatted="false">%1$s की मियाद कल ख़त्म हो गई</string>
+    <string name="ui_cab_expired_days_ago" formatted="false">%1$s की मियाद %2$s दिन पहले ख़त्म हो गई</string>
+    <string name="ui_cab_expires_today" formatted="false">%1$s की मियाद आज ख़त्म</string>
+    <string name="ui_cab_expires_in_1_day" formatted="false">%1$s की मियाद 1 दिन में ख़त्म</string>
+    <string name="ui_cab_expires_in_days" formatted="false">%1$s की मियाद %2$s दिन में ख़त्म</string>
+    <string name="ui_cab_target_reached_today_well_done" formatted="false">टारगेट पूरा: आज %1$s। शाबाश!</string>
+    <string name="ui_cab_you_ve_been_on_duty_for_hours_time_for_a" formatted="false">आप %1$s घंटे से ड्यूटी पर हैं। अब ठीक से आराम कर लीजिए।</string>
+    <string name="ui_cab_turn_on_cab_driver_tools_in_settings_cab" formatted="false">Settings &gt; कैब ड्राइवर में कैब ड्राइवर टूल चालू करें</string>
+    <string name="ui_cab_meter_show_it" formatted="false">"मीटर: %1$s  (दिखाएँ)"</string>
+    <string name="ui_cab_start_the_fare_meter" formatted="false">किराया मीटर शुरू करें</string>
+    <string name="ui_cab_add_a_ride" formatted="false">सवारी जोड़ें</string>
+    <string name="ui_cab_add_a_cost_fuel_toll_food" formatted="false">ख़र्च जोड़ें (ईंधन, टोल, खाना…)</string>
+    <string name="ui_cab_earnings_today_and_this_week" formatted="false">कमाई: आज और इस हफ़्ते</string>
+    <string name="ui_cab_ride_apps" formatted="false">राइड ऐप</string>
+    <string name="ui_cab_quiet_ride_on_tap_to_end" formatted="false">शांत सवारी: चालू (बंद करने के लिए टैप करें)</string>
+    <string name="ui_cab_passenger_in_quiet_ride" formatted="false">सवारी बैठी: शांत सवारी</string>
+    <string name="ui_cab_phrases_for_the_passenger" formatted="false">सवारी के लिए वाक्य</string>
+    <string name="ui_cab_pickup_hotspots_now" formatted="false">अभी सवारी मिलने की जगहें</string>
+    <string name="ui_cab_cng_stations_near_here" formatted="false">पास के CNG स्टेशन</string>
+    <string name="ui_cab_cng_fill_ups" formatted="false">CNG भराई</string>
+    <string name="ui_cab_ride_notes_and_lost_items" formatted="false">सवारी नोट और छूटा सामान</string>
+    <string name="ui_cab_papers_due" formatted="false">काग़ज़ों की मियाद</string>
+    <string name="ui_cab_end_duty_on_for" formatted="false">ड्यूटी ख़त्म करें (%1$s से चालू)</string>
+    <string name="ui_cab_start_duty_now" formatted="false">अभी ड्यूटी शुरू करें</string>
+    <string name="ui_cab_duty_ended_after" formatted="false">%1$s बाद ड्यूटी ख़त्म</string>
+    <string name="ui_cab_sos_send_my_location" formatted="false">SOS: मेरी लोकेशन भेजें</string>
+    <string name="ui_cab_all_the_cab_tools_are_switched_off_in_se" formatted="false">Settings &gt; कैब ड्राइवर में सारे कैब टूल बंद हैं</string>
+    <string name="ui_cab_close" formatted="false">बंद करें</string>
+    <string name="ui_cab_cab_today_net_1_ride" formatted="false">"कैब  ·  आज %1$s शुद्ध, 1 सवारी"</string>
+    <string name="ui_cab_cab_today_net_rides" formatted="false">"कैब  ·  आज %1$s शुद्ध, %2$s सवारियाँ"</string>
+    <string name="ui_cab_no_ride_apps_found_install_uber_driver_o" formatted="false">कोई राइड ऐप नहीं मिला। Play Store से Uber Driver, Ola Driver, Rapido Captain या कोई और इंस्टॉल करें।</string>
+    <string name="ui_cab_quiet_ride_music_down_messages_not_read" formatted="false">शांत सवारी: गाने धीमे, मैसेज पढ़कर नहीं सुनाए जाएँगे</string>
+    <string name="ui_cab_quiet_ride_ended" formatted="false">शांत सवारी ख़त्म</string>
+    <string name="ui_cab_say_to_the_passenger" formatted="false">सवारी से कहें (%1$s)</string>
+    <string name="ui_cab_no_voice_on_the_unit_so_here_it_is_in_en" formatted="false">यूनिट में %1$s आवाज़ नहीं है, इसलिए अंग्रेज़ी में</string>
+    <string name="ui_cab_language" formatted="false">भाषा</string>
+    <string name="ui_cab_phrases_in" formatted="false">वाक्यों की भाषा</string>
+    <string name="ui_cab_add_your_own" formatted="false">अपना जोड़ें</string>
+    <string name="ui_cab_type_it_in_any_language" formatted="false">किसी भी भाषा में लिखें</string>
+    <string name="ui_cab_your_own_phrase" formatted="false">आपका अपना वाक्य</string>
+    <string name="ui_cab_save" formatted="false">सेव करें</string>
+    <string name="ui_cab_cancel" formatted="false">रद्द करें</string>
+    <string name="ui_cab_pickup_hotspots" formatted="false">सवारी मिलने की जगहें</string>
+    <string name="ui_cab_not_enough_rides_around_this_hour_yet_ea" formatted="false">इस समय की अभी काफ़ी सवारियाँ नहीं हैं। हर दर्ज (या मीटर वाली) सवारी याद रखती है कि वह कहाँ से शुरू हुई; दिन के इस समय जिन जगहों पर दो या ज़्यादा सवारियाँ मिलीं, वे यहाँ दिखेंगी।</string>
+    <string name="ui_cab_ok" formatted="false">ठीक है</string>
+    <string name="ui_cab_km_away" formatted="false">"%1$s km दूर  ·  "</string>
+    <string name="ui_cab_rides_around_00" formatted="false">"%2$s:00 के आसपास %1$s सवारियाँ   (%3$s)"</string>
+    <string name="ui_cab_where_you_got_rides_at_this_hour_tap_to" formatted="false">इस समय आपको सवारी कहाँ मिली (वहाँ जाने के लिए टैप करें)</string>
+    <string name="ui_cab_needs_a_map_app_google_maps_organic_maps" formatted="false">मैप ऐप चाहिए (Google Maps, Organic Maps या OsmAnd)</string>
+    <string name="ui_cab_cng_km_kg_average_last_a_km" formatted="false">"CNG  ·  औसत %1$s km/kg, पिछली बार %2$s, ₹%3$s प्रति km"</string>
+    <string name="ui_cab_no_cng_fills_yet" formatted="false">अभी कोई CNG भराई नहीं</string>
+    <string name="ui_cab_cng_km_kg_shows_after_two_fills" formatted="false">"CNG  ·  दो भराई के बाद km/kg दिखेगा"</string>
+    <string name="ui_cab_add_a_fill" formatted="false">भराई जोड़ें</string>
+    <string name="ui_cab_kg" formatted="false">किलो</string>
+    <string name="ui_cab_amount_paid" formatted="false">दी गई रक़म (₹)</string>
+    <string name="ui_cab_odometer_km" formatted="false">ओडोमीटर (km)</string>
+    <string name="ui_cab_add_a_cng_fill" formatted="false">CNG भराई जोड़ें</string>
+    <string name="ui_cab_enter_the_kg_and_the_odometer_as_numbers" formatted="false">किलो और ओडोमीटर अंकों में भरें</string>
+    <string name="ui_cab_no_notes_yet" formatted="false">अभी कोई नोट नहीं</string>
+    <string name="ui_cab_ride_notes" formatted="false">सवारी नोट</string>
+    <string name="ui_cab_lost_item_photo" formatted="false">छूटे सामान की फ़ोटो</string>
+    <string name="ui_cab_add_a_note" formatted="false">नोट जोड़ें</string>
+    <string name="ui_cab_passenger_s_name_what_was_left_a_phone_n" formatted="false">सवारी का नाम, क्या छूटा, फ़ोन नंबर…</string>
+    <string name="ui_cab_note" formatted="false">नोट</string>
+    <string name="ui_cab_what_was_left_and_by_whom" formatted="false">क्या छूटा, और किसका?</string>
+    <string name="ui_cab_left_in_the_car" formatted="false">कार में छूटा</string>
+    <string name="ui_cab_saved_in_ride_notes" formatted="false">सवारी नोट में सेव हो गया</string>
+    <string name="ui_cab_photo_saved" formatted="false">फ़ोटो सेव हो गई</string>
+    <string name="ui_cab_no_camera_free_for_a_photo_so_it_s_a_not" formatted="false">फ़ोटो के लिए कैमरा ख़ाली नहीं, इसलिए सिर्फ़ नोट</string>
+    <string name="ui_cab_taking_a_photo_with_the_car_s_camera" formatted="false">कार के कैमरे से फ़ोटो ले रहे हैं…</string>
+    <string name="ui_cab_left_in_the_car_2" formatted="false">"कार में छूटा: "</string>
+    <string name="ui_cab_delete" formatted="false">मिटाएँ</string>
+    <string name="ui_cab_tap_to_set_the_expiry_date" formatted="false">%1$s: मियाद की तारीख़ डालने के लिए टैप करें</string>
+    <string name="ui_cab_papers_reminded_15_days_ahead" formatted="false">काग़ज़ (15 दिन पहले याद दिलाएगा)</string>
+    <string name="ui_cab_fare" formatted="false">किराया (₹)</string>
+    <string name="ui_cab_enter_the_fare_in_rupees" formatted="false">किराया रुपयों में भरें</string>
+    <string name="ui_cab_amount" formatted="false">रक़म (₹)</string>
+    <string name="ui_cab_add_a_cost" formatted="false">ख़र्च जोड़ें</string>
+    <string name="ui_cab_enter_the_amount_in_rupees" formatted="false">रक़म रुपयों में भरें</string>
+    <string name="ui_cab_net" formatted="false">%1$s: %2$s शुद्ध</string>
+    <string name="ui_cab_1_ride_costs" formatted="false">"1 सवारी %1$s,  ख़र्च %2$s"</string>
+    <string name="ui_cab_rides_costs" formatted="false">"%1$s सवारियाँ %2$s,  ख़र्च %3$s"</string>
+    <string name="ui_cab_this_week_by_app" formatted="false">"इस हफ़्ते ऐप के हिसाब से: "</string>
+    <string name="ui_cab_today_by_payment" formatted="false">"आज भुगतान के हिसाब से: "</string>
+    <string name="ui_cab_daily_target_reached" formatted="false">रोज़ का टारगेट %1$s: पूरा</string>
+    <string name="ui_cab_daily_target_to_go" formatted="false">रोज़ का टारगेट %1$s: %2$s बाक़ी</string>
+    <string name="ui_cab_earnings" formatted="false">कमाई</string>
+    <string name="ui_cab_all_entries" formatted="false">सारी एंट्री</string>
+    <string name="ui_cab_nothing_logged_yet" formatted="false">अभी कुछ दर्ज नहीं</string>
+    <string name="ui_cab_rides_and_costs_tap_one_to_delete_it" formatted="false">सवारियाँ और ख़र्च (मिटाने के लिए टैप करें)</string>
+    <string name="ui_cab_delete_this_entry" formatted="false">यह एंट्री मिटाएँ?</string>
+    <string name="ui_cab_keep" formatted="false">रहने दें</string>
+    <string name="ui_cab_hide" formatted="false">छिपाएँ</string>
+    <string name="ui_cab_stop_and_charge" formatted="false">रोकें और किराया लें</string>
+    <string name="ui_cab_km_min_waiting" formatted="false">"%1$s km   ·   %2$s मिनट इंतज़ार   ·   %3$s"</string>
+    <string name="ui_cab_night_charge" formatted="false">रात का चार्ज +%1$s%%</string>
+    <string name="ui_cab_for_the_first_km_then_a_km" formatted="false">पहले %2$s km के %1$s, फिर %3$s प्रति km</string>
+    <string name="ui_cab_km_min_waiting_2" formatted="false">%1$s km, %2$s मिनट इंतज़ार</string>
+    <string name="ui_cab_night_charge_2" formatted="false">, रात का चार्ज</string>
+    <string name="ui_cab_fare_2" formatted="false">किराया %1$s</string>
+    <string name="ui_cab_save_it_to_the_earnings_log" formatted="false">कमाई के हिसाब में सेव करें?</string>
+    <string name="ui_cab_paid_in_cash" formatted="false">नकद मिला</string>
+    <string name="ui_cab_upi_qr" formatted="false">UPI QR</string>
+    <string name="ui_cab_paid_by_upi" formatted="false">UPI से मिला</string>
+    <string name="ui_cab_pay" formatted="false">%1$s दें</string>
+    <string name="ui_cab_scan_with_any_upi_app_gpay_phonepe_paytm" formatted="false">किसी भी UPI ऐप (GPay, PhonePe, Paytm, BHIM) से स्कैन करें; किराया अपने-आप भर जाएगा। भुगतान %1$s को।</string>
+    <string name="ui_cab_set_your_upi_id_in_settings_cab_driver_t" formatted="false">QR कोड दिखाने के लिए Settings &gt; कैब ड्राइवर में अपनी UPI id डालें</string>
+    <string name="ui_cab_don_t_save" formatted="false">सेव न करें</string>
+    <string name="ui_cab_contact_name" formatted="false">संपर्क %1$s: नाम</string>
+    <string name="ui_cab_contact_phone_number" formatted="false">संपर्क %1$s: फ़ोन नंबर</string>
+    <string name="ui_cab_sos_contacts" formatted="false">SOS संपर्क</string>
+    <string name="ui_cab_sos_texts_them_where_the_car_is_without" formatted="false">SOS उन्हें मैसेज करके बताता है कि कार कहाँ है। स्टीरियो में SIM न हो तो आपके फ़ोन से पहले वाले को कॉल करता है।</string>
+    <string name="ui_cab_no_sos_contacts_yet" formatted="false">अभी कोई SOS संपर्क नहीं</string>
+    <string name="ui_cab_add_two_people_to_text_in_an_emergency" formatted="false">इमरजेंसी में मैसेज करने के लिए दो लोग जोड़ें।</string>
+    <string name="ui_cab_add_them" formatted="false">जोड़ें</string>
+    <string name="ui_cab_call_112" formatted="false">112 पर कॉल करें</string>
+    <string name="ui_cab_and" formatted="false">%1$s और %2$s</string>
+    <string name="ui_cab_sending_sos_with_your_location_to" formatted="false">%1$s को आपकी लोकेशन के साथ SOS भेज रहे हैं</string>
+    <string name="ui_cab_sos_sent_to" formatted="false">%1$s को SOS भेज दिया।</string>
+    <string name="ui_cab_the_stereo_can_t_send_texts_no_sim_so_it" formatted="false">स्टीरियो मैसेज नहीं भेज सकता (SIM नहीं है), इसलिए आपके फ़ोन से %1$s को कॉल कर रहा है।\nSOS मैसेज भेजने के लिए अपने फ़ोन से कोड स्कैन करें।</string>
+    <string name="ui_cab_sos_text" formatted="false">SOS मैसेज</string>
+    <string name="ui_cab_scan_to_send_the_sos_text_from_your_phon" formatted="false">अपने फ़ोन से SOS मैसेज भेजने के लिए स्कैन करें।</string>
+    <string name="ui_cab_net_2" formatted="false">%1$s शुद्ध</string>
+    <string name="ui_cab_hours_on_duty" formatted="false">ड्यूटी पर %1$s घंटे</string>
+    <string name="ui_cab_for_km_km_waiting_4_s_min_after_5_s_min" formatted="false">%2$s km के %1$s, %3$s/km, %5$s मिनट बाद इंतज़ार %4$s/मिनट, रात +%6$s%%</string>
+    <string name="ui_cab_your_upi_id" formatted="false">आपकी UPI id</string>
+    <string name="ui_cab_that_doesn_t_look_like_a_upi_id_name_ban" formatted="false">यह UPI id नहीं लगती (name@bank)</string>
+    <string name="ui_cab_of_full" formatted="false">पूरी आवाज़ का %1$s%%</string>
+    <string name="ui_cab_e_g_dl_1r_ab_1234" formatted="false">जैसे DL 1R AB 1234</string>
+    <string name="ui_cab_vehicle_number" formatted="false">गाड़ी नंबर</string>
+    <string name="ui_cab_of_6_set" formatted="false">"  (6 में से %1$s सेट)"</string>
+    <string name="ui_cab_entries" formatted="false">%1$s एंट्री</string>
+    <string name="ui_cab_delete_every_ride_and_cost_in_the_log" formatted="false">हिसाब की सारी सवारियाँ और ख़र्च मिटाएँ?</string>
+    <string name="ui_cab_delete_all" formatted="false">सब मिटाएँ</string>
+    <string name="ui_cab_enter_a_number" formatted="false">कोई अंक भरें</string>
+    <string name="ui_cab_fare_meter_rates" formatted="false">किराया मीटर की दरें</string>
+    <string name="ui_cab_left_seat" formatted="false">बाईं सीट</string>
+    <string name="ui_cab_right_seat" formatted="false">दाईं सीट</string>
+    <string name="ui_cab_who_sees_a_car_this_colour_first_tap_you" formatted="false">इस रंग की कार पहले कौन देखता है? अपने नाम पर टैप करो।</string>
+    <string name="ui_cab_car" formatted="false">%1$s कार</string>
+    <string name="ui_cab_long_press_a_name_to_change_it_scores_st" formatted="false">नाम बदलने के लिए उसे दबाकर रखें। स्कोर हर दिन नए सिरे से शुरू होता है।</string>
+    <string name="ui_cab_player_s_name" formatted="false">खिलाड़ी का नाम</string>
+    <string name="ui_cab_number_plates_from_other_states_of_found" formatted="false">दूसरे राज्यों की नंबर प्लेट: आज %2$s में से %1$s मिलीं</string>
+    <string name="ui_cab_search_for_a_place_on_the_map_first_or_s" formatted="false">पहले मैप पर कोई जगह खोजें,\nया वहाँ घर या ऑफ़िस सेव करें।</string>
+    <string name="ui_cab_straight_line_distance_the_road_is_a_lit" formatted="false">"सीधी दूरी; सड़क से थोड़ा ज़्यादा है।  जगह बदलने के लिए टैप करें, नाम देने के लिए दबाकर रखें।"</string>
+    <string name="ui_cab_km_to" formatted="false">km %1$s तक</string>
+    <string name="ui_cab_e_g_nani_s_house" formatted="false">जैसे नानी का घर</string>
+    <string name="ui_cab_call_this_place" formatted="false">इस जगह का नाम</string>
+    <string name="ui_cab_not_added" formatted="false">"  (नहीं जोड़ा)"</string>
+    <string name="ui_cab_import_from_openrath_documents" formatted="false">OpenRath/documents से लाएँ</string>
+    <string name="ui_cab_car_documents" formatted="false">कार के काग़ज़</string>
+    <string name="ui_cab_show" formatted="false">दिखाएँ</string>
+    <string name="ui_cab_replace_with_another_photo" formatted="false">दूसरी फ़ोटो लगाएँ</string>
+    <string name="ui_cab_remove" formatted="false">हटाएँ</string>
+    <string name="ui_cab_removed" formatted="false">%1$s हटा दिया</string>
+    <string name="ui_cab_no_picture_picker_on_this_unit_copy_the" formatted="false">इस यूनिट में फ़ोटो चुनने का ऐप नहीं है। फ़ोटो को %2$s.jpg नाम से %1$s में कॉपी करें, फिर लाएँ (Import) दबाएँ।</string>
+    <string name="ui_cab_saved" formatted="false">%1$s सेव हो गया</string>
+    <string name="ui_cab_couldn_t_use_that_photo" formatted="false">वह फ़ोटो इस्तेमाल नहीं हो सकी: %1$s</string>
+    <string name="ui_cab_nothing_to_import_put_photos_named_rc_in" formatted="false">लाने को कुछ नहीं। rc, insurance, puc या licence नाम की फ़ोटो (.jpg या .png) %1$s में रखें।</string>
+    <string name="ui_cab_imported_you_can_delete_the_copies_in_op" formatted="false">ले आए: %1$s। अब OpenRath/documents की कॉपियाँ मिटा सकते हैं।</string>
+    <string name="ui_cab_no_documents_added_yet_settings_car_car" formatted="false">अभी कोई काग़ज़ नहीं जोड़ा: Settings &gt; कार &gt; कार के काग़ज़</string>
+    <string name="ui_cab_tap_for_the_next_of" formatted="false">"   ·   अगले के लिए टैप करें (%2$s में से %1$s)"</string>
+    <string name="ui_cab_valet_mode_is_on_enter_the_pin" formatted="false">वैले मोड चालू है। PIN डालें</string>
+    <string name="ui_cab_wrong_pin" formatted="false">ग़लत PIN</string>
+    <string name="ui_cab_valet_mode_is_off" formatted="false">वैले मोड बंद है</string>
+    <string name="ui_cab_valet_mode_is_on_volume_up_to_warning_ab" formatted="false">वैले मोड चालू: आवाज़ %1$s%% तक, %2$s km/h से ऊपर चेतावनी, Settings लॉक</string>
+    <string name="ui_cab_choose_a_4_digit_pin_for_valet_mode" formatted="false">वैले मोड के लिए 4 अंकों का PIN चुनें</string>
+    <string name="ui_cab_use_4_to_8_digits" formatted="false">4 से 8 अंक डालें</string>
+    <string name="ui_cab_lock_these_apps_while_moving" formatted="false">चलती गाड़ी में ये ऐप लॉक करें</string>
+    <string name="ui_cab_hello" formatted="false">नमस्ते %1$s</string>
+    <string name="ui_cab_add_drivers_in_settings_family_first" formatted="false">पहले Settings &gt; परिवार में ड्राइवर जोड़ें</string>
+    <string name="ui_cab_add_a_driver" formatted="false">ड्राइवर जोड़ें…</string>
+    <string name="ui_cab_remove_a_driver" formatted="false">ड्राइवर हटाएँ…</string>
+    <string name="ui_cab_who_s_driving" formatted="false">कौन चला रहा है?</string>
+    <string name="ui_cab_name" formatted="false">नाम</string>
+    <string name="ui_cab_add_a_driver_2" formatted="false">ड्राइवर जोड़ें</string>
+    <string name="ui_cab_your_current_settings_become_this_driver" formatted="false">अभी की सेटिंग्स इस ड्राइवर की हो जाएँगी। बदल-बदलकर चलाने के लिए दूसरा ड्राइवर जोड़ें।</string>
+    <string name="ui_cab_add" formatted="false">जोड़ें</string>
+    <string name="ui_cab_added" formatted="false">%1$s जुड़ गए</string>
+    <string name="ui_cab_switch_to_another_driver_to_remove" formatted="false">%1$s को हटाने के लिए पहले दूसरे ड्राइवर पर जाएँ</string>
+    <string name="ui_cab_remove_a_driver_2" formatted="false">ड्राइवर हटाएँ</string>
+    <string name="ui_cab_name_e_g_papa" formatted="false">नाम (जैसे पापा)</string>
+    <string name="ui_cab_phone_number" formatted="false">फ़ोन नंबर</string>
+    <string name="ui_cab_emergency_contact" formatted="false">इमरजेंसी संपर्क</string>
+    <string name="ui_cab_called_after_a_crash_if_nobody_taps_i_m" formatted="false">टक्कर के बाद 30 सेकंड में कोई \"मैं ठीक हूँ\" न दबाए तो इन्हें कॉल होगी। फ़ोन Bluetooth से जुड़ा होना चाहिए।</string>
+    <string name="ui_cab_are_you_ok_test" formatted="false">"आप ठीक हैं?  (टेस्ट)"</string>
+    <string name="ui_cab_are_you_ok" formatted="false">आप ठीक हैं?</string>
+    <string name="ui_cab_a_very_hard_stop_was_detected_set_an_eme" formatted="false">बहुत ज़ोर का झटका महसूस हुआ। कॉल के लिए Settings &gt; ड्राइविंग में इमरजेंसी संपर्क डालें।</string>
+    <string name="ui_cab_a_very_hard_stop_was_detected_calling_in" formatted="false">बहुत ज़ोर का झटका महसूस हुआ। %2$s सेकंड में %1$s को कॉल करेंगे।</string>
+    <string name="ui_cab_i_m_ok" formatted="false">मैं ठीक हूँ</string>
+    <string name="ui_cab_call_now" formatted="false">अभी कॉल करें</string>
+    <string name="ui_cab_where_the_car_is" formatted="false">कार कहाँ है</string>
+    <string name="ui_cab_scan_to_open_the_spot_in_google_maps" formatted="false">Google Maps में जगह खोलने के लिए स्कैन करें।</string>
+    <string name="ui_cab_the_car_is_at_scan_for_the_spot_in_googl" formatted="false">कार यहाँ है\n%1$s\nGoogle Maps में जगह के लिए स्कैन करें</string>
+    <string name="ui_cab_test_would_call_read_out_the_place_below" formatted="false">टेस्ट: %1$s को कॉल होती। नीचे की जगह पढ़कर बताएँ। बंद करने के लिए \"मैं ठीक हूँ\" दबाएँ।</string>
+    <string name="ui_cab_calling_read_out_the_place_below_tap_i_m" formatted="false">%1$s को कॉल कर रहे हैं। नीचे की जगह पढ़कर बताएँ। बंद करने के लिए \"मैं ठीक हूँ\" दबाएँ।</string>
+    <string name="ui_cab_no_emergency_contact_is_set_tap_call_112" formatted="false">कोई इमरजेंसी संपर्क सेट नहीं है। मदद चाहिए तो \"112 पर कॉल करें\" दबाएँ।</string>
+    <string name="ui_cab_hold_the_phone_about_30_cm_away_straight" formatted="false">फ़ोन को लगभग 30 cm दूर, सीधा पकड़ें।</string>
+    <string name="ui_cab_done" formatted="false">हो गया</string>
+    <string name="ui_cab_driven_km_in_h_min" formatted="false">चलाई: %2$s घंटे %3$s मिनट में %1$s km</string>
+    <string name="ui_cab_average_km_h" formatted="false">" (औसत %1$s km/h)"</string>
+    <string name="ui_cab_petrol" formatted="false">पेट्रोल: ₹%1$s</string>
+    <string name="ui_cab_a_km" formatted="false">" (₹%1$s प्रति km)"</string>
+    <string name="ui_cab_tolls" formatted="false">टोल: ₹%1$s</string>
+    <string name="ui_cab_driving_score_out_of_100" formatted="false">ड्राइविंग स्कोर: 100 में से %1$s</string>
+    <string name="ui_cab_best_drive" formatted="false">सबसे अच्छी ड्राइव: %1$s</string>
+    <string name="ui_cab_needs_work" formatted="false">सुधार चाहिए: %1$s</string>
+    <string name="ui_cab_turn_on_split_the_cost_by_upi_in_setting" formatted="false">Settings &gt; फ़ीचर में \"UPI से ख़र्च बाँटें\" चालू करें</string>
+    <string name="ui_cab_your_upi_id_like_name_okbank" formatted="false">आपकी UPI id (जैसे name@okbank)</string>
+    <string name="ui_cab_total_to_split_last_fill_up_shown" formatted="false">बाँटने की कुल रक़म, ₹ (पिछली भराई दिखाई है)</string>
+    <string name="ui_cab_total_to_split" formatted="false">बाँटने की कुल रक़म, ₹</string>
+    <string name="ui_cab_how_many_people_you_included" formatted="false">कितने लोग, आपको मिलाकर?</string>
+    <string name="ui_cab_at_least_2_people" formatted="false">कम से कम 2 लोग</string>
+    <string name="ui_cab_pay_each" formatted="false">हर कोई ₹%1$s दे</string>
+    <string name="ui_cab_split_ways_each_person_scans_this_with_a" formatted="false">₹%1$s %2$s हिस्सों में बँटा। हर व्यक्ति किसी भी UPI ऐप (GPay, PhonePe, Paytm, BHIM) से इसे स्कैन करे; रक़म अपने-आप भर जाएगी। भुगतान %3$s को।</string>
+    <string name="ui_cab_turn_on_paid_parking_reminder_in_setting" formatted="false">Settings &gt; फ़ीचर में \"पेड पार्किंग रिमाइंडर\" चालू करें</string>
+    <string name="ui_cab_parking_paid_for" formatted="false">पार्किंग कितने समय की</string>
+    <string name="ui_cab_30_minutes" formatted="false">30 मिनट</string>
+    <string name="ui_cab_1_hour" formatted="false">1 घंटा</string>
+    <string name="ui_cab_2_hours" formatted="false">2 घंटे</string>
+    <string name="ui_cab_3_hours" formatted="false">3 घंटे</string>
+    <string name="ui_cab_4_hours" formatted="false">4 घंटे</string>
+    <string name="ui_cab_parking_ends_at" formatted="false">पार्किंग %1$s पर ख़त्म</string>
+    <string name="ui_cab_scan_with_your_phone_to_add_a_reminder_t" formatted="false">पार्किंग ख़त्म होने से 10 मिनट पहले का रिमाइंडर फ़ोन के कैलेंडर में जोड़ने के लिए स्कैन करें। इंजन बंद होते ही कार की स्क्रीन बंद हो जाती है, इसलिए याद फ़ोन दिलाएगा।</string>
+    <string name="ui_cab_time_for_a_wash" formatted="false">धुलाई का समय?</string>
+    <string name="ui_cab_it_s_been_days_since_the_last_car_wash_a" formatted="false">पिछली धुलाई को %1$s दिन हो गए, और अगले दो दिन बारिश की उम्मीद नहीं है।</string>
+    <string name="ui_cab_washed_today" formatted="false">आज धुल गई</string>
+    <string name="ui_cab_later" formatted="false">बाद में</string>
+    <string name="ui_cab_your_week_in_the_car" formatted="false">कार में आपका हफ़्ता</string>
+    <string name="ui_cab_no_camera_on_this_unit_so_no_parking_pho" formatted="false">इस यूनिट में कैमरा नहीं है, इसलिए पार्किंग फ़ोटो नहीं</string>
+    <string name="ui_cab_no_parking_photo_yet_one_is_taken_when_y" formatted="false">अभी पार्किंग फ़ोटो नहीं: पार्क करने पर एक ली जाती है</string>
+    <string name="ui_cab_taken_tap_to_close" formatted="false">%1$s को ली गई। बंद करने के लिए टैप करें।</string>
+    <string name="ui_cab_turn_on_guest_wi_fi_in_settings_features" formatted="false">Settings &gt; फ़ीचर में \"मेहमान Wi-Fi\" चालू करें</string>
+    <string name="ui_cab_hotspot_name_as_set_on_the_unit" formatted="false">हॉटस्पॉट का नाम (जैसा यूनिट में सेट है)</string>
+    <string name="ui_cab_e_g_mycar" formatted="false">जैसे MyCar</string>
+    <string name="ui_cab_hotspot_password" formatted="false">हॉटस्पॉट पासवर्ड</string>
+    <string name="ui_cab_guest_wi_fi" formatted="false">मेहमान Wi-Fi</string>
+    <string name="ui_cab_android_only_lets_the_unit_s_own_setting" formatted="false">Android हॉटस्पॉट सिर्फ़ यूनिट की अपनी सेटिंग्स से चालू करने देता है। वहाँ चालू करें, वापस आएँ, फिर सवारियों को जुड़ने के लिए कोड दिखाएँ।</string>
+    <string name="ui_cab_show_the_code" formatted="false">कोड दिखाएँ</string>
+    <string name="ui_cab_join_the_car_s_wi_fi" formatted="false">कार के Wi-Fi से जुड़ें</string>
+    <string name="ui_cab_point_a_phone_camera_at_this_to_join_it" formatted="false">\"%1$s\" से जुड़ने के लिए फ़ोन का कैमरा इस पर रखें। यह यूनिट का मोबाइल डेटा बाँटता है।</string>
+    <string name="ui_cab_hotspot_settings" formatted="false">हॉटस्पॉट सेटिंग्स</string>
+    <string name="ui_cab_open_the_unit_s_settings_network_hotspot" formatted="false">यूनिट की Settings &gt; Network &gt; Hotspot खोलें</string>
+    <string name="ui_cab_welcome_to_openrath" formatted="false">OpenRath में स्वागत है</string>
+    <string name="ui_cab_there_s_a_backup_here_from_made_by_dzire" formatted="false">यहाँ %1$s का बैकअप है, Dzire Home का बनाया हुआ। वो सेटिंग्स, ईंधन का हिसाब और ट्रिप वापस लाएँ?</string>
+    <string name="ui_cab_there_s_a_backup_here_from_bring_back_th" formatted="false">यहाँ %1$s का बैकअप है। वो सेटिंग्स, ईंधन का हिसाब और ट्रिप वापस लाएँ?</string>
+    <string name="ui_cab_bring_them_back" formatted="false">वापस लाएँ</string>
+    <string name="ui_cab_restored_restarting" formatted="false">वापस आ गया; फिर से शुरू हो रहा है</string>
+    <string name="ui_cab_couldn_t_restore" formatted="false">वापस नहीं ला सके: %1$s</string>
+    <string name="ui_cab_start_fresh" formatted="false">नए सिरे से शुरू करें</string>
+    <string name="ui_cab_another_brand" formatted="false">कोई और ब्रांड…</string>
+    <string name="ui_cab_which_car_is_this_pick_the_brand" formatted="false">यह कौन सी कार है? ब्रांड चुनें</string>
+    <string name="ui_cab_brand" formatted="false">ब्रांड</string>
+    <string name="ui_cab_e_g_ford" formatted="false">जैसे Ford</string>
+    <string name="ui_cab_you_can_set_up_the_car_any_time_in_setti" formatted="false">कार कभी भी Settings &gt; कार में सेट कर सकते हैं</string>
+    <string name="ui_cab_model" formatted="false">मॉडल</string>
+    <string name="ui_cab_e_g_ecosport" formatted="false">जैसे Ecosport</string>
+    <string name="ui_cab_another_model" formatted="false">कोई और मॉडल…</string>
+    <string name="ui_cab_which_model" formatted="false">%1$s: कौन सा मॉडल?</string>
+    <string name="ui_cab_what_shape_is_it" formatted="false">इसका आकार कैसा है?</string>
+    <string name="ui_cab_what_does_it_run_on" formatted="false">यह किस ईंधन से चलती है?</string>
+    <string name="ui_cab_cng_cylinder_kg_leave_empty_if_unsure" formatted="false">CNG सिलेंडर, किलो (पता न हो तो ख़ाली छोड़ें)</string>
+    <string name="ui_cab_fuel_tank_litres_leave_empty_if_unsure" formatted="false">ईंधन टंकी, लीटर (पता न हो तो ख़ाली छोड़ें)</string>
+    <string name="ui_cab_set_up_change_it_any_time_in_settings_ca" formatted="false">%1$s सेट हो गई। कभी भी Settings &gt; कार में बदलें।</string>
+    <string name="ui_cab_car_2" formatted="false">कार</string>
+    <string name="ui_cab_not_set" formatted="false">सेट नहीं</string>
+    <string name="ui_cab_360_view" formatted="false">"360 व्यू  ·  %1$s"</string>
+    <string name="ui_cab_your_car" formatted="false">आपकी कार</string>
+    <string name="ui_cab_car_colour" formatted="false">कार का रंग</string>
+    <string name="ui_cab_car_shape" formatted="false">कार का आकार</string>
+    <string name="ui_cab_number_plate_e_g_dl_3c_ab_1234" formatted="false">नंबर प्लेट (जैसे DL 3C AB 1234)</string>
+    <string name="ui_cab_this_screen" formatted="false">"यह स्क्रीन, "</string>
+    <string name="ui_cab_make_a_boot_logo_and_animation_for" formatted="false">बूट लोगो और एनिमेशन किसके लिए बनाएँ</string>
+    <string name="ui_cab_making_the_boot_animation" formatted="false">बूट एनिमेशन बन रहा है</string>
+    <string name="ui_cab_drawing_frame_of" formatted="false">%2$s में से फ़्रेम %1$s बन रहा है…</string>
+    <string name="ui_cab_couldn_t_make_them" formatted="false">नहीं बन सके</string>
+    <string name="ui_cab_saved_in" formatted="false">%1$s में सेव हुआ।</string>
+    <string name="ui_cab_saved_in_and_on" formatted="false">%1$s में और %2$s पर सेव हुआ।</string>
+    <string name="ui_cab_copy_bootlogo_bmp_and_bootanimation_zip" formatted="false">bootlogo.bmp और bootanimation.zip को USB स्टिक के सबसे ऊपर वाले फ़ोल्डर में कॉपी करें, और bootlogo.bmp को उसी पर logo नाम के फ़ोल्डर में भी (फ़ाइल मैनेजर से या कंप्यूटर से), फिर स्टिक स्टीरियो में लगाएँ।</string>
+    <string name="ui_cab_they_re_already_on_the_usb_stick_keep_it" formatted="false">ये पहले से USB स्टिक पर हैं; स्टिक लगी रहने दें।</string>
+    <string name="ui_cab_still_boot_logo_safe_1_open_the_stereo_s" formatted="false">स्थिर बूट लोगो (सुरक्षित):\n1. स्टीरियो की Settings खोलें, फिर Factory settings (कोड स्टीरियो की मैनुअल में या दुकानदार से मिलेगा)।\n2. Logo, Car logo या Boot logo ढूँढें, Custom या Import चुनें, और bootlogo.bmp चुनें।\n3. पहले कौन सा लोगो चुना था, लिख लें, ताकि वापस जा सकें।</string>
+    <string name="ui_cab_boot_animation" formatted="false">बूट एनिमेशन:</string>
+    <string name="ui_cab_this_stereo_has_open_it_and_import_boota" formatted="false">इस स्टीरियो में \"%1$s\" है। उसे खोलें और USB स्टिक से bootanimation.zip इम्पोर्ट करें।</string>
+    <string name="ui_cab_some_stereos_have_a_boot_animation_app_i" formatted="false">कुछ स्टीरियो में Boot animation ऐप होता है (ऐप सूची में, या Factory settings में) जो USB स्टिक से bootanimation.zip इम्पोर्ट करता है।</string>
+    <string name="ui_cab_without_one_it_needs_a_computer_with_adb" formatted="false">ऐसा ऐप न हो तो ADB वाला कंप्यूटर चाहिए, और एक ग़लती से स्टीरियो चालू होना बंद हो सकता है, इसलिए OpenRath के सोर्स में BOOT.md ध्यान से पढ़कर चलें और ओरिजिनल की कॉपी रखें।</string>
+    <string name="ui_cab_boot_logo_and_animation_made" formatted="false">बूट लोगो और एनिमेशन बन गए</string>
+    <string name="ui_cab_open" formatted="false">%1$s खोलें</string>
+    <string name="ui_cab_couldn_t_open_it" formatted="false">खुल नहीं सका</string>
+    <string name="ui_cab_backgroundgradient_needs_colours_like_3a" formatted="false">backgroundGradient में #3A0D5C जैसे रंग चाहिए</string>
+    <string name="ui_cab_colour_isn_t_a_colour_like_d8dce2" formatted="false">रंग %1$s, #D8DCE2 जैसा रंग नहीं है</string>
+    <string name="ui_cab_couldn_t_read_theme_json" formatted="false">%1$s/theme.json पढ़ नहीं सके: %2$s</string>
+    <string name="ui_cab_app" formatted="false">ऐप</string>
+    <string name="ui_cab_paid_by" formatted="false">भुगतान</string>
+    <string name="ui_cab_for" formatted="false">किसलिए</string>
+    <string name="ui_cab_cash" formatted="false">नकद</string>
+    <string name="ui_cab_in_the_app" formatted="false">ऐप में</string>
+    <string name="ui_cab_fuel_or_cng" formatted="false">ईंधन या CNG</string>
+    <string name="ui_cab_toll" formatted="false">टोल</string>
+    <string name="ui_cab_parking" formatted="false">पार्किंग</string>
+    <string name="ui_cab_food" formatted="false">खाना</string>
+    <string name="ui_cab_commission" formatted="false">कमीशन</string>
+    <string name="ui_cab_repair" formatted="false">मरम्मत</string>
+    <string name="ui_cab_other" formatted="false">अन्य</string>
+    <string name="ui_cab_street" formatted="false">सड़क से</string>
+    <string name="ui_cab_meter" formatted="false">मीटर</string>
+    <string name="ui_cab_today" formatted="false">आज</string>
+    <string name="ui_cab_yesterday" formatted="false">कल</string>
+    <string name="ui_cab_this_week_from_monday" formatted="false">इस हफ़्ते (सोमवार से)</string>
+    <string name="ui_cab_last_30_days" formatted="false">पिछले 30 दिन</string>
+    <string name="ui_cab_permit" formatted="false">परमिट</string>
+    <string name="ui_cab_fitness_certificate" formatted="false">फ़िटनेस सर्टिफ़िकेट</string>
+    <string name="ui_cab_driver_badge" formatted="false">ड्राइवर बैज</string>
+    <string name="ui_cab_road_tax" formatted="false">रोड टैक्स</string>
+    <string name="ui_cab_insurance" formatted="false">इंश्योरेंस</string>
+    <string name="ui_cab_puc_certificate" formatted="false">PUC सर्टिफ़िकेट</string>
+    <string name="ui_cab_hindi" formatted="false">हिंदी</string>
+    <string name="ui_cab_english" formatted="false">अंग्रेज़ी</string>
+    <string name="ui_cab_marathi" formatted="false">मराठी</string>
+    <string name="ui_cab_kannada" formatted="false">कन्नड़</string>
+    <string name="ui_cab_tamil" formatted="false">तमिल</string>
+    <string name="ui_cab_telugu" formatted="false">तेलुगु</string>
+    <string name="ui_cab_bengali" formatted="false">बांग्ला</string>
+    <string name="ui_cab_switch_them_on_above" formatted="false">ऊपर चालू करें</string>
+    <string name="ui_cab_long_press_any_box_on_the_dashboard_and" formatted="false">डैशबोर्ड पर कोई भी बॉक्स दबाकर रखें और कैब ड्राइवर चुनें</string>
+    <string name="ui_cab_not_set_the_meter_can_show_a_qr_code_to" formatted="false">सेट नहीं: मीटर आपको भुगतान का QR कोड दिखा सकता है</string>
+    <string name="ui_cab_starts_and_ends_with_the_fare_meter" formatted="false">किराया मीटर के साथ शुरू और ख़त्म</string>
+    <string name="ui_cab_only_from_the_cab_menu" formatted="false">सिर्फ़ कैब मेन्यू से</string>
+    <string name="ui_cab_not_set_goes_in_the_sos_text" formatted="false">सेट नहीं (SOS मैसेज में जाता है)</string>
+    <string name="ui_cab_permit_fitness_badge_road_tax_insurance" formatted="false">परमिट, फ़िटनेस, बैज, रोड टैक्स, इंश्योरेंस, PUC: सेट नहीं</string>
+    <string name="ui_cab_base_fare" formatted="false">शुरुआती किराया (₹)</string>
+    <string name="ui_cab_km_included_in_the_base_fare" formatted="false">शुरुआती किराए में शामिल km</string>
+    <string name="ui_cab_a_km_after_that" formatted="false">उसके बाद ₹ प्रति km</string>
+    <string name="ui_cab_waiting_a_minute" formatted="false">इंतज़ार ₹ प्रति मिनट</string>
+    <string name="ui_cab_free_waiting_minutes" formatted="false">मुफ़्त इंतज़ार के मिनट</string>
+    <string name="ui_cab_night_charge_11_pm_to_5_am" formatted="false">रात का चार्ज, रात 11 से सुबह 5 (%)</string>
+    <string name="ui_cab_daily_target_net" formatted="false">रोज़ का टारगेट (₹ शुद्ध)</string>
+    <string name="ui_cab_spot_the_colour" formatted="false">रंग पहचानो</string>
+    <string name="ui_cab_number_plates" formatted="false">नंबर प्लेट</string>
+    <string name="ui_cab_how_far" formatted="false">कितनी दूर?</string>
+    <string name="ui_cab_white" formatted="false">सफ़ेद</string>
+    <string name="ui_cab_silver" formatted="false">सिल्वर</string>
+    <string name="ui_cab_black" formatted="false">काली</string>
+    <string name="ui_cab_red" formatted="false">लाल</string>
+    <string name="ui_cab_blue" formatted="false">नीली</string>
+    <string name="ui_cab_grey" formatted="false">ग्रे</string>
+    <string name="ui_cab_brown" formatted="false">भूरी</string>
+    <string name="ui_cab_yellow" formatted="false">पीली</string>
+    <string name="ui_cab_green" formatted="false">हरी</string>
+    <string name="ui_cab_orange" formatted="false">नारंगी</string>
+    <string name="ui_cab_delhi" formatted="false">दिल्ली</string>
+    <string name="ui_cab_haryana" formatted="false">हरियाणा</string>
+    <string name="ui_cab_uttar_pradesh" formatted="false">उत्तर प्रदेश</string>
+    <string name="ui_cab_rajasthan" formatted="false">राजस्थान</string>
+    <string name="ui_cab_punjab" formatted="false">पंजाब</string>
+    <string name="ui_cab_chandigarh" formatted="false">चंडीगढ़</string>
+    <string name="ui_cab_himachal" formatted="false">हिमाचल</string>
+    <string name="ui_cab_uttarakhand" formatted="false">उत्तराखंड</string>
+    <string name="ui_cab_jammu_kashmir" formatted="false">जम्मू-कश्मीर</string>
+    <string name="ui_cab_maharashtra" formatted="false">महाराष्ट्र</string>
+    <string name="ui_cab_gujarat" formatted="false">गुजरात</string>
+    <string name="ui_cab_madhya_pradesh" formatted="false">मध्य प्रदेश</string>
+    <string name="ui_cab_karnataka" formatted="false">कर्नाटक</string>
+    <string name="ui_cab_tamil_nadu" formatted="false">तमिलनाडु</string>
+    <string name="ui_cab_kerala" formatted="false">केरल</string>
+    <string name="ui_cab_andhra_pradesh" formatted="false">आंध्र प्रदेश</string>
+    <string name="ui_cab_telangana" formatted="false">तेलंगाना</string>
+    <string name="ui_cab_west_bengal" formatted="false">पश्चिम बंगाल</string>
+    <string name="ui_cab_bihar" formatted="false">बिहार</string>
+    <string name="ui_cab_odisha" formatted="false">ओडिशा</string>
+    <string name="ui_cab_goa" formatted="false">गोवा</string>
+    <string name="ui_cab_assam" formatted="false">असम</string>
+    <string name="ui_cab_jharkhand" formatted="false">झारखंड</string>
+    <string name="ui_cab_chhattisgarh" formatted="false">छत्तीसगढ़</string>
+    <string name="ui_cab_bharat_series" formatted="false">भारत सीरीज़</string>
+    <string name="ui_cab_where_we_re_going" formatted="false">जहाँ जा रहे हैं</string>
+    <string name="ui_cab_home" formatted="false">घर</string>
+    <string name="ui_cab_office" formatted="false">ऑफ़िस</string>
+    <string name="ui_cab_rc_registration" formatted="false">RC (रजिस्ट्रेशन)</string>
+    <string name="ui_cab_driving_licence" formatted="false">ड्राइविंग लाइसेंस</string>
+    <string name="ui_cab_this_app_is_locked_while_the_car_is_movi" formatted="false">कार चलते समय यह ऐप लॉक है</string>
+    <string name="ui_cab_petrol_2" formatted="false">पेट्रोल</string>
+    <string name="ui_cab_diesel" formatted="false">डीज़ल</string>
+    <string name="ui_cab_petrol_hybrid" formatted="false">पेट्रोल हाइब्रिड</string>
+    <string name="ui_cab_electric" formatted="false">इलेक्ट्रिक</string>
+    <string name="ui_cab_hatchback" formatted="false">हैचबैक</string>
+    <string name="ui_cab_saloon_sedan" formatted="false">सेडान</string>
+    <string name="ui_cab_muv_people_carrier" formatted="false">MUV / बड़ी फ़ैमिली कार</string>
+    <string name="ui_cab_pearl_white" formatted="false">पर्ल सफ़ेद</string>
+    <string name="ui_cab_beige" formatted="false">बेज</string>
+    <string name="ui_cab_top" formatted="false">ऊपर से</string>
+    <string name="ui_cab_front" formatted="false">आगे से</string>
+    <string name="ui_cab_left" formatted="false">बाएँ से</string>
+    <string name="ui_cab_right" formatted="false">दाएँ से</string>
+    <string name="ui_cab_rear" formatted="false">पीछे से</string>
+    <string name="ui_cab_colour" formatted="false">रंग</string>
+    <string name="ui_cab_shape" formatted="false">आकार</string>
+    <string name="ui_cab_plate" formatted="false">प्लेट</string>
+    <string name="ui_cab_360_camera" formatted="false">360 कैमरा</string>
+</resources>

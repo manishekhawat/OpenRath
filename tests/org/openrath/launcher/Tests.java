@@ -72,10 +72,22 @@ public final class Tests {
         eq("hindi: missing stays English", "Radio", Hindi.t(m, true, "Radio"));
         eq("hindi: off stays English", "Search", Hindi.t(m, false, "Search"));
         eq("hindi: null", null, Hindi.t(m, true, null));
+        eq("hindi: format without a translation", "Toll in 2 km", Hindi.f("Toll in %1$s km", 2));
         java.io.File en = new java.io.File("res/values/ui.xml"), hi = new java.io.File("res/values-hi/ui.xml");
         if (en.exists() && hi.exists()) {
             try {
-                java.util.Map<String, String> e = strings(en), h = strings(hi);
+                java.util.Map<String, String> e = new java.util.HashMap<>(), h = new java.util.HashMap<>();
+                for (String name : Hindi.ARRAYS) {
+                    String file = name.equals("ui_strings") ? "ui" : name;
+                    java.io.File ef = new java.io.File("res/values/" + file + ".xml"), hf = new java.io.File("res/values-hi/" + file + ".xml");
+                    if (!ef.exists()) continue;
+                    java.util.Map<String, String> one = strings(ef);
+                    for (String k : one.keySet()) check("hindi: " + k + " named once", !e.containsKey(k));
+                    e.putAll(one);
+                    String body = new String(java.nio.file.Files.readAllBytes(ef.toPath()), "UTF-8");
+                    check("hindi: " + file + ".xml has its list " + name, body.contains("<string-array name=\"" + name + "\">"));
+                    if (hf.exists()) h.putAll(strings(hf));
+                }
                 java.util.Map<String, String> all = new java.util.HashMap<>();
                 for (java.util.Map.Entry<String, String> x : e.entrySet()) if (h.containsKey(x.getKey())) all.put(x.getValue(), h.get(x.getKey()));
                 check("hindi: the files have the settings", all.size() > 300);

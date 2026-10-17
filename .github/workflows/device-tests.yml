@@ -1,4 +1,4 @@
-# Runs the on-device tests (androidTest/) on an emulator: the oldest Android OpenRath supports and the one it targets.
+# Runs the on-device tests (androidTest/) on an emulator: the oldest Android OpenRath supports (8.0) and the one it targets.
 name: device tests
 on:
   pull_request:
@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api: [29, 34]
+        api: [26, 34]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
@@ -37,8 +37,20 @@ jobs:
           arch: x86_64
           target: default
           disable-animations: true
+          # each line runs on its own; the permissions are the ones a driver allows at first start
           script: |
-            adb install -r out/openrath.apk
+            adb install -r -g out/openrath.apk
             adb install -r out/openrath-test.apk
-            adb shell am instrument -w org.openrath.launcher.test/org.openrath.launcher.Smoke | tee instrument.txt
-            grep -q " 0 failed" instrument.txt
+            adb install -r out/openrath-fleet.apk
+            adb shell appops set org.openrath.launcher MANAGE_EXTERNAL_STORAGE allow || true
+            adb shell am instrument -w org.openrath.launcher.test/org.openrath.launcher.Smoke | tee smoke.txt
+            grep -q " 0 failed" smoke.txt || (adb logcat -d -b crash; adb logcat -d -s AndroidRuntime:E TestRunner:* | tail -150; exit 1)
+            adb shell dpm set-device-owner org.openrath.fleet/.Admin
+            adb shell am instrument -w -e fleet set org.openrath.fleet/.Setup | tee fleet-set.txt
+            grep -q "fleet set: done" fleet-set.txt
+            adb shell am instrument -w -e fleet set org.openrath.launcher.test/org.openrath.launcher.Smoke | tee smoke-fleet-set.txt
+            grep -q " 0 failed" smoke-fleet-set.txt || (adb logcat -d -b crash | tail -150; exit 1)
+            adb shell am instrument -w -e fleet clear org.openrath.fleet/.Setup | tee fleet-clear.txt
+            grep -q "fleet clear: done" fleet-clear.txt
+            adb shell am instrument -w -e fleet clear org.openrath.launcher.test/org.openrath.launcher.Smoke | tee smoke-fleet-clear.txt
+            grep -q " 0 failed" smoke-fleet-clear.txt || (adb logcat -d -b crash | tail -150; exit 1)

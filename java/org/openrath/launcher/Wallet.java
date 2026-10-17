@@ -52,10 +52,10 @@ final class Wallet {
     /** Settings > Car > Documents: show, add or remove each. */
     static void menu(final Activity a) {
         String[] rows = new String[DOCS.length + 1];
-        for (int i = 0; i < DOCS.length; i++) rows[i] = NAMES[i] + (file(a, i).exists() ? "" : "  (not added)");
-        rows[DOCS.length] = "Import from OpenRath/documents";
+        for (int i = 0; i < DOCS.length; i++) rows[i] = Hindi.t(NAMES[i]) + (file(a, i).exists() ? "" : Hindi.t("  (not added)"));
+        rows[DOCS.length] = Hindi.t("Import from OpenRath/documents");
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Car documents")
+                .setTitle(Hindi.t("Car documents"))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -63,23 +63,23 @@ final class Wallet {
                         else if (file(a, w).exists()) one(a, w);
                         else pick(a, w);
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     private static void one(final Activity a, final int i) {
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(NAMES[i])
-                .setItems(new String[]{"Show", "Replace with another photo", "Remove"}, new DialogInterface.OnClickListener() {
+                .setTitle(Hindi.t(NAMES[i]))
+                .setItems(new String[]{Hindi.t("Show"), Hindi.t("Replace with another photo"), Hindi.t("Remove")}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         if (w == 0) show(a, i);
                         else if (w == 1) pick(a, i);
                         else {
                             file(a, i).delete();
-                            Toast.makeText(a, NAMES[i] + " removed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(a, Hindi.f("%1$s removed", Hindi.t(NAMES[i])), Toast.LENGTH_SHORT).show();
                         }
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     static void pick(Activity a, int i) {
@@ -88,9 +88,8 @@ final class Wallet {
                     .addCategory(Intent.CATEGORY_OPENABLE), CODE + i);
         } catch (Exception e) {
             new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                    .setMessage("No picture picker on this unit. Copy the photo to " + folder().getPath() + " named "
-                            + DOCS[i] + ".jpg, then use Import.")
-                    .setPositiveButton("OK", null).show();
+                    .setMessage(Hindi.f("No picture picker on this unit. Copy the photo to %1$s named %2$s.jpg, then use Import.", folder().getPath(), DOCS[i]))
+                    .setPositiveButton(Hindi.t("OK"), null).show();
         }
     }
 
@@ -101,9 +100,9 @@ final class Wallet {
         try {
             InputStream in = a.getContentResolver().openInputStream(uri);
             save(a, i, in);
-            Toast.makeText(a, NAMES[i] + " saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(a, Hindi.f("%1$s saved", Hindi.t(NAMES[i])), Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(a, "Couldn't use that photo: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.f("Couldn't use that photo: %1$s", e.getMessage()), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -154,16 +153,15 @@ final class Wallet {
                 if (i < 0) continue;
                 try {
                     save(a, i, new java.io.FileInputStream(f));
-                    got.add(NAMES[i]);
+                    got.add(Hindi.t(NAMES[i]));
                 } catch (Exception ignored) {
                 }
             }
         }
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setMessage(got.isEmpty() ? "Nothing to import. Put photos named rc, insurance, puc or licence (.jpg or .png) in "
-                        + folder().getPath() + "." : "Imported: " + android.text.TextUtils.join(", ", got)
-                        + ". You can delete the copies in OpenRath/documents now.")
-                .setPositiveButton("OK", null).show();
+                .setMessage(got.isEmpty() ? Hindi.f("Nothing to import. Put photos named rc, insurance, puc or licence (.jpg or .png) in %1$s.", folder().getPath())
+                        : Hindi.f("Imported: %1$s. You can delete the copies in OpenRath/documents now.", android.text.TextUtils.join(", ", got)))
+                .setPositiveButton(Hindi.t("OK"), null).show();
     }
 
     /** Show the documents full screen, starting at one; tap to go to the next, back to close. */
@@ -171,7 +169,7 @@ final class Wallet {
         final List<Integer> have = new ArrayList<>();
         for (int i = 0; i < DOCS.length; i++) if (file(a, i).exists()) have.add(i);
         if (have.isEmpty()) {
-            Toast.makeText(a, "No documents added yet: Settings > Car > Car documents", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("No documents added yet: Settings > Car > Car documents"), Toast.LENGTH_LONG).show();
             menu(a);
             return;
         }
@@ -191,7 +189,7 @@ final class Wallet {
             public void run() {
                 int i = have.get(at[0]);
                 img.setImageBitmap(BitmapFactory.decodeFile(file(a, i).getPath()));
-                label.setText(NAMES[i] + (have.size() > 1 ? "   ·   tap for the next (" + (at[0] + 1) + " of " + have.size() + ")" : ""));
+                label.setText(Hindi.t(NAMES[i]) + (have.size() > 1 ? Hindi.f("   ·   tap for the next (%1$s of %2$s)", at[0] + 1, have.size()) : ""));
             }
         };
         load.run();

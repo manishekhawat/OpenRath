@@ -86,7 +86,7 @@ final class Theme {
                         l.gradient[i] = android.graphics.Color.parseColor(g.getString(i));
                     } catch (Throwable e) {
                         l.gradient = null;
-                        l.problem = "backgroundGradient needs colours like #3A0D5C";
+                        l.problem = Hindi.t("backgroundGradient needs colours like #3A0D5C");
                         break;
                     }
                 }
@@ -102,7 +102,7 @@ final class Theme {
             try {
                 return android.graphics.Color.parseColor(o.getString(key));
             } catch (Throwable e) {
-                problem = "Colour " + key + " isn't a colour like #D8DCE2";
+                problem = Hindi.f("Colour %1$s isn't a colour like #D8DCE2", key);
                 return def;
             }
         }
@@ -179,7 +179,7 @@ final class Theme {
                 pack = new Pack(want, json, d);
             }
         } catch (Throwable e) {
-            error = "Couldn't read " + want + "/theme.json: " + e.getMessage();
+            error = Hindi.f("Couldn't read %1$s/theme.json: %2$s", want, e.getMessage());
             try {
                 json = new JSONObject(read(c.getAssets().open("themes/" + DEFAULT.substring(1) + "/theme.json")));
             } catch (Throwable ignored) {

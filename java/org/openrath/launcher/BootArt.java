@@ -432,19 +432,19 @@ final class BootArt {
         int[] here = nativeSize(a);
         final int[][] sizes = {here, {1024, 600}, {1280, 720}, {1280, 800}, {1920, 720}};
         String[] names = new String[sizes.length];
-        for (int i = 0; i < sizes.length; i++) names[i] = (i == 0 ? "This screen, " : "") + sizes[i][0] + " x " + sizes[i][1];
-        new AlertDialog.Builder(a, DIALOG).setTitle("Make a boot logo and animation for")
+        for (int i = 0; i < sizes.length; i++) names[i] = (i == 0 ? Hindi.t("This screen, ") : "") + sizes[i][0] + " x " + sizes[i][1];
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Make a boot logo and animation for"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         make(a, sizes[w][0], sizes[w][1]);
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static void make(final HomeActivity a, final int w, final int h) {
-        final AlertDialog wait = new AlertDialog.Builder(a, DIALOG).setTitle("Making the boot animation")
-                .setMessage("Drawing frame 1 of " + (FRAMES + 1) + "…").setCancelable(false).show();
+        final AlertDialog wait = new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Making the boot animation"))
+                .setMessage(Hindi.f("Drawing frame %1$s of %2$s…", 1, FRAMES + 1)).setCancelable(false).show();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -461,7 +461,7 @@ final class BootArt {
                             a.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    wait.setMessage("Drawing frame " + (f + 1) + " of " + (FRAMES + 1) + "…");
+                                    wait.setMessage(Hindi.f("Drawing frame %1$s of %2$s…", f + 1, FRAMES + 1));
                                 }
                             });
                         }
@@ -485,8 +485,8 @@ final class BootArt {
                     public void run() {
                         wait.dismiss();
                         if (error != null) {
-                            new AlertDialog.Builder(a, DIALOG).setTitle("Couldn't make them").setMessage(error)
-                                    .setPositiveButton("OK", null).show();
+                            new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Couldn't make them")).setMessage(error)
+                                    .setPositiveButton(Hindi.t("OK"), null).show();
                         } else done(a, files, onUsb);
                     }
                 });
@@ -496,29 +496,30 @@ final class BootArt {
 
     private static void done(final HomeActivity a, File[] files, List<File> onUsb) {
         final ResolveInfo app = bootApp(a);
-        String where = "Saved in " + files[0].getParent() + (onUsb.isEmpty() ? "" : " and on " + onUsb.get(0).getPath()) + ".";
-        String usb = onUsb.isEmpty() ? "Copy bootlogo.bmp and bootanimation.zip to the top folder of a USB stick, plus bootlogo.bmp into a folder "
-                + "named logo on it (with the file manager, or from a computer), and plug it into the stereo." : "They're already on the USB stick; keep it plugged in.";
+        String where = onUsb.isEmpty() ? Hindi.f("Saved in %1$s.", files[0].getParent())
+                : Hindi.f("Saved in %1$s and on %2$s.", files[0].getParent(), onUsb.get(0).getPath());
+        String usb = Hindi.t(onUsb.isEmpty() ? "Copy bootlogo.bmp and bootanimation.zip to the top folder of a USB stick, plus bootlogo.bmp into a folder "
+                + "named logo on it (with the file manager, or from a computer), and plug it into the stereo." : "They're already on the USB stick; keep it plugged in.");
         String msg = where + "\n\n" + usb + "\n\n"
-                + "STILL BOOT LOGO (safe):\n"
+                + Hindi.t("STILL BOOT LOGO (safe):\n"
                 + "1. Open the stereo's Settings, then Factory settings (the code is in the stereo's manual or from the seller).\n"
                 + "2. Find Logo, Car logo or Boot logo, choose Custom or Import, and pick bootlogo.bmp.\n"
-                + "3. Note which logo was chosen before, so you can go back to it.\n\n"
-                + "BOOT ANIMATION:\n"
-                + (app != null ? "This stereo has \"" + app.loadLabel(a.getPackageManager()) + "\". Open it and import bootanimation.zip from the USB stick.\n"
-                : "Some stereos have a Boot animation app (in the app list, or in Factory settings) that imports bootanimation.zip from a USB stick. ")
-                + (app != null ? "" : "Without one it needs a computer with ADB, and a mistake can stop the stereo from starting, so "
-                + "follow BOOT.md in OpenRath's source carefully and keep a copy of the original.");
-        AlertDialog.Builder b = new AlertDialog.Builder(a, DIALOG).setTitle("Boot logo and animation made").setMessage(msg)
-                .setPositiveButton("Done", null);
-        if (app != null) b.setNeutralButton("Open " + app.loadLabel(a.getPackageManager()), new DialogInterface.OnClickListener() {
+                + "3. Note which logo was chosen before, so you can go back to it.") + "\n\n"
+                + Hindi.t("BOOT ANIMATION:") + "\n"
+                + (app != null ? Hindi.f("This stereo has \"%1$s\". Open it and import bootanimation.zip from the USB stick.", app.loadLabel(a.getPackageManager())) + "\n"
+                : Hindi.t("Some stereos have a Boot animation app (in the app list, or in Factory settings) that imports bootanimation.zip from a USB stick.") + " ")
+                + (app != null ? "" : Hindi.t("Without one it needs a computer with ADB, and a mistake can stop the stereo from starting, so "
+                + "follow BOOT.md in OpenRath's source carefully and keep a copy of the original."));
+        AlertDialog.Builder b = new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Boot logo and animation made")).setMessage(msg)
+                .setPositiveButton(Hindi.t("Done"), null);
+        if (app != null) b.setNeutralButton(Hindi.f("Open %1$s", app.loadLabel(a.getPackageManager())), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 try {
                     a.startActivity(new Intent(Intent.ACTION_MAIN).setClassName(app.activityInfo.packageName, app.activityInfo.name)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 } catch (RuntimeException e) {
-                    android.widget.Toast.makeText(a, "Couldn't open it", android.widget.Toast.LENGTH_LONG).show();
+                    android.widget.Toast.makeText(a, Hindi.t("Couldn't open it"), android.widget.Toast.LENGTH_LONG).show();
                 }
             }
         });
