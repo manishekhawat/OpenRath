@@ -44,13 +44,13 @@ jobs:
             adb install -r out/openrath-fleet.apk
             adb shell appops set org.openrath.launcher MANAGE_EXTERNAL_STORAGE allow || true
             adb shell am instrument -w org.openrath.launcher.test/org.openrath.launcher.Smoke | tee smoke.txt
-            grep -q " 0 failed" smoke.txt
+            grep -q " 0 failed" smoke.txt || (adb logcat -d -b crash; adb logcat -d -s AndroidRuntime:E TestRunner:* | tail -150; exit 1)
             adb shell dpm set-device-owner org.openrath.fleet/.Admin
             adb shell am instrument -w -e fleet set org.openrath.fleet/.Setup | tee fleet-set.txt
             grep -q "fleet set: done" fleet-set.txt
             adb shell am instrument -w -e fleet set org.openrath.launcher.test/org.openrath.launcher.Smoke | tee smoke-fleet-set.txt
-            grep -q " 0 failed" smoke-fleet-set.txt
+            grep -q " 0 failed" smoke-fleet-set.txt || (adb logcat -d -b crash | tail -150; exit 1)
             adb shell am instrument -w -e fleet clear org.openrath.fleet/.Setup | tee fleet-clear.txt
             grep -q "fleet clear: done" fleet-clear.txt
             adb shell am instrument -w -e fleet clear org.openrath.launcher.test/org.openrath.launcher.Smoke | tee smoke-fleet-clear.txt
-            grep -q " 0 failed" smoke-fleet-clear.txt
+            grep -q " 0 failed" smoke-fleet-clear.txt || (adb logcat -d -b crash | tail -150; exit 1)
