@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Managed settings a fleet's device-management console can set (Managed.java). -->
+<restrictions xmlns:android="http://schemas.android.com/apk/res/android">
+    <restriction android:key="level" android:title="@string/m_level" android:description="@string/m_level_about"
+        android:restrictionType="choice" android:entries="@array/m_level_names" android:entryValues="@array/m_level_values" android:defaultValue="" />
+    <restriction android:key="lockLevel" android:title="@string/m_lock_level" android:description="@string/m_lock_level_about"
+        android:restrictionType="bool" android:defaultValue="false" />
+    <restriction android:key="featuresOn" android:title="@string/m_features_on" android:description="@string/m_features_on_about"
+        android:restrictionType="string" android:defaultValue="" />
+    <restriction android:key="featuresOff" android:title="@string/m_features_off" android:description="@string/m_features_off_about"
+        android:restrictionType="string" android:defaultValue="" />
+    <restriction android:key="devMode" android:title="@string/m_dev" android:description="@string/m_dev_about"
+        android:restrictionType="bool" android:defaultValue="true" />
+    <restriction android:key="reportUrl" android:title="@string/m_report_url" android:description="@string/m_report_url_about"
+        android:restrictionType="string" android:defaultValue="" />
+</restrictions>

@@ -4,13 +4,22 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation"/>
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.READ_CALL_LOG"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
@@ -21,8 +30,10 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <application android:largeHeap="true" android:allowBackup="false" android:icon="@mipmap/ic_launcher" android:label="@string/app_name"
-        android:hardwareAccelerated="true">
-        <activity android:name="org.openrath.launcher.HomeActivity" android:launchMode="singleTask"
+        android:hardwareAccelerated="true" android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true">
+        <meta-data android:name="android.content.APP_RESTRICTIONS" android:resource="@xml/app_restrictions" />
+        <activity android:name="org.openrath.launcher.HomeActivity" android:launchMode="singleTask" android:exported="true"
             android:theme="@android:style/Theme.Material.NoActionBar"
             android:configChanges="uiMode|orientation|screenSize|screenLayout|keyboardHidden|keyboard|navigation"
             android:stateNotNeeded="true" android:resumeWhilePausing="true" android:clearTaskOnLaunch="true">
@@ -33,10 +44,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="org.openrath.launcher.AppsActivity" android:label="All apps"
+        <activity android:name="org.openrath.launcher.AppsActivity" android:label="All apps" android:exported="false"
             android:theme="@android:style/Theme.Material.NoActionBar"/>
-        <service android:name="org.openrath.launcher.Player" android:exported="false"/>
-        <service android:name="org.openrath.launcher.Drive" android:exported="false"/>
+        <service android:name="org.openrath.launcher.Player" android:exported="false" android:foregroundServiceType="mediaPlayback"/>
+        <service android:name="org.openrath.launcher.Drive" android:exported="false" android:foregroundServiceType="location"/>
         <service android:name="org.openrath.launcher.MediaListener" android:label="@string/app_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" android:exported="true">
             <intent-filter>

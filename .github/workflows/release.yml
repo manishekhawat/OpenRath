@@ -1,0 +1,95 @@
+# Builds a signed public release when a tag like v1.32 is pushed (see RELEASING.md).
+# It never signs with the debug key: without the four RELEASE_* secrets the job fails.
+name: release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    # 24.04 ships Inter 4 (with the InterDisplay faces the welcome line uses); 22.04 doesn't.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with: { distribution: temurin, java-version: '17' }
+      - name: Tools
+        run: |
+          sudo apt-get update && sudo apt-get install -y fonts-inter python3-pil python3-numpy
+          test -f /usr/share/fonts/opentype/inter/InterDisplay-Light.otf
+          export THEME_TOOLS=$RUNNER_TEMP/tools
+          sh tools/fetch_tools.sh
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" > /dev/null
+          cp $ANDROID_HOME/platforms/android-34/android.jar $THEME_TOOLS/
+          cp $ANDROID_HOME/build-tools/34.0.0/lib/d8.jar $THEME_TOOLS/
+          echo "THEME_TOOLS=$THEME_TOOLS" >> $GITHUB_ENV
+      - name: Tag matches build.py
+        run: |
+          TAG=${GITHUB_REF_NAME}
+          VER=$(python3 -c "import re; print(re.search(r\"VERSION_NAME = \d+, '([^']+)'\", open('build.py').read()).group(1))")
+          if [ "$TAG" != "v$VER" ]; then
+            echo "::error::Tag $TAG does not match VERSION_NAME $VER in build.py"
+            exit 1
+          fi
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "VER=$VER" >> $GITHUB_ENV
+      - name: Release key
+        env:
+          KS_B64: ${{ secrets.RELEASE_KEYSTORE_B64 }}
+          STORE_PASS: ${{ secrets.RELEASE_STORE_PASS }}
+          KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.RELEASE_KEY_PASS }}
+        run: |
+          if [ -z "$KS_B64" ] || [ -z "$STORE_PASS" ] || [ -z "$KEY_ALIAS" ] || [ -z "$KEY_PASS" ]; then
+            echo "::error::Release secrets are missing. Releases must never be signed with the debug key."
+            exit 1
+          fi
+          echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+          python3 - <<'EOF'
+          import json, os
+          json.dump({'keystore': os.environ['RUNNER_TEMP'] + '/release.keystore', 'alias': os.environ['KEY_ALIAS'],
+                     'storePass': os.environ['STORE_PASS'], 'keyPass': os.environ['KEY_PASS']},
+                    open('signing.json', 'w'))
+          EOF
+      - name: Unit tests
+        run: python3 build.py test
+      - name: APK
+        run: OPENRATH_PUBLIC=1 python3 build.py out
+      - name: Remove the key
+        if: always()
+        run: rm -f signing.json "$RUNNER_TEMP/release.keystore"
+      - name: Files
+        run: |
+          mv out/openrath.apk "openrath-$TAG.apk"
+          git archive --format=zip --prefix=openrath/ -o "openrath-$TAG-source.zip" HEAD
+          sha256sum "openrath-$TAG.apk" "openrath-$TAG-source.zip" > SHA256SUMS
+          cat SHA256SUMS
+      - name: Notes
+        run: |
+          # the CHANGELOG section for this version, from its "## X.Y" heading to the next one
+          awk -v v="$VER" '
+            /^## / { if (on) exit; if ($2 == v || $2 == v ":") on = 1 }
+            on' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then echo "See CHANGELOG.md." > notes.md; fi
+          CERT=$($ANDROID_HOME/build-tools/34.0.0/apksigner verify --print-certs "openrath-$TAG.apk" \
+                 | sed -n 's/.*certificate SHA-256 digest: //p' | head -1)
+          {
+            echo
+            echo "## Checking the download"
+            echo
+            echo '`sha256sum -c SHA256SUMS` checks the files. The APK is signed with the certificate whose SHA-256 is:'
+            echo
+            echo '```'
+            echo "$CERT"
+            echo '```'
+            echo
+            echo "See RELEASING.md for the steps."
+          } >> notes.md
+          cat notes.md
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$TAG" "openrath-$TAG.apk" "openrath-$TAG-source.zip" SHA256SUMS \
+            --title "OpenRath $VER" --notes-file notes.md --verify-tag

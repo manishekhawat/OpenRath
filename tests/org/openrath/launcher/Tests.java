@@ -32,6 +32,7 @@ public final class Tests {
     public static void main(String[] args) {
         levels();
         hindi();
+        fleets();
         obd();
         tpms();
         fuel();
@@ -65,23 +66,65 @@ public final class Tests {
     }
 
     private static void hindi() {
-        java.util.Map<String, String> m = Hindi.parse("# note\nSearch\tखोज\nEmpty\t\nno tab here\n");
+        java.util.Map<String, String> m = Hindi.pair(new String[]{"Search", "Radio", "Empty"}, new String[]{"खोज", "Radio", ""});
         eq("hindi: one word", 1, m.size());
         eq("hindi: translated", "खोज", Hindi.t(m, true, "Search"));
         eq("hindi: missing stays English", "Radio", Hindi.t(m, true, "Radio"));
         eq("hindi: off stays English", "Search", Hindi.t(m, false, "Search"));
         eq("hindi: null", null, Hindi.t(m, true, null));
-        java.io.File f = new java.io.File("assets/hi.tsv");
-        if (f.exists()) {
+        java.io.File en = new java.io.File("res/values/ui.xml"), hi = new java.io.File("res/values-hi/ui.xml");
+        if (en.exists() && hi.exists()) {
             try {
-                java.util.Map<String, String> all = Hindi.parse(new String(java.nio.file.Files.readAllBytes(f.toPath()), "UTF-8"));
-                check("hindi: the file has the settings", all.size() > 300);
+                java.util.Map<String, String> e = strings(en), h = strings(hi);
+                java.util.Map<String, String> all = new java.util.HashMap<>();
+                for (java.util.Map.Entry<String, String> x : e.entrySet()) if (h.containsKey(x.getKey())) all.put(x.getValue(), h.get(x.getKey()));
+                check("hindi: the files have the settings", all.size() > 300);
+                check("hindi: every Hindi name is an English one", e.keySet().containsAll(h.keySet()));
                 for (Features.F x : Features.ALL) check("hindi: feature " + x.id, all.containsKey(x.name) || x.level == Features.DEV);
                 for (SettingsView.Section sec : SettingsView.SECTIONS) check("hindi: section " + sec.name, all.containsKey(sec.name) && all.containsKey(sec.about));
-            } catch (java.io.IOException e) {
-                check("hindi: file read", false);
+                check("hindi: back button keeps its spaces", "‹  Back to the dashboard".equals(e.get("ui_back_to_the_dashboard")));
+            } catch (java.io.IOException x) {
+                check("hindi: files read", false);
             }
         }
+    }
+
+    /** name to text from an Android strings file, unescaped the way aapt2 does it. */
+    private static java.util.Map<String, String> strings(java.io.File f) throws java.io.IOException {
+        java.util.Map<String, String> m = new java.util.HashMap<>();
+        java.util.regex.Matcher x = java.util.regex.Pattern.compile("<string name=\"([^\"]+)\"[^>]*>(.*?)</string>")
+                .matcher(new String(java.nio.file.Files.readAllBytes(f.toPath()), "UTF-8"));
+        while (x.find()) {
+            String v = x.group(2);
+            if (v.length() > 1 && v.startsWith("\"") && v.endsWith("\"")) v = v.substring(1, v.length() - 1);
+            v = v.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&");
+            StringBuilder b = new StringBuilder();
+            for (int i = 0; i < v.length(); i++) {
+                char c = v.charAt(i);
+                if (c == '\\' && i + 1 < v.length()) {
+                    char n = v.charAt(++i);
+                    b.append(n == 'n' ? '\n' : n);
+                } else b.append(c);
+            }
+            m.put(x.group(1), b.toString());
+        }
+        return m;
+    }
+
+    private static void fleets() {
+        eq("managed: ids", "backup|speedAlerts|reports", String.join("|", Managed.ids(" backup, speedAlerts,reports ")));
+        eq("managed: no ids", 0, Managed.ids("").length);
+        eq("managed: null ids", 0, Managed.ids(null).length);
+        check("reports: https only", Reports.sendable("https://fleet.example/r") && !Reports.sendable("http://fleet.example/r"));
+        check("reports: empty address", !Reports.sendable("") && !Reports.sendable("https://") && !Reports.sendable(null));
+        java.util.Map<String, Integer> m = new java.util.TreeMap<>();
+        m.put("Weather", 2);
+        m.put("app start", 5);
+        m.put("Backup", 2);
+        eq("reports: most used first", "app start: 5\nBackup: 2\nWeather: 2\n", Reports.format(m));
+        Features.F r = Features.get("reports");
+        check("reports: off by default", r != null && !r.def);
+        check("reports: no level turns it on", !Features.onAt(r, Features.SIMPLE, false) && !Features.onAt(r, Features.CUSTOM, false));
     }
 
     private static void levels() {
@@ -92,7 +135,7 @@ public final class Tests {
             else if (x.level == Features.CUSTOM) c++;
             else d++;
         }
-        eq("levels: simple count", 14, s);
+        eq("levels: simple count", 15, s);
         eq("levels: custom count", 10, c);
         eq("levels: dev count", 1, d);
         check("levels: full has the most", f > s && f > c);

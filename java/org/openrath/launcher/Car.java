@@ -178,7 +178,7 @@ final class Car {
     static boolean firstRun(final HomeActivity a) {
         final Prefs p = a.prefs;
         if (ready(p)) return false;
-        if (android.os.Build.VERSION.SDK_INT >= 23 && a.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (a.checkSelfPermission(android.os.Build.VERSION.SDK_INT >= 33 ? "android.permission.READ_MEDIA_IMAGES" : android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 != android.content.pm.PackageManager.PERMISSION_GRANTED && p.num("setupWaits", 0) < 2) {
             p.put("setupWaits", String.valueOf(p.num("setupWaits", 0) + 1));
             return true;   // the storage question is on screen; look for a backup once it's answered

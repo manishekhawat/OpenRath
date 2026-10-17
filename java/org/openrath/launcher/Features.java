@@ -30,9 +30,9 @@ final class Features {
             "Simple plus the helpers: voice, road warnings, highway trips, car care, driving score, cab tools",
             "Full plus making it your own: widgets, extra pages, boot logo, equalizer, driver profiles"};
     /** Off whatever the level until the owner turns them on: they need hardware, or change the home screen. */
-    private static final java.util.Set<String> ASK_FIRST = new java.util.HashSet<>(java.util.Arrays.asList("cab", "obd", "dashcam", "tpms"));
+    private static final java.util.Set<String> ASK_FIRST = new java.util.HashSet<>(java.util.Arrays.asList("cab", "obd", "dashcam", "tpms", "reports"));
 
-    private static final String[] SIMPLE_IDS = {"arrows", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "resume", "offlineMap", "backup"};
+    private static final String[] SIMPLE_IDS = {"arrows", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "resume", "offlineMap", "backup", "reports"};
     private static final String[] CUSTOM_IDS = {"road", "pages", "widgets", "saver", "perf", "bootArt", "soundProfiles", "speedVolume", "eq", "profiles"};
     private static final String[] DEV_IDS = {"maker"};
 
@@ -72,7 +72,7 @@ final class Features {
     }
 
     static boolean dev(Prefs p) {
-        return "on".equals(p.str("devMode", "off"));
+        return !Managed.devBlocked(p) && "on".equals(p.str("devMode", "off"));
     }
 
     /** Whether Settings shows this feature's switch: those of the owner's level, or every one in developer mode. */
@@ -164,6 +164,7 @@ final class Features {
             new F("offlineVoice", "Voice without internet", "Driving", true, "Uses the offline speech pack when there's no Wi-Fi"),
             new F("bootArt", "Boot logo and animation maker", "Dashboard", true, "Your car's badge and name for the stereo's start-up screens"),
             new F("backup", "Daily automatic backup", "Data", true, "Settings, fuel log and trips to OpenRath/backup"),
+            new F("reports", "Crash and usage reports", "Data", false, "Counts which settings you open, kept on the unit with any crash reports for you to share; off forgets them"),
             // cab drivers: one switch for all, then one each
             new F("cab", "Cab driver tools", "Cab", false, "Earnings, fare meter, SOS and more; adds the Cab box and the Cab menu"),
             new F("cabEarnings", "Earnings log", "Cab", true, "Rides and costs; today's and this week's net in the Cab box"),
@@ -191,12 +192,15 @@ final class Features {
     }
 
     static boolean on(Prefs p, String id) {
+        String locked = Managed.lockedTo(p, id);
+        if (locked != null) return "on".equals(locked);
         if ("speedAlerts".equals(id)) return p.alertsOn();   // kept in the older switch
         F f = get(id);
         return "on".equals(p.str("feat:" + id, f == null || f.def ? "on" : "off"));
     }
 
     static void set(Prefs p, String id, boolean on) {
+        if (Managed.lockedTo(p, id) != null) return;   // a fleet's managed settings decide this one
         p.put("feat:" + id, on ? "on" : "off");
         if ("speedAlerts".equals(id)) p.setAlertsOn(on);   // the older switch, kept in step
     }
