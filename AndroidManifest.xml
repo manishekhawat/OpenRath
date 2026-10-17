@@ -30,7 +30,9 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <application android:largeHeap="true" android:allowBackup="false" android:icon="@mipmap/ic_launcher" android:label="@string/app_name"
-        android:hardwareAccelerated="true" android:requestLegacyExternalStorage="true">
+        android:hardwareAccelerated="true" android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true">
+        <meta-data android:name="android.content.APP_RESTRICTIONS" android:resource="@xml/app_restrictions" />
         <activity android:name="org.openrath.launcher.HomeActivity" android:launchMode="singleTask" android:exported="true"
             android:theme="@android:style/Theme.Material.NoActionBar"
             android:configChanges="uiMode|orientation|screenSize|screenLayout|keyboardHidden|keyboard|navigation"

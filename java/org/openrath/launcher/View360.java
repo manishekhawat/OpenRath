@@ -145,7 +145,7 @@ final class View360 {
         String[] names = {"Top", "Front", "Left", "Right", "Rear", "Colour", "Shape", "Plate", cam != null ? "360 camera" : null, "Close"};
         for (final String n : names) {
             if (n == null) continue;
-            TextView b = Cards.PhoneCard.pill(a, n, "Close".equals(n) ? 0xFF7A2328 : "360 camera".equals(n) ? 0xFF1F6F45 : 0);
+            TextView b = PhoneCard.pill(a, n, "Close".equals(n) ? 0xFF7A2328 : "360 camera".equals(n) ? 0xFF1F6F45 : 0);
             b.setTextSize(0, 15 * Ui.k);
             b.setPadding(Ui.px(16), 0, Ui.px(16), 0);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, Ui.px(46));

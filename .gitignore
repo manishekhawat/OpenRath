@@ -5,4 +5,5 @@ brands/*
 signing.json
 *.keystore
 package/
+out/
 __pycache__/

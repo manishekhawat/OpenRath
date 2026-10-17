@@ -2,6 +2,15 @@
 
 Newest first.
 
+## 1.33: Ready for Android 14, fleets and translators
+
+- **Android 10 and newer, built for Android 14.** OpenRath now asks for the permissions each Android version names (media, notifications and nearby devices on newer ones), and asks once for access to the OpenRath folder on Android 11 and newer. Units on Android 9 or older stay on 1.32: Android won't offer them this update.
+- **Crash and usage reports, off unless you turn them on** (Settings > Backup and about). They count how often OpenRath starts and which settings get opened, kept on the unit with any crash reports for you to read and share under Settings > Backup and about > Usage report. Nothing about where you drive, who you call or what you type. Turning them off forgets everything.
+- **Managed settings for fleets:** a device-management console can pick and lock the level, turn features on or off and lock them, hide developer mode, and collect usage reports at the fleet's own https address. Locked switches say "Set by your organisation". See docs/MANAGED.md.
+- **Settings text in Android string files** (res/values/ui.xml, and res/values-hi/ui.xml for Hindi), so translators can use the usual tools. The Hindi still needs a native speaker's check.
+- Online radio stations that only stream over plain http keep playing.
+- For contributors: on-device tests (`build.py androidtest`), GitHub runs them on Android 10 and 14 emulators; tagged releases with checksums; issue and pull request forms; F-Droid listing text; NOTICE and an updated privacy page.
+
 ## 1.32: Own release key, Hindi settings, voice in two taps
 
 - **Signed with OpenRath's own release key** instead of the old Dzire theme key. Android won't install it over 1.31 or earlier: back up (Settings > Backup and about > Back up now), uninstall the old one, install 1.32, and say yes to bringing the backup back.

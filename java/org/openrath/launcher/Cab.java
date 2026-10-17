@@ -1,23 +1,18 @@
 package org.openrath.launcher;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.text.InputType;
-import android.view.Gravity;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -301,7 +296,7 @@ final class Cab {
         return out;
     }
 
-    private static void save(Prefs p, List<Entry> l) {
+    static void save(Prefs p, List<Entry> l) {
         JSONArray a = new JSONArray();
         int from = Math.max(0, l.size() - 3000);   // a year or so of rides
         try {
@@ -367,7 +362,7 @@ final class Cab {
     static String stamp(Prefs p) {
         if (!Features.on(p, "cab")) return "";
         long at = p.longNum("cabMeterAt", 0);
-        String m = at == 0 ? "" : fareNow(p) + "/" + Math.round(meterKm(p) * 10) + "/" + p.longNum("cabMeterWait", 0) / 60000;
+        String m = at == 0 ? "" : CabMeter.fareNow(p) + "/" + Math.round(CabMeter.meterKm(p) * 10) + "/" + p.longNum("cabMeterWait", 0) / 60000;
         long duty = p.longNum("cabDutyAt", 0);
         return version + m + quiet + (duty == 0 ? "" : String.valueOf((System.currentTimeMillis() - duty) / 60000));
     }
@@ -420,7 +415,7 @@ final class Cab {
         }
     }
 
-    private static long waitMs = -1;
+    static long waitMs = -1;
 
     static void startDuty(Prefs p, long now) {
         if (!on(p, "cabTarget")) return;
@@ -443,12 +438,12 @@ final class Cab {
         final List<Runnable> acts = new ArrayList<>();
         if (on(p, "cabMeter")) {
             boolean running = p.longNum("cabMeterAt", 0) > 0;
-            names.add(running ? "Meter: " + rs(fareNow(p)) + "  (show it)" : "Start the fare meter");
+            names.add(running ? "Meter: " + rs(CabMeter.fareNow(p)) + "  (show it)" : "Start the fare meter");
             acts.add(new Runnable() {
                 @Override
                 public void run() {
-                    if (p.longNum("cabMeterAt", 0) == 0) startMeter(a);
-                    showMeter(a);
+                    if (p.longNum("cabMeterAt", 0) == 0) CabMeter.startMeter(a);
+                    CabMeter.showMeter(a);
                 }
             });
         }
@@ -457,21 +452,21 @@ final class Cab {
             acts.add(new Runnable() {
                 @Override
                 public void run() {
-                    rideDialog(a, 0, 0, 0, 0, null);
+                    CabEarnings.rideDialog(a, 0, 0, 0, 0, null);
                 }
             });
             names.add("Add a cost (fuel, toll, food…)");
             acts.add(new Runnable() {
                 @Override
                 public void run() {
-                    costDialog(a);
+                    CabEarnings.costDialog(a);
                 }
             });
             names.add("Earnings: today and this week");
             acts.add(new Runnable() {
                 @Override
                 public void run() {
-                    earnings(a);
+                    CabEarnings.earnings(a);
                 }
             });
         }
@@ -571,7 +566,7 @@ final class Cab {
             acts.add(new Runnable() {
                 @Override
                 public void run() {
-                    sos(a);
+                    CabSos.sos(a);
                 }
             });
         }
@@ -596,20 +591,16 @@ final class Cab {
         return "Cab  ·  today " + rs(s.net()) + " net, " + s.rides + (s.rides == 1 ? " ride" : " rides");
     }
 
-    // ================================================================== earnings screens
+    // ================================================================== dialog helpers
 
-    static final String[] APPS = {"Uber", "Ola", "Rapido", "inDrive", "Namma Yatri", "Street", "Other"};
-    static final String[] PAYS = {"Cash", "UPI", "In the app"};
-    static final String[] COSTS = {"Fuel or CNG", "Toll", "Parking", "Food", "Commission", "Repair", "Other"};
-
-    private static LinearLayout box(Context a) {
+    static LinearLayout box(Context a) {
         LinearLayout box = new LinearLayout(a);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setPadding(Ui.px(20), Ui.px(8), Ui.px(20), 0);
         return box;
     }
 
-    private static EditText number(LinearLayout box, String hint, String value) {
+    static EditText number(LinearLayout box, String hint, String value) {
         EditText e = new EditText(box.getContext());
         e.setHint(hint);
         e.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -618,335 +609,12 @@ final class Cab {
         return e;
     }
 
-    /** A line that steps through choices on each tap: "App: Uber  ▸". */
-    private static TextView chooser(LinearLayout box, final String label, final String[] choices, final String[] chosen) {
-        final TextView t = new TextView(box.getContext());
-        t.setTextSize(18);
-        t.setPadding(0, Ui.px(12), 0, Ui.px(12));
-        t.setText(label + ": " + chosen[0] + "   ▸");
-        t.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int i = java.util.Arrays.asList(choices).indexOf(chosen[0]);
-                chosen[0] = choices[(i + 1) % choices.length];
-                t.setText(label + ": " + chosen[0] + "   ▸");
-            }
-        });
-        box.addView(t);
-        return t;
-    }
-
-    private static double num(EditText e) {
+    static double num(EditText e) {
         try {
             return Double.parseDouble(e.getText().toString().trim());
         } catch (Exception ex) {
             return -1;
         }
-    }
-
-    static void rideDialog(final HomeActivity a, long fare, final double km, final double lat, final double lon, String pay) {
-        final Prefs p = a.prefs;
-        LinearLayout box = box(a);
-        final EditText amount = number(box, "Fare (₹)", fare > 0 ? String.valueOf(fare) : null);
-        final String[] app = {p.str("cabLastApp", "Uber")};
-        final String[] how = {pay != null ? pay : p.str("cabLastPay", "Cash")};
-        chooser(box, "App", APPS, app);
-        chooser(box, "Paid by", PAYS, how);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Add a ride").setView(box)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        double v = num(amount);
-                        if (v <= 0) {
-                            Toast.makeText(a, "Enter the fare in rupees", Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        p.put("cabLastApp", app[0]);
-                        p.put("cabLastPay", how[0]);
-                        addRide(a, v, km, app[0], how[0], lat, lon);
-                        a.hub.notifyIfChanged(true);
-                    }
-                }).setNegativeButton("Cancel", null).show();
-    }
-
-    static void costDialog(final HomeActivity a) {
-        final Prefs p = a.prefs;
-        LinearLayout box = box(a);
-        final EditText amount = number(box, "Amount (₹)", null);
-        final String[] what = {p.str("cabLastCost", COSTS[0])};
-        chooser(box, "For", COSTS, what);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Add a cost").setView(box)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        double v = num(amount);
-                        if (v <= 0) {
-                            Toast.makeText(a, "Enter the amount in rupees", Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        p.put("cabLastCost", what[0]);
-                        addCost(p, v, what[0]);
-                        a.hub.notifyIfChanged(true);
-                    }
-                }).setNegativeButton("Cancel", null).show();
-    }
-
-    static String report(Prefs p, long now) {
-        List<Entry> l = log(p);
-        long today = dayStart(now), week = weekStart(now);
-        StringBuilder b = new StringBuilder();
-        Object[][] spans = {{"Today", today, now + 1}, {"Yesterday", dayStart(today - 3600000), today},
-                {"This week (from Monday)", week, now + 1}, {"Last 30 days", today - 29 * 86400000L, now + 1}};
-        for (Object[] s : spans) {
-            Sum x = sum(l, (Long) s[1], (Long) s[2]);
-            b.append(s[0]).append(": ").append(rs(x.net())).append(" net\n   ").append(x.rides).append(x.rides == 1 ? " ride " : " rides ")
-                    .append(rs(x.in)).append(",  costs ").append(rs(x.out)).append("\n");
-        }
-        List<Object[]> apps = by(l, week, now + 1, false), pays = by(l, today, now + 1, true);
-        if (!apps.isEmpty()) {
-            b.append("\nThis week by app: ");
-            for (int i = 0; i < apps.size(); i++) b.append(i == 0 ? "" : ",  ").append(apps.get(i)[0]).append(" ").append(rs((Double) apps.get(i)[1]));
-        }
-        if (!pays.isEmpty()) {
-            b.append("\nToday by payment: ");
-            for (int i = 0; i < pays.size(); i++) b.append(i == 0 ? "" : ",  ").append(pays.get(i)[0]).append(" ").append(rs((Double) pays.get(i)[1]));
-        }
-        int target = p.num("cabTargetRs", 2000);
-        if (on(p, "cabTarget") && target > 0) {
-            double net = sum(l, today, now + 1).net();
-            b.append("\n\nDaily target ").append(rs(target)).append(": ")
-                    .append(net >= target ? "reached" : rs(target - net) + " to go");
-        }
-        return b.toString().trim();
-    }
-
-    /** What "how much did I earn" says. */
-    static String spoken(Prefs p) {
-        long now = System.currentTimeMillis();
-        Sum s = sum(log(p), dayStart(now), now + 1);
-        if (s.rides == 0 && s.out == 0) return "No rides logged today yet.";
-        return "Today, " + s.rides + (s.rides == 1 ? " ride, " : " rides, ") + Math.round(s.in) + " rupees in, "
-                + Math.round(s.out) + " rupees of costs, " + Math.round(s.net()) + " rupees net.";
-    }
-
-    static void earnings(final HomeActivity a) {
-        final Prefs p = a.prefs;
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Earnings").setMessage(report(p, System.currentTimeMillis()))
-                .setPositiveButton("Add a ride", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        rideDialog(a, 0, 0, 0, 0, null);
-                    }
-                })
-                .setNeutralButton("All entries", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        entries(a);
-                    }
-                })
-                .setNegativeButton("Close", null).show();
-    }
-
-    static void entries(final HomeActivity a) {
-        final Prefs p = a.prefs;
-        final List<Entry> l = log(p);
-        int n = Math.min(l.size(), 200);
-        String[] rows = new String[n];
-        SimpleDateFormat f = new SimpleDateFormat("d MMM  HH:mm", Locale.getDefault());
-        for (int i = 0; i < n; i++) {
-            Entry e = l.get(l.size() - 1 - i);
-            rows[i] = f.format(new Date(e.t)) + "   " + (e.ride ? "+" + rs(e.rs) + "  " + e.app + ", " + e.pay
-                    + (e.km > 0 ? ", " + Fuel.fmt(e.km) + " km" : "") : "−" + rs(e.rs) + "  " + e.what);
-        }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(n == 0 ? "Nothing logged yet" : "Rides and costs (tap one to delete it)")
-                .setItems(rows, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, final int which) {
-                        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                                .setMessage("Delete this entry?")
-                                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface d2, int w) {
-                                        List<Entry> out = new ArrayList<>(l);
-                                        out.remove(l.size() - 1 - which);
-                                        save(p, out);
-                                        a.hub.notifyIfChanged(true);
-                                    }
-                                }).setNegativeButton("Keep", null).show();
-                    }
-                }).setNegativeButton("Close", null).show();
-    }
-
-    // ================================================================== fare meter
-
-    static Rates rates(Prefs p) {
-        Rates r = new Rates();
-        r.base = dbl(p, "cabBase", r.base);
-        r.baseKm = dbl(p, "cabBaseKm", r.baseKm);
-        r.perKm = dbl(p, "cabPerKm", r.perKm);
-        r.waitPerMin = dbl(p, "cabWaitRs", r.waitPerMin);
-        r.freeWait = dbl(p, "cabFreeWait", r.freeWait);
-        r.nightPct = dbl(p, "cabNightPct", r.nightPct);
-        return r;
-    }
-
-    private static double dbl(Prefs p, String k, double def) {
-        try {
-            return Double.parseDouble(p.str(k, String.valueOf(def)));
-        } catch (Exception e) {
-            return def;
-        }
-    }
-
-    static double meterKm(Prefs p) {
-        return Math.max(0, Drive.odoKm - dbl(p, "cabMeterOdo", Drive.odoKm));
-    }
-
-    static long meterWaitMs(Prefs p) {
-        if (waitMs < 0) waitMs = p.longNum("cabMeterWait", 0);
-        return waitMs;
-    }
-
-    static boolean meterNight(Prefs p) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(p.longNum("cabMeterAt", System.currentTimeMillis()));
-        return night(c.get(Calendar.HOUR_OF_DAY)) || night(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
-    }
-
-    static long fareNow(Prefs p) {
-        return fare(rates(p), meterKm(p), meterWaitMs(p) / 60000.0, meterNight(p));
-    }
-
-    static void startMeter(HomeActivity a) {
-        Prefs p = a.prefs;
-        long now = System.currentTimeMillis();
-        p.putLong("cabMeterAt", now);
-        p.put("cabMeterOdo", String.valueOf(Drive.odoKm));
-        p.putLong("cabMeterWait", 0);
-        p.put("cabMeterLat", String.valueOf(Drive.latNow));
-        p.put("cabMeterLon", String.valueOf(Drive.lonNow));
-        waitMs = 0;
-        startDuty(p, now);
-        if (on(p, "cabQuiet") && "on".equals(p.str("cabQuietWithMeter", "on")) && !quiet) setQuiet(a, true);
-        version++;
-    }
-
-    /** The meter, big, for the passenger to see. */
-    static void showMeter(final HomeActivity a) {
-        final Prefs p = a.prefs;
-        final Dialog d = new Dialog(a, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        LinearLayout col = new LinearLayout(a);
-        col.setOrientation(LinearLayout.VERTICAL);
-        col.setGravity(Gravity.CENTER);
-        col.setBackgroundColor(0xFF050607);
-        TextView head = Ui.text(a, 22, Ui.SILVER_DIM, "sans-serif-medium", Gravity.CENTER);
-        head.setText("FARE  ·  किराया");
-        col.addView(head);
-        final TextView fare = Ui.text(a, 120, 0xFFFFFFFF, "sans-serif-light", Gravity.CENTER);
-        col.addView(fare);
-        final TextView info = Ui.text(a, 24, Ui.SILVER, "sans-serif", Gravity.CENTER);
-        info.setPadding(0, 0, 0, Ui.px(26));
-        col.addView(info);
-        LinearLayout row = new LinearLayout(a);
-        row.setGravity(Gravity.CENTER);
-        TextView hide = button(a, "Hide", 0xFF33363C), stop = button(a, "Stop and charge", 0xFF1F6F45);
-        LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(Ui.px(260), Ui.px(76));
-        bp.leftMargin = bp.rightMargin = Ui.px(14);
-        row.addView(hide, bp);
-        row.addView(stop, bp);
-        col.addView(row);
-        d.setContentView(col);
-        final Runnable[] tick = new Runnable[1];
-        tick[0] = new Runnable() {
-            @Override
-            public void run() {
-                if (p.longNum("cabMeterAt", 0) == 0) {
-                    d.dismiss();
-                    return;
-                }
-                Rates r = rates(p);
-                fare.setText(rs(fareNow(p)));
-                long w = meterWaitMs(p) / 60000;
-                info.setText(Fuel.fmt(meterKm(p)) + " km   ·   " + w + " min waiting   ·   " + hm(System.currentTimeMillis() - p.longNum("cabMeterAt", 0))
-                        + (meterNight(p) ? "\nNight charge +" + Math.round(r.nightPct) + "%" : "")
-                        + "\n" + rs(r.base) + " for the first " + Fuel.fmt(r.baseKm) + " km, then " + rs(r.perKm) + " a km");
-                fare.postDelayed(this, 1000);
-            }
-        };
-        hide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                d.dismiss();
-            }
-        });
-        stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                d.dismiss();
-                stopMeter(a);
-            }
-        });
-        d.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface di) {
-                fare.removeCallbacks(tick[0]);
-            }
-        });
-        d.show();
-        tick[0].run();
-    }
-
-    static void stopMeter(final HomeActivity a) {
-        final Prefs p = a.prefs;
-        if (p.longNum("cabMeterAt", 0) == 0) return;
-        final long f = fareNow(p);
-        final double km = meterKm(p);
-        final double lat = dbl(p, "cabMeterLat", 0), lon = dbl(p, "cabMeterLon", 0);
-        long w = meterWaitMs(p) / 60000;
-        String said = Fuel.fmt(km) + " km, " + w + " min waiting" + (meterNight(p) ? ", night charge" : "");
-        p.putLong("cabMeterAt", 0);
-        p.putLong("cabMeterWait", 0);
-        waitMs = 0;
-        if (quiet && "on".equals(p.str("cabQuietWithMeter", "on"))) setQuiet(a, false);
-        version++;
-        final boolean log = on(p, "cabEarnings");
-        final String upi = p.str("upiId", "");
-        AlertDialog.Builder b = new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Fare " + rs(f)).setMessage(said + (log ? "\n\nSave it to the earnings log?" : ""))
-                .setPositiveButton(log ? "Paid in cash" : "OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int which) {
-                        if (log) addRide(a, f, km, "Meter", "Cash", lat, lon);
-                        a.hub.notifyIfChanged(true);
-                    }
-                })
-                .setNeutralButton(Errands.validVpa(upi) ? "UPI QR" : "Paid by UPI", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int which) {
-                        if (log) addRide(a, f, km, "Meter", "UPI", lat, lon);
-                        if (Errands.validVpa(upi)) Qr.show(a, "Pay " + rs(f), Errands.upiLink(upi, p.str("upiName", ""), (int) f, "Cab fare"),
-                                "Scan with any UPI app (GPay, PhonePe, Paytm, BHIM); the fare is filled in. Pays " + upi + ".");
-                        else Toast.makeText(a, "Set your UPI id in Settings > Cab driver to show a QR code", Toast.LENGTH_LONG).show();
-                        a.hub.notifyIfChanged(true);
-                    }
-                });
-        if (log) b.setNegativeButton("Don't save", null);
-        b.show();
-    }
-
-    private static TextView button(Context a, String s, int colour) {
-        TextView b = Ui.text(a, 22, 0xFFFFFFFF, "sans-serif-medium", Gravity.CENTER);
-        b.setText(s);
-        GradientDrawable g = new GradientDrawable();
-        g.setCornerRadius(Ui.px(16));
-        g.setColor(colour);
-        b.setBackground(g);
-        b.setClickable(true);
-        return b;
     }
 
     // ================================================================== ride apps
@@ -1378,387 +1046,6 @@ final class Cab {
                         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
                     }
                 }).setNegativeButton("Close", null).show();
-    }
-
-    // ================================================================== SOS
-
-    static String[] contact(Prefs p, int i) {
-        String v = p.str("cabSos" + i, "");
-        int bar = v.indexOf('|');
-        if (bar < 0 || bar == v.length() - 1) return null;
-        return new String[]{v.substring(0, bar), v.substring(bar + 1)};
-    }
-
-    static String sosText(Prefs p, double lat, double lon, long now) {
-        String who = p.welcome().isEmpty() ? "your driver" : p.welcome();
-        String car = p.str("cabVehicle", "");
-        return "SOS from " + who + (car.isEmpty() ? "" : " (" + car + ")") + ": I need help. "
-                + (lat == 0 && lon == 0 ? "Location not known yet." : "I am here: " + Geo.mapsLink(lat, lon))
-                + " at " + new SimpleDateFormat("HH:mm, d MMM", Locale.US).format(new Date(now)) + ".";
-    }
-
-    static void editContacts(final HomeActivity a, final Runnable done) {
-        final Prefs p = a.prefs;
-        LinearLayout box = box(a);
-        final EditText[] f = new EditText[4];
-        for (int i = 0; i < 2; i++) {
-            String[] c = contact(p, i + 1);
-            f[i * 2] = new EditText(a);
-            f[i * 2].setHint("Contact " + (i + 1) + ": name");
-            f[i * 2].setText(c == null ? "" : c[0]);
-            box.addView(f[i * 2]);
-            f[i * 2 + 1] = new EditText(a);
-            f[i * 2 + 1].setHint("Contact " + (i + 1) + ": phone number");
-            f[i * 2 + 1].setInputType(InputType.TYPE_CLASS_PHONE);
-            f[i * 2 + 1].setText(c == null ? "" : c[1]);
-            box.addView(f[i * 2 + 1]);
-        }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("SOS contacts")
-                .setMessage("SOS texts them where the car is. Without a SIM in the stereo it calls the first one through your phone instead.")
-                .setView(box)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        for (int i = 0; i < 2; i++) {
-                            String n = f[i * 2 + 1].getText().toString().replaceAll("[^0-9+]", "");
-                            String name = f[i * 2].getText().toString().trim().replace('|', ' ');
-                            p.put("cabSos" + (i + 1), n.isEmpty() ? "" : (name.isEmpty() ? n : name) + "|" + n);
-                        }
-                        if (!canText(a))
-                            a.requestPermissions(new String[]{android.Manifest.permission.SEND_SMS}, 6);
-                        if (done != null) done.run();
-                    }
-                }).setNegativeButton("Cancel", null).show();
-    }
-
-    static boolean canText(Context c) {
-        return c.checkCallingOrSelfPermission(android.Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private static boolean simReady(Context c) {
-        try {
-            android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
-            return tm != null && tm.getSimState() == android.telephony.TelephonyManager.SIM_STATE_READY;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /** Five seconds to cancel (a mistaken tap), then text both contacts, or call the first. */
-    static void sos(final HomeActivity a) {
-        final Prefs p = a.prefs;
-        final String[] c1 = contact(p, 1), c2 = contact(p, 2);
-        if (c1 == null && c2 == null) {
-            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                    .setTitle("No SOS contacts yet")
-                    .setMessage("Add two people to text in an emergency.")
-                    .setPositiveButton("Add them", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface d, int w) {
-                            editContacts(a, null);
-                        }
-                    })
-                    .setNeutralButton("Call 112", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface d, int w) {
-                            a.call("112");
-                        }
-                    }).setNegativeButton("Close", null).show();
-            return;
-        }
-        final Dialog d = new Dialog(a, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        LinearLayout col = new LinearLayout(a);
-        col.setOrientation(LinearLayout.VERTICAL);
-        col.setGravity(Gravity.CENTER);
-        col.setBackgroundColor(0xF2120808);
-        final TextView info = Ui.text(a, 26, 0xFFFFFFFF, "sans-serif-medium", Gravity.CENTER);
-        info.setPadding(Ui.px(40), 0, Ui.px(40), Ui.px(10));
-        col.addView(info);
-        final TextView count = Ui.text(a, 96, 0xFFFF6A5A, "sans-serif-light", Gravity.CENTER);
-        col.addView(count);
-        final LinearLayout extra = new LinearLayout(a);
-        extra.setGravity(Gravity.CENTER);
-        col.addView(extra);
-        final TextView cancel = button(a, "Cancel", 0xFF33363C);
-        LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(Ui.px(260), Ui.px(76));
-        bp.topMargin = Ui.px(20);
-        bp.gravity = Gravity.CENTER_HORIZONTAL;
-        col.addView(cancel, bp);
-        d.setContentView(col);
-        final String who = (c1 != null ? c1[0] : "") + (c1 != null && c2 != null ? " and " : "") + (c2 != null ? c2[0] : "");
-        info.setText("Sending SOS with your location to " + who);
-        final int[] left = {5};
-        count.setText("5");
-        final Runnable send = new Runnable() {
-            @Override
-            public void run() {
-                count.setText("");
-                cancel.setText("Close");
-                double lat = Drive.latNow, lon = Drive.lonNow;
-                final String msg = sosText(p, lat, lon, System.currentTimeMillis());
-                List<String> to = new ArrayList<>();
-                if (c1 != null) to.add(c1[1]);
-                if (c2 != null) to.add(c2[1]);
-                boolean sent = false;
-                if (canText(a) && simReady(a)) {
-                    try {
-                        android.telephony.SmsManager sm = android.telephony.SmsManager.getDefault();
-                        for (String n : to) sm.sendMultipartTextMessage(n, null, sm.divideMessage(msg), null, null);
-                        sent = true;
-                    } catch (Exception ignored) {
-                    }
-                }
-                if (sent) {
-                    info.setText("SOS sent to " + who + ".\n\n" + msg);
-                    return;
-                }
-                // no SIM in the stereo: call through the paired phone, and a code to send the text from it
-                info.setText("The stereo can't send texts (no SIM), so it's calling " + (c1 != null ? c1[0] : c2[0])
-                        + " through your phone.\nScan the code with your phone to send the SOS text.");
-                a.call(c1 != null ? c1[1] : c2[1]);
-                ImageView qr = Qr.view(a, "SOS text", "SMSTO:" + to.get(0) + ":" + msg, "Scan to send the SOS text from your phone.", Ui.px(220));
-                extra.addView(qr, new LinearLayout.LayoutParams(Ui.px(220), Ui.px(220)));
-            }
-        };
-        final Runnable tick = new Runnable() {
-            @Override
-            public void run() {
-                if (!d.isShowing()) return;
-                left[0]--;
-                if (left[0] <= 0) send.run();
-                else {
-                    count.setText(String.valueOf(left[0]));
-                    count.postDelayed(this, 1000);
-                }
-            }
-        };
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                count.removeCallbacks(tick);
-                d.dismiss();
-            }
-        });
-        d.show();
-        count.postDelayed(tick, 1000);
-    }
-
-    // ================================================================== settings
-
-    static void rows(final HomeActivity a, List<SettingsView.Row> r) {
-        final Prefs p = a.prefs;
-        final String g = "Cab";
-        if (!Features.on(p, "cab")) {
-            r.add(new SettingsView.Row(g, "Cab driver tools are off", "switch them on above", null));
-            return;
-        }
-        final Runnable redo = new Runnable() {
-            @Override
-            public void run() {
-                if (a.settingsView != null) a.settingsView.refresh();
-            }
-        };
-        r.add(new SettingsView.Row(g, "Cab box", "long-press any box on the dashboard and pick Cab driver", null));
-        if (Features.on(p, "cabTarget")) {
-            r.add(new SettingsView.Row(g, "Daily target", rs(p.num("cabTargetRs", 2000)) + " net", new Runnable() {
-                @Override
-                public void run() {
-                    ask(a, "Daily target (₹ net)", String.valueOf(p.num("cabTargetRs", 2000)), "cabTargetRs", redo);
-                }
-            }));
-            r.add(new SettingsView.Row(g, "Break reminder after", p.num("cabDutyH", 10) + " hours on duty", new Runnable() {
-                @Override
-                public void run() {
-                    int[] steps = {8, 9, 10, 11, 12, 0};
-                    int cur = p.num("cabDutyH", 10), next = 10;
-                    for (int k = 0; k < steps.length; k++) if (steps[k] == cur) next = steps[(k + 1) % steps.length];
-                    p.put("cabDutyH", String.valueOf(next));
-                    redo.run();
-                }
-            }));
-        }
-        if (Features.on(p, "cabMeter")) {
-            final Rates rt = rates(p);
-            r.add(new SettingsView.Row(g, "Fare meter rates", rs(rt.base) + " for " + Fuel.fmt(rt.baseKm) + " km, " + rs(rt.perKm) + "/km, waiting "
-                    + rs(rt.waitPerMin) + "/min after " + Math.round(rt.freeWait) + " min, night +" + Math.round(rt.nightPct) + "%", new Runnable() {
-                @Override
-                public void run() {
-                    meterRates(a, redo);
-                }
-            }));
-        }
-        if (Features.on(p, "cabMeter") || Features.on(p, "cabEarnings")) {
-            String upi = p.str("upiId", "");
-            r.add(new SettingsView.Row(g, "UPI id for fares", upi.isEmpty() ? "not set: the meter can show a QR code to pay you" : upi, new Runnable() {
-                @Override
-                public void run() {
-                    final EditText e = new EditText(a);
-                    e.setHint("name@bank");
-                    e.setText(p.str("upiId", ""));
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setTitle("Your UPI id").setView(e)
-                            .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface d, int w) {
-                                    String v = e.getText().toString().trim();
-                                    if (!v.isEmpty() && !Errands.validVpa(v)) {
-                                        Toast.makeText(a, "That doesn't look like a UPI id (name@bank)", Toast.LENGTH_LONG).show();
-                                        return;
-                                    }
-                                    p.put("upiId", v);
-                                    redo.run();
-                                }
-                            }).setNegativeButton("Cancel", null).show();
-                }
-            }));
-        }
-        if (Features.on(p, "cabQuiet")) {
-            r.add(new SettingsView.Row(g, "Quiet ride volume", p.num("cabQuietPct", 30) + "% of full", new Runnable() {
-                @Override
-                public void run() {
-                    int v = p.num("cabQuietPct", 30);
-                    p.put("cabQuietPct", String.valueOf(v >= 50 ? 10 : v + 10));
-                    redo.run();
-                }
-            }));
-            r.add(new SettingsView.Row(g, "Quiet ride with the meter", "on".equals(p.str("cabQuietWithMeter", "on"))
-                    ? "starts and ends with the fare meter" : "only from the Cab menu", new Runnable() {
-                @Override
-                public void run() {
-                    p.put("cabQuietWithMeter", "on".equals(p.str("cabQuietWithMeter", "on")) ? "off" : "on");
-                    redo.run();
-                }
-            }));
-        }
-        if (Features.on(p, "cabSos")) {
-            String[] c1 = contact(p, 1), c2 = contact(p, 2);
-            r.add(new SettingsView.Row(g, "SOS contacts", c1 == null && c2 == null ? "not set"
-                    : (c1 != null ? c1[0] : "") + (c1 != null && c2 != null ? ", " : "") + (c2 != null ? c2[0] : ""), new Runnable() {
-                @Override
-                public void run() {
-                    editContacts(a, redo);
-                }
-            }));
-        }
-        if (Features.on(p, "cabSos") || Features.on(p, "cabMeter")) {
-            r.add(new SettingsView.Row(g, "Vehicle number", p.str("cabVehicle", "").isEmpty() ? "not set (goes in the SOS text)" : p.str("cabVehicle", ""), new Runnable() {
-                @Override
-                public void run() {
-                    final EditText e = new EditText(a);
-                    e.setHint("e.g. DL 1R AB 1234");
-                    e.setText(p.str("cabVehicle", ""));
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setTitle("Vehicle number").setView(e)
-                            .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface d, int w) {
-                                    p.put("cabVehicle", e.getText().toString().trim().toUpperCase(Locale.US));
-                                    redo.run();
-                                }
-                            }).setNegativeButton("Cancel", null).show();
-                }
-            }));
-        }
-        if (Features.on(p, "cabPapers")) {
-            long now = System.currentTimeMillis();
-            int set = 0;
-            String soonest = "";
-            long best = Long.MAX_VALUE;
-            for (int i = 0; i < PAPERS.length; i++) {
-                long d = daysTo(p.str(paperKey(PAPERS[i]), ""), now);
-                if (d == Long.MIN_VALUE) continue;
-                set++;
-                if (d < best) {
-                    best = d;
-                    soonest = dueText(PAPER_NAMES[i], d);
-                }
-            }
-            r.add(new SettingsView.Row(g, "Papers due dates", set == 0 ? "permit, fitness, badge, road tax, insurance, PUC: not set" : soonest + "  (" + set + " of 6 set)",
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            papers(a, redo);
-                        }
-                    }));
-        }
-        if (Features.on(p, "cabPhrases")) {
-            int li = java.util.Arrays.asList(LANGS).indexOf(p.str("cabLang", "hi"));
-            r.add(new SettingsView.Row(g, "Phrases in", LANG_NAMES[Math.max(0, li)], new Runnable() {
-                @Override
-                public void run() {
-                    int i = java.util.Arrays.asList(LANGS).indexOf(p.str("cabLang", "hi"));
-                    p.put("cabLang", LANGS[(Math.max(0, i) + 1) % LANGS.length]);
-                    redo.run();
-                }
-            }));
-        }
-        if (Features.on(p, "cabEarnings")) {
-            r.add(new SettingsView.Row(g, "Clear the earnings log", log(p).size() + " entries", new Runnable() {
-                @Override
-                public void run() {
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setMessage("Delete every ride and cost in the log?")
-                            .setPositiveButton("Delete all", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface d, int w) {
-                                    save(p, new ArrayList<Entry>());
-                                    redo.run();
-                                }
-                            }).setNegativeButton("Keep", null).show();
-                }
-            }));
-        }
-    }
-
-    private static void ask(final HomeActivity a, String title, String value, final String key, final Runnable done) {
-        final EditText e = new EditText(a);
-        e.setInputType(InputType.TYPE_CLASS_NUMBER);
-        e.setText(value);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(title).setView(e)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        try {
-                            a.prefs.put(key, String.valueOf(Integer.parseInt(e.getText().toString().trim())));
-                            done.run();
-                        } catch (Exception ex) {
-                            Toast.makeText(a, "Enter a number", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }).setNegativeButton("Cancel", null).show();
-    }
-
-    private static void meterRates(final HomeActivity a, final Runnable done) {
-        final Prefs p = a.prefs;
-        Rates r = rates(p);
-        LinearLayout box = box(a);
-        final String[] keys = {"cabBase", "cabBaseKm", "cabPerKm", "cabWaitRs", "cabFreeWait", "cabNightPct"};
-        String[] labels = {"Base fare (₹)", "Km included in the base fare", "₹ a km after that", "Waiting ₹ a minute",
-                "Free waiting minutes", "Night charge, 11 pm to 5 am (%)"};
-        double[] vals = {r.base, r.baseKm, r.perKm, r.waitPerMin, r.freeWait, r.nightPct};
-        final EditText[] f = new EditText[keys.length];
-        for (int i = 0; i < keys.length; i++) {
-            TextView t = new TextView(a);
-            t.setText(labels[i]);
-            box.addView(t);
-            f[i] = number(box, "", Fuel.fmt(vals[i]).replace(".0", ""));
-        }
-        android.widget.ScrollView sv = new android.widget.ScrollView(a);
-        sv.addView(box);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Fare meter rates").setView(sv)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        for (int i = 0; i < keys.length; i++) {
-                            double v = num(f[i]);
-                            if (v >= 0) p.put(keys[i], String.valueOf(v));
-                        }
-                        done.run();
-                    }
-                }).setNegativeButton("Cancel", null).show();
     }
 
     private Cab() {

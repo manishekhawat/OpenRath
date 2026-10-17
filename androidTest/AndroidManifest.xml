@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!-- The on-device tests (build.py androidtest). They run inside OpenRath's own process. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.openrath.launcher.test">
+    <application android:label="OpenRath tests" android:hasCode="true" />
+    <instrumentation android:name="org.openrath.launcher.Smoke" android:targetPackage="org.openrath.launcher"
+        android:label="OpenRath on-device tests" />
+</manifest>
