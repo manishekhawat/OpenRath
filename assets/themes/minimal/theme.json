@@ -1,0 +1,21 @@
+{
+  "name": "Minimal",
+  "author": "OpenRath",
+  "description": "Pure black, no borders, one blue accent",
+  "colours": {
+    "text": "#F5F5F7",
+    "textDim": "#86868B",
+    "accent": "#3E6AE1",
+    "edge": "#00000000",
+    "panelTop": "#151515",
+    "panel": "#151515",
+    "background": "#000000",
+    "icons": "#E5E5E7",
+    "road": "#1C1C1E",
+    "roadLine": "#5A5A5E"
+  },
+  "cornerRadius": 24,
+  "road": true,
+  "chromeText": false,
+  "welcomeTitle": ""
+}

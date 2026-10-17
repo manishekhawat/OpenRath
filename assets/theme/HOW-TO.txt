@@ -1,0 +1,47 @@
+OPENRATH THEME
+================
+
+This folder is a theme. Change what you like, then in OpenRath open
+Settings > Themes and tap this theme's picture.
+Tap it again after editing to reload your changes.
+
+theme.json
+  colours       Colours as #RRGGBB (or #AARRGGBB for see-through).
+                text        main text and numbers
+                textDim     smaller, quieter text
+                accent      labels such as "LIGHTS ON" and highlights
+                edge        the thin border round each box
+                panelTop    box colour at the top (it fades to "panel")
+                panel       box colour at the bottom
+                background  behind everything
+                icons       one colour for the buttons bar and play/next buttons
+                            (leave out to keep the chrome pictures)
+                road        the road under the car
+                roadLine    the road's centre dashes and edges
+  backgroundGradient  2 or 3 colours, top-left to bottom-right, instead of
+                a plain background, e.g. ["#3A0D5C", "#062A4A"]
+  chromeText    true or false: silver shine on the car name and welcome line
+  description   one line shown under the theme in Settings > Themes
+  cornerRadius  how round the box corners are (0 = square, 14 = default)
+  road          true or false: the moving road under the car
+  font          a .otf or .ttf file in this folder for the welcome line
+  welcomeTitle  the word above the name (default WELCOME)
+  carName       the name beside the logo (default: the car's model; the owner can change it)
+
+Pictures (PNG, keep the same names; anything left out uses the built-in one)
+  car_off.png, car_on.png       the car with headlights off / on
+  logo.png                      the logo top-left in the car box (the car name is text)
+  dock_navi.png … dock_settings.png   the buttons down the left
+  btn_play.png, btn_pause.png, btn_prev.png, btn_next.png
+  w_sun.png, w_moon.png, w_partly.png, w_cloud.png, w_rain.png,
+  w_snow.png, w_storm.png, w_fog.png   weather icons
+  background.jpg or background.png     optional wallpaper (1024x600 or 1280x720)
+  preview.png                   optional picture for Settings > Themes
+                                (otherwise the app draws one from your colours)
+
+Pictures are drawn for a 600-pixel-tall screen at 2.4x; keep similar sizes
+and transparent backgrounds.
+
+SHARING
+  Zip this folder and share the .zip. Others put it in Download and use
+  Settings > Themes > Import a theme from Download.

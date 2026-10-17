@@ -1,0 +1,8 @@
+# brand packs hold car makers' trademarks: never published (see brands/README.md)
+brands/*
+!brands/README.md
+# local signing details and build output
+signing.json
+*.keystore
+package/
+__pycache__/

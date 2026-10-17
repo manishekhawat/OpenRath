@@ -1,0 +1,116 @@
+{
+  "about": "Picture layouts. Positions are in a 1024 x 600 screen; wider screens centre it. Each part's opt is the switch that shows or hides it in Settings > Look > Layout parts.",
+  "layouts": [
+    {
+      "id": "bubbles", "name": "Bubbles", "bg": "bubbles", "light": true,
+      "parts": [
+        {"kind": "clock", "style": "digital", "shape": "circle", "x": 60, "y": 70, "w": 200, "h": 200, "fill": "#F4F6F9", "alpha": 0.9, "ink": "#1D2127", "sub": "#4A5260", "opt": "time"},
+        {"kind": "picture", "src": "bubbles_pill", "style": "trip", "shape": "rect", "r": 110, "x": 290, "y": 50, "w": 220, "h": 500, "ink": "#FFFFFF", "sub": "#F3E6EE", "opt": "trip"},
+        {"kind": "weather", "style": "bubble", "shape": "circle", "x": 540, "y": 70, "w": 200, "h": 200, "fill": "#EBB84E", "fill2": "#CF8E2E", "ink": "#FFFFFF", "sub": "#FFF4DD", "opt": "weather"},
+        {"kind": "speed", "style": "ring", "shape": "circle", "x": 770, "y": 70, "w": 200, "h": 200, "fill": "#3FA389", "fill2": "#22735F", "ink": "#FFFFFF", "sub": "#D8F2EA", "opt": "speed"},
+        {"kind": "apps", "shape": "circle", "x": 60, "y": 330, "w": 200, "h": 200, "fill": "#9AAEE0", "fill2": "#6E88C6", "ink": "#FFFFFF"},
+        {"kind": "music", "style": "pill", "shape": "rect", "r": 100, "x": 540, "y": 330, "w": 430, "h": 200, "fill": "#F4F6F9", "alpha": 0.75, "ink": "#1D2127", "sub": "#4A5260", "accent": "#E0703A", "opt": "media"},
+        {"kind": "gear", "x": 984, "y": 14, "w": 28, "h": 28, "ink": "#4A5260"}
+      ]
+    },
+    {
+      "id": "scenery", "name": "Scenery", "bg": "scenery", "light": true,
+      "road": {"horizon": 364, "x": 512, "half": 416, "dash": "#FFFFFF"},
+      "parts": [
+        {"kind": "car", "src": "car_rear_silver", "x": 427, "y": 410, "w": 170, "h": 122, "opt": "car"},
+        {"kind": "speed", "style": "number", "x": 387, "y": 40, "w": 250, "h": 110, "ink": "#14171B", "sub": "#5A626C", "opt": "speed"},
+        {"kind": "stats", "items": ["temp", "altitude", "direction"], "x": 80, "y": 170, "w": 280, "h": 300, "ink": "#14171B", "sub": "#4E5660", "opt": "stats"},
+        {"kind": "music", "style": "float", "x": 680, "y": 250, "w": 310, "h": 170, "fill": "#F2F4F6", "alpha": 0.55, "shape": "rect", "r": 14, "ink": "#14171B", "sub": "#4E5660", "opt": "media"},
+        {"kind": "dock", "items": ["navi", "radio", "apps", "bt", "phone", "user"], "x": 40, "y": 535, "w": 944, "h": 56, "ink": "#22272E"}
+      ]
+    },
+    {
+      "id": "columns", "name": "Columns", "bg": "columns", "light": false,
+      "lines": [[262, 20, 262, 450], [502, 20, 502, 450], [762, 20, 762, 450], [20, 455, 1004, 455]],
+      "parts": [
+        {"kind": "user", "shape": "rect", "r": 6, "x": 20, "y": 30, "w": 228, "h": 90, "fill": "#151A22", "alpha": 0.85, "ink": "#FFFFFF", "sub": "#C8D2E0", "opt": "user"},
+        {"kind": "clock", "style": "analog-date", "x": 20, "y": 140, "w": 228, "h": 300, "ink": "#FFFFFF", "sub": "#D6DEEA", "accent": "#E8473C", "opt": "clock"},
+        {"kind": "music", "style": "card", "shape": "rect", "r": 8, "x": 276, "y": 40, "w": 212, "h": 300, "fill": "#151A22", "alpha": 0.9, "ink": "#FFFFFF", "sub": "#C8D2E0", "opt": "media"},
+        {"kind": "compass", "style": "arrow", "x": 516, "y": 60, "w": 232, "h": 260, "ink": "#E8EDF4", "sub": "#9FB0C6", "opt": "direction"},
+        {"kind": "speed", "style": "badge", "shape": "rect", "r": 8, "x": 516, "y": 340, "w": 232, "h": 76, "fill": "#2E8CF0", "ink": "#FFFFFF", "sub": "#DCEBFF", "opt": "speed"},
+        {"kind": "weather", "style": "detail", "x": 776, "y": 40, "w": 228, "h": 240, "ink": "#FFFFFF", "sub": "#C8D2E0", "opt": "weather"},
+        {"kind": "forecast", "x": 776, "y": 300, "w": 228, "h": 130, "ink": "#FFFFFF", "sub": "#C8D2E0", "opt": "forecast"},
+        {"kind": "dock", "items": ["navi", "radio", "settings", "apps", "phone"], "x": 40, "y": 480, "w": 944, "h": 100, "ink": "#EEF2F7"}
+      ]
+    },
+    {
+      "id": "picture_clock", "name": "Picture and clock", "bg": "picture_clock", "light": true,
+      "parts": [
+        {"kind": "car", "src": "car_rear_white", "x": 70, "y": 250, "w": 400, "h": 286, "opt": "car"},
+        {"kind": "clock", "style": "digital-line", "x": 600, "y": 80, "w": 260, "h": 130, "ink": "#14171B", "sub": "#3E4650", "opt": "time"},
+        {"kind": "weather", "style": "range", "x": 870, "y": 80, "w": 140, "h": 130, "ink": "#14171B", "sub": "#3E4650", "opt": "weather"},
+        {"kind": "dock", "items": ["apps", "radio", "navi", "music", "bt"], "shape": "rect", "r": 18, "x": 10, "y": 510, "w": 1004, "h": 80, "fill": "#F6F7F9", "alpha": 0.7, "ink": "#22272E"}
+      ]
+    },
+    {
+      "id": "strip", "name": "Strip", "bg": "strip", "light": true,
+      "parts": [
+        {"kind": "car", "src": "car_rear_silver", "x": 330, "y": 282, "w": 220, "h": 157, "opt": "car"},
+        {"kind": "weather", "style": "wide", "x": 700, "y": 80, "w": 300, "h": 100, "ink": "#14171B", "sub": "#4E5660", "opt": "weather"},
+        {"kind": "music", "style": "row", "shape": "rect", "r": 10, "x": 20, "y": 460, "w": 250, "h": 120, "fill": "#F6F8FC", "alpha": 0.75, "ink": "#14171B", "sub": "#4E5660", "opt": "media"},
+        {"kind": "speed", "style": "gauge-small", "shape": "rect", "r": 10, "x": 284, "y": 460, "w": 230, "h": 120, "fill": "#F6F8FC", "alpha": 0.75, "ink": "#14171B", "sub": "#4E5660", "accent": "#3CB46E", "opt": "speed"},
+        {"kind": "dock", "items": ["navi", "apps", "bt"], "labels": true, "shape": "rect", "r": 10, "x": 528, "y": 460, "w": 230, "h": 120, "fill": "#F6F8FC", "alpha": 0.75, "ink": "#22272E"},
+        {"kind": "clock", "style": "analog-digital", "shape": "rect", "r": 10, "x": 772, "y": 460, "w": 232, "h": 120, "fill": "#F6F8FC", "alpha": 0.75, "ink": "#14171B", "sub": "#4E5660", "opt": "clock"}
+      ]
+    },
+    {
+      "id": "twin_dials", "name": "Twin dials", "bg": "twin_dials", "light": false,
+      "road": {"horizon": 240, "x": 512, "half": 208, "dash": "#D8DEE8"},
+      "parts": [
+        {"kind": "logo", "shape": "circle", "x": 467, "y": 30, "w": 90, "h": 90, "fill": "#1A1F28", "ink": "#E6EAF0"},
+        {"kind": "music", "style": "dial", "shape": "circle", "x": 82, "y": 170, "w": 300, "h": 300, "fill": "#0E1218", "ink": "#FFFFFF", "sub": "#C8D2E0", "opt": "media"},
+        {"kind": "speed", "style": "dial", "shape": "circle", "x": 627, "y": 155, "w": 330, "h": 330, "fill": "#0E1218", "ink": "#FFFFFF", "sub": "#9FB0C6", "accent": "#3A8DFF", "opt": "speed"},
+        {"kind": "car", "src": "car_rear_white", "x": 447, "y": 380, "w": 130, "h": 93, "opt": "car"},
+        {"kind": "dock", "items": ["navi", "apps", "radio", "music", "bt", "phone"], "x": 60, "y": 530, "w": 904, "h": 60, "ink": "#E6EAF0"}
+      ]
+    },
+    {
+      "id": "room", "name": "Room", "bg": "room", "light": true,
+      "parts": [
+        {"kind": "music", "style": "record", "x": 90, "y": 60, "w": 270, "h": 300, "ink": "#2A2622", "sub": "#6A625A", "opt": "media"},
+        {"kind": "clock", "style": "wall", "shape": "rect", "r": 6, "x": 560, "y": 90, "w": 300, "h": 150, "fill": "#F4F2EE", "alpha": 0.8, "ink": "#1E1C1A", "sub": "#6A625A", "accent": "#C0392B", "opt": "clock"},
+        {"kind": "weather", "style": "calendar", "shape": "rect", "r": 8, "x": 880, "y": 90, "w": 120, "h": 150, "fill": "#F7F5F1", "alpha": 0.9, "ink": "#2A2622", "sub": "#6A625A", "opt": "weather"},
+        {"kind": "stats", "style": "frame", "items": ["altitude", "pressure"], "shape": "rect", "r": 4, "x": 560, "y": 270, "w": 300, "h": 140, "fill": "#F4EEE4", "alpha": 0.9, "ink": "#2A2622", "sub": "#6A625A", "opt": "stats"},
+        {"kind": "dock", "items": ["navi", "music", "phone", "radio", "apps", "settings"], "tiles": true, "x": 90, "y": 515, "w": 844, "h": 70, "fill": "#E9D7BE", "alpha": 0.6, "ink": "#FFFFFF"}
+      ]
+    },
+    {
+      "id": "big_clock", "name": "Big clock", "bg": "big_clock", "light": false,
+      "parts": [
+        {"kind": "weather", "style": "row", "x": 40, "y": 50, "w": 300, "h": 90, "ink": "#FFFFFF", "sub": "#C8CDD3", "opt": "weather"},
+        {"kind": "music", "style": "list", "x": 40, "y": 160, "w": 300, "h": 140, "ink": "#FFFFFF", "sub": "#C8CDD3", "opt": "media"},
+        {"kind": "speed", "style": "row", "x": 40, "y": 320, "w": 300, "h": 80, "ink": "#FFFFFF", "sub": "#C8CDD3", "opt": "speed"},
+        {"kind": "places", "x": 40, "y": 410, "w": 300, "h": 60, "ink": "#FFFFFF"},
+        {"kind": "clock", "style": "analog-big", "x": 540, "y": 70, "w": 420, "h": 420, "ink": "#FFFFFF", "sub": "#E6E8EA", "opt": "clock"},
+        {"kind": "dock", "items": ["bt", "navi", "phone", "apps"], "x": 100, "y": 520, "w": 824, "h": 60, "ink": "#FFFFFF"}
+      ]
+    },
+    {
+      "id": "lyrics", "name": "Lyrics", "bg": "lyrics", "light": true,
+      "parts": [
+        {"kind": "user", "style": "line", "x": 20, "y": 16, "w": 290, "h": 40, "ink": "#1D2127", "sub": "#4A5260", "opt": "user"},
+        {"kind": "clock", "style": "digital-analog", "x": 20, "y": 66, "w": 290, "h": 120, "ink": "#1D2127", "sub": "#4A5260", "opt": "time"},
+        {"kind": "music", "style": "row", "shape": "rect", "r": 10, "x": 20, "y": 200, "w": 290, "h": 150, "fill": "#E3E8F8", "fill2": "#EBD9F2", "ink": "#1D2127", "sub": "#4A5260", "opt": "media"},
+        {"kind": "forecast", "x": 20, "y": 370, "w": 290, "h": 120, "ink": "#1D2127", "sub": "#4A5260", "opt": "forecast"},
+        {"kind": "music", "style": "lyrics", "shape": "rect", "r": 14, "x": 330, "y": 20, "w": 674, "h": 480, "fill": "#E4F2F4", "fill2": "#D2EAEE", "alpha": 0.85, "ink": "#14171B", "sub": "#7A8490", "opt": "media"},
+        {"kind": "dock", "items": ["dash", "music", "radio", "navi", "phone", "apps", "settings"], "clock": true, "x": 20, "y": 520, "w": 984, "h": 66, "ink": "#22272E"}
+      ]
+    },
+    {
+      "id": "cards", "name": "Cards and apps", "bg": "cards", "light": false,
+      "parts": [
+        {"kind": "speed", "style": "card", "shape": "rect", "r": 14, "x": 60, "y": 50, "w": 220, "h": 340, "fill": "#F5F6F8", "ink": "#14171B", "sub": "#4E5660", "opt": "speed"},
+        {"kind": "clock", "style": "analog-dark", "shape": "rect", "r": 14, "x": 296, "y": 50, "w": 170, "h": 170, "fill": "#14171B", "ink": "#FFFFFF", "sub": "#C8CDD3", "accent": "#E0A040", "opt": "clock"},
+        {"kind": "music", "style": "wide", "shape": "rect", "r": 14, "x": 482, "y": 50, "w": 482, "h": 170, "fill": "#F5F6F8", "ink": "#14171B", "sub": "#4E5660", "opt": "media"},
+        {"kind": "weather", "style": "card", "shape": "rect", "r": 14, "x": 296, "y": 236, "w": 170, "h": 154, "fill": "#7CC0F2", "fill2": "#4C9EE0", "ink": "#FFFFFF", "sub": "#EAF5FF", "opt": "weather"},
+        {"kind": "favourites", "x": 482, "y": 236, "w": 482, "h": 154, "ink": "#FFFFFF"},
+        {"kind": "dock", "items": ["navi", "music", "radio", "apps", "bt", "phone", "settings"], "shape": "rect", "r": 18, "x": 60, "y": 420, "w": 904, "h": 90, "fill": "#DDE2E8", "alpha": 0.45, "ink": "#FFFFFF"}
+      ]
+    }
+  ]
+}
