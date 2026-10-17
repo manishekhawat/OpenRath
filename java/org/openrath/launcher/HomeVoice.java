@@ -30,7 +30,7 @@ final class HomeVoice {
         }
         if (cmd == null || "search".equals(cmd.kind)) {
             if (map != null) map.voiceResult(cmd == null ? said.get(0) : cmd.arg);
-            else Toast.makeText(a, "Heard \"" + said.get(0) + "\". Put the map on the dashboard to search for places.", Toast.LENGTH_LONG).show();
+            else Toast.makeText(a, Hindi.f("Heard \"%1$s\". Put the map on the dashboard to search for places.", said.get(0)), Toast.LENGTH_LONG).show();
             return;
         }
         if (map != null) map.voiceResult(null);
@@ -91,7 +91,7 @@ final class HomeVoice {
                     }
                 }, 2500);
             }
-            Toast.makeText(a, err == null ? "FM " + (cmd.arg.isEmpty() ? "radio" : cmd.arg) : "FM didn't start: " + err, Toast.LENGTH_SHORT).show();
+            Toast.makeText(a, err == null ? (cmd.arg.isEmpty() ? Hindi.t("FM radio") : "FM " + cmd.arg) : Hindi.f("FM didn't start: %1$s", err), Toast.LENGTH_SHORT).show();
         } else if ("call".equals(k)) {
             String num = Voice.number(cmd.arg), who = cmd.arg;
             if (num.isEmpty()) {
@@ -106,15 +106,15 @@ final class HomeVoice {
             }
             if (num.isEmpty()) {
                 a.speak("I couldn't find " + cmd.arg + " in your favourites");
-                Toast.makeText(a, "No favourite called \"" + cmd.arg + "\". Add one in Settings > Phone and messages.", Toast.LENGTH_LONG).show();
+                Toast.makeText(a, Hindi.f("No favourite called \"%1$s\". Add one in Settings > Phone and messages.", cmd.arg), Toast.LENGTH_LONG).show();
             } else {
                 String err = unit.call(a, num);
-                Toast.makeText(a, err == null ? "Calling " + who + "…" : "Couldn't call: " + err, Toast.LENGTH_SHORT).show();
+                Toast.makeText(a, err == null ? Hindi.f("Calling %1$s…", who) : Hindi.f("Couldn't call: %1$s", err), Toast.LENGTH_SHORT).show();
             }
         } else if ("park".equals(k)) {
             a.parkQr();
         } else if ("clip".equals(k)) {
-            if (!Features.on(a.prefs, "dashcam")) Toast.makeText(a, "Turn on the dashcam in Settings > Driving", Toast.LENGTH_LONG).show();
+            if (!Features.on(a.prefs, "dashcam")) Toast.makeText(a, Hindi.t("Turn on the dashcam in Settings > Driving"), Toast.LENGTH_LONG).show();
             else {
                 Dashcam.protect();
                 a.speak("Clip saved");
@@ -123,12 +123,12 @@ final class HomeVoice {
             Monsoon.mark(a, a.prefs);
         } else if ("docs".equals(k)) {
             if (Features.on(a.prefs, "wallet")) Wallet.show(a, 0);
-            else Toast.makeText(a, "Turn on the documents wallet in Settings > Car", Toast.LENGTH_LONG).show();
+            else Toast.makeText(a, Hindi.t("Turn on the documents wallet in Settings > Car"), Toast.LENGTH_LONG).show();
         } else if ("kids".equals(k)) {
             if (Features.on(a.prefs, "kids")) Kids.show(a, a.prefs);
-            else Toast.makeText(a, "Turn on trip games in Settings > Family", Toast.LENGTH_LONG).show();
+            else Toast.makeText(a, Hindi.t("Turn on trip games in Settings > Family"), Toast.LENGTH_LONG).show();
         } else if ("fog".equals(k)) {
-            if (!Features.on(a.prefs, "fog")) Toast.makeText(a, "Turn on fog mode in Settings > Driving", Toast.LENGTH_LONG).show();
+            if (!Features.on(a.prefs, "fog")) Toast.makeText(a, Hindi.t("Turn on fog mode in Settings > Driving"), Toast.LENGTH_LONG).show();
             else {
                 boolean on = !"on".equals(a.prefs.str("fogNow", "off"));
                 a.prefs.put("fogNow", on ? "on" : "off");
@@ -154,11 +154,11 @@ final class HomeVoice {
             Cab.menu(a);
         } else if ("sos".equals(k)) {
             if (Cab.on(a.prefs, "cabSos")) CabSos.sos(a);
-            else Toast.makeText(a, "Turn on One-tap SOS in Settings > Cab driver", Toast.LENGTH_LONG).show();
+            else Toast.makeText(a, Hindi.t("Turn on One-tap SOS in Settings > Cab driver"), Toast.LENGTH_LONG).show();
         } else if ("meter".equals(k)) {
-            if (!Cab.on(a.prefs, "cabMeter")) Toast.makeText(a, "Turn on the fare meter in Settings > Cab driver", Toast.LENGTH_LONG).show();
+            if (!Cab.on(a.prefs, "cabMeter")) Toast.makeText(a, Hindi.t("Turn on the fare meter in Settings > Cab driver"), Toast.LENGTH_LONG).show();
             else if (a.prefs.longNum("cabMeterAt", 0) > 0 && "stop".equals(cmd.arg)) CabMeter.stopMeter(a);
-            else if ("stop".equals(cmd.arg)) Toast.makeText(a, "The fare meter isn't running", Toast.LENGTH_SHORT).show();
+            else if ("stop".equals(cmd.arg)) Toast.makeText(a, Hindi.t("The fare meter isn't running"), Toast.LENGTH_SHORT).show();
             else {
                 if (a.prefs.longNum("cabMeterAt", 0) == 0) CabMeter.startMeter(a);
                 CabMeter.showMeter(a);
@@ -168,13 +168,15 @@ final class HomeVoice {
             // the stereo's 360 cameras when it has them, else OpenRath's 3D car
             if (!View360.openCam(a, a.prefs)) View360.show(a);
         } else if ("earnings".equals(k)) {
-            String t = Cab.on(a.prefs, "cabEarnings") ? CabEarnings.spoken(a.prefs) : "Turn on the earnings log in Settings > Cab driver.";
-            Toast.makeText(a, t, Toast.LENGTH_LONG).show();
+            boolean logOn = Cab.on(a.prefs, "cabEarnings");
+            String t = logOn ? CabEarnings.spoken(a.prefs) : "Turn on the earnings log in Settings > Cab driver.";
+            Toast.makeText(a, logOn ? t : Hindi.t("Turn on the earnings log in Settings > Cab driver."), Toast.LENGTH_LONG).show();
             a.speak(t);
         } else if ("aqi".equals(k)) {
             String t = Air.aqi < 0 ? "The air quality isn't known yet." : "The air quality is " + Air.band(Air.aqi).toLowerCase(java.util.Locale.US)
                     + ", A Q I " + Air.aqi + ".";
-            Toast.makeText(a, t, Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Air.aqi < 0 ? Hindi.t("The air quality isn't known yet.") : Hindi.f("The air quality is %1$s, AQI %2$s.",
+                    Hindi.t(Air.band(Air.aqi)).toLowerCase(java.util.Locale.US), String.valueOf(Air.aqi)), Toast.LENGTH_LONG).show();
             a.speak(t);
         } else if ("music".equals(k)) {
             MediaCard.owner = "music";
@@ -193,7 +195,7 @@ final class HomeVoice {
         } else {
             MapCard m = a.mapCard();
             if (m == null) {
-                Toast.makeText(a, "Put the map on the dashboard for directions", Toast.LENGTH_LONG).show();
+                Toast.makeText(a, Hindi.t("Put the map on the dashboard for directions"), Toast.LENGTH_LONG).show();
                 return;
             }
             if ("home".equals(k)) m.js("goFav('Home')");

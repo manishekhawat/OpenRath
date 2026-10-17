@@ -45,10 +45,10 @@ final class ReverseView extends View {
         p.setTextSize(h / 14f);
         p.setTextAlign(Paint.Align.CENTER);
         p.setLetterSpacing(0.3f);
-        c.drawText("REVERSE", cx, h * 0.14f, p);
+        c.drawText(Hindi.t("REVERSE"), cx, h * 0.14f, p);
         p.setTextSize(h / 34f);
         p.setLetterSpacing(0.05f);
         p.setColor(Ui.SILVER_DIM);
-        c.drawText("Check around the car. This closes when you leave reverse.", cx, h * 0.2f, p);
+        c.drawText(Hindi.t("Check around the car. This closes when you leave reverse."), cx, h * 0.2f, p);
     }
 }

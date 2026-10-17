@@ -45,25 +45,25 @@ final class Rescue {
         box.setOrientation(LinearLayout.VERTICAL);
         box.setPadding(Ui.px(20), Ui.px(8), Ui.px(20), 0);
         final EditText name = new EditText(a), num = new EditText(a);
-        name.setHint("Name (e.g. Papa)");
+        name.setHint(Hindi.t("Name (e.g. Papa)"));
         name.setText(p.str("sosName", ""));
-        num.setHint("Phone number");
+        num.setHint(Hindi.t("Phone number"));
         num.setInputType(InputType.TYPE_CLASS_PHONE);
         num.setText(contact(p));
         box.addView(name);
         box.addView(num);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Emergency contact")
-                .setMessage("Called after a crash if nobody taps \"I'm OK\" within 30 seconds. The phone must be paired by Bluetooth.")
+                .setTitle(Hindi.t("Emergency contact"))
+                .setMessage(Hindi.t("Called after a crash if nobody taps \"I'm OK\" within 30 seconds. The phone must be paired by Bluetooth."))
                 .setView(box)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         p.put("sosName", name.getText().toString().trim());
                         p.put("sosNumber", num.getText().toString().replaceAll("[^0-9+]", ""));
                         done.run();
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     /** "28.45950, 77.02660" and a Maps link for the QR code. */
@@ -91,12 +91,12 @@ final class Rescue {
         cover.addView(col, new FrameLayout.LayoutParams(-1, -2, Gravity.CENTER));
 
         TextView title = Ui.text(a, 34, 0xFFFFFFFF, "sans-serif-medium", Gravity.CENTER);
-        title.setText(test ? "Are you OK?  (test)" : "Are you OK?");
+        title.setText(Hindi.t(test ? "Are you OK?  (test)" : "Are you OK?"));
         col.addView(title);
         final TextView info = Ui.text(a, 18, 0xFFE8C8C8, "sans-serif", Gravity.CENTER);
         final String who = contactName(p);
-        info.setText(contact(p).isEmpty() ? "A very hard stop was detected. Set an emergency contact in Settings > Driving to be called."
-                : "A very hard stop was detected. Calling " + who + " in " + SECONDS + " seconds.");
+        info.setText(contact(p).isEmpty() ? Hindi.t("A very hard stop was detected. Set an emergency contact in Settings > Driving to be called.")
+                : Hindi.f("A very hard stop was detected. Calling %1$s in %2$s seconds.", who, SECONDS));
         info.setPadding(Ui.px(40), Ui.px(10), Ui.px(40), Ui.px(18));
         col.addView(info);
         final TextView count = Ui.text(a, 96, 0xFFFF6A5A, "sans-serif-light", Gravity.CENTER);
@@ -105,8 +105,8 @@ final class Rescue {
 
         LinearLayout row = new LinearLayout(a);
         row.setGravity(Gravity.CENTER);
-        final TextView ok = button(a, "I'm OK", 0xFF2E7D4F);
-        final TextView now = button(a, contact(p).isEmpty() ? "Call 112" : "Call now", 0xFFB3261E);
+        final TextView ok = button(a, Hindi.t("I'm OK"), 0xFF2E7D4F);
+        final TextView now = button(a, Hindi.t(contact(p).isEmpty() ? "Call 112" : "Call now"), 0xFFB3261E);
         LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(Ui.px(240), Ui.px(76));
         bp.leftMargin = bp.rightMargin = Ui.px(14);
         row.addView(ok, bp);
@@ -117,10 +117,10 @@ final class Rescue {
         place.setGravity(Gravity.CENTER_VERTICAL);
         place.setPadding(0, Ui.px(22), 0, 0);
         if (lat != 0 || lon != 0) {
-            ImageView qr = Qr.view(a, "Where the car is", Geo.mapsLink(lat, lon), "Scan to open the spot in Google Maps.", Ui.px(170));
+            ImageView qr = Qr.view(a, Hindi.t("Where the car is"), Geo.mapsLink(lat, lon), Hindi.t("Scan to open the spot in Google Maps."), Ui.px(170));
             place.addView(qr, new LinearLayout.LayoutParams(Ui.px(170), Ui.px(170)));
             TextView where = Ui.text(a, 18, 0xFFFFFFFF, "sans-serif", Gravity.LEFT);
-            where.setText("The car is at\n" + where(lat, lon) + "\nScan for the spot in Google Maps");
+            where.setText(Hindi.f("The car is at\n%1$s\nScan for the spot in Google Maps", where(lat, lon)));
             where.setPadding(Ui.px(18), 0, 0, 0);
             place.addView(where);
         }
@@ -144,8 +144,8 @@ final class Rescue {
                 cover.removeCallbacks(tick[0]);
                 count.setText("");
                 String n = contact(p).isEmpty() ? "112" : contact(p);
-                info.setText((test ? "Test: would call " : "Calling ") + (contact(p).isEmpty() ? "112" : who)
-                        + ". Read out the place below. Tap \"I'm OK\" to close.");
+                info.setText(Hindi.f(test ? "Test: would call %1$s. Read out the place below. Tap \"I'm OK\" to close."
+                        : "Calling %1$s. Read out the place below. Tap \"I'm OK\" to close.", contact(p).isEmpty() ? "112" : who));
                 if (!test) a.call(n);
                 now.setVisibility(View.GONE);
             }
@@ -158,7 +158,7 @@ final class Rescue {
                 if (left[0] <= 0) {
                     if (contact(p).isEmpty()) {
                         count.setText("");
-                        info.setText("No emergency contact is set. Tap \"Call 112\" if you need help.");
+                        info.setText(Hindi.t("No emergency contact is set. Tap \"Call 112\" if you need help."));
                         return;
                     }
                     dial.run();

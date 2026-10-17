@@ -36,7 +36,7 @@ final class OverMic {
             try {
                 a.startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION));
             } catch (Exception ignored) {
-                android.widget.Toast.makeText(a, "This unit has no page for that permission", android.widget.Toast.LENGTH_LONG).show();
+                android.widget.Toast.makeText(a, Hindi.t("This unit has no page for that permission"), android.widget.Toast.LENGTH_LONG).show();
             }
         }
     }

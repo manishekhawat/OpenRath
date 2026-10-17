@@ -1,9 +1,9 @@
 # Translating OpenRath
 
-The words of the Settings screens are Android string resources, so any tool that edits Android strings (Weblate, Android Studio, or a plain text editor) works.
+Everything OpenRath shows is in Android string resources, so any tool that edits Android strings (Weblate, Android Studio, or a plain text editor) works.
 
-- `res/values/ui.xml` holds the English, exactly as the code uses it, and the `ui_strings` list that ties each name to its English.
-- `res/values-hi/ui.xml` holds the Hindi under the same names.
+- `res/values/ui.xml` (Settings), `ui_home.xml` (home screen, dialogs), `ui_cards.xml` (dashboard boxes), `ui_cab.xml` (cab and car tools), `ui_driving.xml` (driving helpers) and `ui_extras.xml` (the rest) hold the English, exactly as the code uses it, each with a list that ties every name to its English.
+- `res/values-hi/` holds the Hindi in files of the same names.
 - `res/values/strings.xml` holds the app's name, the steering-wheel service and the managed settings a fleet's console shows.
 
 Anything left out of a translation stays in English, so a new setting never shows blank. OpenRath starts in the stereo's own language when it has a translation, and the owner can switch in Settings > OpenRath level > Language.
@@ -20,6 +20,6 @@ The Hindi was drafted by machine and **still needs a native speaker to check it*
 
 ## Adding a setting
 
-Write the English in the code as usual, then add it to `res/values/ui.xml` (a `ui_` name and the English) and to the `ui_strings` list, and its Hindi to `res/values-hi/ui.xml` if you can. The tests check that every feature and section has a Hindi line.
+Write the English in the code inside `Hindi.t` or `Hindi.f`, then add it to the matching `res/values/ui*.xml` file (a name starting with that file's prefix, and the English) and to that file's list, and its Hindi to `res/values-hi/ui.xml` if you can. The tests check that every feature and section has a Hindi line.
 
-Other screens (the dashboard, dialogs and spoken prompts) are still in the Java code in English. Moving them to resources is planned, section by section.
+Code passes text through `Hindi.t("…")`, or `Hindi.f("Toll in %1$s km", km)` when it has numbers or names in it; the English format is what gets translated. Spoken prompts stay in English, because many stereos' voices can't speak Hindi.

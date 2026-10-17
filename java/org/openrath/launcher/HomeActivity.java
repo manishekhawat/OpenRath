@@ -28,6 +28,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         prefs = new Prefs(this);
         Managed.apply(this, prefs);   // a fleet's managed settings, if the unit has any
         Reports.install(this, prefs);
+        Hindi.load(this, prefs);   // before the dashboard is built, so it starts in the owner's language
         // a new version: steps skipped after a crash in the old one get another try
         try {
             int v = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
@@ -98,7 +99,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     void restStop() {
         MapCard m = mapCard();
         if (m != null) m.js("restStop()");
-        else Toast.makeText(this, "Time for a break. Put the map on the dashboard to see stops ahead.", Toast.LENGTH_LONG).show();
+        else Toast.makeText(this, Hindi.t("Time for a break. Put the map on the dashboard to see stops ahead."), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -189,7 +190,7 @@ public class HomeActivity extends Activity implements Cards.Host {
      */
     void shareTrip() {
         if (!Features.on(prefs, "tripShare")) {
-            Toast.makeText(this, "Turn on \"Share the trip by QR code\" in Settings > Features", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Hindi.t("Turn on \"Share the trip by QR code\" in Settings > Features"), Toast.LENGTH_LONG).show();
             return;
         }
         double lat = Drive.latNow, lon = Drive.lonNow;
@@ -198,7 +199,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             lon = hub.fix.getLongitude();
         }
         if (lat == 0 && lon == 0) {
-            Toast.makeText(this, "Waiting for the GPS to find the car", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Hindi.t("Waiting for the GPS to find the car"), Toast.LENGTH_LONG).show();
             return;
         }
         String[] d = prefs.str("dest", "").split("\\|");
@@ -206,31 +207,31 @@ public class HomeActivity extends Activity implements Cards.Host {
             try {
                 double tl = Double.parseDouble(d[1]), tn = Double.parseDouble(d[2]);
                 double km = Geo.dist(lat, lon, tl, tn) / 1000;
-                Qr.show(this, "Our trip to " + d[0], Geo.routeLink(lat, lon, tl, tn),
-                        String.format(java.util.Locale.US, "About %.0f km to go in a straight line. ", km)
-                                + "Scan with a phone to see the route and time from where the car is now. "
-                                + "Show a new code later for a fresh position.");
+                Qr.show(this, Hindi.f("Our trip to %1$s", d[0]), Geo.routeLink(lat, lon, tl, tn),
+                        Hindi.f("About %1$s km to go in a straight line.", String.format(java.util.Locale.US, "%.0f", km)) + " "
+                                + Hindi.t("Scan with a phone to see the route and time from where the car is now. "
+                                + "Show a new code later for a fresh position."));
                 return;
             } catch (Exception ignored) {
             }
         }
-        Qr.show(this, "Where we are now", Geo.mapsLink(lat, lon),
-                "Scan with a phone to see where the car is now. Pick a destination on the map to share the route too.");
+        Qr.show(this, Hindi.t("Where we are now"), Geo.mapsLink(lat, lon),
+                Hindi.t("Scan with a phone to see where the car is now. Pick a destination on the map to share the route too."));
     }
 
     /** The parking spot as a QR code that opens it in Google Maps on a phone. */
     @Override
     public void parkQr() {
         if (!Features.on(prefs, "parkLink")) {
-            Toast.makeText(this, "Turn on \"Parking spot to your phone\" in Settings > Driving", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Hindi.t("Turn on \"Parking spot to your phone\" in Settings > Driving"), Toast.LENGTH_LONG).show();
             return;
         }
         if (Drive.parkAt == 0) {
-            Toast.makeText(this, "No parking spot saved yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Hindi.t("No parking spot saved yet"), Toast.LENGTH_SHORT).show();
             return;
         }
-        Qr.show(this, "Where the car is parked", Geo.mapsLink(Drive.parkLat, Drive.parkLon),
-                "Scan with your phone to open the spot in Google Maps and walk back to the car.");
+        Qr.show(this, Hindi.t("Where the car is parked"), Geo.mapsLink(Drive.parkLat, Drive.parkLon),
+                Hindi.t("Scan with your phone to open the spot in Google Maps and walk back to the car."));
     }
 
     /** Call a number through the unit's Bluetooth phone (the map's service centre list). */
@@ -239,7 +240,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         String n = number == null ? "" : number.replaceAll("[^0-9+]", "");
         if (n.isEmpty()) return;
         String err = hub.unit.call(this, n);
-        Toast.makeText(this, err == null ? "Calling " + n + "…" : "Couldn't call: " + err, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, err == null ? Hindi.f("Calling %1$s…", n) : Hindi.f("Couldn't call: %1$s", err), Toast.LENGTH_SHORT).show();
     }
 
     /** Swipe to the next or previous dashboard page. */
@@ -534,8 +535,9 @@ public class HomeActivity extends Activity implements Cards.Host {
             root.addView(highwayView, lp);
         }
         long mins = Drive.drives.drivingMinutes(System.currentTimeMillis());
-        String t = "HIGHWAY  ·  avg " + Math.round(Drive.avgKmh()) + " km/h  ·  driving " + (mins >= 60 ? mins / 60 + " h " + mins % 60 + " min" : mins + " min")
-                + (Highway.held > 0 ? "  ·  " + Highway.held + " waiting" : "");
+        String t = Hindi.f("HIGHWAY  ·  avg %1$s km/h  ·  driving %2$s", String.valueOf(Math.round(Drive.avgKmh())),
+                mins >= 60 ? Hindi.f("%1$s h %2$s min", String.valueOf(mins / 60), String.valueOf(mins % 60)) : Hindi.f("%1$s min", String.valueOf(mins)))
+                + (Highway.held > 0 ? "  ·  " + Hindi.f("%1$s waiting", String.valueOf(Highway.held)) : "");
         highwayView.setText(t);
         root.removeCallbacks(highwayTick);
         root.postDelayed(highwayTick, 30000);
@@ -555,7 +557,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         boolean on = Valet.on(prefs);
         if (on && valetView == null) {
             valetView = Ui.text(this, 13, 0xFFFFFFFF, "sans-serif-medium", Gravity.CENTER);
-            valetView.setText("VALET MODE  ·  tap to end");
+            valetView.setText(Hindi.t("VALET MODE  ·  tap to end"));
             valetView.setLetterSpacing(0.1f);
             valetView.setPadding(Ui.px(16), Ui.px(6), Ui.px(16), Ui.px(6));
             android.graphics.drawable.GradientDrawable g = new android.graphics.drawable.GradientDrawable();
@@ -601,7 +603,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     public void openApp(final String key, final String name) {
         String pkg = prefs.app(key);
         if (ChildLock.blocked(prefs, pkg)) {
-            Toast.makeText(this, ChildLock.SORRY, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Hindi.t(ChildLock.SORRY), Toast.LENGTH_SHORT).show();
             return;
         }
         Intent i = pkg == null ? null : getPackageManager().getLaunchIntentForPackage(pkg);
@@ -613,7 +615,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             } catch (Exception ignored) {
             }
         }
-        AppPicker.show(this, "Choose the app for " + name, new AppPicker.Picked() {
+        AppPicker.show(this, Hindi.f("Choose the app for %1$s", Hindi.t(name)), new AppPicker.Picked() {
             @Override
             public void picked(String p) {
                 prefs.setApp(key, p);
@@ -663,9 +665,9 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     @Override
     public void tripMenu() {
-        String[] items = {"Start today's trip again", "Save the parking spot here", "Fuel log"};
+        String[] items = {Hindi.t("Start today's trip again"), Hindi.t("Save the parking spot here"), Hindi.t("Fuel log")};
         new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(String.format(java.util.Locale.US, "Today %.1f km  ·  GPS odometer %d km", Drive.todayKm, Math.round(Drive.odoKm)))
+                .setTitle(Hindi.f("Today %1$s km  ·  GPS odometer %2$s km", String.format(java.util.Locale.US, "%.1f", Drive.todayKm), String.valueOf(Math.round(Drive.odoKm))))
                 .setItems(items, new android.content.DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(android.content.DialogInterface d, int w) {
@@ -680,11 +682,11 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     void parkHere() {
         if (hub.fix == null) {
-            Toast.makeText(this, "No GPS position yet", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Hindi.t("No GPS position yet"), Toast.LENGTH_LONG).show();
             return;
         }
         Drive.setPark(this, hub.fix.getLatitude(), hub.fix.getLongitude());
-        Toast.makeText(this, "Parking spot saved", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, Hindi.t("Parking spot saved"), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -693,7 +695,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         String lang = prefs.str("voiceLang", "en-IN");
         Intent i = new Intent(android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
                 .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE_MODEL, android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                .putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, commands ? "Say a command or a place" : "Where to?")
+                .putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, commands ? Hindi.t("Say a command or a place") : Hindi.t("Where to?"))
                 .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE, lang)
                 .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, lang)
                 .putExtra(android.speech.RecognizerIntent.EXTRA_MAX_RESULTS, 5)
@@ -708,7 +710,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         } catch (Exception e) {
             listening = null;
             listeningAny = false;
-            Toast.makeText(this, "Voice needs the Google app on the unit", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Hindi.t("Voice needs the Google app on the unit"), Toast.LENGTH_LONG).show();
             if (map != null) map.voiceResult(null);
         }
     }
@@ -742,8 +744,8 @@ public class HomeActivity extends Activity implements Cards.Host {
     @Override
     public void navigateOffline(double lat, double lon, String name) {
         if (!OfflineNav.go(this, prefs, lat, lon, name))
-            Toast.makeText(this, "No internet, and no offline map app. Install Organic Maps (free, with offline maps of India) "
-                    + "and download your state's map once on Wi-Fi.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Hindi.t("No internet, and no offline map app. Install Organic Maps (free, with offline maps of India) "
+                    + "and download your state's map once on Wi-Fi."), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -763,7 +765,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         try {
             startActivity(geo.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         } catch (Exception e) {
-            Toast.makeText(this, "No navigation app found", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Hindi.t("No navigation app found"), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -911,9 +913,9 @@ public class HomeActivity extends Activity implements Cards.Host {
         bar.setPadding(Ui.px(18), Ui.px(8), Ui.px(8), Ui.px(8));
         bar.setBackground(Ui.panel());
         TextView t = Ui.text(this, 16, Ui.SILVER, "sans-serif", Gravity.LEFT);
-        t.setText("Drag a box onto another to swap them");
+        t.setText(Hindi.t("Drag a box onto another to swap them"));
         bar.addView(t);
-        TextView done = PhoneCard.pill(this, "Done", 0xFF2A2D32);
+        TextView done = PhoneCard.pill(this, Hindi.t("Done"), 0xFF2A2D32);
         done.setTextSize(0, 16 * Ui.k);
         done.setPadding(Ui.px(20), 0, Ui.px(20), 0);
         LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(-2, Ui.px(44));
@@ -975,7 +977,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             }
             restyle();
         } catch (Exception e) {
-            Toast.makeText(this, "Couldn't use that picture: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Hindi.f("Couldn't use that picture: %1$s", e.getMessage()), Toast.LENGTH_LONG).show();
         }
     }
 

@@ -1,0 +1,38 @@
+# Builds OpenRath the way F-Droid's build server would (docs/FDROID.md): apktool built from source,
+# the SDK's own aapt2 and d8, no downloaded jars, no brand packs, and no signing.
+name: f-droid build
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  fdroid:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with: { distribution: temurin, java-version: '17' }
+      - name: SDK and packages
+        run: |
+          sudo apt-get update && sudo apt-get install -y fonts-inter python3-pil python3-numpy
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" > /dev/null
+          mkdir -p tools/.tools/framework
+          cp $ANDROID_HOME/platforms/android-34/android.jar tools/.tools/
+          cp $ANDROID_HOME/build-tools/34.0.0/lib/d8.jar tools/.tools/
+      - name: Apktool from source
+        run: |
+          git clone --depth 1 --branch v2.9.3 https://github.com/iBotPeaches/Apktool.git $RUNNER_TEMP/Apktool
+          cd $RUNNER_TEMP/Apktool && ./gradlew shadowJar -x test
+          ls brut.apktool/apktool-cli/build/libs/
+          cp "$(ls -S brut.apktool/apktool-cli/build/libs/*.jar | head -1)" $GITHUB_WORKSPACE/tools/.tools/apktool.jar
+      - name: Build, unsigned
+        run: |
+          test ! -e tools/.tools/signer.jar
+          OPENRATH_PUBLIC=1 OPENRATH_UNSIGNED=1 AAPT2=$ANDROID_HOME/build-tools/34.0.0/aapt2 python3 build.py out
+      - name: Check the APK
+        run: |
+          $ANDROID_HOME/build-tools/34.0.0/aapt2 dump badging out/openrath-unsigned.apk | head -3
+          $ANDROID_HOME/build-tools/34.0.0/aapt2 dump badging out/openrath-unsigned.apk | grep -q "package: name='org.openrath.launcher'"
+          $ANDROID_HOME/build-tools/34.0.0/aapt2 dump badging out/openrath-unsigned.apk | grep -q "sdkVersion:'29'"
+          ! unzip -l out/openrath-unsigned.apk | grep -q "META-INF/.*\.\(RSA\|SF\)"
+      - uses: actions/upload-artifact@v4
+        with: { name: openrath-unsigned-apk, path: out/openrath-unsigned.apk }

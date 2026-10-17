@@ -455,12 +455,12 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
     private void foreground() {
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification.Builder b;
-        nm.createNotificationChannel(new NotificationChannel("player", "Player", NotificationManager.IMPORTANCE_LOW));
+        nm.createNotificationChannel(new NotificationChannel("player", Hindi.t("Player"), NotificationManager.IMPORTANCE_LOW));
         b = new Notification.Builder(this, "player");
         Track t = current();
         b.setSmallIcon(getApplicationInfo().icon)
                 .setContentTitle(t == null ? "OpenRath" : t.name)
-                .setContentText(WEB.equals(mode) ? "Web radio" : "Music")
+                .setContentText(WEB.equals(mode) ? Hindi.t("Web radio") : Hindi.t("Music"))
                 .setOngoing(true);
         try {
             startForeground(7, b.build());

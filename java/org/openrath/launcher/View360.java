@@ -133,7 +133,7 @@ final class View360 {
         car.lightsOn = a.hub.lightsOn();
         root.addView(car, new FrameLayout.LayoutParams(-1, -1));
 
-        TextView title = Ui.label(a, "360 VIEW  ·  " + (Car.name(p).isEmpty() ? "YOUR CAR" : Car.name(p).toUpperCase(Locale.getDefault())));
+        TextView title = Ui.label(a, Hindi.f("360 VIEW  ·  %1$s", Car.name(p).isEmpty() ? Hindi.t("YOUR CAR") : Car.name(p).toUpperCase(Locale.getDefault())));
         title.setTextSize(0, 14 * Ui.k);
         FrameLayout.LayoutParams tl = new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.LEFT);
         tl.leftMargin = tl.topMargin = Ui.px(20);
@@ -145,7 +145,7 @@ final class View360 {
         String[] names = {"Top", "Front", "Left", "Right", "Rear", "Colour", "Shape", "Plate", cam != null ? "360 camera" : null, "Close"};
         for (final String n : names) {
             if (n == null) continue;
-            TextView b = PhoneCard.pill(a, n, "Close".equals(n) ? 0xFF7A2328 : "360 camera".equals(n) ? 0xFF1F6F45 : 0);
+            TextView b = PhoneCard.pill(a, Hindi.t(n), "Close".equals(n) ? 0xFF7A2328 : "360 camera".equals(n) ? 0xFF1F6F45 : 0);
             b.setTextSize(0, 15 * Ui.k);
             b.setPadding(Ui.px(16), 0, Ui.px(16), 0);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, Ui.px(46));
@@ -183,8 +183,8 @@ final class View360 {
     }
 
     private static void colour(HomeActivity a, final CarView car) {
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Car colour")
-                .setItems(Car3D.COLOUR_NAMES, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Car colour"))
+                .setItems(Cab.tr(Car3D.COLOUR_NAMES), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface di, int w) {
                         car.prefs.put("carColour", String.valueOf(Car3D.COLOURS[w]));
@@ -194,8 +194,8 @@ final class View360 {
     }
 
     private static void shape(HomeActivity a, final CarView car) {
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Car shape")
-                .setItems(Car3D.SHAPE_NAMES, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Car shape"))
+                .setItems(Cab.tr(Car3D.SHAPE_NAMES), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface di, int w) {
                         car.prefs.put("carShape", Car3D.SHAPES[w]);
@@ -209,14 +209,14 @@ final class View360 {
         e.setSingleLine(true);
         e.setText(Car3D.plate(car.prefs));
         e.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Number plate (e.g. DL 3C AB 1234)").setView(e)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Number plate (e.g. DL 3C AB 1234)")).setView(e)
+                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface di, int w) {
                         car.prefs.put("carPlate", e.getText().toString().trim().toUpperCase(Locale.US));
                         car.invalidate();
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private View360() {

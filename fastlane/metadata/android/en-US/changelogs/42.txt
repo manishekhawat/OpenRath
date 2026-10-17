@@ -1,0 +1,1 @@
+The whole app in Hindi, not only Settings: dashboard, map, phone, music, cab tools, alerts on screen and dialogs. Settings > OpenRath level > Language switches everything. Spoken prompts stay in English. Times in Hindi say the part of the day.

@@ -1,5 +1,6 @@
 # Builds a signed public release when a tag like v1.32 is pushed (see RELEASING.md).
-# It never signs with the debug key: without the four RELEASE_* secrets the job fails.
+# It never signs with the debug key. Without the four RELEASE_* secrets it builds nothing: the release is
+# then made by hand with an APK signed offline (RELEASING.md, "Signing offline").
 name: release
 on:
   push:
@@ -35,6 +36,7 @@ jobs:
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo "VER=$VER" >> $GITHUB_ENV
       - name: Release key
+        id: key
         env:
           KS_B64: ${{ secrets.RELEASE_KEYSTORE_B64 }}
           STORE_PASS: ${{ secrets.RELEASE_STORE_PASS }}
@@ -42,9 +44,11 @@ jobs:
           KEY_PASS: ${{ secrets.RELEASE_KEY_PASS }}
         run: |
           if [ -z "$KS_B64" ] || [ -z "$STORE_PASS" ] || [ -z "$KEY_ALIAS" ] || [ -z "$KEY_PASS" ]; then
-            echo "::error::Release secrets are missing. Releases must never be signed with the debug key."
-            exit 1
+            echo "::notice::No release secrets: this release is signed offline and uploaded by hand (RELEASING.md)."
+            echo "SIGNED=no" >> $GITHUB_ENV
+            exit 0
           fi
+          echo "SIGNED=yes" >> $GITHUB_ENV
           echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/release.keystore"
           python3 - <<'EOF'
           import json, os
@@ -53,19 +57,23 @@ jobs:
                     open('signing.json', 'w'))
           EOF
       - name: Unit tests
+        if: env.SIGNED == 'yes'
         run: python3 build.py test
       - name: APK
+        if: env.SIGNED == 'yes'
         run: OPENRATH_PUBLIC=1 python3 build.py out
       - name: Remove the key
         if: always()
         run: rm -f signing.json "$RUNNER_TEMP/release.keystore"
       - name: Files
+        if: env.SIGNED == 'yes'
         run: |
           mv out/openrath.apk "openrath-$TAG.apk"
           git archive --format=zip --prefix=openrath/ -o "openrath-$TAG-source.zip" HEAD
           sha256sum "openrath-$TAG.apk" "openrath-$TAG-source.zip" > SHA256SUMS
           cat SHA256SUMS
       - name: Notes
+        if: env.SIGNED == 'yes'
         run: |
           # the CHANGELOG section for this version, from its "## X.Y" heading to the next one
           awk -v v="$VER" '
@@ -88,6 +96,7 @@ jobs:
           } >> notes.md
           cat notes.md
       - name: GitHub release
+        if: env.SIGNED == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

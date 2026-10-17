@@ -73,7 +73,7 @@ final class Extras {
                 MediaCard.owner = "music";
                 key(a, KeyEvent.KEYCODE_MEDIA_PLAY);
             }
-            Toast.makeText(a, "Carrying on where you left off", Toast.LENGTH_SHORT).show();
+            Toast.makeText(a, Hindi.t("Carrying on where you left off"), Toast.LENGTH_SHORT).show();
             if (!"text".equals(a.prefs.str("summaryHow", "voice"))) Speak.say(a, "Welcome back. Carrying on where you left off.", false);
         } catch (Throwable ignored) {
         }
@@ -286,7 +286,7 @@ final class Extras {
 
     static void pickWidget(final HomeActivity a, final String content) {
         if (!Features.on(a.prefs, "widgets")) {
-            Toast.makeText(a, "Switch on Widgets from other apps in Settings > Home screen first", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("Switch on Widgets from other apps in Settings > Home screen first"), Toast.LENGTH_LONG).show();
             return;
         }
         final AppWidgetManager m = AppWidgetManager.getInstance(a);
@@ -305,12 +305,12 @@ final class Extras {
         });
         final List<AppWidgetProviderInfo> sorted = new ArrayList<>();
         String[] items = new String[all.size() + 1];
-        items[0] = "No widget (empty box)";
+        items[0] = Hindi.t("No widget (empty box)");
         for (int k = 0; k < order.size(); k++) {
             sorted.add(all.get(order.get(k)));
             items[k + 1] = names.get(order.get(k));
         }
-        new AlertDialog.Builder(a, DIALOG).setTitle(all.isEmpty() ? "No apps on the unit offer widgets" : "Choose a widget")
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(all.isEmpty() ? "No apps on the unit offer widgets" : "Choose a widget"))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -336,11 +336,11 @@ final class Extras {
                                 a.startActivityForResult(i, WIDGET_BIND);
                             } catch (Throwable e) {
                                 a.widgets.deleteAppWidgetId(id);
-                                Toast.makeText(a, "This unit doesn't let launchers add widgets", Toast.LENGTH_LONG).show();
+                                Toast.makeText(a, Hindi.t("This unit doesn't let launchers add widgets"), Toast.LENGTH_LONG).show();
                             }
                         }
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static String label(PackageManager pm, AppWidgetProviderInfo i) {
@@ -392,25 +392,25 @@ final class Extras {
     static void obdMenu(final HomeActivity a) {
         final Prefs p = a.prefs;
         String mac = p.str("obdMac", "");
-        String[] items = {"Adapter: " + (mac.isEmpty() ? "choose…" : p.str("obdName", mac)), "Read fault codes",
-                "Clear fault codes…", "Status: " + Obd.status + (Obd.protocol.isEmpty() ? "" : " (" + Obd.protocol + ")")};
-        new AlertDialog.Builder(a, DIALOG).setTitle("Engine (OBD-II)").setItems(items, new DialogInterface.OnClickListener() {
+        String[] items = {Hindi.f("Adapter: %1$s", mac.isEmpty() ? Hindi.t("choose…") : p.str("obdName", mac)), Hindi.t("Read fault codes"),
+                Hindi.t("Clear fault codes…"), Hindi.f("Status: %1$s", Hindi.t(Obd.status) + (Obd.protocol.isEmpty() ? "" : " (" + Obd.protocol + ")"))};
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Engine (OBD-II)")).setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 if (w == 0) chooseAdapter(a);
                 else if (w == 1) readCodes(a);
                 else if (w == 2) clearCodes(a);
             }
-        }).setNegativeButton("Close", null).show();
+        }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     static void chooseAdapter(final HomeActivity a) {
         final List<String> devs = Obd.paired();
         if (devs.isEmpty()) {
-            new AlertDialog.Builder(a, DIALOG).setTitle("No paired Bluetooth devices")
-                    .setMessage("Plug the ELM327 adapter into the OBD socket under the steering wheel, switch the ignition on, "
-                            + "and pair it in the unit's Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here.")
-                    .setPositiveButton("Bluetooth settings", new DialogInterface.OnClickListener() {
+            new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("No paired Bluetooth devices"))
+                    .setMessage(Hindi.t("Plug the ELM327 adapter into the OBD socket under the steering wheel, switch the ignition on, "
+                            + "and pair it in the unit's Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here."))
+                    .setPositiveButton(Hindi.t("Bluetooth settings"), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface d, int w) {
                             try {
@@ -418,12 +418,12 @@ final class Extras {
                             } catch (Throwable ignored) {
                             }
                         }
-                    }).setNegativeButton("Close", null).show();
+                    }).setNegativeButton(Hindi.t("Close"), null).show();
             return;
         }
         String[] names = new String[devs.size()];
         for (int i = 0; i < names.length; i++) names[i] = devs.get(i).replace("|", "   ");
-        new AlertDialog.Builder(a, DIALOG).setTitle("Which one is the OBD-II adapter?").setItems(names, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Which one is the OBD-II adapter?")).setItems(names, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 String[] f = devs.get(w).split("\\|");
@@ -432,19 +432,19 @@ final class Extras {
                 Obd.stop();
                 Features.set(a.prefs, "obd", true);
                 Drive.start(a);
-                Toast.makeText(a, "Connecting to " + f[0] + "; keep the ignition on", Toast.LENGTH_LONG).show();
+                Toast.makeText(a, Hindi.f("Connecting to %1$s; keep the ignition on", f[0]), Toast.LENGTH_LONG).show();
             }
-        }).setNegativeButton("Cancel", null).show();
+        }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     static void readCodes(final HomeActivity a) {
         if (!Obd.connected) {
-            Toast.makeText(a, "Not connected to the adapter: " + Obd.status, Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.f("Not connected to the adapter: %1$s", Hindi.t(Obd.status)), Toast.LENGTH_LONG).show();
             return;
         }
         final long asked = System.currentTimeMillis();
         Obd.readCodes();
-        Toast.makeText(a, "Asking the engine computer…", Toast.LENGTH_SHORT).show();
+        Toast.makeText(a, Hindi.t("Asking the engine computer…"), Toast.LENGTH_SHORT).show();
         a.dash.postDelayed(new Runnable() {
             int tries;
 
@@ -458,33 +458,33 @@ final class Extras {
                 synchronized (Obd.codes) {
                     for (String c : Obd.codes) sb.append(c).append("  ").append(Obd.meaning(c)).append('\n');
                 }
-                new AlertDialog.Builder(a, DIALOG).setTitle(Obd.codesAt < asked ? "No answer from the engine computer"
-                        : sb.length() == 0 ? "No fault codes" : "Fault codes")
-                        .setMessage(sb.length() == 0 ? "The engine computer reports nothing stored." : sb.toString().trim()
-                                + "\n\nA code points at where to look; a mechanic can confirm the cause.")
-                        .setPositiveButton("OK", null).show();
+                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Obd.codesAt < asked ? "No answer from the engine computer"
+                        : sb.length() == 0 ? "No fault codes" : "Fault codes"))
+                        .setMessage(sb.length() == 0 ? Hindi.t("The engine computer reports nothing stored.") : sb.toString().trim()
+                                + Hindi.t("\n\nA code points at where to look; a mechanic can confirm the cause."))
+                        .setPositiveButton(Hindi.t("OK"), null).show();
             }
         }, 1500);
     }
 
     static void clearCodes(final HomeActivity a) {
-        new AlertDialog.Builder(a, DIALOG).setTitle("Clear the fault codes?")
-                .setMessage("This also turns off the check-engine light until the fault is seen again. Only clear codes after "
-                        + "the problem has been fixed. Do it with the engine off and the ignition on.")
-                .setPositiveButton("Clear", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Clear the fault codes?"))
+                .setMessage(Hindi.t("This also turns off the check-engine light until the fault is seen again. Only clear codes after "
+                        + "the problem has been fixed. Do it with the engine off and the ignition on."))
+                .setPositiveButton(Hindi.t("Clear"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         Obd.clearCodes();
-                        Toast.makeText(a, "Cleared", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(a, Hindi.t("Cleared"), Toast.LENGTH_SHORT).show();
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     static void tyresMenu(final HomeActivity a) {
         final Prefs p = a.prefs;
-        String[] items = {"Find my tyre sensors", "Units: " + p.str("tpmsUnit", "psi"), "Warn below " + p.num("tpmsLow", 28) + " psi",
-                "Status: " + Tpms.status};
-        new AlertDialog.Builder(a, DIALOG).setTitle("Tyre pressure").setItems(items, new DialogInterface.OnClickListener() {
+        String[] items = {Hindi.t("Find my tyre sensors"), Hindi.f("Units: %1$s", p.str("tpmsUnit", "psi")), Hindi.f("Warn below %1$s psi", p.num("tpmsLow", 28)),
+                Hindi.f("Status: %1$s", Hindi.t(Tpms.status))};
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Tyre pressure")).setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 if (w == 0) findSensors(a);
@@ -496,7 +496,7 @@ final class Extras {
                 }
                 a.hub.notifyIfChanged(true);
             }
-        }).setNegativeButton("Close", null).show();
+        }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     /** Listen for sensors for a while, then let the owner say which wheel each one is on. */
@@ -507,10 +507,10 @@ final class Extras {
         final TextView t = Ui.text(a, 16, 0xFFDDDDDD, "sans-serif", Gravity.LEFT);
         t.setSingleLine(false);
         t.setPadding(Ui.px(24), Ui.px(16), Ui.px(24), Ui.px(8));
-        t.setText("Listening… Sensors send every few seconds while the car moves, and less often when parked. "
-                + "Driving slowly or letting a little air out wakes them up.");
-        final AlertDialog dlg = new AlertDialog.Builder(a, DIALOG).setTitle("Finding tyre sensors").setView(t)
-                .setPositiveButton("Assign wheels", null).setNegativeButton("Close", null).show();
+        t.setText(Hindi.t("Listening… Sensors send every few seconds while the car moves, and less often when parked. "
+                + "Driving slowly or letting a little air out wakes them up."));
+        final AlertDialog dlg = new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Finding tyre sensors")).setView(t)
+                .setPositiveButton(Hindi.t("Assign wheels"), null).setNegativeButton(Hindi.t("Close"), null).show();
         final Runnable tick = new Runnable() {
             @Override
             public void run() {
@@ -541,7 +541,7 @@ final class Extras {
             ids.addAll(Tpms.heard.keySet());
         }
         if (ids.isEmpty()) {
-            Toast.makeText(a, "No sensors heard yet", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("No sensors heard yet"), Toast.LENGTH_LONG).show();
             return;
         }
         // sensors that say which wheel they are on are placed straight away
@@ -554,15 +554,15 @@ final class Extras {
             }
         }
         if (auto == 4) {
-            Toast.makeText(a, "All four sensors placed", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("All four sensors placed"), Toast.LENGTH_LONG).show();
             return;
         }
         final String[] items = ids.toArray(new String[0]);
-        new AlertDialog.Builder(a, DIALOG).setTitle("Tap a sensor to choose its wheel").setItems(items, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Tap a sensor to choose its wheel")).setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 final String id = items[w];
-                new AlertDialog.Builder(a, DIALOG).setTitle(id).setItems(new String[]{"Front left", "Front right", "Rear left", "Rear right"},
+                new AlertDialog.Builder(a, DIALOG).setTitle(id).setItems(tr(new String[]{"Front left", "Front right", "Rear left", "Rear right"}),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d2, int wheel) {
@@ -571,7 +571,7 @@ final class Extras {
                             }
                         }).show();
             }
-        }).setNegativeButton("Done", null).show();
+        }).setNegativeButton(Hindi.t("Done"), null).show();
     }
 
     // ------------------------------------------------------------------ settings rows
@@ -589,8 +589,8 @@ final class Extras {
         android.widget.FrameLayout box = new android.widget.FrameLayout(a);
         box.setPadding(pad, pad / 2, pad, 0);
         box.addView(e);
-        new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(title).setView(box)
-                .setPositiveButton("Save", new android.content.DialogInterface.OnClickListener() {
+        new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t(title)).setView(box)
+                .setPositiveButton(Hindi.t("Save"), new android.content.DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(android.content.DialogInterface d, int w) {
                         String v = e.getText().toString().trim();
@@ -598,11 +598,11 @@ final class Extras {
                             if (!v.isEmpty()) Double.parseDouble(v);
                             then.set(v);
                         } catch (Exception ex) {
-                            android.widget.Toast.makeText(e.getContext(), "Enter a number", android.widget.Toast.LENGTH_SHORT).show();
+                            android.widget.Toast.makeText(e.getContext(), Hindi.t("Enter a number"), android.widget.Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
-                .setNegativeButton("Cancel", null).show();
+                .setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static String onOff(boolean b) {
@@ -621,7 +621,7 @@ final class Extras {
                 @Override
                 public void run() {
                     if (locked) {
-                        android.widget.Toast.makeText(a, Managed.NOTE, android.widget.Toast.LENGTH_SHORT).show();
+                        android.widget.Toast.makeText(a, Hindi.t(Managed.NOTE), android.widget.Toast.LENGTH_SHORT).show();
                         return;
                     }
                     Features.set(p, f.id, !Features.on(p, f.id));
@@ -635,7 +635,7 @@ final class Extras {
 
         // ---- Dashboard extras
         if (Features.on(p, "pages")) {
-            r.add(new SettingsView.Row("Dashboard", "Number of pages", String.valueOf(p.pages()) + "  (swipe sideways)", new Runnable() {
+            r.add(new SettingsView.Row("Dashboard", "Number of pages", Hindi.f("%1$s  (swipe sideways)", p.pages()), new Runnable() {
                 @Override
                 public void run() {
                     p.put("pages", String.valueOf(p.pages() >= Prefs.MAX_PAGES ? 2 : p.pages() + 1));
@@ -643,7 +643,7 @@ final class Extras {
                 }
             }));
         }
-        r.add(new SettingsView.Row("Dashboard", "Clock screensaver after", Features.on(p, "saver") ? p.num("saverMin", 5) + " min idle while parked" : "off (switch above)",
+        r.add(new SettingsView.Row("Dashboard", "Clock screensaver after", Features.on(p, "saver") ? Hindi.f("%1$s min idle while parked", p.num("saverMin", 5)) : "off (switch above)",
                 new Runnable() {
                     @Override
                     public void run() {
@@ -670,7 +670,7 @@ final class Extras {
                         chooseAdapter(a);
                     }
                 }));
-        r.add(new SettingsView.Row(g, "Read fault codes", Obd.codesAt == 0 ? null : Obd.codes.size() + " found last time", new Runnable() {
+        r.add(new SettingsView.Row(g, "Read fault codes", Obd.codesAt == 0 ? null : Hindi.f("%1$s found last time", Obd.codes.size()), new Runnable() {
             @Override
             public void run() {
                 readCodes(a);
@@ -682,7 +682,7 @@ final class Extras {
                 clearCodes(a);
             }
         }));
-        r.add(new SettingsView.Row(g, "Warn when the coolant is above", p.num("obdHot", 105) + " °C", new Runnable() {
+        r.add(new SettingsView.Row(g, "Warn when the coolant is above", Hindi.f("%1$s °C", p.num("obdHot", 105)), new Runnable() {
             @Override
             public void run() {
                 int[] steps = {100, 105, 110, 115};
@@ -743,7 +743,7 @@ final class Extras {
                         try {
                             a.startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
                         } catch (Throwable e) {
-                            Toast.makeText(a, "This unit has no accessibility settings screen", Toast.LENGTH_LONG).show();
+                            Toast.makeText(a, Hindi.t("This unit has no accessibility settings screen"), Toast.LENGTH_LONG).show();
                         }
                     }
                 }));
@@ -769,7 +769,7 @@ final class Extras {
                 }
             }
         }));
-        r.add(new SettingsView.Row(g, "Apps to listen to", Ticker.apps(p).size() + " apps", new Runnable() {
+        r.add(new SettingsView.Row(g, "Apps to listen to", Hindi.f("%1$s apps", Ticker.apps(p).size()), new Runnable() {
             @Override
             public void run() {
                 tickerApps(a);
@@ -781,7 +781,7 @@ final class Extras {
                 try {
                     a.startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
                 } catch (Throwable e) {
-                    Toast.makeText(a, "This unit has no notification access screen", Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.t("This unit has no notification access screen"), Toast.LENGTH_LONG).show();
                 }
             }
         }));
@@ -809,15 +809,15 @@ final class Extras {
                         });
             }
         }));
-        r.add(new SettingsView.Row(g, "Mileage coach", Coach.trips(p).size() + " drives recorded", new Runnable() {
+        r.add(new SettingsView.Row(g, "Mileage coach", Hindi.f("%1$s drives recorded", Coach.trips(p).size()), new Runnable() {
             @Override
             public void run() {
                 Coach.show(a, p);
             }
         }));
         final int[] breaks = {90, 120, 150, 180};
-        r.add(new SettingsView.Row(g, "Break reminder after", p.num("breakMin", 120) / 60f % 1 == 0
-                ? p.num("breakMin", 120) / 60 + " hours of driving" : String.format(java.util.Locale.US, "%.1f hours of driving", p.num("breakMin", 120) / 60f),
+        r.add(new SettingsView.Row(g, "Break reminder after", Hindi.f("%1$s hours of driving", p.num("breakMin", 120) / 60f % 1 == 0
+                ? String.valueOf(p.num("breakMin", 120) / 60) : String.format(java.util.Locale.US, "%.1f", p.num("breakMin", 120) / 60f)),
                 new Runnable() {
                     @Override
                     public void run() {
@@ -848,7 +848,7 @@ final class Extras {
             }
         }).toggle(Valet.on(p), null));
         final int[] vols = {30, 40, 50, 60, 70};
-        r.add(new SettingsView.Row(g, "Volume limit", Valet.volumeCap(p) + "% of full volume", new Runnable() {
+        r.add(new SettingsView.Row(g, "Volume limit", Hindi.f("%1$s%% of full volume", Valet.volumeCap(p)), new Runnable() {
             @Override
             public void run() {
                 int cur = Valet.volumeCap(p), next = vols[0];
@@ -871,7 +871,7 @@ final class Extras {
                 Valet.choosePin(a, p, new Runnable() {
                     @Override
                     public void run() {
-                        android.widget.Toast.makeText(a, "PIN saved", android.widget.Toast.LENGTH_SHORT).show();
+                        android.widget.Toast.makeText(a, Hindi.t("PIN saved"), android.widget.Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -904,14 +904,14 @@ final class Extras {
         r.add(new SettingsView.Row(g, "What you can say", "radio, calls, music, volume, places", new Runnable() {
             @Override
             public void run() {
-                new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("What you can say")
-                        .setMessage("Radio: \"FM 91.1\", \"radio chalao\", \"रेडियो 98.3\"\n"
+                new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("What you can say"))
+                        .setMessage(Hindi.t("Radio: \"FM 91.1\", \"radio chalao\", \"रेडियो 98.3\"\n"
                                 + "Calls: \"call Mom\", \"papa ko call karo\", \"मम्मी को फोन लगाओ\" (uses your favourites)\n"
                                 + "Music: \"play music\", \"gaana chalao\", \"next\", \"अगला\", \"pause\", \"रोको\"\n"
                                 + "Volume: \"volume up\", \"awaaz kam karo\", \"आवाज़ बढ़ाओ\"\n"
                                 + "Places: \"take me home\", \"घर ले चलो\", \"office\", \"petrol pump\", \"dhaba\", "
-                                + "\"navigate to India Gate\"\n\nAnything else is searched on the map.")
-                        .setPositiveButton("OK", null).show();
+                                + "\"navigate to India Gate\"\n\nAnything else is searched on the map."))
+                        .setPositiveButton(Hindi.t("OK"), null).show();
             }
         }));
 
@@ -941,7 +941,7 @@ final class Extras {
                 if (m != null) m.js("restStop('fuel')");
             }
         }));
-        r.add(new SettingsView.Row(g, "Tank size", FuelPlan.tank(p) + " litres", new Runnable() {
+        r.add(new SettingsView.Row(g, "Tank size", Hindi.f("%1$s litres", FuelPlan.tank(p)), new Runnable() {
             @Override
             public void run() {
                 number(a, "cng".equals(Car.fuel(p)) ? "CNG cylinder, kg" : "Fuel tank, litres", String.valueOf(FuelPlan.tank(p)), new Num() {
@@ -953,7 +953,7 @@ final class Extras {
             }
         }));
         final int[] lows = {40, 60, 80, 100};
-        r.add(new SettingsView.Row(g, "Warn when the petrol is below", FuelPlan.warnKm(p) + " km of driving", new Runnable() {
+        r.add(new SettingsView.Row(g, "Warn when the petrol is below", Hindi.f("%1$s km of driving", FuelPlan.warnKm(p)), new Runnable() {
             @Override
             public void run() {
                 int cur = FuelPlan.warnKm(p), next = lows[0];
@@ -998,13 +998,13 @@ final class Extras {
                     }
                 }));
         r.add(new SettingsView.Row(g, "Paid parking reminder", p.longNum("parkEnds", 0) > System.currentTimeMillis()
-                ? "parking ends at " + Errands.clock(p.longNum("parkEnds", 0)) : "a reminder on your phone; or say \"parking timer\"", new Runnable() {
+                ? Hindi.f("parking ends at %1$s", Errands.clock(p.longNum("parkEnds", 0))) : "a reminder on your phone; or say \"parking timer\"", new Runnable() {
             @Override
             public void run() {
                 Chores.parkingTimer(a);
             }
         }));
-        r.add(new SettingsView.Row(g, "Pause parked music after", p.num("parkedMusicMin", 20) + " minutes with the engine off", new Runnable() {
+        r.add(new SettingsView.Row(g, "Pause parked music after", Hindi.f("%1$s minutes with the engine off", p.num("parkedMusicMin", 20)), new Runnable() {
             @Override
             public void run() {
                 number(a, "Minutes before parked music pauses", String.valueOf(p.num("parkedMusicMin", 20)), new Num() {
@@ -1015,7 +1015,7 @@ final class Extras {
                 });
             }
         }));
-        r.add(new SettingsView.Row(g, "Air quality now", Air.aqi < 0 ? "not known yet" : Air.band(Air.aqi) + ", AQI " + Air.aqi, new Runnable() {
+        r.add(new SettingsView.Row(g, "Air quality now", Air.aqi < 0 ? "not known yet" : Hindi.f("%1$s, AQI %2$s", Hindi.t(Air.band(Air.aqi)), Air.aqi), new Runnable() {
             @Override
             public void run() {
             }
@@ -1028,14 +1028,14 @@ final class Extras {
                     }
                 }));
         r.add(new SettingsView.Row(g, "Car washed today", p.longNum("washAt", 0) == 0 ? "tap after a wash"
-                : "last wash " + (System.currentTimeMillis() - p.longNum("washAt", 0)) / 86400000L + " days ago", new Runnable() {
+                : Hindi.f("last wash %1$s days ago", (System.currentTimeMillis() - p.longNum("washAt", 0)) / 86400000L), new Runnable() {
             @Override
             public void run() {
                 p.putLong("washAt", System.currentTimeMillis());
-                Toast.makeText(a, "Noted. The next reminder is in " + p.num("washDays", 14) + " days.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(a, Hindi.f("Noted. The next reminder is in %1$s days.", p.num("washDays", 14)), Toast.LENGTH_SHORT).show();
             }
         }));
-        r.add(new SettingsView.Row(g, "Wash reminder every", p.num("washDays", 14) + " days", new Runnable() {
+        r.add(new SettingsView.Row(g, "Wash reminder every", Hindi.f("%1$s days", p.num("washDays", 14)), new Runnable() {
             @Override
             public void run() {
                 number(a, "Days between car washes", String.valueOf(p.num("washDays", 14)), new Num() {
@@ -1069,33 +1069,33 @@ final class Extras {
                 return Spots.drives(s) >= 3;
             }
         });
-        r.add(new SettingsView.Row(g, "Speed breakers learnt", learnt + " (" + bumps.size() + " places seen); tap to forget them", new Runnable() {
+        r.add(new SettingsView.Row(g, "Speed breakers learnt", Hindi.f("%1$s (%2$s places seen); tap to forget them", learnt, bumps.size()), new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, DIALOG).setMessage("Forget all learnt speed breakers?")
-                        .setPositiveButton("Forget", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(a, DIALOG).setMessage(Hindi.t("Forget all learnt speed breakers?"))
+                        .setPositiveButton(Hindi.t("Forget"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 p.put("bumps", "");
                             }
-                        }).setNegativeButton("Cancel", null).show();
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
-        r.add(new SettingsView.Row(g, "Stops learnt", waits.size() + " signals and toll plazas; tap to forget them", new Runnable() {
+        r.add(new SettingsView.Row(g, "Stops learnt", Hindi.f("%1$s signals and toll plazas; tap to forget them", waits.size()), new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, DIALOG).setMessage("Forget all learnt waiting times?")
-                        .setPositiveButton("Forget", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(a, DIALOG).setMessage(Hindi.t("Forget all learnt waiting times?"))
+                        .setPositiveButton(Hindi.t("Forget"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 p.put("waits", "");
                             }
-                        }).setNegativeButton("Cancel", null).show();
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
 
         r.add(new SettingsView.Row("Phone", "Guest Wi-Fi", p.str("apName", "").isEmpty() ? "a code passengers scan to join the hotspot"
-                : "\"" + p.str("apName", "") + "\"; or say \"hotspot\"", new Runnable() {
+                : Hindi.f("\"%1$s\"; or say \"hotspot\"", p.str("apName", "")), new Runnable() {
             @Override
             public void run() {
                 Chores.hotspot(a);
@@ -1119,7 +1119,7 @@ final class Extras {
                 a.fogMode(a.hub);
             }
         }));
-        r.add(new SettingsView.Row(g, "Speed in fog", "keep below " + Fog.guide(p) + " km/h", new Runnable() {
+        r.add(new SettingsView.Row(g, "Speed in fog", Hindi.f("keep below %1$s km/h", Fog.guide(p)), new Runnable() {
             @Override
             public void run() {
                 int[] s = {30, 40, 50, 60};
@@ -1129,7 +1129,7 @@ final class Extras {
             }
         }));
         r.add(new SettingsView.Row(g, "Emergency contact", Rescue.contact(p).isEmpty() ? "not set (accident help calls 112 only if you tap it)"
-                : Rescue.contactName(p) + (Features.on(p, "accidentHelp") ? "" : " (accident help is off)"), new Runnable() {
+                : Rescue.contactName(p) + (Features.on(p, "accidentHelp") ? "" : Hindi.t(" (accident help is off)")), new Runnable() {
             @Override
             public void run() {
                 Rescue.edit(a, p, new Runnable() {
@@ -1150,11 +1150,11 @@ final class Extras {
         r.add(new SettingsView.Row(g, "Holidays ahead", android.text.TextUtils.join(";  ", Holidays.upcoming(java.util.Calendar.getInstance(), 3)), new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, DIALOG).setTitle("Holidays with heavy traffic")
+                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Holidays with heavy traffic"))
                         .setMessage(android.text.TextUtils.join("\n", Holidays.upcoming(java.util.Calendar.getInstance(), 12))
-                                + "\n\nThe warning comes once a day when you reach highway speed, from the day before (two days for Diwali) "
-                                + "and over long weekends.")
-                        .setPositiveButton("OK", null).show();
+                                + Hindi.t("\n\nThe warning comes once a day when you reach highway speed, from the day before (two days for Diwali) "
+                                + "and over long weekends."))
+                        .setPositiveButton(Hindi.t("OK"), null).show();
             }
         }));
 
@@ -1167,17 +1167,17 @@ final class Extras {
             }
         }));
         final int spots = Monsoon.spots(p).size();
-        r.add(new SettingsView.Row(g, "Marked spots", spots == 0 ? "none yet" : spots + (spots == 1 ? " spot; tap to clear" : " spots; tap to clear all"), new Runnable() {
+        r.add(new SettingsView.Row(g, "Marked spots", spots == 0 ? "none yet" : Hindi.f(spots == 1 ? "%1$s spot; tap to clear" : "%1$s spots; tap to clear all", spots), new Runnable() {
             @Override
             public void run() {
                 if (spots == 0) return;
-                new AlertDialog.Builder(a, DIALOG).setMessage("Clear all " + spots + " waterlogging spots?")
-                        .setPositiveButton("Clear", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(a, DIALOG).setMessage(Hindi.f("Clear all %1$s waterlogging spots?", spots))
+                        .setPositiveButton(Hindi.t("Clear"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 Monsoon.clear(p);
                             }
-                        }).setNegativeButton("Keep", null).show();
+                        }).setNegativeButton(Hindi.t("Keep"), null).show();
             }
         }));
 
@@ -1185,7 +1185,7 @@ final class Extras {
         g = "Dashcam";
         r.add(new SettingsView.Row(g, "Dashcam", Features.on(p, "dashcam") ? Dashcam.status : "off (switch above)", null));
         final int cams = Dashcam.cameras();
-        r.add(new SettingsView.Row(g, "Camera", cams == 0 ? "none found" : "camera " + (Math.max(0, Math.min(cams - 1, p.num("dashcamId", cams - 1))) + 1) + " of " + cams,
+        r.add(new SettingsView.Row(g, "Camera", cams == 0 ? "none found" : Hindi.f("camera %1$s of %2$s", Math.max(0, Math.min(cams - 1, p.num("dashcamId", cams - 1))) + 1, cams),
                 new Runnable() {
                     @Override
                     public void run() {
@@ -1195,7 +1195,7 @@ final class Extras {
                         if (Features.on(p, "dashcam")) Dashcam.start(a, p);
                     }
                 }));
-        r.add(new SettingsView.Row(g, "Space for recordings", p.num("dashcamGB", 4) + " GB, oldest clips deleted first", new Runnable() {
+        r.add(new SettingsView.Row(g, "Space for recordings", Hindi.f("%1$s GB, oldest clips deleted first", p.num("dashcamGB", 4)), new Runnable() {
             @Override
             public void run() {
                 List<Integer> c = Dashcam.spaceChoices();
@@ -1203,11 +1203,11 @@ final class Extras {
                 p.put("dashcamGB", String.valueOf(c.get((i + 1) % c.size())));
             }
         }));
-        r.add(new SettingsView.Row(g, "Save the clip now", Dashcam.savedClips() + " saved in OpenRath/dashcam/saved", new Runnable() {
+        r.add(new SettingsView.Row(g, "Save the clip now", Hindi.f("%1$s saved in OpenRath/dashcam/saved", Dashcam.savedClips()), new Runnable() {
             @Override
             public void run() {
                 Dashcam.protect();
-                android.widget.Toast.makeText(a, "Saving the last two minutes", android.widget.Toast.LENGTH_SHORT).show();
+                android.widget.Toast.makeText(a, Hindi.t("Saving the last two minutes"), android.widget.Toast.LENGTH_SHORT).show();
             }
         }));
 
@@ -1218,12 +1218,12 @@ final class Extras {
                 a.closeSettings();
                 MapCard m = a.mapCard();
                 if (m != null) m.js("serviceCentres()");
-                else android.widget.Toast.makeText(a, "Put the map on the dashboard first", android.widget.Toast.LENGTH_LONG).show();
+                else android.widget.Toast.makeText(a, Hindi.t("Put the map on the dashboard first"), android.widget.Toast.LENGTH_LONG).show();
             }
         }));
 
         // ---- Documents and service booking
-        r.add(new SettingsView.Row("Car care", "Car documents", Features.on(p, "wallet") ? Wallet.count(a) + " of 4 added; say \"documents\" to show"
+        r.add(new SettingsView.Row("Car care", "Car documents", Features.on(p, "wallet") ? Hindi.f("%1$s of 4 added; say \"documents\" to show", Wallet.count(a))
                 : "off (switch above)", new Runnable() {
             @Override
             public void run() {
@@ -1231,7 +1231,7 @@ final class Extras {
             }
         }));
         String[] mine = p.str("myService", "").split("\\|", -1);
-        r.add(new SettingsView.Row("Car care", "Your service centre", mine.length == 2 && !mine[0].isEmpty() ? mine[0] + (mine[1].isEmpty() ? " (no phone number)" : ", " + mine[1])
+        r.add(new SettingsView.Row("Car care", "Your service centre", mine.length == 2 && !mine[0].isEmpty() ? mine[0] + (mine[1].isEmpty() ? Hindi.t(" (no phone number)") : ", " + mine[1])
                 : "not set: tap Mine next to one in the service centre list", new Runnable() {
             @Override
             public void run() {
@@ -1239,8 +1239,8 @@ final class Extras {
                 e.setInputType(android.text.InputType.TYPE_CLASS_PHONE);
                 String[] m = p.str("myService", "").split("\\|", -1);
                 e.setText(m.length == 2 ? m[1] : "");
-                new AlertDialog.Builder(a, DIALOG).setTitle("Service centre's phone number").setView(e)
-                        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Service centre's phone number")).setView(e)
+                        .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 String[] m = p.str("myService", "").split("\\|", -1);
@@ -1248,7 +1248,7 @@ final class Extras {
                                 p.put("myService", name + "|" + e.getText().toString().replaceAll("[^0-9+]", ""));
                                 if (a.settingsView != null) a.settingsView.refresh();
                             }
-                        }).setNegativeButton("Cancel", null).show();
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
 
@@ -1264,7 +1264,7 @@ final class Extras {
                 }
             }
         }));
-        r.add(new SettingsView.Row(g, "Apps locked while moving", ChildLock.apps(p).isEmpty() ? "none chosen" : ChildLock.apps(p).size() + " apps", new Runnable() {
+        r.add(new SettingsView.Row(g, "Apps locked while moving", ChildLock.apps(p).isEmpty() ? "none chosen" : Hindi.f("%1$s apps", ChildLock.apps(p).size()), new Runnable() {
             @Override
             public void run() {
                 ChildLock.choose(a, p);
@@ -1284,27 +1284,27 @@ final class Extras {
             final String nice = prof.substring(0, 1).toUpperCase(Locale.US) + prof.substring(1);
             String eq = Sound.eq(p, prof);
             int vol = p.num("sndVol:" + prof, Sound.vol(prof));
-            r.add(new SettingsView.Row(g, nice + " sound", (Features.on(p, "soundProfiles") ? "" : "(profiles off) ")
-                    + (eq.isEmpty() ? "your equalizer" : eq) + ", volume " + (vol > 0 ? "+" : "") + vol
-                    + (prof.equals(Drive.soundNow) ? "  · now" : ""), new Runnable() {
+            r.add(new SettingsView.Row(g, nice + " sound", (Features.on(p, "soundProfiles") ? "" : Hindi.t("(profiles off) "))
+                    + Hindi.f("%1$s, volume %2$s", eq.isEmpty() ? Hindi.t("your equalizer") : Hindi.t(eq), (vol > 0 ? "+" : "") + vol)
+                    + (prof.equals(Drive.soundNow) ? Hindi.t("  · now") : ""), new Runnable() {
                 @Override
                 public void run() {
                     final String[] presets = new String[Eq.PRESETS.length];
-                    presets[0] = "Your equalizer";
-                    System.arraycopy(Eq.PRESETS, 0, presets, 1, Eq.PRESETS.length - 1);
-                    new AlertDialog.Builder(a, DIALOG).setTitle(nice + " sound: equalizer")
+                    presets[0] = Hindi.t("Your equalizer");
+                    for (int i = 1; i < presets.length; i++) presets[i] = Hindi.t(Eq.PRESETS[i - 1]);
+                    new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.f("%1$s sound: equalizer", Hindi.t(nice)))
                             .setItems(presets, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface d, int w) {
                                     p.put("sndEq:" + prof, w == 0 ? "" : Eq.PRESETS[w - 1]);
-                                    number(a, nice + " sound: volume steps (-5 to 5)", String.valueOf(p.num("sndVol:" + prof, Sound.vol(prof))), new Num() {
+                                    number(a, Hindi.f("%1$s sound: volume steps (-5 to 5)", Hindi.t(nice)), String.valueOf(p.num("sndVol:" + prof, Sound.vol(prof))), new Num() {
                                         @Override
                                         public void set(String v) {
                                             if (!v.isEmpty()) p.put("sndVol:" + prof, String.valueOf(Math.max(-5, Math.min(5, (int) Double.parseDouble(v)))));
                                         }
                                     });
                                 }
-                            }).setNegativeButton("Cancel", null).show();
+                            }).setNegativeButton(Hindi.t("Cancel"), null).show();
                 }
             }));
         }
@@ -1327,8 +1327,7 @@ final class Extras {
                     }
                 }));
         final int[] hours = {20, 21, 22, 23, 0};
-        r.add(new SettingsView.Row(g, "Quiet hours", Features.on(p, "quiet") ? "from " + Quiet.hour(Quiet.from(p)) + " to " + Quiet.hour(Quiet.to(p))
-                + ", music at " + p.num("quietVol", 40) + "%" : "off", new Runnable() {
+        r.add(new SettingsView.Row(g, "Quiet hours", Features.on(p, "quiet") ? Hindi.f("from %1$s to %2$s, music at %3$s%%", Quiet.hour(Quiet.from(p)), Quiet.hour(Quiet.to(p)), p.num("quietVol", 40)) : "off", new Runnable() {
             @Override
             public void run() {
                 int cur = Quiet.from(p), next = hours[0];
@@ -1347,7 +1346,7 @@ final class Extras {
             }
         }));
         final int[] qv = {20, 30, 40, 50};
-        r.add(new SettingsView.Row(g, "Quiet-hours volume", p.num("quietVol", 40) + "% of full volume", new Runnable() {
+        r.add(new SettingsView.Row(g, "Quiet-hours volume", Hindi.f("%1$s%% of full volume", p.num("quietVol", 40)), new Runnable() {
             @Override
             public void run() {
                 int cur = p.num("quietVol", 40), next = qv[0];
@@ -1355,7 +1354,7 @@ final class Extras {
                 p.put("quietVol", String.valueOf(next));
             }
         }));
-        r.add(new SettingsView.Row(g, "Equalizer", Features.on(p, "eq") ? p.str("eqPreset", "Flat") + "  ·  " + Eq.status : "off", new Runnable() {
+        r.add(new SettingsView.Row(g, "Equalizer", Features.on(p, "eq") ? Hindi.t(p.str("eqPreset", "Flat")) + "  ·  " + Hindi.t(Eq.status) : "off", new Runnable() {
             @Override
             public void run() {
                 equalizer(a);
@@ -1366,14 +1365,14 @@ final class Extras {
         g = "Driving";
         String last = p.str("accelLast", "");
         String[] lf = last.split("\\|");
-        r.add(new SettingsView.Row(g, "0–100 km/h", last.isEmpty() ? "no full run yet" : "last " + lf[0] + " s"
-                + (lf.length > 1 && !lf[1].isEmpty() ? " (0–60 " + lf[1] + " s)" : "") + "  ·  best " + p.str("accelBest", "-") + " s", new Runnable() {
+        r.add(new SettingsView.Row(g, "0–100 km/h", last.isEmpty() ? "no full run yet" : Hindi.f("last %1$s s", lf[0])
+                + (lf.length > 1 && !lf[1].isEmpty() ? " (0–60 " + lf[1] + " s)" : "") + Hindi.f("  ·  best %1$s s", p.str("accelBest", "-")), new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, DIALOG).setTitle("0–100 km/h timer")
-                        .setMessage("Stop completely, then accelerate. The time is spoken when you pass 100 km/h. It uses GPS (or OBD-II speed "
-                                + "when connected), so it is good to about half a second. Only on a safe, empty road.")
-                        .setPositiveButton("OK", null).setNeutralButton("Forget the best time", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("0–100 km/h timer"))
+                        .setMessage(Hindi.t("Stop completely, then accelerate. The time is spoken when you pass 100 km/h. It uses GPS (or OBD-II speed "
+                                + "when connected), so it is good to about half a second. Only on a safe, empty road."))
+                        .setPositiveButton(Hindi.t("OK"), null).setNeutralButton(Hindi.t("Forget the best time"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 p.put("accelBest", "");
@@ -1382,7 +1381,7 @@ final class Extras {
                         }).show();
             }
         }));
-        r.add(new SettingsView.Row(g, "Export routes as GPX", Tracks.days(a).size() + " days recorded", new Runnable() {
+        r.add(new SettingsView.Row(g, "Export routes as GPX", Hindi.f("%1$s days recorded", Tracks.days(a).size()), new Runnable() {
             @Override
             public void run() {
                 exportGpx(a);
@@ -1391,13 +1390,13 @@ final class Extras {
         r.add(new SettingsView.Row(g, "Delete recorded routes", null, new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, DIALOG).setMessage("Delete every recorded route on the unit?")
-                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(a, DIALOG).setMessage(Hindi.t("Delete every recorded route on the unit?"))
+                        .setPositiveButton(Hindi.t("Delete"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 Tracks.deleteAll(a);
                             }
-                        }).setNegativeButton("Cancel", null).show();
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
 
@@ -1408,13 +1407,13 @@ final class Extras {
             public void run() {
                 try {
                     File f = Backup.make(a, "manual");
-                    Toast.makeText(a, "Saved " + f.getPath(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.f("Saved %1$s", f.getPath()), Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
-                    Toast.makeText(a, "Couldn't back up: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.f("Couldn't back up: %1$s", e.getMessage()), Toast.LENGTH_LONG).show();
                 }
             }
         }));
-        r.add(new SettingsView.Row(g, "Restore from a backup", Backup.found().size() + " found", new Runnable() {
+        r.add(new SettingsView.Row(g, "Restore from a backup", Hindi.f("%1$s found", Backup.found().size()), new Runnable() {
             @Override
             public void run() {
                 restore(a);
@@ -1426,7 +1425,7 @@ final class Extras {
         } catch (Exception ignored) {
         }
         r.add(new SettingsView.Row(g, "Daily automatic backup", !Features.on(p, "backup") ? "off"
-                : at == 0 ? "on; none yet" : "on; last " + Cards.TripCard.ago(at), new Runnable() {
+                : at == 0 ? "on; none yet" : Hindi.f("on; last %1$s", Cards.TripCard.ago(at)), new Runnable() {
             @Override
             public void run() {
                 Features.set(p, "backup", !Features.on(p, "backup"));
@@ -1448,7 +1447,7 @@ final class Extras {
                 About.privacy(a);
             }
         }));
-        r.add(new SettingsView.Row(g, "Crash reports", Crash.files().size() + " saved", new Runnable() {
+        r.add(new SettingsView.Row(g, "Crash reports", Hindi.f("%1$s saved", Crash.files().size()), new Runnable() {
             @Override
             public void run() {
                 About.crashes(a);
@@ -1475,9 +1474,9 @@ final class Extras {
     }
 
     private static void learnButton(final HomeActivity a) {
-        final AlertDialog dlg = new AlertDialog.Builder(a, DIALOG).setTitle("Press the steering-wheel button now")
-                .setMessage("Press and release it once. Waiting for up to 15 seconds…")
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        final AlertDialog dlg = new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Press the steering-wheel button now"))
+                .setMessage(Hindi.t("Press and release it once. Waiting for up to 15 seconds…"))
+                .setNegativeButton(Hindi.t("Cancel"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         Keys.stopLearning();
@@ -1502,35 +1501,35 @@ final class Extras {
             public void run() {
                 if (dlg.isShowing()) {
                     Keys.stopLearning();
-                    dlg.setMessage("Nothing arrived. This button may be handled by the unit itself before any app sees it; "
-                            + "try another one, or turn on \"Buttons work in other apps too\".");
+                    dlg.setMessage(Hindi.t("Nothing arrived. This button may be handled by the unit itself before any app sees it; "
+                            + "try another one, or turn on \"Buttons work in other apps too\"."));
                 }
             }
         }, 15000);
     }
 
     private static void chooseAction(final HomeActivity a, final String sig, final String label, boolean existing) {
-        String[] items = existing ? java.util.Arrays.copyOf(Keys.ACTION_NAMES, Keys.ACTION_NAMES.length + 1) : Keys.ACTION_NAMES;
-        if (existing) items[items.length - 1] = "Forget this button";
-        new AlertDialog.Builder(a, DIALOG).setTitle("What should " + label + " do?")
+        String[] items = tr(existing ? java.util.Arrays.copyOf(Keys.ACTION_NAMES, Keys.ACTION_NAMES.length + 1) : Keys.ACTION_NAMES);
+        if (existing) items[items.length - 1] = Hindi.t("Forget this button");
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.f("What should %1$s do?", label))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         Keys.put(a.prefs, sig, label, w < Keys.ACTIONS.length ? Keys.ACTIONS[w] : null);
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static void chooseLong(final HomeActivity a, final String sig, final String label) {
-        final String[] items = java.util.Arrays.copyOf(Keys.ACTION_NAMES, Keys.ACTION_NAMES.length + 1);
-        items[items.length - 1] = "Nothing extra";
-        new AlertDialog.Builder(a, DIALOG).setTitle("Holding " + label + " down should")
+        final String[] items = tr(java.util.Arrays.copyOf(Keys.ACTION_NAMES, Keys.ACTION_NAMES.length + 1));
+        items[items.length - 1] = Hindi.t("Nothing extra");
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.f("Holding %1$s down should", label))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         Keys.putLong(a.prefs, sig, w < Keys.ACTIONS.length ? Keys.ACTIONS[w] : null);
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static void tickerApps(final HomeActivity a) {
@@ -1550,20 +1549,20 @@ final class Extras {
         final List<String> chosen = Ticker.apps(p);
         final boolean[] on = new boolean[pkgs.size()];
         for (int i = 0; i < on.length; i++) on[i] = chosen.contains(pkgs.get(i));
-        new AlertDialog.Builder(a, DIALOG).setTitle("Show messages from")
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Show messages from"))
                 .setMultiChoiceItems(names.toArray(new String[0]), on, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w, boolean v) {
                         on[w] = v;
                     }
-                }).setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                }).setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < on.length; i++) if (on[i]) sb.append(pkgs.get(i)).append(',');
                 p.put("tickerApps", sb.length() == 0 ? "," : sb.toString());
             }
-        }).setNegativeButton("Cancel", null).show();
+        }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static void equalizer(final HomeActivity a) {
@@ -1574,7 +1573,7 @@ final class Extras {
         final TextView presetT = Ui.text(a, 17, 0xFFEEEEEE, "sans-serif-medium", Gravity.LEFT);
         presetT.setPadding(0, Ui.px(8), 0, Ui.px(12));
         col.addView(presetT);
-        final String[] bandNames = {"60 Hz (bass)", "230 Hz", "910 Hz (voice)", "3.6 kHz", "14 kHz (treble)"};
+        final String[] bandNames = tr(new String[]{"60 Hz (bass)", "230 Hz", "910 Hz (voice)", "3.6 kHz", "14 kHz (treble)"});
         final SeekBar[] bars = new SeekBar[5];
         final TextView[] vals = new TextView[5];
         final int[] g = Eq.gains(p);
@@ -1603,7 +1602,7 @@ final class Extras {
                     for (SeekBar b : bars) c.append(b.getProgress() - 12).append(',');
                     p.put("eqCustom", c.toString());
                     p.put("eqPreset", "Custom");
-                    presetT.setText("Preset: Custom  (tap to change)");
+                    presetT.setText(Hindi.f("Preset: %1$s  (tap to change)", Hindi.t("Custom")));
                     Eq.apply(a, p, 0);
                 }
 
@@ -1614,24 +1613,24 @@ final class Extras {
         }
         final TextView bassT = Ui.text(a, 15, 0xFFEEEEEE, "sans-serif", Gravity.LEFT);
         bassT.setPadding(0, Ui.px(14), 0, Ui.px(14));
-        bassT.setText("Bass boost: " + p.num("eqBass", 0) + " / 10  (tap to change)");
+        bassT.setText(Hindi.f("Bass boost: %1$s / 10  (tap to change)", p.num("eqBass", 0)));
         bassT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 p.put("eqBass", String.valueOf((p.num("eqBass", 0) + 2) % 12));
-                bassT.setText("Bass boost: " + p.num("eqBass", 0) + " / 10  (tap to change)");
+                bassT.setText(Hindi.f("Bass boost: %1$s / 10  (tap to change)", p.num("eqBass", 0)));
                 Eq.apply(a, p, 0);
             }
         });
         col.addView(bassT);
-        presetT.setText("Preset: " + p.str("eqPreset", "Flat") + "  (tap to change)");
+        presetT.setText(Hindi.f("Preset: %1$s  (tap to change)", Hindi.t(p.str("eqPreset", "Flat"))));
         presetT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int i = java.util.Arrays.asList(Eq.PRESETS).indexOf(p.str("eqPreset", "Flat"));
                 String next = Eq.PRESETS[(i + 1) % Eq.PRESETS.length];
                 p.put("eqPreset", next);
-                presetT.setText("Preset: " + next + "  (tap to change)");
+                presetT.setText(Hindi.f("Preset: %1$s  (tap to change)", Hindi.t(next)));
                 int[] ng = Eq.gains(p);
                 quiet[0] = true;
                 for (int k = 0; k < 5; k++) bars[k].setProgress(ng[k] + 12);
@@ -1641,29 +1640,29 @@ final class Extras {
         });
         Features.set(p, "eq", true);
         Eq.apply(a, p, 0);
-        new AlertDialog.Builder(a, DIALOG).setTitle("Equalizer").setView(col)
-                .setPositiveButton("Done", null)
-                .setNeutralButton("Turn off", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Equalizer")).setView(col)
+                .setPositiveButton(Hindi.t("Done"), null)
+                .setNeutralButton(Hindi.t("Turn off"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         Features.set(p, "eq", false);
                         Eq.apply(a, p, 0);
                     }
                 }).show();
-        if (Eq.status.startsWith("This unit")) Toast.makeText(a, Eq.status, Toast.LENGTH_LONG).show();
+        if (Eq.status.startsWith("This unit")) Toast.makeText(a, Hindi.t(Eq.status), Toast.LENGTH_LONG).show();
     }
 
     private static void exportGpx(final HomeActivity a) {
         final List<String> days = Tracks.days(a);
         if (days.isEmpty()) {
-            Toast.makeText(a, Features.on(a.prefs, "gpx") ? "No routes recorded yet" : "Route recording is off in Settings > Driving",
+            Toast.makeText(a, Hindi.t(Features.on(a.prefs, "gpx") ? "No routes recorded yet" : "Route recording is off in Settings > Driving"),
                     Toast.LENGTH_LONG).show();
             return;
         }
         final String[] items = new String[days.size() + 1];
-        items[0] = "All " + days.size() + " days";
+        items[0] = Hindi.f("All %1$s days", days.size());
         for (int i = 0; i < days.size(); i++) items[i + 1] = days.get(i);
-        new AlertDialog.Builder(a, DIALOG).setTitle("Export which day?").setItems(items, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Export which day?")).setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 int n = 0;
@@ -1674,34 +1673,34 @@ final class Extras {
                         last = Tracks.export(a, days.get(i));
                         n++;
                     }
-                    Toast.makeText(a, n == 1 ? "Saved " + last.getPath() : "Saved " + n + " files in " + last.getParent(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, n == 1 ? Hindi.f("Saved %1$s", last.getPath()) : Hindi.f("Saved %1$s files in %2$s", n, last.getParent()), Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
-                    Toast.makeText(a, "Couldn't export: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.f("Couldn't export: %1$s", e.getMessage()), Toast.LENGTH_LONG).show();
                 }
             }
-        }).setNegativeButton("Cancel", null).show();
+        }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static void restore(final HomeActivity a) {
         final List<File> files = Backup.found();
         if (files.isEmpty()) {
-            Toast.makeText(a, "No backups in OpenRath/backup or Download", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("No backups in OpenRath/backup or Download"), Toast.LENGTH_LONG).show();
             return;
         }
         String[] names = new String[files.size()];
         for (int i = 0; i < names.length; i++) names[i] = files.get(i).getName();
-        new AlertDialog.Builder(a, DIALOG).setTitle("Restore which backup?").setItems(names, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Restore which backup?")).setItems(names, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, final int w) {
-                new AlertDialog.Builder(a, DIALOG).setMessage("Replace every setting, the fuel log and trip history with this backup? "
-                        + "A copy of what's here now is saved first.")
-                        .setPositiveButton("Restore", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(a, DIALOG).setMessage(Hindi.t("Replace every setting, the fuel log and trip history with this backup? "
+                        + "A copy of what's here now is saved first."))
+                        .setPositiveButton(Hindi.t("Restore"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d2, int x) {
                                 try {
                                     Backup.make(a, "before-restore");
                                     Backup.restore(a, files.get(w));
-                                    Toast.makeText(a, "Restored; restarting", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(a, Hindi.t("Restored; restarting"), Toast.LENGTH_SHORT).show();
                                     a.dash.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
@@ -1710,12 +1709,19 @@ final class Extras {
                                         }
                                     }, 1200);
                                 } catch (Exception e) {
-                                    Toast.makeText(a, "Couldn't restore: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(a, Hindi.f("Couldn't restore: %1$s", e.getMessage()), Toast.LENGTH_LONG).show();
                                 }
                             }
-                        }).setNegativeButton("Cancel", null).show();
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
-        }).setNegativeButton("Cancel", null).show();
+        }).setNegativeButton(Hindi.t("Cancel"), null).show();
+    }
+
+    /** A translated copy of a list shown in a dialog; the original stays English. */
+    private static String[] tr(String[] in) {
+        String[] out = new String[in.length];
+        for (int i = 0; i < in.length; i++) out[i] = in[i] == null ? null : Hindi.t(in[i]);
+        return out;
     }
 
     private Extras() {

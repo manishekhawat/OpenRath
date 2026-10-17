@@ -59,8 +59,8 @@ final class FuelPlan {
 
     static String text(Prefs p) {
         double r = rangeKm(p);
-        if (r < 0) return "not known yet: add a fill-up with \"filled to full\" ticked";
-        return "about " + Math.round(r / 10) * 10 + " km of petrol left";
+        if (r < 0) return Hindi.t("not known yet: add a fill-up with \"filled to full\" ticked");
+        return Hindi.f("about %1$s km of petrol left", Math.round(r / 10) * 10);
     }
 
     private static int told = Integer.MAX_VALUE;   // the last warning level spoken, km

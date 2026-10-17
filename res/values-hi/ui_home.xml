@@ -1,0 +1,796 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hindi for the home screen and its dialogs. Machine-drafted: a native speaker should check it (docs/TRANSLATING.md). -->
+<resources>
+    <string name="ui_home_time_for_a_break_put_the_map_on_the_dash" formatted="false">आराम का समय। आगे के स्टॉप देखने के लिए मैप को डैशबोर्ड पर रखें।</string>
+    <string name="ui_home_turn_on_share_the_trip_by_qr_code_in_set" formatted="false">सेटिंग्स &gt; फ़ीचर्स में \"QR कोड से ट्रिप शेयर करें\" चालू करें</string>
+    <string name="ui_home_waiting_for_the_gps_to_find_the_car" formatted="false">GPS के कार ढूँढने का इंतज़ार है</string>
+    <string name="ui_home_our_trip_to" formatted="false">%1$s की हमारी ट्रिप</string>
+    <string name="ui_home_about_km_to_go_in_a_straight_line" formatted="false">सीधी रेखा में लगभग %1$s km बाकी।</string>
+    <string name="ui_home_scan_with_a_phone_to_see_the_route_and_t" formatted="false">रास्ता और समय देखने के लिए फ़ोन से स्कैन करें, कार अभी जहाँ है वहाँ से। नई जगह के लिए बाद में नया कोड दिखाएँ।</string>
+    <string name="ui_home_where_we_are_now" formatted="false">हम अभी कहाँ हैं</string>
+    <string name="ui_home_scan_with_a_phone_to_see_where_the_car_i" formatted="false">कार अभी कहाँ है, यह देखने के लिए फ़ोन से स्कैन करें। रास्ता भी शेयर करने के लिए मैप पर मंज़िल चुनें।</string>
+    <string name="ui_home_turn_on_parking_spot_to_your_phone_in_se" formatted="false">सेटिंग्स &gt; ड्राइविंग में \"पार्किंग की जगह फ़ोन पर\" चालू करें</string>
+    <string name="ui_home_no_parking_spot_saved_yet" formatted="false">अभी कोई पार्किंग जगह सेव नहीं है</string>
+    <string name="ui_home_where_the_car_is_parked" formatted="false">कार कहाँ पार्क है</string>
+    <string name="ui_home_scan_with_your_phone_to_open_the_spot_in" formatted="false">Google Maps में जगह खोलने और कार तक पैदल लौटने के लिए अपने फ़ोन से स्कैन करें।</string>
+    <string name="ui_home_calling" formatted="false">%1$s को कॉल हो रही है…</string>
+    <string name="ui_home_couldn_t_call" formatted="false">कॉल नहीं हो सकी: %1$s</string>
+    <string name="ui_home_highway_avg_km_h_driving" formatted="false">"हाईवे  ·  औसत %1$s km/h  ·  ड्राइविंग %2$s"</string>
+    <string name="ui_home_h_min" formatted="false">%1$s घं %2$s मिनट</string>
+    <string name="ui_home_min" formatted="false">%1$s मिनट</string>
+    <string name="ui_home_waiting" formatted="false">%1$s रुके हुए</string>
+    <string name="ui_home_valet_mode_tap_to_end" formatted="false">"वैले मोड  ·  बंद करने के लिए टैप करें"</string>
+    <string name="ui_home_choose_the_app_for" formatted="false">%1$s के लिए ऐप चुनें</string>
+    <string name="ui_home_today_km_gps_odometer_km" formatted="false">"आज %1$s km  ·  GPS ओडोमीटर %2$s km"</string>
+    <string name="ui_home_no_gps_position_yet" formatted="false">अभी GPS लोकेशन नहीं है</string>
+    <string name="ui_home_parking_spot_saved" formatted="false">पार्किंग की जगह सेव हो गई</string>
+    <string name="ui_home_say_a_command_or_a_place" formatted="false">कोई कमांड या जगह बोलें</string>
+    <string name="ui_home_where_to" formatted="false">कहाँ जाना है?</string>
+    <string name="ui_home_voice_needs_the_google_app_on_the_unit" formatted="false">वॉइस के लिए यूनिट पर Google ऐप चाहिए</string>
+    <string name="ui_home_no_internet_and_no_offline_map_app_insta" formatted="false">इंटरनेट नहीं है, और कोई ऑफ़लाइन मैप ऐप नहीं है। Organic Maps इंस्टॉल करें (मुफ़्त, भारत के ऑफ़लाइन मैप के साथ) और Wi-Fi पर एक बार अपने राज्य का मैप डाउनलोड करें।</string>
+    <string name="ui_home_no_navigation_app_found" formatted="false">कोई नेविगेशन ऐप नहीं मिला</string>
+    <string name="ui_home_drag_a_box_onto_another_to_swap_them" formatted="false">बॉक्स बदलने के लिए एक बॉक्स को दूसरे पर खींचें</string>
+    <string name="ui_home_done" formatted="false">हो गया</string>
+    <string name="ui_home_couldn_t_use_that_picture" formatted="false">वह तस्वीर इस्तेमाल नहीं हो सकी: %1$s</string>
+    <string name="ui_home_to_keep_the_floating_mic_on_top_of_maps" formatted="false">फ़्लोटिंग माइक को मैप और म्यूज़िक के ऊपर रखने के लिए, अगले पेज पर OpenRath के लिए \"दूसरे ऐप्स के ऊपर दिखाएँ\" की अनुमति दें। माइक को आप सेटिंग्स &gt; फ़ीचर्स में बंद कर सकते हैं।</string>
+    <string name="ui_home_allow" formatted="false">अनुमति दें</string>
+    <string name="ui_home_not_now" formatted="false">अभी नहीं</string>
+    <string name="ui_home_is_overdue_by_km" formatted="false">%1$s %2$s km से ओवरड्यू है।</string>
+    <string name="ui_home_is_due_in_km" formatted="false">%1$s %2$s km में होनी है।</string>
+    <string name="ui_home_book_the_service" formatted="false">सर्विस बुक करें?</string>
+    <string name="ui_home_call_to_book_a_slot" formatted="false">" स्लॉट बुक करने के लिए %1$s को कॉल करें?"</string>
+    <string name="ui_home_find_your_service_centre_on_the_map_and" formatted="false">" मैप पर अपना सर्विस सेंटर ढूँढें और उसके पास Mine दबाएँ, ताकि अगली बार एक टैप में कॉल हो जाए।"</string>
+    <string name="ui_home_call" formatted="false">कॉल करें</string>
+    <string name="ui_home_find_one" formatted="false">ढूँढें</string>
+    <string name="ui_home_later" formatted="false">बाद में</string>
+    <string name="ui_home_show_what_s_playing" formatted="false">क्या चल रहा है, दिखाएँ</string>
+    <string name="ui_home_to_show_the_station_the_track_and_the_ri" formatted="false">स्टेशन, गाना और सही प्ले या पॉज़ बटन दिखाने के लिए OpenRath को नोटिफ़िकेशन ऐक्सेस चाहिए। अगली स्क्रीन पर OpenRath चालू करें।</string>
+    <string name="ui_home_open" formatted="false">खोलें</string>
+    <string name="ui_home_this_unit_has_no_notification_access_scr" formatted="false">इस यूनिट पर नोटिफ़िकेशन ऐक्सेस की स्क्रीन नहीं है</string>
+    <string name="ui_home_choose_a_widget_from_another_app" formatted="false">दूसरे ऐप से विजेट चुनें…</string>
+    <string name="ui_home_show_here" formatted="false">यहाँ %1$s दिखाएँ</string>
+    <string name="ui_home_all_settings" formatted="false">सभी सेटिंग्स…</string>
+    <string name="ui_home_move_boxes_drag_and_drop" formatted="false">बॉक्स हिलाएँ (खींचकर छोड़ें)…</string>
+    <string name="ui_home_close" formatted="false">बंद करें</string>
+    <string name="ui_home_allow_the_openrath_folder" formatted="false">OpenRath फ़ोल्डर की अनुमति दें</string>
+    <string name="ui_home_on_this_android_version_openrath_needs_a" formatted="false">इस Android वर्ज़न पर OpenRath को \"सभी फ़ाइलें मैनेज करने की अनुमति\" चाहिए, ताकि बैकअप, थीम, डैशकैम क्लिप और दस्तावेज़ OpenRath फ़ोल्डर में रख सके और USB स्टिक पर म्यूज़िक ढूँढ सके।</string>
+    <string name="ui_home_open_the_setting" formatted="false">सेटिंग खोलें</string>
+    <string name="ui_home_get_a_spoken_voice" formatted="false">बोलने वाली आवाज़ लें</string>
+    <string name="ui_home_this_stereo_has_no_text_to_speech_voice" formatted="false">इस स्टीरियो में टेक्स्ट-टू-स्पीच आवाज़ नहीं है, इसलिए OpenRath अलर्ट, मोड़ या खबरें नहीं बोल सकता। Play Store से \"Speech Services by Google\" (मुफ़्त) लें? बाद में: सेटिंग्स &gt; मैप और नेविगेशन &gt; बोलने वाली आवाज़।</string>
+    <string name="ui_home_open_the_play_store" formatted="false">Play Store खोलें</string>
+    <string name="ui_home_app_for_the_bar" formatted="false">बार के लिए ऐप</string>
+    <string name="ui_home_app_for" formatted="false">%1$s के लिए ऐप</string>
+    <string name="ui_home_built_in_fm_tuner_is_on" formatted="false">बिल्ट-इन FM ट्यूनर चालू है</string>
+    <string name="ui_home_keep_it" formatted="false">इसे रखें</string>
+    <string name="ui_home_use_the_stock_radio_again" formatted="false">फिर से स्टॉक रेडियो चलाएँ</string>
+    <string name="ui_home_trying_the_fm_chip" formatted="false">FM चिप आज़मा रहे हैं…</string>
+    <string name="ui_home_the_built_in_tuner_can_t_play_on_this_un" formatted="false">बिल्ट-इन ट्यूनर इस यूनिट पर नहीं चल सकता</string>
+    <string name="ui_home_openrath_keeps_using_the_stock_radio_app" formatted="false">FM के लिए OpenRath स्टॉक रेडियो ऐप ही चलाता रहेगा। कृपया इसकी फ़ोटो भेजें।</string>
+    <string name="ui_home_ok" formatted="false">ठीक है</string>
+    <string name="ui_home_can_you_hear_fm" formatted="false">क्या FM %1$s सुनाई दे रहा है?</string>
+    <string name="ui_home_turn_the_volume_up_if_it_s_quiet_if_it_p" formatted="false">आवाज़ धीमी हो तो वॉल्यूम बढ़ाएँ। अगर यह चलता है, तो अब से OpenRath FM खुद चलाएगा: न स्टॉक रेडियो ऐप, न कोई स्क्रीन खुलेगी।</string>
+    <string name="ui_home_yes_use_it" formatted="false">हाँ, इसे इस्तेमाल करें</string>
+    <string name="ui_home_no_sound" formatted="false">आवाज़ नहीं</string>
+    <string name="ui_home_developer_mode" formatted="false">डेवलपर मोड: %1$s</string>
+    <string name="ui_home_developer_mode_is_already_on" formatted="false">डेवलपर मोड पहले से चालू है</string>
+    <string name="ui_home_developer_mode_is_on_every_switch_diagno" formatted="false">डेवलपर मोड चालू: हर स्विच, डायग्नॉस्टिक्स और टेस्ट सेटिंग्स में हैं</string>
+    <string name="ui_home_more_taps_for_developer_mode" formatted="false">डेवलपर मोड के लिए %1$s टैप और</string>
+    <string name="ui_home_openrath_level" formatted="false">OpenRath लेवल: %1$s</string>
+    <string name="ui_home_how_much_should_openrath_show" formatted="false">OpenRath कितना दिखाए?</string>
+    <string name="ui_home_use_this" formatted="false">यह इस्तेमाल करें</string>
+    <string name="ui_home_change_it_any_time_in_settings_openrath" formatted="false">%1$s। इसे कभी भी सेटिंग्स &gt; OpenRath लेवल में बदलें</string>
+    <string name="ui_home_cancel" formatted="false">रद्द करें</string>
+    <string name="ui_home_choose_a_picture" formatted="false">तस्वीर चुनें</string>
+    <string name="ui_home_no_app_on_the_unit_can_pick_pictures_put" formatted="false">यूनिट पर कोई ऐप तस्वीर नहीं चुन सकता। इसके बजाय थीम पैक में PNG रखें (एडिट के लिए थीम बनाएँ)।</string>
+    <string name="ui_home_name" formatted="false">नाम</string>
+    <string name="ui_home_phone_number" formatted="false">फ़ोन नंबर</string>
+    <string name="ui_home_favourite_empty_to_remove" formatted="false">फ़ेवरेट %1$s (हटाने के लिए खाली छोड़ें)</string>
+    <string name="ui_home_save" formatted="false">सेव करें</string>
+    <string name="ui_home_name_under_the_car_empty_to_hide" formatted="false">कार के नीचे नाम (छिपाने के लिए खाली छोड़ें)</string>
+    <string name="ui_home_finding_stations" formatted="false">स्टेशन ढूँढ रहे हैं…</string>
+    <string name="ui_home_looking_for_music" formatted="false">म्यूज़िक ढूँढ रहे हैं…</string>
+    <string name="ui_home_web_radio_unreachable" formatted="false">वेब रेडियो तक नहीं पहुँच सके</string>
+    <string name="ui_home_no_music_files_found" formatted="false">कोई म्यूज़िक फ़ाइल नहीं मिली</string>
+    <string name="ui_home_online_radio" formatted="false">ऑनलाइन रेडियो</string>
+    <string name="ui_home_songs" formatted="false">गाने</string>
+    <string name="ui_home_heard_put_the_map_on_the_dashboard_to_se" formatted="false">सुना \"%1$s\"। जगहें खोजने के लिए मैप को डैशबोर्ड पर रखें।</string>
+    <string name="ui_home_fm_radio" formatted="false">FM रेडियो</string>
+    <string name="ui_home_fm_didn_t_start" formatted="false">FM शुरू नहीं हुआ: %1$s</string>
+    <string name="ui_home_no_favourite_called_add_one_in_settings" formatted="false">\"%1$s\" नाम का कोई फ़ेवरेट नहीं है। सेटिंग्स &gt; फ़ोन और मैसेज में जोड़ें।</string>
+    <string name="ui_home_turn_on_the_dashcam_in_settings_driving" formatted="false">सेटिंग्स &gt; ड्राइविंग में डैशकैम चालू करें</string>
+    <string name="ui_home_turn_on_the_documents_wallet_in_settings" formatted="false">सेटिंग्स &gt; कार में दस्तावेज़ वॉलेट चालू करें</string>
+    <string name="ui_home_turn_on_trip_games_in_settings_family" formatted="false">सेटिंग्स &gt; परिवार में ट्रिप गेम्स चालू करें</string>
+    <string name="ui_home_turn_on_fog_mode_in_settings_driving" formatted="false">सेटिंग्स &gt; ड्राइविंग में फ़ॉग मोड चालू करें</string>
+    <string name="ui_home_turn_on_one_tap_sos_in_settings_cab_driv" formatted="false">सेटिंग्स &gt; कैब ड्राइवर में वन-टैप SOS चालू करें</string>
+    <string name="ui_home_turn_on_the_fare_meter_in_settings_cab_d" formatted="false">सेटिंग्स &gt; कैब ड्राइवर में किराया मीटर चालू करें</string>
+    <string name="ui_home_the_fare_meter_isn_t_running" formatted="false">किराया मीटर नहीं चल रहा है</string>
+    <string name="ui_home_turn_on_the_earnings_log_in_settings_cab" formatted="false">सेटिंग्स &gt; कैब ड्राइवर में कमाई का लॉग चालू करें।</string>
+    <string name="ui_home_the_air_quality_isn_t_known_yet" formatted="false">हवा की क्वालिटी अभी पता नहीं है।</string>
+    <string name="ui_home_the_air_quality_is_aqi" formatted="false">हवा की क्वालिटी %1$s है, AQI %2$s।</string>
+    <string name="ui_home_put_the_map_on_the_dashboard_for_directi" formatted="false">रास्ता पाने के लिए मैप को डैशबोर्ड पर रखें</string>
+    <string name="ui_home_not_installed" formatted="false">%1$s (इंस्टॉल नहीं)</string>
+    <string name="ui_home_of_parts" formatted="false">%2$s में से %1$s हिस्से</string>
+    <string name="ui_home_show_on" formatted="false">%1$s पर दिखाएँ</string>
+    <string name="ui_home_details_on" formatted="false">%1$s पर जानकारी</string>
+    <string name="ui_home_show_two_or_more_details_first" formatted="false">पहले दो या ज़्यादा जानकारियाँ दिखाएँ</string>
+    <string name="ui_home_put_first" formatted="false">सबसे ऊपर रखें</string>
+    <string name="ui_home_driver_profile" formatted="false">%1$s (ड्राइवर प्रोफ़ाइल)</string>
+    <string name="ui_home_tap_the_new_button_to_choose_your_mirror" formatted="false">अपना मिररिंग ऐप चुनने के लिए नया बटन दबाएँ</string>
+    <string name="ui_home_add_your_pictures" formatted="false">अपनी तस्वीरें जोड़ें</string>
+    <string name="ui_home_copy_pictures_jpg_or_png_to_on_the_unit" formatted="false">USB स्टिक या फ़ाइल मैनेजर से तस्वीरें (JPG या PNG) यूनिट पर %1$s में कॉपी करें। तब तक लेआउट की अपनी तस्वीर दिखेगी।</string>
+    <string name="ui_home_cleared_tap_a_tile_on_the_layout_to_choo" formatted="false">साफ़ हो गया। ऐप चुनने के लिए लेआउट पर कोई टाइल दबाएँ।</string>
+    <string name="ui_home_shows" formatted="false">%1$s में क्या दिखे</string>
+    <string name="ui_home_as_designed" formatted="false">" (जैसा डिज़ाइन है)"</string>
+    <string name="ui_home_boxes_stacked" formatted="false">%1$s, बॉक्स ऊपर-नीचे</string>
+    <string name="ui_home_put_the_boxes_and_chosen_apps_back_as_th" formatted="false">बॉक्स और चुने हुए ऐप शुरुआत जैसे कर दें? आपका नाम, सोर्स और सीखे हुए कार सिग्नल बने रहेंगे।</string>
+    <string name="ui_home_reset" formatted="false">रीसेट करें</string>
+    <string name="ui_home_set_by" formatted="false">%1$s ने सेट किया</string>
+    <string name="ui_home_match_the_car_s_colour" formatted="false">कार के रंग से मिलाएँ</string>
+    <string name="ui_home_copies_to_openrath_themes_to_edit" formatted="false">%1$s को एडिट के लिए OpenRath/themes में कॉपी करता है</string>
+    <string name="ui_home_theme_created" formatted="false">थीम बन गई</string>
+    <string name="ui_home_edit_the_files_in_on_a_pc_over_usb_or_wi" formatted="false">%1$s में फ़ाइलें एडिट करें (USB से PC पर, या फ़ाइल मैनेजर से)। उस फ़ोल्डर में HOW-TO.txt हर फ़ाइल समझाती है। यह अब ऊपर की लिस्ट में है; इस्तेमाल के लिए इसे टैप करें, और हर एडिट के बाद फिर से।</string>
+    <string name="ui_home_couldn_t_create_it_allow_storage_access" formatted="false">नहीं बन सकी: %1$s (स्टोरेज की अनुमति दें?)</string>
+    <string name="ui_home_no_zip_files_in_download" formatted="false">Download में कोई .zip फ़ाइल नहीं</string>
+    <string name="ui_home_import_which_theme" formatted="false">कौन-सी थीम इंपोर्ट करें?</string>
+    <string name="ui_home_theme_is_on" formatted="false">थीम \"%1$s\" चालू है</string>
+    <string name="ui_home_not_a_theme" formatted="false">थीम नहीं है: %1$s</string>
+    <string name="ui_home_the_360_camera_app" formatted="false">360 कैमरा ऐप</string>
+    <string name="ui_home_name_beside_the_logo_e_g_swift_baleno" formatted="false">लोगो के पास नाम (जैसे SWIFT, BALENO)</string>
+    <string name="ui_home_start" formatted="false">शुरू: %1$s</string>
+    <string name="ui_home_start_stop" formatted="false">शुरू: %1$s, बंद: %2$s</string>
+    <string name="ui_home_topway_s_radio_service_isn_t_connected_o" formatted="false">Topway की रेडियो सर्विस जुड़ी नहीं है; सिर्फ़ MCU लिंक आज़माया जा सकता है</string>
+    <string name="ui_home_fm_frequency_mhz" formatted="false">FM फ़्रीक्वेंसी (MHz)</string>
+    <string name="ui_home_music_files_are_found_again_on_the_next" formatted="false">अगली बार चलाने पर म्यूज़िक फ़ाइलें फिर से ढूँढी जाएँगी</string>
+    <string name="ui_home_turn_on_openrath_in_this_list" formatted="false">इस लिस्ट में OpenRath चालू करें</string>
+    <string name="ui_home_about_mb_of_places_you_ve_seen_tap_to_cl" formatted="false">देखी गई जगहों का लगभग %1$s MB; साफ़ करने के लिए टैप करें</string>
+    <string name="ui_home_delete_the_kept_map_places_will_show_aga" formatted="false">रखा हुआ मैप मिटाएँ? इंटरनेट के साथ देखने पर जगहें फिर दिखेंगी।</string>
+    <string name="ui_home_delete" formatted="false">मिटाएँ</string>
+    <string name="ui_home_download_english_india_and_hindi_on_wi_f" formatted="false">Wi-Fi पर English (India) और हिन्दी डाउनलोड करें</string>
+    <string name="ui_home_saved" formatted="false">%1$s सेव किया</string>
+    <string name="ui_home_km_h" formatted="false">%1$s km/h</string>
+    <string name="ui_home_today_km" formatted="false">आज %1$s km</string>
+    <string name="ui_home_fill_ups_km_l" formatted="false">%1$s बार फ़्यूल, %2$s km/l</string>
+    <string name="ui_home_fill_ups" formatted="false">%1$s बार फ़्यूल</string>
+    <string name="ui_home_for_route_estimates" formatted="false">₹%1$s (रास्ते के अनुमान के लिए)</string>
+    <string name="ui_home_typical_car_toll_per_plaza" formatted="false">प्रति प्लाज़ा कार का आम टोल (₹)</string>
+    <string name="ui_home_km_tap_to_correct" formatted="false">%1$s km (ठीक करने के लिए टैप करें)</string>
+    <string name="ui_home_to" formatted="false">%1$s से %2$s</string>
+    <string name="ui_home_now_the_time_they_go_off" formatted="false">अब बंद होने का समय</string>
+    <string name="ui_home_the_time_the_headlights_go_on" formatted="false">हेडलाइट जलने का समय</string>
+    <string name="ui_home_needs_topway_s_service" formatted="false">" (Topway की सर्विस चाहिए)"</string>
+    <string name="ui_home_tap_to_close" formatted="false">बंद करने के लिए टैप करें</string>
+    <string name="ui_home_developer_mode_2" formatted="false">, डेवलपर मोड</string>
+    <string name="ui_home_look_under_turn_on_or_off_at_the_top_of" formatted="false">हर सेक्शन में सबसे ऊपर \"चालू या बंद करें\" देखें</string>
+    <string name="ui_home_developer_mode_is_off" formatted="false">डेवलपर मोड बंद है</string>
+    <string name="ui_home_save_on_the_map_first_the_star_in_the_ma" formatted="false">पहले मैप पर %1$s सेव करें (मैप बॉक्स में स्टार)</string>
+    <string name="ui_home_choose_an_app" formatted="false">ऐप चुनें</string>
+    <string name="ui_home_nothing_playing" formatted="false">कुछ नहीं चल रहा</string>
+    <string name="ui_home_tap_to_choose_music" formatted="false">म्यूज़िक चुनने के लिए टैप करें</string>
+    <string name="ui_home_today" formatted="false">आज</string>
+    <string name="ui_home_today_2" formatted="false">आज · %1$s</string>
+    <string name="ui_home_humidity" formatted="false">नमी</string>
+    <string name="ui_home_wind" formatted="false">हवा</string>
+    <string name="ui_home_air_pressure" formatted="false">हवा का दबाव</string>
+    <string name="ui_home_humidity_2" formatted="false">नमी %1$s</string>
+    <string name="ui_home_forecast_after_the_first_weather_update" formatted="false">पहले मौसम अपडेट के बाद पूर्वानुमान</string>
+    <string name="ui_home_radio" formatted="false">रेडियो</string>
+    <string name="ui_home_music" formatted="false">म्यूज़िक</string>
+    <string name="ui_home_temp_c" formatted="false">तापमान (°C)</string>
+    <string name="ui_home_altitude" formatted="false">ऊँचाई</string>
+    <string name="ui_home_direction" formatted="false">दिशा</string>
+    <string name="ui_home_direction_2" formatted="false">दिशा %1$s</string>
+    <string name="ui_home_tyres_check_the_pressures" formatted="false">टायर: प्रेशर जाँचें</string>
+    <string name="ui_home_tyres" formatted="false">टायर (%1$s)</string>
+    <string name="ui_home_let_s_go" formatted="false">चलो चलें!</string>
+    <string name="ui_home_let_s_go_2" formatted="false">चलो चलें, %1$s!</string>
+    <string name="ui_home_hello" formatted="false">नमस्ते</string>
+    <string name="ui_home_drive_safe" formatted="false">सुरक्षित चलाएँ</string>
+    <string name="ui_home_add_app" formatted="false">ऐप जोड़ें</string>
+    <string name="ui_home_in_use" formatted="false">"%1$s   ✓ चालू"</string>
+    <string name="ui_home_by" formatted="false">%1$s द्वारा</string>
+    <string name="ui_home_lights_on" formatted="false">लाइट चालू</string>
+    <string name="ui_home_sunday_11_october" formatted="false">रविवार 11 अक्टूबर</string>
+    <string name="ui_home_cloudy" formatted="false">बादल</string>
+    <string name="ui_home_a_free_and_open_source_home_screen_for_a" formatted="false">Android कार स्टीरियो के लिए एक मुफ़्त और ओपन-सोर्स होम स्क्रीन।</string>
+    <string name="ui_home_not_affiliated_with_or_endorsed_by_any_c" formatted="false">किसी कार या स्टीरियो कंपनी से जुड़ा या समर्थित नहीं; ब्रांड नाम उनके मालिकों के हैं। कार के नाम और लोगो उनके मालिकों के ट्रेडमार्क हैं और सिर्फ़ मालिक की अपनी कार पहचानने के लिए दिखाए जाते हैं।</string>
+    <string name="ui_home_third_party_parts" formatted="false">तीसरे पक्ष के हिस्से</string>
+    <string name="ui_home_online_services_free_no_account" formatted="false">ऑनलाइन सेवाएँ (मुफ़्त, बिना अकाउंट)</string>
+    <string name="ui_home_openrath_has_no_account_no_ads_no_analyt" formatted="false">OpenRath में न अकाउंट है, न विज्ञापन, न एनालिटिक्स, न ट्रैकिंग। यह अपने बनाने वालों को कभी कुछ नहीं भेजता।</string>
+    <string name="ui_home_crash_and_usage_reports_off_unless_you_t" formatted="false">क्रैश और इस्तेमाल रिपोर्ट (सेटिंग्स &gt; फ़ीचर्स में चालू करने तक बंद) यूनिट पर ही रहती हैं, ताकि आप शेयर कर सकें। फ़्लीट की यूनिट पर, उसकी मैनेज्ड सेटिंग्स इन्हें दिन में एक बार फ़्लीट के अपने पते पर भेज सकती हैं।</string>
+    <string name="ui_home_stays_on_the_unit" formatted="false">यूनिट पर ही रहता है</string>
+    <string name="ui_home_trips_driving_score_routes_gpx_fuel_and" formatted="false">ट्रिप, ड्राइविंग स्कोर, रास्ते (GPX), फ़्यूल और टोल लॉग, पार्किंग जगह, सर्विस रिमाइंडर, फ़ोन फ़ेवरेट, सीखे हुए कार सिग्नल, सेटिंग्स, ड्राइवर प्रोफ़ाइल, जलभराव वाली जगहें और बैकअप। बैकअप यूनिट की अपनी स्टोरेज में OpenRath/backup में जाते हैं। डैशकैम क्लिप OpenRath/dashcam में जाती हैं और कभी अपलोड नहीं होतीं। पार्किंग QR कोड यूनिट पर बनता है; सिर्फ़ उसे स्कैन करने वाला फ़ोन मैप लिंक खोलता है।</string>
+    <string name="ui_home_sent_only_when_the_feature_is_used" formatted="false">सिर्फ़ फ़ीचर इस्तेमाल करने पर भेजा जाता है</string>
+    <string name="ui_home_weather_and_air_quality_your_approximate" formatted="false">मौसम और हवा की क्वालिटी: आपकी अनुमानित जगह (3 दशमलव, लगभग 100 m) Open-Meteo को।</string>
+    <string name="ui_home_qr_codes_parking_trip_sharing_upi_split" formatted="false">QR कोड (पार्किंग, ट्रिप शेयर, UPI बँटवारा, पार्किंग रिमाइंडर) यूनिट पर बनते हैं; जब तक कोई फ़ोन स्कैन न करे, कुछ नहीं भेजा जाता।</string>
+    <string name="ui_home_speed_limits_cameras_toll_plazas_one_way" formatted="false">स्पीड लिमिट, कैमरे, टोल प्लाज़ा, वन-वे सड़कें, स्कूल, अस्पताल, मोड़, रुकने की जगहें, पेट्रोल पंप और सर्विस सेंटर: आपके आसपास का इलाका Overpass API (OpenStreetMap) को।</string>
+    <string name="ui_home_accident_help_nothing_is_sent_the_paired" formatted="false">दुर्घटना में मदद: कुछ नहीं भेजा जाता; जुड़ा हुआ फ़ोन आपके इमरजेंसी कॉन्टैक्ट को कॉल करता है। कार के दस्तावेज़ ऐप के अंदर ही रहते हैं।</string>
+    <string name="ui_home_map_the_map_area_you_look_at_to_the_tile" formatted="false">मैप: आप मैप का जो हिस्सा देखते हैं, वह टाइल सर्वर को।</string>
+    <string name="ui_home_routes_start_and_destination_to_the_osrm" formatted="false">रास्ते: शुरुआत और मंज़िल OSRM रूटिंग सर्वर को।</string>
+    <string name="ui_home_search_what_you_type_or_say_to_photon_vo" formatted="false">खोज: आप जो टाइप करते या बोलते हैं, वह Photon को। वॉइस सर्च यूनिट का स्पीच रिकग्नाइज़र इस्तेमाल करता है (आमतौर पर Google)।</string>
+    <string name="ui_home_online_radio_the_station_list_from_radio" formatted="false">ऑनलाइन रेडियो: स्टेशन लिस्ट radio-browser.info से, और स्ट्रीम सीधे स्टेशन से।</string>
+    <string name="ui_home_each_has_an_on_off_switch_at_the_top_of" formatted="false">हर एक का चालू/बंद स्विच सेटिंग्स में उसके सेक्शन में सबसे ऊपर है। टिकर में दिखने वाले मैसेज यूनिट पर पढ़े जाते हैं और कभी सेव नहीं होते।</string>
+    <string name="ui_home_no_crash_reports_good" formatted="false">कोई क्रैश रिपोर्ट नहीं। बढ़िया।</string>
+    <string name="ui_home_crash_reports_in_openrath_logs" formatted="false">क्रैश रिपोर्ट (OpenRath/logs में)</string>
+    <string name="ui_home_share" formatted="false">शेयर करें</string>
+    <string name="ui_home_share_the_report" formatted="false">रिपोर्ट शेयर करें</string>
+    <string name="ui_home_no_app_to_share_with_the_file_is_in_open" formatted="false">शेयर करने के लिए कोई ऐप नहीं; फ़ाइल OpenRath/logs में है</string>
+    <string name="ui_home_delete_all" formatted="false">सब मिटाएँ</string>
+    <string name="ui_home_usage_report" formatted="false">इस्तेमाल रिपोर्ट</string>
+    <string name="ui_home_no_app_to_share_with" formatted="false">शेयर करने के लिए कोई ऐप नहीं</string>
+    <string name="ui_home_start_again" formatted="false">फिर से शुरू करें</string>
+    <string name="ui_home_copying_the_stock_launcher" formatted="false">स्टॉक लॉन्चर कॉपी हो रहा है…</string>
+    <string name="ui_home_nothing_could_be_copied_android_may_not" formatted="false">कुछ भी कॉपी नहीं हो सका। इस यूनिट पर Android शायद ऐप्स को स्टॉक ऐप्स पढ़ने नहीं देता।</string>
+    <string name="ui_home_copied_to" formatted="false">यहाँ कॉपी हुआ:</string>
+    <string name="ui_home_send_the_files_ending_in_apk_and_vdex_or" formatted="false">लॉन्चर के लिए .apk और .vdex (या .odex) वाली फ़ाइलें भेजें।</string>
+    <string name="ui_home_stock_launcher_copied" formatted="false">स्टॉक लॉन्चर कॉपी हो गया</string>
+    <string name="ui_home_reading_the_stock_launcher_and_radio" formatted="false">स्टॉक लॉन्चर और रेडियो पढ़ रहे हैं…</string>
+    <string name="ui_home_saved_to" formatted="false">%1$s में सेव हुआ</string>
+    <string name="ui_home_how_the_stock_launcher_does_it_photograp" formatted="false">स्टॉक लॉन्चर यह कैसे करता है (हर स्क्रीन की फ़ोटो लें)</string>
+    <string name="ui_home_big_box_left" formatted="false">बड़ा बॉक्स, बाएँ</string>
+    <string name="ui_home_big_box_right" formatted="false">बड़ा बॉक्स, दाएँ</string>
+    <string name="ui_home_middle_box_left" formatted="false">बीच का बॉक्स, बाएँ</string>
+    <string name="ui_home_middle_box_right" formatted="false">बीच का बॉक्स, दाएँ</string>
+    <string name="ui_home_bottom_box_left" formatted="false">नीचे का बॉक्स, बाएँ</string>
+    <string name="ui_home_bottom_box_right" formatted="false">नीचे का बॉक्स, दाएँ</string>
+    <string name="ui_home_car_and_speed" formatted="false">कार और स्पीड</string>
+    <string name="ui_home_clock_and_date" formatted="false">घड़ी और तारीख</string>
+    <string name="ui_home_map" formatted="false">मैप</string>
+    <string name="ui_home_trip_computer" formatted="false">ट्रिप कंप्यूटर</string>
+    <string name="ui_home_engine_obd_ii" formatted="false">इंजन (OBD-II)</string>
+    <string name="ui_home_tyre_pressure" formatted="false">टायर प्रेशर</string>
+    <string name="ui_home_news_top_5_headlines" formatted="false">खबरें (टॉप 5 हेडलाइन)</string>
+    <string name="ui_home_cab_driver_earnings_meter" formatted="false">कैब ड्राइवर (कमाई, मीटर)</string>
+    <string name="ui_home_performance_fps_cpu_temperature" formatted="false">परफ़ॉर्मेंस (FPS, CPU, तापमान)</string>
+    <string name="ui_home_widget_from_another_app" formatted="false">दूसरे ऐप का विजेट</string>
+    <string name="ui_home_second_widget" formatted="false">दूसरा विजेट</string>
+    <string name="ui_home_oil_change" formatted="false">ऑयल बदलना</string>
+    <string name="ui_home_tyre_rotation" formatted="false">टायर रोटेशन</string>
+    <string name="ui_home_wheel_alignment_and_balancing" formatted="false">व्हील अलाइनमेंट और बैलेंसिंग</string>
+    <string name="ui_home_general_service" formatted="false">जनरल सर्विस</string>
+    <string name="ui_home_insurance_renewal" formatted="false">इंश्योरेंस रिन्यूअल</string>
+    <string name="ui_home_puc_certificate" formatted="false">PUC सर्टिफ़िकेट</string>
+    <string name="ui_home_navigation" formatted="false">नेविगेशन</string>
+    <string name="ui_home_bluetooth" formatted="false">Bluetooth</string>
+    <string name="ui_home_all_apps" formatted="false">सभी ऐप्स</string>
+    <string name="ui_home_apps" formatted="false">ऐप्स</string>
+    <string name="ui_home_settings" formatted="false">सेटिंग्स</string>
+    <string name="ui_home_driver" formatted="false">ड्राइवर</string>
+    <string name="ui_home_dashboard" formatted="false">डैशबोर्ड</string>
+    <string name="ui_home_phone_mirroring" formatted="false">फ़ोन मिररिंग</string>
+    <string name="ui_home_home" formatted="false">घर</string>
+    <string name="ui_home_office" formatted="false">ऑफ़िस</string>
+    <string name="ui_home_simple" formatted="false">सिंपल</string>
+    <string name="ui_home_full" formatted="false">फ़ुल</string>
+    <string name="ui_home_custom" formatted="false">कस्टम</string>
+    <string name="ui_home_the_must_haves_home_screen_map_radio_mus" formatted="false">ज़रूरी चीज़ें: होम स्क्रीन, मैप, रेडियो, म्यूज़िक, फ़ोन, रिवर्स लाइनें, स्पीड अलर्ट</string>
+    <string name="ui_home_simple_plus_the_helpers_voice_road_warni" formatted="false">सिंपल के साथ मददगार: वॉइस, सड़क चेतावनी, हाईवे ट्रिप, कार केयर, ड्राइविंग स्कोर, कैब टूल</string>
+    <string name="ui_home_full_plus_making_it_your_own_widgets_ext" formatted="false">फ़ुल के साथ अपनी पसंद का: विजेट, और पेज, बूट लोगो, इक्वलाइज़र, ड्राइवर प्रोफ़ाइल</string>
+    <string name="ui_home_set_by_your_organisation" formatted="false">आपकी संस्था ने सेट किया</string>
+    <string name="ui_home_this_app_is_locked_while_the_car_is_movi" formatted="false">कार चलते समय यह ऐप लॉक है</string>
+    <string name="ui_home_speed" formatted="false">स्पीड</string>
+    <string name="ui_home_time" formatted="false">समय</string>
+    <string name="ui_home_clock" formatted="false">घड़ी</string>
+    <string name="ui_home_weather_for_the_next_days" formatted="false">अगले दिनों का मौसम</string>
+    <string name="ui_home_music_and_radio" formatted="false">म्यूज़िक और रेडियो</string>
+    <string name="ui_home_compass_and_direction" formatted="false">कंपास और दिशा</string>
+    <string name="ui_home_temperature_altitude_and_direction" formatted="false">तापमान, ऊँचाई और दिशा</string>
+    <string name="ui_home_the_car" formatted="false">कार</string>
+    <string name="ui_home_today_s_distance" formatted="false">आज की दूरी</string>
+    <string name="ui_home_temperature" formatted="false">तापमान</string>
+    <string name="ui_home_latitude_and_longitude" formatted="false">अक्षांश और देशांतर</string>
+    <string name="ui_home_tyre_pressures" formatted="false">टायर प्रेशर</string>
+    <string name="ui_home_bubbles" formatted="false">बुलबुले</string>
+    <string name="ui_home_scenery" formatted="false">नज़ारा</string>
+    <string name="ui_home_picture_and_clock" formatted="false">तस्वीर और घड़ी</string>
+    <string name="ui_home_strip" formatted="false">पट्टी</string>
+    <string name="ui_home_twin_dials" formatted="false">दो डायल</string>
+    <string name="ui_home_room" formatted="false">कमरा</string>
+    <string name="ui_home_big_clock" formatted="false">बड़ी घड़ी</string>
+    <string name="ui_home_lyrics" formatted="false">गीत के बोल</string>
+    <string name="ui_home_cards_and_apps" formatted="false">कार्ड और ऐप्स</string>
+    <string name="ui_home_soft_dark_grey_cards_and_a_light_blue_ac" formatted="false">हल्के गहरे स्लेटी कार्ड और हल्का नीला रंग, Android Auto जैसा</string>
+    <string name="ui_home_purple_night_gradient_with_neon_pink_and" formatted="false">बैंगनी रात का ग्रेडिएंट, नियॉन गुलाबी और पुदीना हरा</string>
+    <string name="ui_home_bright_and_easy_to_read_in_daylight" formatted="false">तेज़ रोशनी में आसानी से पढ़ने लायक</string>
+    <string name="ui_home_the_original_dark_chrome_look" formatted="false">असली गहरा क्रोम लुक</string>
+    <string name="ui_home_pure_black_no_borders_one_blue_accent" formatted="false">पूरा काला, बिना बॉर्डर, एक नीला रंग</string>
+    <string name="ui_home_monday" formatted="false">सोमवार</string>
+    <string name="ui_home_tuesday" formatted="false">मंगलवार</string>
+    <string name="ui_home_wednesday" formatted="false">बुधवार</string>
+    <string name="ui_home_thursday" formatted="false">गुरुवार</string>
+    <string name="ui_home_friday" formatted="false">शुक्रवार</string>
+    <string name="ui_home_saturday" formatted="false">शनिवार</string>
+    <string name="ui_home_sunday" formatted="false">रविवार</string>
+    <string name="ui_home_sun" formatted="false">रवि</string>
+    <string name="ui_home_mon" formatted="false">सोम</string>
+    <string name="ui_home_tue" formatted="false">मंगल</string>
+    <string name="ui_home_wed" formatted="false">बुध</string>
+    <string name="ui_home_thu" formatted="false">गुरु</string>
+    <string name="ui_home_fri" formatted="false">शुक्र</string>
+    <string name="ui_home_sat" formatted="false">शनि</string>
+    <string name="ui_home_jan" formatted="false">जन॰</string>
+    <string name="ui_home_feb" formatted="false">फ़र॰</string>
+    <string name="ui_home_mar" formatted="false">मार्च</string>
+    <string name="ui_home_apr" formatted="false">अप्रैल</string>
+    <string name="ui_home_may" formatted="false">मई</string>
+    <string name="ui_home_jun" formatted="false">जून</string>
+    <string name="ui_home_jul" formatted="false">जुल॰</string>
+    <string name="ui_home_aug" formatted="false">अग॰</string>
+    <string name="ui_home_sep" formatted="false">सित॰</string>
+    <string name="ui_home_oct" formatted="false">अक्टू॰</string>
+    <string name="ui_home_nov" formatted="false">नव॰</string>
+    <string name="ui_home_dec" formatted="false">दिस॰</string>
+    <string name="ui_home_offline_map_app" formatted="false">ऑफ़लाइन मैप ऐप</string>
+    <string name="ui_home_rear_camera" formatted="false">रियर कैमरा</string>
+    <string name="ui_home_brand_logo" formatted="false">ब्रांड लोगो</string>
+    <string name="ui_home_car_picture_lights_off" formatted="false">कार की तस्वीर, लाइट बंद</string>
+    <string name="ui_home_car_picture_lights_on" formatted="false">कार की तस्वीर, लाइट चालू</string>
+    <string name="ui_home_door_setup" formatted="false">दरवाज़ा सेटअप</string>
+    <string name="ui_home_seat_belt_setup" formatted="false">सीट-बेल्ट सेटअप</string>
+    <string name="ui_home_car_care" formatted="false">कार केयर</string>
+    <string name="ui_home_car_signals" formatted="false">कार सिग्नल</string>
+    <string name="ui_home_speech_services_by_google_tap_to_pick_it" formatted="false">Speech Services by Google (चुनने के लिए टैप करें, या हिन्दी आवाज़ लें)</string>
+    <string name="ui_home_a_png_with_a_transparent_background_look" formatted="false">पारदर्शी बैकग्राउंड वाला PNG सबसे अच्छा लगता है; कार आपकी ओर, लगभग 820 x 480</string>
+    <string name="ui_home_a_theme_zip_someone_shared" formatted="false">किसी की शेयर की हुई थीम .zip</string>
+    <string name="ui_home_after_plugging_in_a_usb_stick" formatted="false">USB स्टिक लगाने के बाद</string>
+    <string name="ui_home_after_sunset" formatted="false">सूरज ढलने के बाद</string>
+    <string name="ui_home_always_off" formatted="false">हमेशा बंद</string>
+    <string name="ui_home_always_on" formatted="false">हमेशा चालू</string>
+    <string name="ui_home_and_retry_skipped_steps" formatted="false">और छोड़े गए स्टेप फिर आज़माएँ</string>
+    <string name="ui_home_another_engine_tap_to_get_google_s_which" formatted="false">दूसरा इंजन (Google का लेने के लिए टैप करें, जो हिन्दी बोलता है)</string>
+    <string name="ui_home_auto_music_app_with_internet_else_files" formatted="false">ऑटो: इंटरनेट हो तो म्यूज़िक ऐप, वरना फ़ाइलें</string>
+    <string name="ui_home_auto_online_with_internet_else_fm" formatted="false">ऑटो: इंटरनेट हो तो ऑनलाइन, वरना FM</string>
+    <string name="ui_home_beep_and_voice" formatted="false">बीप और आवाज़</string>
+    <string name="ui_home_between_set_times" formatted="false">तय समय के बीच</string>
+    <string name="ui_home_boxes_and_apps_back_to_the_start" formatted="false">बॉक्स और ऐप शुरुआत जैसे</string>
+    <string name="ui_home_car_on_the_left" formatted="false">बाईं ओर कार</string>
+    <string name="ui_home_didn_t_work_on_this_unit_tap_to_try_agai" formatted="false">इस यूनिट पर नहीं चला; फिर आज़माने के लिए टैप करें</string>
+    <string name="ui_home_do_nothing" formatted="false">कुछ नहीं</string>
+    <string name="ui_home_drag_and_drop_on_the_dashboard" formatted="false">डैशबोर्ड पर खींचकर छोड़ें</string>
+    <string name="ui_home_each_level_s_features_can_still_be_turne" formatted="false">हर लेवल के फ़ीचर अपने सेक्शन में एक-एक करके चालू या बंद किए जा सकते हैं</string>
+    <string name="ui_home_follow_the_car_else_sunset_to_sunrise" formatted="false">कार के साथ (वरना सूर्यास्त से सूर्योदय)</string>
+    <string name="ui_home_gentle_while_driving" formatted="false">धीमी, ड्राइविंग के समय</string>
+    <string name="ui_home_get_google_s_offline_speech_pack_english" formatted="false">Google का ऑफ़लाइन स्पीच पैक लें (English और हिन्दी)</string>
+    <string name="ui_home_how_the_stock_radio_and_launcher_work" formatted="false">स्टॉक रेडियो और लॉन्चर कैसे काम करते हैं</string>
+    <string name="ui_home_long_press_a_button_on_the_bar_to_choose" formatted="false">बार पर बटन को देर तक दबाकर उसका ऐप चुनें</string>
+    <string name="ui_home_make_them_with_your_car_s_badge_and_name" formatted="false">अपनी कार के बैज और नाम से बनाएँ</string>
+    <string name="ui_home_map_on_the_left" formatted="false">बाईं ओर मैप</string>
+    <string name="ui_home_music_app" formatted="false">म्यूज़िक ऐप</string>
+    <string name="ui_home_music_files" formatted="false">म्यूज़िक फ़ाइलें</string>
+    <string name="ui_home_no_fill_ups_yet" formatted="false">अभी कोई फ़्यूल एंट्री नहीं</string>
+    <string name="ui_home_no_offline_map_app_install_organic_maps" formatted="false">कोई ऑफ़लाइन मैप ऐप नहीं: Organic Maps इंस्टॉल करें</string>
+    <string name="ui_home_none_found_pick_one" formatted="false">कोई नहीं मिला (एक चुनें)</string>
+    <string name="ui_home_none_installed_tap_to_get_speech_service" formatted="false">कोई इंस्टॉल नहीं: Speech Services by Google लेने के लिए टैप करें</string>
+    <string name="ui_home_none_saved" formatted="false">कुछ सेव नहीं</string>
+    <string name="ui_home_not_allowed" formatted="false">अनुमति नहीं</string>
+    <string name="ui_home_not_done_yet" formatted="false">अभी नहीं हुआ</string>
+    <string name="ui_home_not_set_up_for_the_voice_reminders" formatted="false">सेट अप नहीं; वॉइस रिमाइंडर के लिए</string>
+    <string name="ui_home_not_tried_yet_tap_to_try" formatted="false">अभी नहीं आज़माया: आज़माने के लिए टैप करें</string>
+    <string name="ui_home_on_the_layout_s_buttons" formatted="false">लेआउट के बटनों पर</string>
+    <string name="ui_home_on_while_driving" formatted="false">चालू, ड्राइविंग के समय</string>
+    <string name="ui_home_on_openrath_plays_fm_itself" formatted="false">चालू: OpenRath खुद FM चलाता है</string>
+    <string name="ui_home_on_every_switch_diagnostics_and_tests_ta" formatted="false">चालू: हर स्विच, डायग्नॉस्टिक्स और टेस्ट। बंद करने के लिए टैप करें</string>
+    <string name="ui_home_online_stations" formatted="false">ऑनलाइन स्टेशन</string>
+    <string name="ui_home_open_the_camera_app" formatted="false">कैमरा ऐप खोलें</string>
+    <string name="ui_home_send_a_photo_if_something_doesn_t_work" formatted="false">कुछ काम न करे तो फ़ोटो भेजें</string>
+    <string name="ui_home_show_parking_guide_lines" formatted="false">पार्किंग गाइड लाइनें दिखाएँ</string>
+    <string name="ui_home_slower_also_reads_the_system_apps" formatted="false">धीमा; सिस्टम ऐप्स भी पढ़ता है</string>
+    <string name="ui_home_take_turns_every_hour" formatted="false">हर घंटे बारी-बारी</string>
+    <string name="ui_home_tap_a_tile_on_the_layout_to_choose_long" formatted="false">ऐप चुनने के लिए लेआउट पर टाइल दबाएँ, बदलने के लिए देर तक दबाएँ</string>
+    <string name="ui_home_tap_one_to_put_it_first" formatted="false">सबसे ऊपर रखने के लिए किसी पर टैप करें</string>
+    <string name="ui_home_the_layout_s_own" formatted="false">लेआउट की अपनी</string>
+    <string name="ui_home_the_radio_and_light_names_inside_the_sto" formatted="false">स्टॉक ऐप्स के अंदर रेडियो और लाइट के नाम</string>
+    <string name="ui_home_to_download_and_usb_to_send_for_a_closer" formatted="false">Download और USB में, ध्यान से देखने के लिए भेजने को</string>
+    <string name="ui_home_weekly_and_monthly_distance_time_and_cos" formatted="false">हफ़्ते और महीने की दूरी, समय और खर्च</string>
+    <string name="ui_home_with_the_headlights" formatted="false">हेडलाइट के साथ</string>
+    <string name="ui_home_your_picture" formatted="false">आपकी तस्वीर</string>
+    <string name="ui_home_allowed" formatted="false">अनुमति है</string>
+    <string name="ui_home_built_in" formatted="false">बिल्ट-इन</string>
+    <string name="ui_home_hidden" formatted="false">छिपा हुआ</string>
+    <string name="ui_home_none" formatted="false">कोई नहीं</string>
+    <string name="ui_home_silent" formatted="false">चुप</string>
+    <string name="ui_home_auto" formatted="false">ऑटो</string>
+    <string name="ui_home_landscape" formatted="false">लैंडस्केप</string>
+    <string name="ui_home_portrait" formatted="false">पोर्ट्रेट</string>
+    <string name="ui_home_left" formatted="false">बाएँ</string>
+    <string name="ui_home_right" formatted="false">दाएँ</string>
+    <string name="ui_home_top" formatted="false">ऊपर</string>
+    <string name="ui_home_bottom" formatted="false">नीचे</string>
+    <string name="ui_home_skipped_reading_the_stock_apps_stopped_o" formatted="false">छोड़ दिया: स्टॉक ऐप्स पढ़ते समय पहले OpenRath बंद हो गया था।\nफिर आज़माने के लिए मदद &gt; क्रैश नोट हटाएँ इस्तेमाल करें।</string>
+    <string-array name="ui_home">
+        <item>@string/ui_home_time_for_a_break_put_the_map_on_the_dash</item>
+        <item>@string/ui_home_turn_on_share_the_trip_by_qr_code_in_set</item>
+        <item>@string/ui_home_waiting_for_the_gps_to_find_the_car</item>
+        <item>@string/ui_home_our_trip_to</item>
+        <item>@string/ui_home_about_km_to_go_in_a_straight_line</item>
+        <item>@string/ui_home_scan_with_a_phone_to_see_the_route_and_t</item>
+        <item>@string/ui_home_where_we_are_now</item>
+        <item>@string/ui_home_scan_with_a_phone_to_see_where_the_car_i</item>
+        <item>@string/ui_home_turn_on_parking_spot_to_your_phone_in_se</item>
+        <item>@string/ui_home_no_parking_spot_saved_yet</item>
+        <item>@string/ui_home_where_the_car_is_parked</item>
+        <item>@string/ui_home_scan_with_your_phone_to_open_the_spot_in</item>
+        <item>@string/ui_home_calling</item>
+        <item>@string/ui_home_couldn_t_call</item>
+        <item>@string/ui_home_highway_avg_km_h_driving</item>
+        <item>@string/ui_home_h_min</item>
+        <item>@string/ui_home_min</item>
+        <item>@string/ui_home_waiting</item>
+        <item>@string/ui_home_valet_mode_tap_to_end</item>
+        <item>@string/ui_home_choose_the_app_for</item>
+        <item>@string/ui_home_today_km_gps_odometer_km</item>
+        <item>@string/ui_home_no_gps_position_yet</item>
+        <item>@string/ui_home_parking_spot_saved</item>
+        <item>@string/ui_home_say_a_command_or_a_place</item>
+        <item>@string/ui_home_where_to</item>
+        <item>@string/ui_home_voice_needs_the_google_app_on_the_unit</item>
+        <item>@string/ui_home_no_internet_and_no_offline_map_app_insta</item>
+        <item>@string/ui_home_no_navigation_app_found</item>
+        <item>@string/ui_home_drag_a_box_onto_another_to_swap_them</item>
+        <item>@string/ui_home_done</item>
+        <item>@string/ui_home_couldn_t_use_that_picture</item>
+        <item>@string/ui_home_to_keep_the_floating_mic_on_top_of_maps</item>
+        <item>@string/ui_home_allow</item>
+        <item>@string/ui_home_not_now</item>
+        <item>@string/ui_home_is_overdue_by_km</item>
+        <item>@string/ui_home_is_due_in_km</item>
+        <item>@string/ui_home_book_the_service</item>
+        <item>@string/ui_home_call_to_book_a_slot</item>
+        <item>@string/ui_home_find_your_service_centre_on_the_map_and</item>
+        <item>@string/ui_home_call</item>
+        <item>@string/ui_home_find_one</item>
+        <item>@string/ui_home_later</item>
+        <item>@string/ui_home_show_what_s_playing</item>
+        <item>@string/ui_home_to_show_the_station_the_track_and_the_ri</item>
+        <item>@string/ui_home_open</item>
+        <item>@string/ui_home_this_unit_has_no_notification_access_scr</item>
+        <item>@string/ui_home_choose_a_widget_from_another_app</item>
+        <item>@string/ui_home_show_here</item>
+        <item>@string/ui_home_all_settings</item>
+        <item>@string/ui_home_move_boxes_drag_and_drop</item>
+        <item>@string/ui_home_close</item>
+        <item>@string/ui_home_allow_the_openrath_folder</item>
+        <item>@string/ui_home_on_this_android_version_openrath_needs_a</item>
+        <item>@string/ui_home_open_the_setting</item>
+        <item>@string/ui_home_get_a_spoken_voice</item>
+        <item>@string/ui_home_this_stereo_has_no_text_to_speech_voice</item>
+        <item>@string/ui_home_open_the_play_store</item>
+        <item>@string/ui_home_app_for_the_bar</item>
+        <item>@string/ui_home_app_for</item>
+        <item>@string/ui_home_built_in_fm_tuner_is_on</item>
+        <item>@string/ui_home_keep_it</item>
+        <item>@string/ui_home_use_the_stock_radio_again</item>
+        <item>@string/ui_home_trying_the_fm_chip</item>
+        <item>@string/ui_home_the_built_in_tuner_can_t_play_on_this_un</item>
+        <item>@string/ui_home_openrath_keeps_using_the_stock_radio_app</item>
+        <item>@string/ui_home_ok</item>
+        <item>@string/ui_home_can_you_hear_fm</item>
+        <item>@string/ui_home_turn_the_volume_up_if_it_s_quiet_if_it_p</item>
+        <item>@string/ui_home_yes_use_it</item>
+        <item>@string/ui_home_no_sound</item>
+        <item>@string/ui_home_developer_mode</item>
+        <item>@string/ui_home_developer_mode_is_already_on</item>
+        <item>@string/ui_home_developer_mode_is_on_every_switch_diagno</item>
+        <item>@string/ui_home_more_taps_for_developer_mode</item>
+        <item>@string/ui_home_openrath_level</item>
+        <item>@string/ui_home_how_much_should_openrath_show</item>
+        <item>@string/ui_home_use_this</item>
+        <item>@string/ui_home_change_it_any_time_in_settings_openrath</item>
+        <item>@string/ui_home_cancel</item>
+        <item>@string/ui_home_choose_a_picture</item>
+        <item>@string/ui_home_no_app_on_the_unit_can_pick_pictures_put</item>
+        <item>@string/ui_home_name</item>
+        <item>@string/ui_home_phone_number</item>
+        <item>@string/ui_home_favourite_empty_to_remove</item>
+        <item>@string/ui_home_save</item>
+        <item>@string/ui_home_name_under_the_car_empty_to_hide</item>
+        <item>@string/ui_home_finding_stations</item>
+        <item>@string/ui_home_looking_for_music</item>
+        <item>@string/ui_home_web_radio_unreachable</item>
+        <item>@string/ui_home_no_music_files_found</item>
+        <item>@string/ui_home_online_radio</item>
+        <item>@string/ui_home_songs</item>
+        <item>@string/ui_home_heard_put_the_map_on_the_dashboard_to_se</item>
+        <item>@string/ui_home_fm_radio</item>
+        <item>@string/ui_home_fm_didn_t_start</item>
+        <item>@string/ui_home_no_favourite_called_add_one_in_settings</item>
+        <item>@string/ui_home_turn_on_the_dashcam_in_settings_driving</item>
+        <item>@string/ui_home_turn_on_the_documents_wallet_in_settings</item>
+        <item>@string/ui_home_turn_on_trip_games_in_settings_family</item>
+        <item>@string/ui_home_turn_on_fog_mode_in_settings_driving</item>
+        <item>@string/ui_home_turn_on_one_tap_sos_in_settings_cab_driv</item>
+        <item>@string/ui_home_turn_on_the_fare_meter_in_settings_cab_d</item>
+        <item>@string/ui_home_the_fare_meter_isn_t_running</item>
+        <item>@string/ui_home_turn_on_the_earnings_log_in_settings_cab</item>
+        <item>@string/ui_home_the_air_quality_isn_t_known_yet</item>
+        <item>@string/ui_home_the_air_quality_is_aqi</item>
+        <item>@string/ui_home_put_the_map_on_the_dashboard_for_directi</item>
+        <item>@string/ui_home_not_installed</item>
+        <item>@string/ui_home_of_parts</item>
+        <item>@string/ui_home_show_on</item>
+        <item>@string/ui_home_details_on</item>
+        <item>@string/ui_home_show_two_or_more_details_first</item>
+        <item>@string/ui_home_put_first</item>
+        <item>@string/ui_home_driver_profile</item>
+        <item>@string/ui_home_tap_the_new_button_to_choose_your_mirror</item>
+        <item>@string/ui_home_add_your_pictures</item>
+        <item>@string/ui_home_copy_pictures_jpg_or_png_to_on_the_unit</item>
+        <item>@string/ui_home_cleared_tap_a_tile_on_the_layout_to_choo</item>
+        <item>@string/ui_home_shows</item>
+        <item>@string/ui_home_as_designed</item>
+        <item>@string/ui_home_boxes_stacked</item>
+        <item>@string/ui_home_put_the_boxes_and_chosen_apps_back_as_th</item>
+        <item>@string/ui_home_reset</item>
+        <item>@string/ui_home_set_by</item>
+        <item>@string/ui_home_match_the_car_s_colour</item>
+        <item>@string/ui_home_copies_to_openrath_themes_to_edit</item>
+        <item>@string/ui_home_theme_created</item>
+        <item>@string/ui_home_edit_the_files_in_on_a_pc_over_usb_or_wi</item>
+        <item>@string/ui_home_couldn_t_create_it_allow_storage_access</item>
+        <item>@string/ui_home_no_zip_files_in_download</item>
+        <item>@string/ui_home_import_which_theme</item>
+        <item>@string/ui_home_theme_is_on</item>
+        <item>@string/ui_home_not_a_theme</item>
+        <item>@string/ui_home_the_360_camera_app</item>
+        <item>@string/ui_home_name_beside_the_logo_e_g_swift_baleno</item>
+        <item>@string/ui_home_start</item>
+        <item>@string/ui_home_start_stop</item>
+        <item>@string/ui_home_topway_s_radio_service_isn_t_connected_o</item>
+        <item>@string/ui_home_fm_frequency_mhz</item>
+        <item>@string/ui_home_music_files_are_found_again_on_the_next</item>
+        <item>@string/ui_home_turn_on_openrath_in_this_list</item>
+        <item>@string/ui_home_about_mb_of_places_you_ve_seen_tap_to_cl</item>
+        <item>@string/ui_home_delete_the_kept_map_places_will_show_aga</item>
+        <item>@string/ui_home_delete</item>
+        <item>@string/ui_home_download_english_india_and_hindi_on_wi_f</item>
+        <item>@string/ui_home_saved</item>
+        <item>@string/ui_home_km_h</item>
+        <item>@string/ui_home_today_km</item>
+        <item>@string/ui_home_fill_ups_km_l</item>
+        <item>@string/ui_home_fill_ups</item>
+        <item>@string/ui_home_for_route_estimates</item>
+        <item>@string/ui_home_typical_car_toll_per_plaza</item>
+        <item>@string/ui_home_km_tap_to_correct</item>
+        <item>@string/ui_home_to</item>
+        <item>@string/ui_home_now_the_time_they_go_off</item>
+        <item>@string/ui_home_the_time_the_headlights_go_on</item>
+        <item>@string/ui_home_needs_topway_s_service</item>
+        <item>@string/ui_home_tap_to_close</item>
+        <item>@string/ui_home_developer_mode_2</item>
+        <item>@string/ui_home_look_under_turn_on_or_off_at_the_top_of</item>
+        <item>@string/ui_home_developer_mode_is_off</item>
+        <item>@string/ui_home_save_on_the_map_first_the_star_in_the_ma</item>
+        <item>@string/ui_home_choose_an_app</item>
+        <item>@string/ui_home_nothing_playing</item>
+        <item>@string/ui_home_tap_to_choose_music</item>
+        <item>@string/ui_home_today</item>
+        <item>@string/ui_home_today_2</item>
+        <item>@string/ui_home_humidity</item>
+        <item>@string/ui_home_wind</item>
+        <item>@string/ui_home_air_pressure</item>
+        <item>@string/ui_home_humidity_2</item>
+        <item>@string/ui_home_forecast_after_the_first_weather_update</item>
+        <item>@string/ui_home_radio</item>
+        <item>@string/ui_home_music</item>
+        <item>@string/ui_home_temp_c</item>
+        <item>@string/ui_home_altitude</item>
+        <item>@string/ui_home_direction</item>
+        <item>@string/ui_home_direction_2</item>
+        <item>@string/ui_home_tyres_check_the_pressures</item>
+        <item>@string/ui_home_tyres</item>
+        <item>@string/ui_home_let_s_go</item>
+        <item>@string/ui_home_let_s_go_2</item>
+        <item>@string/ui_home_hello</item>
+        <item>@string/ui_home_drive_safe</item>
+        <item>@string/ui_home_add_app</item>
+        <item>@string/ui_home_in_use</item>
+        <item>@string/ui_home_by</item>
+        <item>@string/ui_home_lights_on</item>
+        <item>@string/ui_home_sunday_11_october</item>
+        <item>@string/ui_home_cloudy</item>
+        <item>@string/ui_home_a_free_and_open_source_home_screen_for_a</item>
+        <item>@string/ui_home_not_affiliated_with_or_endorsed_by_any_c</item>
+        <item>@string/ui_home_third_party_parts</item>
+        <item>@string/ui_home_online_services_free_no_account</item>
+        <item>@string/ui_home_openrath_has_no_account_no_ads_no_analyt</item>
+        <item>@string/ui_home_crash_and_usage_reports_off_unless_you_t</item>
+        <item>@string/ui_home_stays_on_the_unit</item>
+        <item>@string/ui_home_trips_driving_score_routes_gpx_fuel_and</item>
+        <item>@string/ui_home_sent_only_when_the_feature_is_used</item>
+        <item>@string/ui_home_weather_and_air_quality_your_approximate</item>
+        <item>@string/ui_home_qr_codes_parking_trip_sharing_upi_split</item>
+        <item>@string/ui_home_speed_limits_cameras_toll_plazas_one_way</item>
+        <item>@string/ui_home_accident_help_nothing_is_sent_the_paired</item>
+        <item>@string/ui_home_map_the_map_area_you_look_at_to_the_tile</item>
+        <item>@string/ui_home_routes_start_and_destination_to_the_osrm</item>
+        <item>@string/ui_home_search_what_you_type_or_say_to_photon_vo</item>
+        <item>@string/ui_home_online_radio_the_station_list_from_radio</item>
+        <item>@string/ui_home_each_has_an_on_off_switch_at_the_top_of</item>
+        <item>@string/ui_home_no_crash_reports_good</item>
+        <item>@string/ui_home_crash_reports_in_openrath_logs</item>
+        <item>@string/ui_home_share</item>
+        <item>@string/ui_home_share_the_report</item>
+        <item>@string/ui_home_no_app_to_share_with_the_file_is_in_open</item>
+        <item>@string/ui_home_delete_all</item>
+        <item>@string/ui_home_usage_report</item>
+        <item>@string/ui_home_no_app_to_share_with</item>
+        <item>@string/ui_home_start_again</item>
+        <item>@string/ui_home_copying_the_stock_launcher</item>
+        <item>@string/ui_home_nothing_could_be_copied_android_may_not</item>
+        <item>@string/ui_home_copied_to</item>
+        <item>@string/ui_home_send_the_files_ending_in_apk_and_vdex_or</item>
+        <item>@string/ui_home_stock_launcher_copied</item>
+        <item>@string/ui_home_reading_the_stock_launcher_and_radio</item>
+        <item>@string/ui_home_saved_to</item>
+        <item>@string/ui_home_how_the_stock_launcher_does_it_photograp</item>
+        <item>@string/ui_home_big_box_left</item>
+        <item>@string/ui_home_big_box_right</item>
+        <item>@string/ui_home_middle_box_left</item>
+        <item>@string/ui_home_middle_box_right</item>
+        <item>@string/ui_home_bottom_box_left</item>
+        <item>@string/ui_home_bottom_box_right</item>
+        <item>@string/ui_home_car_and_speed</item>
+        <item>@string/ui_home_clock_and_date</item>
+        <item>@string/ui_home_map</item>
+        <item>@string/ui_home_trip_computer</item>
+        <item>@string/ui_home_engine_obd_ii</item>
+        <item>@string/ui_home_tyre_pressure</item>
+        <item>@string/ui_home_news_top_5_headlines</item>
+        <item>@string/ui_home_cab_driver_earnings_meter</item>
+        <item>@string/ui_home_performance_fps_cpu_temperature</item>
+        <item>@string/ui_home_widget_from_another_app</item>
+        <item>@string/ui_home_second_widget</item>
+        <item>@string/ui_home_oil_change</item>
+        <item>@string/ui_home_tyre_rotation</item>
+        <item>@string/ui_home_wheel_alignment_and_balancing</item>
+        <item>@string/ui_home_general_service</item>
+        <item>@string/ui_home_insurance_renewal</item>
+        <item>@string/ui_home_puc_certificate</item>
+        <item>@string/ui_home_navigation</item>
+        <item>@string/ui_home_bluetooth</item>
+        <item>@string/ui_home_all_apps</item>
+        <item>@string/ui_home_apps</item>
+        <item>@string/ui_home_settings</item>
+        <item>@string/ui_home_driver</item>
+        <item>@string/ui_home_dashboard</item>
+        <item>@string/ui_home_phone_mirroring</item>
+        <item>@string/ui_home_home</item>
+        <item>@string/ui_home_office</item>
+        <item>@string/ui_home_simple</item>
+        <item>@string/ui_home_full</item>
+        <item>@string/ui_home_custom</item>
+        <item>@string/ui_home_the_must_haves_home_screen_map_radio_mus</item>
+        <item>@string/ui_home_simple_plus_the_helpers_voice_road_warni</item>
+        <item>@string/ui_home_full_plus_making_it_your_own_widgets_ext</item>
+        <item>@string/ui_home_set_by_your_organisation</item>
+        <item>@string/ui_home_this_app_is_locked_while_the_car_is_movi</item>
+        <item>@string/ui_home_speed</item>
+        <item>@string/ui_home_time</item>
+        <item>@string/ui_home_clock</item>
+        <item>@string/ui_home_weather_for_the_next_days</item>
+        <item>@string/ui_home_music_and_radio</item>
+        <item>@string/ui_home_compass_and_direction</item>
+        <item>@string/ui_home_temperature_altitude_and_direction</item>
+        <item>@string/ui_home_the_car</item>
+        <item>@string/ui_home_today_s_distance</item>
+        <item>@string/ui_home_temperature</item>
+        <item>@string/ui_home_latitude_and_longitude</item>
+        <item>@string/ui_home_tyre_pressures</item>
+        <item>@string/ui_home_bubbles</item>
+        <item>@string/ui_home_scenery</item>
+        <item>@string/ui_home_picture_and_clock</item>
+        <item>@string/ui_home_strip</item>
+        <item>@string/ui_home_twin_dials</item>
+        <item>@string/ui_home_room</item>
+        <item>@string/ui_home_big_clock</item>
+        <item>@string/ui_home_lyrics</item>
+        <item>@string/ui_home_cards_and_apps</item>
+        <item>@string/ui_home_soft_dark_grey_cards_and_a_light_blue_ac</item>
+        <item>@string/ui_home_purple_night_gradient_with_neon_pink_and</item>
+        <item>@string/ui_home_bright_and_easy_to_read_in_daylight</item>
+        <item>@string/ui_home_the_original_dark_chrome_look</item>
+        <item>@string/ui_home_pure_black_no_borders_one_blue_accent</item>
+        <item>@string/ui_home_monday</item>
+        <item>@string/ui_home_tuesday</item>
+        <item>@string/ui_home_wednesday</item>
+        <item>@string/ui_home_thursday</item>
+        <item>@string/ui_home_friday</item>
+        <item>@string/ui_home_saturday</item>
+        <item>@string/ui_home_sunday</item>
+        <item>@string/ui_home_sun</item>
+        <item>@string/ui_home_mon</item>
+        <item>@string/ui_home_tue</item>
+        <item>@string/ui_home_wed</item>
+        <item>@string/ui_home_thu</item>
+        <item>@string/ui_home_fri</item>
+        <item>@string/ui_home_sat</item>
+        <item>@string/ui_home_jan</item>
+        <item>@string/ui_home_feb</item>
+        <item>@string/ui_home_mar</item>
+        <item>@string/ui_home_apr</item>
+        <item>@string/ui_home_may</item>
+        <item>@string/ui_home_jun</item>
+        <item>@string/ui_home_jul</item>
+        <item>@string/ui_home_aug</item>
+        <item>@string/ui_home_sep</item>
+        <item>@string/ui_home_oct</item>
+        <item>@string/ui_home_nov</item>
+        <item>@string/ui_home_dec</item>
+        <item>@string/ui_home_offline_map_app</item>
+        <item>@string/ui_home_rear_camera</item>
+        <item>@string/ui_home_brand_logo</item>
+        <item>@string/ui_home_car_picture_lights_off</item>
+        <item>@string/ui_home_car_picture_lights_on</item>
+        <item>@string/ui_home_door_setup</item>
+        <item>@string/ui_home_seat_belt_setup</item>
+        <item>@string/ui_home_car_care</item>
+        <item>@string/ui_home_car_signals</item>
+        <item>@string/ui_home_speech_services_by_google_tap_to_pick_it</item>
+        <item>@string/ui_home_a_png_with_a_transparent_background_look</item>
+        <item>@string/ui_home_a_theme_zip_someone_shared</item>
+        <item>@string/ui_home_after_plugging_in_a_usb_stick</item>
+        <item>@string/ui_home_after_sunset</item>
+        <item>@string/ui_home_always_off</item>
+        <item>@string/ui_home_always_on</item>
+        <item>@string/ui_home_and_retry_skipped_steps</item>
+        <item>@string/ui_home_another_engine_tap_to_get_google_s_which</item>
+        <item>@string/ui_home_auto_music_app_with_internet_else_files</item>
+        <item>@string/ui_home_auto_online_with_internet_else_fm</item>
+        <item>@string/ui_home_beep_and_voice</item>
+        <item>@string/ui_home_between_set_times</item>
+        <item>@string/ui_home_boxes_and_apps_back_to_the_start</item>
+        <item>@string/ui_home_car_on_the_left</item>
+        <item>@string/ui_home_didn_t_work_on_this_unit_tap_to_try_agai</item>
+        <item>@string/ui_home_do_nothing</item>
+        <item>@string/ui_home_drag_and_drop_on_the_dashboard</item>
+        <item>@string/ui_home_each_level_s_features_can_still_be_turne</item>
+        <item>@string/ui_home_follow_the_car_else_sunset_to_sunrise</item>
+        <item>@string/ui_home_gentle_while_driving</item>
+        <item>@string/ui_home_get_google_s_offline_speech_pack_english</item>
+        <item>@string/ui_home_how_the_stock_radio_and_launcher_work</item>
+        <item>@string/ui_home_long_press_a_button_on_the_bar_to_choose</item>
+        <item>@string/ui_home_make_them_with_your_car_s_badge_and_name</item>
+        <item>@string/ui_home_map_on_the_left</item>
+        <item>@string/ui_home_music_app</item>
+        <item>@string/ui_home_music_files</item>
+        <item>@string/ui_home_no_fill_ups_yet</item>
+        <item>@string/ui_home_no_offline_map_app_install_organic_maps</item>
+        <item>@string/ui_home_none_found_pick_one</item>
+        <item>@string/ui_home_none_installed_tap_to_get_speech_service</item>
+        <item>@string/ui_home_none_saved</item>
+        <item>@string/ui_home_not_allowed</item>
+        <item>@string/ui_home_not_done_yet</item>
+        <item>@string/ui_home_not_set_up_for_the_voice_reminders</item>
+        <item>@string/ui_home_not_tried_yet_tap_to_try</item>
+        <item>@string/ui_home_on_the_layout_s_buttons</item>
+        <item>@string/ui_home_on_while_driving</item>
+        <item>@string/ui_home_on_openrath_plays_fm_itself</item>
+        <item>@string/ui_home_on_every_switch_diagnostics_and_tests_ta</item>
+        <item>@string/ui_home_online_stations</item>
+        <item>@string/ui_home_open_the_camera_app</item>
+        <item>@string/ui_home_send_a_photo_if_something_doesn_t_work</item>
+        <item>@string/ui_home_show_parking_guide_lines</item>
+        <item>@string/ui_home_slower_also_reads_the_system_apps</item>
+        <item>@string/ui_home_take_turns_every_hour</item>
+        <item>@string/ui_home_tap_a_tile_on_the_layout_to_choose_long</item>
+        <item>@string/ui_home_tap_one_to_put_it_first</item>
+        <item>@string/ui_home_the_layout_s_own</item>
+        <item>@string/ui_home_the_radio_and_light_names_inside_the_sto</item>
+        <item>@string/ui_home_to_download_and_usb_to_send_for_a_closer</item>
+        <item>@string/ui_home_weekly_and_monthly_distance_time_and_cos</item>
+        <item>@string/ui_home_with_the_headlights</item>
+        <item>@string/ui_home_your_picture</item>
+        <item>@string/ui_home_allowed</item>
+        <item>@string/ui_home_built_in</item>
+        <item>@string/ui_home_hidden</item>
+        <item>@string/ui_home_none</item>
+        <item>@string/ui_home_silent</item>
+        <item>@string/ui_home_auto</item>
+        <item>@string/ui_home_landscape</item>
+        <item>@string/ui_home_portrait</item>
+        <item>@string/ui_home_left</item>
+        <item>@string/ui_home_right</item>
+        <item>@string/ui_home_top</item>
+        <item>@string/ui_home_bottom</item>
+        <item>@string/ui_home_skipped_reading_the_stock_apps_stopped_o</item>
+    </string-array>
+</resources>

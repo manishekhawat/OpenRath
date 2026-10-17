@@ -7,12 +7,16 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Hindi for the Settings screens, from Android's string resources: res/values/ui.xml holds the English
- * the code uses, res/values-hi/ui.xml the Hindi under the same names, and the ui_strings list pairs
- * them. Anything not translated stays in English, so a new setting never shows blank. The owner
- * picks the language in Settings; it starts as the stereo's own language.
+ * Hindi for everything OpenRath shows, from Android's string resources: res/values/ui*.xml hold the
+ * English the code uses, res/values-hi/ui*.xml the Hindi under the same names, and each file's list
+ * (ARRAYS) pairs them. Code passes its English through t(), or f() for text with numbers or names
+ * in it ("%1$s km"). Anything not translated stays in English, so new text never shows blank. The
+ * owner picks the language in Settings; it starts as the stereo's own language.
  */
 final class Hindi {
+
+    /** One list per resource file: Settings, then the dashboard and the rest of the app. */
+    static final String[] ARRAYS = {"ui_strings", "ui_home", "ui_cards", "ui_cab", "ui_driving", "ui_extras", "ui_misc"};
 
     private static Map<String, String> words;
     static boolean on;
@@ -33,11 +37,14 @@ final class Hindi {
     static void load(Context c, Prefs p) {
         on = "hi".equals(lang(p));
         if (!on || words != null) return;
-        try {
-            int id = c.getResources().getIdentifier("ui_strings", "array", c.getPackageName());
-            words = pair(in(c, Locale.ENGLISH).getStringArray(id), in(c, new Locale("hi")).getStringArray(id));
-        } catch (Exception e) {
-            words = new HashMap<>();
+        words = new HashMap<>();
+        android.content.res.Resources en = in(c, Locale.ENGLISH), hi = in(c, new Locale("hi"));
+        for (String name : ARRAYS) {
+            try {
+                int id = c.getResources().getIdentifier(name, "array", c.getPackageName());
+                if (id != 0) words.putAll(pair(en.getStringArray(id), hi.getStringArray(id)));
+            } catch (Exception ignored) {
+            }
         }
     }
 
@@ -49,6 +56,20 @@ final class Hindi {
 
     static String t(String s) {
         return t(words, on, s);
+    }
+
+    /** Text with numbers or names in it: the English format ("Toll in %1$s km") is what gets translated. */
+    static String f(String format, Object... args) {
+        try {
+            return String.format(Locale.US, t(format), args);
+        } catch (Exception e) {
+            return String.format(Locale.US, format, args);
+        }
+    }
+
+    /** t() for a CharSequence, for code that sets text either way. */
+    static CharSequence t(CharSequence s) {
+        return s instanceof String ? t((String) s) : s;
     }
 
     static String t(Map<String, String> m, boolean on, String s) {

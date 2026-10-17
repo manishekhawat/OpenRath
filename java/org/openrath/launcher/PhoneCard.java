@@ -11,7 +11,7 @@ import android.widget.TextView;
  * answer and hang up, and up to three favourite numbers to call with one tap.
  */
 final class PhoneCard extends Cards.Card {
-    final TextView head = Ui.label(getContext(), "PHONE");
+    final TextView head = Ui.label(getContext(), Hindi.t("PHONE"));
     final TextView title = Ui.text(getContext(), 24, Ui.SILVER, "sans-serif-light", Gravity.LEFT);
     final TextView sub = Ui.text(getContext(), 13, Ui.SILVER_DIM, "sans-serif", Gravity.LEFT);
     final LinearLayout row = new LinearLayout(getContext());
@@ -30,8 +30,8 @@ final class PhoneCard extends Cards.Card {
         super(c);
         title.setEllipsize(android.text.TextUtils.TruncateAt.END);
         sub.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        answer = pill(c, "Answer", 0xFF1F6F45);
-        end = pill(c, "End", 0xFF7A2328);
+        answer = pill(c, Hindi.t("Answer"), 0xFF1F6F45);
+        end = pill(c, Hindi.t("End"), 0xFF7A2328);
         row.setGravity(Gravity.CENTER_VERTICAL);
         row.addView(answer);
         row.addView(end);
@@ -45,7 +45,7 @@ final class PhoneCard extends Cards.Card {
                     String[] f = fav(host.prefs(), n);
                     if (f == null) return;
                     String err = unit == null ? "the stereo isn't ready" : unit.call(getContext(), f[1]);
-                    sub.setText(err == null ? "Calling " + f[0] + "…" : "Couldn't call: " + err);
+                    sub.setText(err == null ? Hindi.f("Calling %1$s…", f[0]) : Hindi.f("Couldn't call: %1$s", Hindi.t(err)));
                 }
             });
         }
@@ -65,8 +65,8 @@ final class PhoneCard extends Cards.Card {
                     if (n >= recentCalls.size()) return;
                     String[] f = recentCalls.get(n);
                     String err = unit == null ? "the stereo isn't ready" : unit.call(getContext(), f[0]);
-                    android.widget.Toast.makeText(getContext(), err == null ? "Calling " + (f[1].isEmpty() ? f[0] : f[1]) + "…"
-                            : "Couldn't call: " + err, android.widget.Toast.LENGTH_SHORT).show();
+                    android.widget.Toast.makeText(getContext(), err == null ? Hindi.f("Calling %1$s…", f[1].isEmpty() ? f[0] : f[1])
+                            : Hindi.f("Couldn't call: %1$s", Hindi.t(err)), android.widget.Toast.LENGTH_SHORT).show();
                 }
             });
             calls.addView(callRows[i]);
@@ -94,7 +94,7 @@ final class PhoneCard extends Cards.Card {
                     return;
                 }
                 String err = unit.call(getContext(), last[0]);
-                sub.setText(err == null ? "Calling " + (last[1].isEmpty() ? last[0] : last[1]) + "…" : "Couldn't call: " + err);
+                sub.setText(err == null ? Hindi.f("Calling %1$s…", last[1].isEmpty() ? last[0] : last[1]) : Hindi.f("Couldn't call: %1$s", Hindi.t(err)));
             }
         };
         clickable(title, back);
@@ -105,9 +105,9 @@ final class PhoneCard extends Cards.Card {
 
     static String ago(long at) {
         long m = (System.currentTimeMillis() - at) / 60000;
-        if (m < 1) return "just now";
-        if (m < 60) return m + " min ago";
-        if (m < 24 * 60) return (m / 60) + " h ago";
+        if (m < 1) return Hindi.t("just now");
+        if (m < 60) return Hindi.f("%1$s min ago", m);
+        if (m < 24 * 60) return Hindi.f("%1$s h ago", m / 60);
         return new java.text.SimpleDateFormat("d MMM", java.util.Locale.US).format(new java.util.Date(at));
     }
 
@@ -175,27 +175,27 @@ final class PhoneCard extends Cards.Card {
         }
         String down = unit.phoneDown();
         if (down != null) {
-            head.setText("PHONE");
-            title.setText("Phone");
-            sub.setText(down);
+            head.setText(Hindi.t("PHONE"));
+            title.setText(Hindi.t("Phone"));
+            sub.setText(Hindi.t(down));
             return;
         }
         String said = unit.caller();
-        head.setText(h.btConnected ? "PHONE  ·  CONNECTED" : "PHONE  ·  NOT CONNECTED");
+        head.setText(h.btConnected ? Hindi.t("PHONE  ·  CONNECTED") : Hindi.t("PHONE  ·  NOT CONNECTED"));
         boolean call = h.phoneStatus != 0;
         last = h.lastCall;
         if (call) {
             String who = last != null && System.currentTimeMillis() - Long.parseLong(last[3]) < 120000
-                    ? (last[1].isEmpty() ? last[0] : last[1]) : !said.isEmpty() ? said : "Call";
+                    ? (last[1].isEmpty() ? last[0] : last[1]) : !said.isEmpty() ? said : Hindi.t("Call");
             title.setText(who);
-            sub.setText("Call in progress or ringing");
+            sub.setText(Hindi.t("Call in progress or ringing"));
         } else if (last != null) {
             title.setText((last[1].isEmpty() ? last[0] : last[1]));
-            sub.setText(("out".equals(last[2]) ? "Called " : "in".equals(last[2]) ? "Called you " : "Last call ")
-                    + ago(Long.parseLong(last[3])) + (h.btConnected ? "  ·  tap to call back" : ""));
+            sub.setText(Hindi.f("out".equals(last[2]) ? "Called %1$s" : "in".equals(last[2]) ? "Called you %1$s" : "Last call %1$s", ago(Long.parseLong(last[3])))
+                    + (h.btConnected ? "  ·  " + Hindi.t("tap to call back") : ""));
         } else {
-            title.setText(h.btConnected ? "Phone connected" : "No phone connected");
-            sub.setText(h.btConnected ? "Your last call shows here" : "Pair your phone in the Bluetooth app");
+            title.setText(h.btConnected ? Hindi.t("Phone connected") : Hindi.t("No phone connected"));
+            sub.setText(h.btConnected ? Hindi.t("Your last call shows here") : Hindi.t("Pair your phone in the Bluetooth app"));
         }
         answer.setVisibility(call ? VISIBLE : GONE);
         end.setVisibility(call ? VISIBLE : GONE);

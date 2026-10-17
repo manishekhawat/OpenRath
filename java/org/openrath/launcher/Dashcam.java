@@ -28,6 +28,8 @@ import java.util.Locale;
 final class Dashcam {
 
     static volatile String status = "off";
+    private static final String NEEDS = "needs camera permission: open Settings once to allow it";
+    private static final String NO_CAMERA = "no camera found: plug in the USB dashcam";
     private static Camera camera;
     private static MediaRecorder rec;
     private static SurfaceTexture texture;
@@ -75,11 +77,11 @@ final class Dashcam {
             public void run() {
                 if (rec != null) return;
                 if (!allowed(app)) {
-                    status = "needs camera permission: open Settings once to allow it";
+                    status = Hindi.t(NEEDS);
                     return;
                 }
                 if (cameras() == 0) {
-                    status = "no camera found: plug in the USB dashcam";
+                    status = Hindi.t(NO_CAMERA);
                     return;
                 }
                 segment();
@@ -99,7 +101,7 @@ final class Dashcam {
                     }
                     camera = null;
                 }
-                if (!status.startsWith("no camera") && !status.startsWith("needs")) status = "off";
+                if (!status.equals(Hindi.t(NO_CAMERA)) && !status.equals(Hindi.t(NEEDS)) && !status.startsWith("no camera") && !status.startsWith("needs")) status = "off";
             }
         });
     }
@@ -119,7 +121,7 @@ final class Dashcam {
     private static void keep(File f) {
         File d = savedDir();
         d.mkdirs();
-        if (f.renameTo(new File(d, f.getName()))) status = "recording · clip saved";
+        if (f.renameTo(new File(d, f.getName()))) status = Hindi.t("recording · clip saved");
     }
 
     /** Record the next minute. */
@@ -167,7 +169,7 @@ final class Dashcam {
             });
             rec.prepare();
             rec.start();
-            status = "recording";
+            status = Hindi.t("recording");
             prune();
         } catch (Throwable t) {
             finish();
@@ -178,7 +180,7 @@ final class Dashcam {
                 }
                 camera = null;
             }
-            status = "camera error: " + (t.getMessage() == null ? t.getClass().getSimpleName() : t.getMessage());
+            status = Hindi.f("camera error: %1$s", t.getMessage() == null ? t.getClass().getSimpleName() : t.getMessage());
             main.postDelayed(new Runnable() {
                 @Override
                 public void run() {

@@ -256,8 +256,8 @@ final class FytUnit extends Unit {
     String call(Context c, String n) {
         String num = n == null ? "" : n.replaceAll("[^0-9+*#]", "");
         if (btM == null || num.isEmpty()) return super.call(c, n);
-        if (phone >= 0 && phone < PH_CONNECTED) return "no phone connected";
-        return cmd(btM, C_DIAL, null, new String[]{num}) ? null : "the stereo's phone service didn't answer";
+        if (phone >= 0 && phone < PH_CONNECTED) return Hindi.t("no phone connected");
+        return cmd(btM, C_DIAL, null, new String[]{num}) ? null : Hindi.t("the stereo's phone service didn't answer");
     }
 
     @Override
@@ -289,11 +289,11 @@ final class FytUnit extends Unit {
 
     @Override
     String fmPlay(Context c, Prefs p, boolean on) {
-        if (mainM == null) return "the stereo's radio service isn't connected";
+        if (mainM == null) return Hindi.t("the stereo's radio service isn't connected");
         // the MCU's sound source: 1 is the radio, 0 lets it go
         boolean ok = cmd(mainM, C_APP_ID, new int[]{on ? APP_RADIO : 0}, null);
         if (ok) appId = on ? APP_RADIO : 0;
-        return ok ? null : "the stereo's radio service didn't answer";
+        return ok ? null : Hindi.t("the stereo's radio service didn't answer");
     }
 
     @Override
@@ -323,10 +323,10 @@ final class FytUnit extends Unit {
             if (!f.equals(p.fmFreq())) p.setFmFreq(f);
             f += "  FM";
         }
-        s.title = f.isEmpty() ? "FM radio" : f;
+        s.title = f.isEmpty() ? Hindi.t("FM radio") : f;
         s.playing = appId < 0 ? null : appId == APP_RADIO;
         boolean on = s.playing != null ? s.playing : localOn;
-        s.sub = !note.isEmpty() && on ? note : !ps.isEmpty() ? ps : on ? "FM radio" : "Tap play to listen";
+        s.sub = !note.isEmpty() && on ? note : !ps.isEmpty() ? ps : on ? Hindi.t("FM radio") : Hindi.t("Tap play to listen");
         return s;
     }
 

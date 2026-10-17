@@ -58,20 +58,21 @@ Builds:
       - cp $$SDK$$/build-tools/34.0.0/lib/d8.jar tools/.tools/
     build:
       - pushd $$Apktool$$ && ./gradlew build shadowJar -x test && popd
-      - cp $$Apktool$$/brut.apktool/apktool-cli/build/libs/apktool-cli-all.jar tools/.tools/apktool.jar
+      - cp $$Apktool$$/brut.apktool/apktool-cli/build/libs/apktool-cli-all.jar tools/.tools/apktool.jar   # the name GitHub's f-droid build job prints
       - OPENRATH_PUBLIC=1 OPENRATH_UNSIGNED=1 AAPT2=$$SDK$$/build-tools/34.0.0/aapt2 python3 build.py out
     output: out/openrath-unsigned.apk
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
 UpdateCheckData: build.py|VERSION_CODE, VERSION_NAME = (\d+),|build.py|VERSION_NAME = \d+, '([^']+)'
-CurrentVersion: '1.32'
-CurrentVersionCode: 40
+CurrentVersion: '1.33'
+CurrentVersionCode: 41
 ```
 
 Notes on the recipe:
 
-- `output` names the unsigned APK the new option would write. Change it to whatever name `build.py` uses.
+- `output` is the unsigned APK `build.py` writes with `OPENRATH_UNSIGNED=1`.
+- The "f-droid build" check (`.github/workflows/fdroid-build.yml`) runs these same steps on every pull request: apktool built from source, the SDK's aapt2 and d8, no downloaded jars, no signing. If it is green, this recipe should build.
 - The Apktool `srclib` needs a matching `srclibs/Apktool.yml` in fdroiddata (one may already exist). The path to the built jar can change between apktool versions.
 - For a reproducible build that keeps OpenRath's own signature, add `Binaries: https://github.com/manishekhawat/OpenRath/releases/download/v%v/openrath-v%v.apk` and `AllowedAPKSigningKeys:` with the release certificate's SHA-256 (see `RELEASING.md`). F-Droid then publishes the release APK only when its own build matches it.
 

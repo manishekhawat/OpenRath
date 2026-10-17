@@ -97,7 +97,7 @@ final class Profiles {
         }
         p.put("profile", name);
         saveCurrent(a, p);
-        Toast.makeText(a, "Hello " + name, Toast.LENGTH_SHORT).show();
+        Toast.makeText(a, Hindi.f("Hello %1$s", name), Toast.LENGTH_SHORT).show();
         a.recreate();
     }
 
@@ -105,7 +105,7 @@ final class Profiles {
     static void next(Activity a, Prefs p) {
         List<String> n = names(p);
         if (n.size() < 2) {
-            Toast.makeText(a, "Add drivers in Settings > Family first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(a, Hindi.t("Add drivers in Settings > Family first"), Toast.LENGTH_SHORT).show();
             return;
         }
         int i = n.indexOf(current(p));
@@ -116,9 +116,9 @@ final class Profiles {
         final List<String> n = names(p);
         List<String> rows = new ArrayList<>();
         for (String s : n) rows.add((s.equals(current(p)) ? "✓  " : "     ") + s);
-        rows.add("Add a driver…");
-        if (!n.isEmpty()) rows.add("Remove a driver…");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Who's driving?")
+        rows.add(Hindi.t("Add a driver…"));
+        if (!n.isEmpty()) rows.add(Hindi.t("Remove a driver…"));
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Who's driving?"))
                 .setItems(rows.toArray(new String[0]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -127,20 +127,20 @@ final class Profiles {
                         } else if (w == n.size()) add(a, p);
                         else remove(a, p);
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     private static void add(final Activity a, final Prefs p) {
         final EditText e = new EditText(a);
         e.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-        e.setHint("Name");
+        e.setHint(Hindi.t("Name"));
         int pad = (int) (20 * a.getResources().getDisplayMetrics().density);
         android.widget.FrameLayout box = new android.widget.FrameLayout(a);
         box.setPadding(pad, pad / 2, pad, 0);
         box.addView(e);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Add a driver")
-                .setMessage(names(p).isEmpty() ? "Your current settings become this driver's. Add a second driver to switch between them." : null)
-                .setView(box).setPositiveButton("Add", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Add a driver"))
+                .setMessage(names(p).isEmpty() ? Hindi.t("Your current settings become this driver's. Add a second driver to switch between them.") : null)
+                .setView(box).setPositiveButton(Hindi.t("Add"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         String name = e.getText().toString().trim();
@@ -148,20 +148,20 @@ final class Profiles {
                         if (current(p).isEmpty()) {
                             p.put("profile", name);
                             saveCurrent(a, p);
-                            Toast.makeText(a, name + " added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(a, Hindi.f("%1$s added", name), Toast.LENGTH_SHORT).show();
                         } else switchTo(a, p, name);
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static void remove(final Activity a, final Prefs p) {
         final List<String> n = names(p);
         n.remove(current(p));
         if (n.isEmpty()) {
-            Toast.makeText(a, "Switch to another driver to remove " + current(p), Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.f("Switch to another driver to remove %1$s", current(p)), Toast.LENGTH_LONG).show();
             return;
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Remove a driver")
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Remove a driver"))
                 .setItems(n.toArray(new String[0]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -169,7 +169,7 @@ final class Profiles {
                         all.remove(n.get(w));
                         p.put("profiles", all.toString());
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private Profiles() {

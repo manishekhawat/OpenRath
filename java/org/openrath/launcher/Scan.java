@@ -63,34 +63,34 @@ final class Scan {
             return;
         }
         if (xt == null) {
-            android.widget.Toast.makeText(a, "The radio service isn't connected", android.widget.Toast.LENGTH_LONG).show();
+            android.widget.Toast.makeText(a, Hindi.t("The radio service isn't connected"), android.widget.Toast.LENGTH_LONG).show();
             return;
         }
         final List<String> found = saved(p);
         if (found.isEmpty()) found.addAll(StockRadio.stations());
         String[] items = new String[found.size() + 1];
-        items[0] = found.isEmpty() ? "Scan for stations" : "Scan again";
+        items[0] = Hindi.t(found.isEmpty() ? "Scan for stations" : "Scan again");
         String now = freq(xt);
-        for (int i = 0; i < found.size(); i++) items[i + 1] = found.get(i) + " FM" + (found.get(i).equals(now) ? "   (playing)" : "");
+        for (int i = 0; i < found.size(); i++) items[i + 1] = found.get(i) + " FM" + (found.get(i).equals(now) ? Hindi.t("   (playing)") : "");
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(found.isEmpty() ? "FM stations" : found.size() + " FM stations")
+                .setTitle(found.isEmpty() ? Hindi.t("FM stations") : Hindi.f("%1$s FM stations", found.size()))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         if (w == 0) all(a, p, xt, changed);
                         else tune(a, xt, found.get(w - 1), changed);
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     /** With OpenRath's own tuner: the chip scans the whole band itself. */
     private static void own(final Activity a, final Prefs p, final Runnable changed) {
         final List<String> found = saved(p);
         String[] items = new String[found.size() + 1];
-        items[0] = found.isEmpty() ? "Scan for stations" : "Scan again";
-        for (int i = 0; i < found.size(); i++) items[i + 1] = found.get(i) + " FM" + (found.get(i).equals(Tuner.freqText()) ? "   (playing)" : "");
+        items[0] = Hindi.t(found.isEmpty() ? "Scan for stations" : "Scan again");
+        for (int i = 0; i < found.size(); i++) items[i + 1] = found.get(i) + " FM" + (found.get(i).equals(Tuner.freqText()) ? Hindi.t("   (playing)") : "");
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(found.isEmpty() ? "FM stations" : found.size() + " FM stations")
+                .setTitle(found.isEmpty() ? Hindi.t("FM stations") : Hindi.f("%1$s FM stations", found.size()))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -100,17 +100,17 @@ final class Scan {
                             changed.run();
                             return;
                         }
-                        android.widget.Toast.makeText(a, "Scanning the FM band…", android.widget.Toast.LENGTH_SHORT).show();
+                        android.widget.Toast.makeText(a, Hindi.t("Scanning the FM band…"), android.widget.Toast.LENGTH_SHORT).show();
                         List<String> st = Tuner.scan();
                         finish(a, p, st, changed);
                     }
-                }).setNegativeButton("Close", null).show();
+                }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     /** Step round the band once and keep every stop. */
     static void all(final Activity a, final Prefs p, final Xt xt, final Runnable changed) {
         final ProgressDialog wait = new ProgressDialog(a, android.R.style.Theme_Material_Dialog_Alert);
-        wait.setMessage("Scanning for FM stations…");
+        wait.setMessage(Hindi.t("Scanning for FM stations…"));
         wait.setCancelable(true);
         wait.show();
         final List<String> stops = new ArrayList<>();
@@ -133,7 +133,7 @@ final class Scan {
                     // the radio stopped on a new station
                     last[0] = freq(xt);
                     stops.add(last[0]);
-                    wait.setMessage("Scanning for FM stations…\n" + stations(stops).size() + " found, now on " + last[0]);
+                    wait.setMessage(Hindi.f("Scanning for FM stations…\n%1$s found, now on %2$s", stations(stops).size(), last[0]));
                     if (round(stops) || stops.size() >= MAX_STATIONS) {
                         wait.dismiss();
                         finish(a, p, stops, changed);
@@ -157,14 +157,14 @@ final class Scan {
         // the stepping saw nothing (the radio service doesn't say where it is): use the stock radio's own scan
         if (st.size() < 2) st = stations(merge(st, StockRadio.stations()));
         if (st.isEmpty()) {
-            android.widget.Toast.makeText(a, "No stations found. Open the stock radio once and run its scan (or AS), then try again.", android.widget.Toast.LENGTH_LONG).show();
+            android.widget.Toast.makeText(a, Hindi.t("No stations found. Open the stock radio once and run its scan (or AS), then try again."), android.widget.Toast.LENGTH_LONG).show();
             return;
         }
         StringBuilder b = new StringBuilder();
         for (String s : st) b.append(b.length() == 0 ? "" : ",").append(s);
         p.put("fmStations", b.toString());
         changed.run();
-        android.widget.Toast.makeText(a, st.size() + " stations found. Tap SCAN to pick one.", android.widget.Toast.LENGTH_LONG).show();
+        android.widget.Toast.makeText(a, Hindi.f("%1$s stations found. Tap SCAN to pick one.", st.size()), android.widget.Toast.LENGTH_LONG).show();
     }
 
     private static List<String> merge(List<String> a, List<String> b) {
@@ -207,7 +207,7 @@ final class Scan {
                     stepAt[0] = now;
                     if (xt.run("radioSearchNext") != null) xt.next();
                 } else if (now - stepAt[0] > STEP_TIMEOUT_MS) {
-                    android.widget.Toast.makeText(a, "Couldn't reach " + target + " FM", android.widget.Toast.LENGTH_LONG).show();
+                    android.widget.Toast.makeText(a, Hindi.f("Couldn't reach %1$s FM", target), android.widget.Toast.LENGTH_LONG).show();
                     return;
                 }
                 xt.askRadio();

@@ -214,15 +214,15 @@ final class Cards {
         @Override
         public void changed(Hub h) {
             temp.setText(h.temp);
-            desc.setText(h.weather);
+            desc.setText(Hindi.t(h.weather));
             int aq = Features.on(host.prefs(), "aqi") ? Air.aqi : -1;
             place.setText(aq < 0 ? h.place : h.place + (h.place.isEmpty() ? "" : "  ·  ") + "AQI " + aq);
             place.setTextColor(aq > 200 ? 0xFFFFB02E : Ui.SILVER_DIM);
             // rain on the planned route wins over rain here; both come and go
-            String r = !Features.on(host.prefs(), "rain") ? "" : !Hub.routeRain.isEmpty() ? Hub.routeRain : h.rainSoon;
+            String r = !Features.on(host.prefs(), "rain") ? "" : !Hub.routeRain.isEmpty() ? Hub.routeRain : Hub.showRain(h.rainSoon);
             // offline: say the reading comes from the kept forecast
             if (h.weatherSaved > 0) r = r.isEmpty() ? Weather.savedNote(h.weatherSaved, System.currentTimeMillis())
-                    : r + "  ·  offline";
+                    : r + "  ·  " + Hindi.t("offline");
             rain.setText(r);
             rain.setVisibility(r.isEmpty() ? GONE : VISIBLE);
             if (!h.weatherIcon.equals(lastIcon)) {
@@ -266,7 +266,7 @@ final class Cards {
             pill.setCornerRadius(999);
             pill.setStroke(Math.max(1, Ui.px(1.5f)), Ui.EDGE);
             read.setBackground(pill);
-            read.setText("▶  Read aloud");
+            read.setText(Hindi.t("▶  Read aloud"));
             clickable(read, new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -322,7 +322,7 @@ final class Cards {
         void button() {
             boolean on = Speak.speaking();
             wasSpeaking = on;
-            read.setText(on ? "■  Stop" : "▶  Read aloud");
+            read.setText(on ? Hindi.t("■  Stop") : Hindi.t("▶  Read aloud"));
         }
 
         @Override
@@ -336,16 +336,16 @@ final class Cards {
             lastAge = now;
             String age = News.age(now);
             String topic = News.topicName(p.str("newsTopic", "top"));
-            head.setText((topic.equals("Top stories") ? "TOP NEWS" : topic.toUpperCase(Locale.US) + " NEWS")
-                    + (age.isEmpty() ? "" : "  ·  " + age + (Player.online(getContext()) ? "" : ", offline")));
+            head.setText((topic.equals("Top stories") ? Hindi.t("TOP NEWS") : Hindi.f("%1$s NEWS", Hindi.t(topic).toUpperCase(Locale.US)))
+                    + (age.isEmpty() ? "" : "  ·  " + age + (Player.online(getContext()) ? "" : Hindi.t(", offline"))));
             for (int i = 0; i < lines.length; i++) {
                 if (i < News.items.size()) {
                     News.Item it = News.items.get(i);
                     lines[i].setText((i + 1) + ".  " + it.title);
                     lines[i].setTextColor(Ui.SILVER);
                 } else if (i == 0) {
-                    lines[i].setText(!Features.on(p, "news") ? "The news box is switched off in Settings > Features."
-                            : Player.online(getContext()) ? "Getting the headlines…" : "Headlines show here when there's internet.");
+                    lines[i].setText(!Features.on(p, "news") ? Hindi.t("The news box is switched off in Settings > Features.")
+                            : Player.online(getContext()) ? Hindi.t("Getting the headlines…") : Hindi.t("Headlines show here when there's internet."));
                     lines[i].setTextColor(Ui.SILVER_DIM);
                 } else lines[i].setText("");
             }
@@ -363,7 +363,7 @@ final class Cards {
             setOrientation(VERTICAL);
             setGravity(Gravity.CENTER);
             value = Ui.text(c, 30, Ui.SILVER, "sans-serif-light", Gravity.CENTER);
-            label = Ui.label(c, name);
+            label = Ui.label(c, Hindi.t(name));
             label.setGravity(Gravity.CENTER);
             addView(value);
             addView(label);
@@ -385,7 +385,7 @@ final class Cards {
 
         FiguresCard(Context c, String title, String... names) {
             super(c);
-            head = Ui.label(c, title);
+            head = Ui.label(c, Hindi.t(title));
             figs = new Figure[names.length];
             row.setGravity(Gravity.CENTER_VERTICAL);
             for (int i = 0; i < names.length; i++) {
@@ -439,18 +439,18 @@ final class Cards {
             figs[1].value.setText(min < 60 ? min + "m" : (min / 60) + "h " + (min % 60) + "m");
             double avg = Drive.avgKmh();
             figs[2].value.setText(avg <= 0 ? "--" : String.valueOf(Math.round(avg)));
-            String park = Drive.parkAt == 0 ? "" : "  ·  parked " + ago(Drive.parkAt);
+            String park = Drive.parkAt == 0 ? "" : "  ·  " + Hindi.f("parked %1$s", ago(Drive.parkAt));
             double rs = Features.on(host.prefs(), "fuelPrice") ? Fuel.cost(host.prefs(), Drive.todayKm) : 0;
-            foot.setText("This drive " + Fuel.fmt(Drive.driveKm) + " km" + (rs >= 1 ? "  ·  ₹" + Math.round(rs) + " petrol today" : "")
-                    + (Features.on(host.prefs(), "score") ? "  ·  score " + Drive.score() : "") + park);
+            foot.setText(Hindi.f("This drive %1$s km", Fuel.fmt(Drive.driveKm)) + (rs >= 1 ? "  ·  " + Hindi.f("₹%1$s petrol today", Math.round(rs)) : "")
+                    + (Features.on(host.prefs(), "score") ? "  ·  " + Hindi.f("score %1$s", Drive.score()) : "") + park);
         }
 
         static String ago(long t) {
             long m = (System.currentTimeMillis() - t) / 60000;
-            if (m < 1) return "just now";
-            if (m < 60) return m + " min ago";
-            if (m < 48 * 60) return (m / 60) + " h ago";
-            return (m / 1440) + " days ago";
+            if (m < 1) return Hindi.t("just now");
+            if (m < 60) return Hindi.f("%1$s min ago", m);
+            if (m < 48 * 60) return Hindi.f("%1$s h ago", m / 60);
+            return Hindi.f("%1$s days ago", m / 1440);
         }
     }
 
@@ -460,7 +460,7 @@ final class Cards {
         c.set(java.util.Calendar.HOUR_OF_DAY, 0);
         c.set(java.util.Calendar.MINUTE, 0);
         double rs = Care.spent(Care.tolls(p), c.getTimeInMillis(), Long.MAX_VALUE);
-        return rs > 0 ? "  ·  tolls ₹" + Math.round(rs) + " this month" : "";
+        return rs > 0 ? "  ·  " + Hindi.f("tolls ₹%1$s this month", Math.round(rs)) : "";
     }
 
     static final class FuelCard extends FiguresCard {
@@ -479,11 +479,11 @@ final class Cards {
             figs[0].value.setText(st.lastKmpl > 0 ? Fuel.fmt(st.lastKmpl) : "--");
             figs[1].value.setText(st.avgKmpl > 0 ? Fuel.fmt(st.avgKmpl) : "--");
             figs[2].value.setText(st.rupeesPerKm > 0 ? Fuel.fmt(st.rupeesPerKm) : "--");
-            figs[0].label.setText("LAST TANK KM/L");
-            figs[1].label.setText("AVERAGE KM/L");
-            if (st.fills == 0) foot.setText("Tap to add your first fill-up");
-            else if (st.lastKmpl <= 0) foot.setText("Mileage shows after two full-tank fill-ups");
-            else foot.setText(st.fills + " fill-ups  ·  last " + TripCard.ago(st.lastAt) + tollsThisMonth(host.prefs()));
+            figs[0].label.setText(Hindi.t("LAST TANK KM/L"));
+            figs[1].label.setText(Hindi.t("AVERAGE KM/L"));
+            if (st.fills == 0) foot.setText(Hindi.t("Tap to add your first fill-up"));
+            else if (st.lastKmpl <= 0) foot.setText(Hindi.t("Mileage shows after two full-tank fill-ups"));
+            else foot.setText(Hindi.f("%1$s fill-ups  ·  last %2$s", st.fills, TripCard.ago(st.lastAt)) + tollsThisMonth(host.prefs()));
         }
     }
 
@@ -505,7 +505,7 @@ final class Cards {
             Prefs p = host.prefs();
             if (!Features.on(p, "cab")) {
                 for (Figure f : figs) f.value.setText("--");
-                foot.setText("Turn on Cab driver tools in Settings > Cab driver");
+                foot.setText(Hindi.t("Turn on Cab driver tools in Settings > Cab driver"));
                 return;
             }
             long now = System.currentTimeMillis();
@@ -515,14 +515,14 @@ final class Cards {
             figs[2].value.setText(Cab.rs(s.net()));
             String f;
             if (p.longNum("cabMeterAt", 0) > 0) {
-                f = "Meter " + Cab.rs(CabMeter.fareNow(p)) + "  ·  " + Fuel.fmt(CabMeter.meterKm(p)) + " km  ·  " + CabMeter.meterWaitMs(p) / 60000 + " min waiting";
+                f = Hindi.f("Meter %1$s  ·  %2$s km  ·  %3$s min waiting", Cab.rs(CabMeter.fareNow(p)), Fuel.fmt(CabMeter.meterKm(p)), CabMeter.meterWaitMs(p) / 60000);
             } else {
                 int target = p.num("cabTargetRs", 2000);
                 long duty = p.longNum("cabDutyAt", 0);
-                f = Cab.on(p, "cabTarget") && target > 0 ? (s.net() >= target ? "Target " + Cab.rs(target) + " reached" : Cab.rs(target - s.net()) + " to the target")
-                        + (duty >= Cab.dayStart(now) ? "  ·  on duty " + Cab.hm(now - duty) : "") : "Tap for the meter, rides and SOS";
+                f = Cab.on(p, "cabTarget") && target > 0 ? (s.net() >= target ? Hindi.f("Target %1$s reached", Cab.rs(target)) : Hindi.f("%1$s to the target", Cab.rs(target - s.net())))
+                        + (duty >= Cab.dayStart(now) ? "  ·  " + Hindi.f("on duty %1$s", Cab.hm(now - duty)) : "") : Hindi.t("Tap for the meter, rides and SOS");
             }
-            foot.setText((Cab.quiet ? "Quiet ride  ·  " : "") + f);
+            foot.setText((Cab.quiet ? Hindi.t("Quiet ride") + "  ·  " : "") + f);
         }
     }
 
@@ -577,8 +577,8 @@ final class Cards {
             figs[2].value.setTextColor(m.temp >= 80 ? 0xFFFF5A4E : m.temp >= 70 ? 0xFFF5C542 : Ui.SILVER);
             figs[3].value.setText(m.fps == 0 ? "--" : String.valueOf(m.worst));
             figs[3].value.setTextColor(m.worst > 50 ? 0xFFF5C542 : Ui.SILVER);
-            foot.setText(m.sysPct >= 0 ? "Whole unit " + m.sysPct + "% CPU, this app " + m.appPct + "%"
-                    : "CPU is this app's share; Android hides the whole unit's figure");
+            foot.setText(m.sysPct >= 0 ? Hindi.f("Whole unit %1$s%% CPU, this app %2$s%%", m.sysPct, m.appPct)
+                    : Hindi.t("CPU is this app's share; Android hides the whole unit's figure"));
         }
     }
 
@@ -597,7 +597,7 @@ final class Cards {
             Prefs p = host.prefs();
             if (!Features.on(p, "obd")) {
                 for (Figure f : figs) f.value.setText("--");
-                foot.setText("Engine data is off in Settings > Car");
+                foot.setText(Hindi.t("Engine data is off in Settings > Car"));
                 return;
             }
             boolean live = Obd.connected && System.currentTimeMillis() - Obd.readAt < 5000;
@@ -612,9 +612,9 @@ final class Cards {
             synchronized (Obd.codes) {
                 n = Obd.codes.size();
             }
-            if (p.str("obdMac", "").isEmpty()) foot.setText("Tap to choose your OBD-II Bluetooth adapter");
-            else if (!live) foot.setText(Obd.status);
-            else foot.setText((Obd.load >= 0 ? "Load " + Obd.load + "%" : "") + (n > 0 ? "  ·  " + n + " fault code" + (n == 1 ? "" : "s") : Obd.codesAt > 0 ? "  ·  no fault codes" : ""));
+            if (p.str("obdMac", "").isEmpty()) foot.setText(Hindi.t("Tap to choose your OBD-II Bluetooth adapter"));
+            else if (!live) foot.setText(Hindi.t(Obd.status));
+            else foot.setText((Obd.load >= 0 ? Hindi.f("Load %1$s%%", Obd.load) : "") + (n > 0 ? "  ·  " + (n == 1 ? Hindi.t("1 fault code") : Hindi.f("%1$s fault codes", n)) : Obd.codesAt > 0 ? "  ·  " + Hindi.t("no fault codes") : ""));
         }
     }
 
@@ -634,10 +634,10 @@ final class Cards {
         public void changed(Hub h) {
             Prefs p = host.prefs();
             String unit = "bar".equals(p.str("tpmsUnit", "psi")) ? "BAR" : "PSI";
-            head.setText("TYRES  ·  " + unit);
+            head.setText(Hindi.f("TYRES  ·  %1$s", unit));
             if (!Features.on(p, "tpms")) {
                 for (Figure f : figs) f.value.setText("--");
-                foot.setText("Tyre sensors are off in Settings > Car");
+                foot.setText(Hindi.t("Tyre sensors are off in Settings > Car"));
                 return;
             }
             String warn = "";
@@ -651,11 +651,11 @@ final class Cards {
                 if (warn.isEmpty()) warn = wn;
                 any |= !p.str("tpms" + w, "").isEmpty();
             }
-            if (!any) foot.setText("Tap to find your tyre sensors");
-            else if (!warn.isEmpty()) foot.setText(warn);
+            if (!any) foot.setText(Hindi.t("Tap to find your tyre sensors"));
+            else if (!warn.isEmpty()) foot.setText(Hindi.t(warn));
             else {
                 Tpms.Tyre t = Tpms.tyres[0];
-                foot.setText(t != null && !Float.isNaN(t.tempC) ? "Front left " + Math.round(t.tempC) + "°C  ·  " + Tpms.status : Tpms.status);
+                foot.setText(t != null && !Float.isNaN(t.tempC) ? Hindi.f("Front left %1$s°C  ·  %2$s", Math.round(t.tempC), Hindi.t(Tpms.status)) : Hindi.t(Tpms.status));
             }
         }
     }
@@ -686,8 +686,8 @@ final class Cards {
                 }
             }
             if (hosted == null) {
-                hint.setText(Features.on(p, "widgets") ? "Tap to choose a widget from another app\n(long-press for other box contents)"
-                        : "Widgets are off in Settings > Home screen");
+                hint.setText(Features.on(p, "widgets") ? Hindi.t("Tap to choose a widget from another app\n(long-press for other box contents)")
+                        : Hindi.t("Widgets are off in Settings > Home screen"));
                 addView(hint, new LayoutParams(-1, -1));
                 clickable(hint, new OnClickListener() {
                     @Override

@@ -17,7 +17,7 @@ class Unit {
 
     /** What the radio box shows for FM driven by the unit itself. */
     static final class Show {
-        String title = "FM radio", sub = "Tap play to listen";
+        String title = Hindi.t("FM radio"), sub = Hindi.t("Tap play to listen");
         /** null: the unit can't tell; the box keeps its own guess. */
         Boolean playing;
     }
@@ -87,14 +87,14 @@ class Unit {
     /** Ring a number; null when the call started, else why not. */
     String call(Context c, String number) {
         String n = number == null ? "" : number.replaceAll("[^0-9+*#]", "");
-        if (n.isEmpty()) return "no number";
+        if (n.isEmpty()) return Hindi.t("no number");
         boolean direct = c.checkCallingOrSelfPermission(android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED;
         try {
             c.startActivity(new Intent(direct ? Intent.ACTION_CALL : Intent.ACTION_DIAL, android.net.Uri.parse("tel:" + n.replace("#", "%23")))
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             return null;
         } catch (Exception e) {
-            return "the stereo has no phone app for calls";
+            return Hindi.t("the stereo has no phone app for calls");
         }
     }
 
@@ -143,7 +143,7 @@ class Unit {
 
     /** Start or stop FM; null when it worked, else why not. */
     String fmPlay(Context c, Prefs p, boolean on) {
-        return "this stereo's radio app is controlled from its own screen";
+        return Hindi.t("this stereo's radio app is controlled from its own screen");
     }
 
     /** Tune a station, "91.1" (voice commands). */

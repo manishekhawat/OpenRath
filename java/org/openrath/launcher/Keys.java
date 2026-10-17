@@ -205,7 +205,7 @@ final class Keys {
                     if ("flood".equals(action)) Monsoon.mark(app, prefs);
                     else {
                         Dashcam.protect();
-                        android.widget.Toast.makeText(app, "Dashcam clip saved", android.widget.Toast.LENGTH_SHORT).show();
+                        android.widget.Toast.makeText(app, Hindi.t("Dashcam clip saved"), android.widget.Toast.LENGTH_SHORT).show();
                     }
                 }
             });
