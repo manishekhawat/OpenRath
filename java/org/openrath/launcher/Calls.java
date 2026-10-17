@@ -132,7 +132,7 @@ final class Calls {
     private static java.util.List<String[]> fromLog(Context c, int n) {
         java.util.List<String[]> out = new java.util.ArrayList<>();
         try {
-            if (android.os.Build.VERSION.SDK_INT >= 23 && c.checkSelfPermission(android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) return out;
+            if (c.checkSelfPermission(android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) return out;
             Cursor q = c.getContentResolver().query(CallLog.Calls.CONTENT_URI,
                     new String[]{CallLog.Calls.NUMBER, CallLog.Calls.CACHED_NAME, CallLog.Calls.TYPE, CallLog.Calls.DATE},
                     null, null, CallLog.Calls.DATE + " DESC");

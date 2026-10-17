@@ -1,0 +1,44 @@
+# Runs the on-device tests (androidTest/) on an emulator: the oldest Android OpenRath supports and the one it targets.
+name: device tests
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  emulator:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        api: [29, 34]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with: { distribution: temurin, java-version: '17' }
+      - name: Tools
+        run: |
+          sudo apt-get update && sudo apt-get install -y fonts-inter python3-pil python3-numpy
+          export THEME_TOOLS=$RUNNER_TEMP/tools
+          sh tools/fetch_tools.sh
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" > /dev/null
+          cp $ANDROID_HOME/platforms/android-34/android.jar $THEME_TOOLS/
+          cp $ANDROID_HOME/build-tools/34.0.0/lib/d8.jar $THEME_TOOLS/
+          echo "THEME_TOOLS=$THEME_TOOLS" >> $GITHUB_ENV
+      - name: APKs
+        run: |
+          python3 build.py out
+          python3 build.py androidtest out
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api }}
+          arch: x86_64
+          target: default
+          disable-animations: true
+          script: |
+            adb install -r out/openrath.apk
+            adb install -r out/openrath-test.apk
+            adb shell am instrument -w org.openrath.launcher.test/org.openrath.launcher.Smoke | tee instrument.txt
+            grep -q " 0 failed" instrument.txt

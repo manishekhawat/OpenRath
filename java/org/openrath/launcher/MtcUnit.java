@@ -71,7 +71,7 @@ final class MtcUnit extends Unit {
         IntentFilter f = new IntentFilter("com.microntek.bootcheck");
         f.addAction("com.microntek.canbusdisplay");
         try {
-            ctx.registerReceiver(calls, f);
+            Compat.fromOthers(ctx, calls, f);
             receiving = true;
         } catch (Throwable ignored) {
         }

@@ -66,7 +66,7 @@ final class Dashboard extends ViewGroup {
                 swiped = false;
                 int at = slotAt(swipeX, swipeY);
                 // the map and other apps' widgets use sideways drags themselves
-                swipeOk = at < 0 || !(slots[at] instanceof Cards.MapCard || slots[at] instanceof Cards.WidgetCard);
+                swipeOk = at < 0 || !(slots[at] instanceof MapCard || slots[at] instanceof Cards.WidgetCard);
                 return false;
             case MotionEvent.ACTION_MOVE:
                 float dx = e.getX() - swipeX, dy = e.getY() - swipeY;

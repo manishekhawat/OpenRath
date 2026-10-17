@@ -43,6 +43,8 @@ final class About {
     static void privacy(HomeActivity a) {
         text(a, "Privacy",
                 "OpenRath has no account, no ads, no analytics and no tracking. It never sends anything to its makers.\n\n"
+                        + "Crash and usage reports (off unless you turn them on in Settings > Features) stay on the unit for you to share. "
+                        + "On a fleet's unit, its managed settings can send them once a day to the fleet's own address.\n\n"
                         + "STAYS ON THE UNIT\n"
                         + "Trips, driving score, routes (GPX), fuel and toll logs, parking spot, service reminders, phone favourites, "
                         + "learnt car signals, settings, driver profiles, waterlogging spots and backups. Backups go to OpenRath/backup "
@@ -92,6 +94,29 @@ final class About {
                 for (File f : files) f.delete();
             }
         }).show();
+    }
+
+    /** The opt-in usage report: what it holds, to read and share. */
+    static void usage(final HomeActivity a) {
+        final String body = Reports.text(a.versionName());
+        new AlertDialog.Builder(a, DIALOG).setTitle("Usage report").setMessage(body)
+                .setPositiveButton("Share", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int x) {
+                        Intent s = new Intent(Intent.ACTION_SEND).setType("text/plain")
+                                .putExtra(Intent.EXTRA_SUBJECT, "OpenRath usage report").putExtra(Intent.EXTRA_TEXT, body);
+                        try {
+                            a.startActivity(Intent.createChooser(s, "Share the report"));
+                        } catch (Throwable e) {
+                            Toast.makeText(a, "No app to share with", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }).setNeutralButton("Start again", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int x) {
+                        Reports.clear();
+                    }
+                }).setNegativeButton("Close", null).show();
     }
 
     private static void text(HomeActivity a, String title, String body) {
