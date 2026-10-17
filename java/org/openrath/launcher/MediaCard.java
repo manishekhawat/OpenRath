@@ -66,7 +66,7 @@ final class MediaCard extends Cards.Card {
             pill.setCornerRadius(999);
             pill.setStroke(Math.max(1, Ui.px(1.5f)), Ui.EDGE);
             scan.setBackground(pill);
-            scan.setText("SCAN");
+            scan.setText(Hindi.t("SCAN"));
             scan.setVisibility(GONE);
             addView(scan);
             clickable(scan, new OnClickListener() {
@@ -143,7 +143,7 @@ final class MediaCard extends Cards.Card {
                     Resume.remember(pr, start ? "fm" : "");
                     boolean own = unit.fmFirst(pr);
                     if (start && !own) host.startRadioService();
-                    fmNote = start && err != null ? "FM didn't start: " + err
+                    fmNote = start && err != null ? Hindi.f("FM didn't start: %1$s", Hindi.t(err))
                             : "";
                     localOn = start;
                     audioOn = start;
@@ -217,7 +217,7 @@ final class MediaCard extends Cards.Card {
         else source = auto ? (h.online ? "app" : Player.FILES) : pref;
         String label = radio ? (Player.WEB.equals(source) ? "ONLINE RADIO" : "FM RADIO")
                 : (Player.FILES.equals(source) ? "MUSIC FILES" : "MUSIC APP");
-        head.setText(label + (auto ? "  ·  AUTO" : "") + "  ▾");
+        head.setText(Hindi.t(label) + (auto ? "  ·  " + Hindi.t("AUTO") : "") + "  ▾");
         // FM through the unit, unless a radio app shows its own player (then that app's controls)
         unitFm = radio && "app".equals(source) && unit.fm(p) && (unit.fmFirst(p) || h.radio == null);
         if (radio) scan.setVisibility(unitFm && unit.canScan(p) ? VISIBLE : GONE);
@@ -236,14 +236,14 @@ final class MediaCard extends Cards.Card {
             boolean mine = isMine();
             Player.Track t = mine ? Player.current() : null;
             if (mine && !Player.status.isEmpty() && (Player.busy || !Player.playing)) {
-                title.setText(t != null ? t.name : radio ? "Online radio" : "Music files");
-                sub.setText(Player.status);
+                title.setText(t != null ? t.name : radio ? Hindi.t("Online radio") : Hindi.t("Music files"));
+                sub.setText(Hindi.t(Player.status));
             } else if (t != null) {
                 title.setText(t.name);
-                sub.setText(Player.busy ? "Connecting…" : t.sub);
+                sub.setText(Player.busy ? Hindi.t("Connecting…") : t.sub);
             } else {
-                title.setText(radio ? "Online radio" : "Music files");
-                sub.setText(radio ? "Tap play for Indian stations" : "Tap play for music on the unit or USB");
+                title.setText(radio ? Hindi.t("Online radio") : Hindi.t("Music files"));
+                sub.setText(radio ? Hindi.t("Tap play for Indian stations") : Hindi.t("Tap play for music on the unit or USB"));
             }
             audioOn = mine && Player.playing;
         } else {
@@ -252,8 +252,8 @@ final class MediaCard extends Cards.Card {
                 title.setText(media.title);
                 sub.setText(media.subtitle == null ? "" : media.subtitle);
             } else {
-                title.setText(radio ? "FM radio" : "Music app");
-                sub.setText("Tap to open " + (radio ? "the radio" : "the music app"));
+                title.setText(radio ? Hindi.t("FM radio") : Hindi.t("Music app"));
+                sub.setText(radio ? Hindi.t("Tap to open the radio") : Hindi.t("Tap to open the music app"));
             }
             audioOn = media != null ? media.playing : localOn && kind().equals(owner);
         }

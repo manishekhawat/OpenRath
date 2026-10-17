@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hindi for the dashboard extras. Machine-drafted: a native speaker should check it (docs/TRANSLATING.md). -->
+<resources>
+    <string name="ui_extras_carrying_on_where_you_left_off" formatted="false">जहाँ छोड़ा था, वहीं से जारी</string>
+    <string name="ui_extras_switch_on_widgets_from_other_apps" formatted="false">पहले Settings > होम स्क्रीन में दूसरे ऐप्स के विजेट चालू करें</string>
+    <string name="ui_extras_no_widget_empty_box" formatted="false">कोई विजेट नहीं (खाली बॉक्स)</string>
+    <string name="ui_extras_no_apps_on_the_unit_offer" formatted="false">यूनिट पर किसी ऐप में विजेट नहीं है</string>
+    <string name="ui_extras_choose_a_widget" formatted="false">विजेट चुनें</string>
+    <string name="ui_extras_this_unit_doesn_t_let_launchers" formatted="false">यह यूनिट लॉन्चर को विजेट जोड़ने नहीं देती</string>
+    <string name="ui_extras_cancel" formatted="false">रद्द करें</string>
+    <string name="ui_extras_close" formatted="false">बंद करें</string>
+    <string name="ui_extras_ok" formatted="false">ठीक है</string>
+    <string name="ui_extras_save" formatted="false">सेव करें</string>
+    <string name="ui_extras_done" formatted="false">हो गया</string>
+    <string name="ui_extras_clear" formatted="false">मिटाएँ</string>
+    <string name="ui_extras_forget" formatted="false">भूल जाएँ</string>
+    <string name="ui_extras_delete" formatted="false">डिलीट करें</string>
+    <string name="ui_extras_restore" formatted="false">रिस्टोर करें</string>
+    <string name="ui_extras_keep" formatted="false">रहने दें</string>
+    <string name="ui_extras_adapter_n" formatted="false">एडैप्टर: %1$s</string>
+    <string name="ui_extras_choose" formatted="false">चुनें…</string>
+    <string name="ui_extras_clear_fault_codes" formatted="false">फ़ॉल्ट कोड मिटाएँ…</string>
+    <string name="ui_extras_status_n" formatted="false">स्थिति: %1$s</string>
+    <string name="ui_extras_engine_obd_ii" formatted="false">इंजन (OBD-II)</string>
+    <string name="ui_extras_no_paired_bluetooth_devices" formatted="false">कोई पेयर किया Bluetooth डिवाइस नहीं</string>
+    <string name="ui_extras_plug_the_elm327_adapter_into_the" formatted="false">ELM327 एडैप्टर को स्टीयरिंग के नीचे वाले OBD सॉकेट में लगाएँ, इग्निशन चालू करें, और यूनिट की Bluetooth सेटिंग्स में पेयर करें (PIN आमतौर पर 1234 या 0000 होता है)। फिर यहाँ वापस आएँ।</string>
+    <string name="ui_extras_bluetooth_settings" formatted="false">Bluetooth सेटिंग्स</string>
+    <string name="ui_extras_which_one_is_the_obd_ii" formatted="false">इनमें OBD-II एडैप्टर कौन सा है?</string>
+    <string name="ui_extras_connecting_to_n_keep_the_ignition" formatted="false">%1$s से जुड़ रहा है; इग्निशन चालू रखें</string>
+    <string name="ui_extras_not_connected_to_the_adapter_n" formatted="false">एडैप्टर से नहीं जुड़ा: %1$s</string>
+    <string name="ui_extras_asking_the_engine_computer" formatted="false">इंजन कंप्यूटर से पूछ रहे हैं…</string>
+    <string name="ui_extras_no_answer_from_the_engine_computer" formatted="false">इंजन कंप्यूटर से कोई जवाब नहीं</string>
+    <string name="ui_extras_no_fault_codes" formatted="false">कोई फ़ॉल्ट कोड नहीं</string>
+    <string name="ui_extras_fault_codes" formatted="false">फ़ॉल्ट कोड</string>
+    <string name="ui_extras_the_engine_computer_reports_nothing_stored" formatted="false">इंजन कंप्यूटर में कुछ भी दर्ज नहीं है।</string>
+    <string name="ui_extras_a_code_points_at_where_to" formatted="false">\n\nकोड बताता है कि कहाँ देखना है; असली वजह मैकेनिक पक्का करेगा।</string>
+    <string name="ui_extras_clear_the_fault_codes" formatted="false">फ़ॉल्ट कोड मिटाएँ?</string>
+    <string name="ui_extras_this_also_turns_off_the_check" formatted="false">इससे चेक-इंजन लाइट भी तब तक बंद हो जाएगी जब तक खराबी फिर न दिखे। कोड तभी मिटाएँ जब खराबी ठीक हो चुकी हो। इंजन बंद और इग्निशन चालू रखकर करें।</string>
+    <string name="ui_extras_cleared" formatted="false">मिटा दिया</string>
+    <string name="ui_extras_find_my_tyre_sensors" formatted="false">मेरे टायर सेंसर ढूँढें</string>
+    <string name="ui_extras_units_n" formatted="false">यूनिट: %1$s</string>
+    <string name="ui_extras_warn_below_n_psi" formatted="false">%1$s psi से कम पर चेतावनी</string>
+    <string name="ui_extras_tyre_pressure" formatted="false">टायर प्रेशर</string>
+    <string name="ui_extras_listening_sensors_send_every_few_seconds" formatted="false">सुन रहे हैं… गाड़ी चलते समय सेंसर हर कुछ सेकंड में सिग्नल भेजते हैं, खड़ी गाड़ी में कम। धीरे चलाने या थोड़ी हवा निकालने से वे जाग जाते हैं।</string>
+    <string name="ui_extras_finding_tyre_sensors" formatted="false">टायर सेंसर ढूँढ रहे हैं</string>
+    <string name="ui_extras_assign_wheels" formatted="false">पहिए तय करें</string>
+    <string name="ui_extras_no_sensors_heard_yet" formatted="false">अभी तक कोई सेंसर नहीं मिला</string>
+    <string name="ui_extras_all_four_sensors_placed" formatted="false">चारों सेंसर लग गए</string>
+    <string name="ui_extras_tap_a_sensor_to_choose_its" formatted="false">सेंसर पर टैप करके उसका पहिया चुनें</string>
+    <string name="ui_extras_front_left" formatted="false">आगे बाएँ</string>
+    <string name="ui_extras_front_right" formatted="false">आगे दाएँ</string>
+    <string name="ui_extras_rear_left" formatted="false">पीछे बाएँ</string>
+    <string name="ui_extras_rear_right" formatted="false">पीछे दाएँ</string>
+    <string name="ui_extras_enter_a_number" formatted="false">कोई नंबर डालें</string>
+    <string name="ui_extras_petrol_price_a_litre_empty_use" formatted="false">पेट्रोल का दाम, ₹ प्रति लीटर (खाली: आपकी फ़िल-अप से)</string>
+    <string name="ui_extras_cng_cylinder_kg" formatted="false">CNG सिलेंडर, kg</string>
+    <string name="ui_extras_fuel_tank_litres" formatted="false">फ़्यूल टैंक, लीटर</string>
+    <string name="ui_extras_minutes_before_parked_music_pauses" formatted="false">खड़ी गाड़ी में कितने मिनट बाद म्यूज़िक रुके</string>
+    <string name="ui_extras_days_between_car_washes" formatted="false">कार धुलाई के बीच कितने दिन</string>
+    <string name="ui_extras_pin_saved" formatted="false">PIN सेव हो गया</string>
+    <string name="ui_extras_radio_fm_91_1_radio_chalao" formatted="false">रेडियो: \"FM 91.1\", \"radio chalao\", \"रेडियो 98.3\"\nकॉल: \"call Mom\", \"papa ko call karo\", \"मम्मी को फोन लगाओ\" (आपके फ़ेवरेट से)\nम्यूज़िक: \"play music\", \"gaana chalao\", \"next\", \"अगला\", \"pause\", \"रोको\"\nआवाज़: \"volume up\", \"awaaz kam karo\", \"आवाज़ बढ़ाओ\"\nजगहें: \"take me home\", \"घर ले चलो\", \"office\", \"petrol pump\", \"dhaba\", \"navigate to India Gate\"\n\nबाकी कुछ भी बोलें तो मैप पर खोजा जाएगा।</string>
+    <string name="ui_extras_noted_the_next_reminder_is_in" formatted="false">नोट कर लिया। अगली याद %1$s दिन में।</string>
+    <string name="ui_extras_forget_all_learnt_speed_breakers" formatted="false">सीखे हुए सारे स्पीड ब्रेकर भूल जाएँ?</string>
+    <string name="ui_extras_forget_all_learnt_waiting_times" formatted="false">सीखे हुए सारे रुकने के समय भूल जाएँ?</string>
+    <string name="ui_extras_holidays_with_heavy_traffic" formatted="false">भारी ट्रैफ़िक वाली छुट्टियाँ</string>
+    <string name="ui_extras_the_warning_comes_once_a_day" formatted="false">\n\nचेतावनी दिन में एक बार आती है जब आप हाईवे स्पीड पर पहुँचते हैं, एक दिन पहले से (दिवाली के लिए दो दिन) और लंबे वीकेंड पर।</string>
+    <string name="ui_extras_clear_all_n_waterlogging_spots" formatted="false">पानी भरने वाली सभी %1$s जगहें मिटाएँ?</string>
+    <string name="ui_extras_saving_the_last_two_minutes" formatted="false">पिछले दो मिनट सेव हो रहे हैं</string>
+    <string name="ui_extras_put_the_map_on_the_dashboard" formatted="false">पहले मैप को डैशबोर्ड पर लगाएँ</string>
+    <string name="ui_extras_service_centre_s_phone_number" formatted="false">सर्विस सेंटर का फ़ोन नंबर</string>
+    <string name="ui_extras_your_equalizer" formatted="false">आपका इक्वलाइज़र</string>
+    <string name="ui_extras_your_equalizer_2" formatted="false">आपका इक्वलाइज़र</string>
+    <string name="ui_extras_n_sound_equalizer" formatted="false">%1$s साउंड: इक्वलाइज़र</string>
+    <string name="ui_extras_n_sound_volume_steps_5_to" formatted="false">%1$s साउंड: आवाज़ के स्टेप (-5 से 5)</string>
+    <string name="ui_extras_stop_completely_then_accelerate_the_time" formatted="false">पूरी तरह रुकें, फिर रफ़्तार बढ़ाएँ। 100 km/h पार करते ही समय बोला जाएगा। यह GPS (या जुड़ा हो तो OBD-II स्पीड) से चलता है, इसलिए लगभग आधे सेकंड तक सही है। सिर्फ़ सुरक्षित, खाली सड़क पर करें।</string>
+    <string name="ui_extras_forget_the_best_time" formatted="false">सबसे अच्छा समय भूल जाएँ</string>
+    <string name="ui_extras_delete_every_recorded_route_on_the" formatted="false">यूनिट पर रिकॉर्ड हुए सारे रास्ते डिलीट करें?</string>
+    <string name="ui_extras_saved_n" formatted="false">सेव हुआ: %1$s</string>
+    <string name="ui_extras_couldn_t_back_up_n" formatted="false">बैकअप नहीं हो सका: %1$s</string>
+    <string name="ui_extras_press_the_steering_wheel_button_now" formatted="false">अब स्टीयरिंग का बटन दबाएँ</string>
+    <string name="ui_extras_press_and_release_it_once_waiting" formatted="false">एक बार दबाकर छोड़ें। 15 सेकंड तक इंतज़ार…</string>
+    <string name="ui_extras_nothing_arrived_this_button_may_be" formatted="false">कुछ नहीं आया। हो सकता है यूनिट खुद यह बटन किसी ऐप तक पहुँचने से पहले संभाल लेती हो; कोई और बटन आज़माएँ, या \"बटन दूसरे ऐप्स में भी काम करें\" चालू करें।</string>
+    <string name="ui_extras_forget_this_button" formatted="false">यह बटन भूल जाएँ</string>
+    <string name="ui_extras_what_should_n_do" formatted="false">%1$s क्या करे?</string>
+    <string name="ui_extras_nothing_extra" formatted="false">कुछ और नहीं</string>
+    <string name="ui_extras_holding_n_down_should" formatted="false">%1$s दबाए रखने पर</string>
+    <string name="ui_extras_show_messages_from" formatted="false">इनके मैसेज दिखाएँ</string>
+    <string name="ui_extras_60_hz_bass" formatted="false">60 Hz (बेस)</string>
+    <string name="ui_extras_910_hz_voice" formatted="false">910 Hz (आवाज़)</string>
+    <string name="ui_extras_14_khz_treble" formatted="false">14 kHz (ट्रेबल)</string>
+    <string name="ui_extras_custom" formatted="false">कस्टम</string>
+    <string name="ui_extras_flat" formatted="false">फ़्लैट</string>
+    <string name="ui_extras_preset_n_tap_to_change" formatted="false">"प्रीसेट: %1$s  (बदलने के लिए टैप करें)"</string>
+    <string name="ui_extras_bass_boost_n_10_tap_to" formatted="false">"बेस बूस्ट: %1$s / 10  (बदलने के लिए टैप करें)"</string>
+    <string name="ui_extras_turn_off" formatted="false">बंद करें</string>
+    <string name="ui_extras_no_routes_recorded_yet" formatted="false">अभी कोई रास्ता रिकॉर्ड नहीं हुआ</string>
+    <string name="ui_extras_route_recording_is_off_in_settings" formatted="false">Settings > ड्राइविंग में रास्ता रिकॉर्डिंग बंद है</string>
+    <string name="ui_extras_all_n_days" formatted="false">सभी %1$s दिन</string>
+    <string name="ui_extras_export_which_day" formatted="false">कौन सा दिन एक्सपोर्ट करें?</string>
+    <string name="ui_extras_saved_n_files_in_m" formatted="false">%1$s फ़ाइलें %2$s में सेव हुईं</string>
+    <string name="ui_extras_couldn_t_export_n" formatted="false">एक्सपोर्ट नहीं हो सका: %1$s</string>
+    <string name="ui_extras_no_backups_in_openrath_backup_or" formatted="false">OpenRath/backup या Download में कोई बैकअप नहीं</string>
+    <string name="ui_extras_restore_which_backup" formatted="false">कौन सा बैकअप रिस्टोर करें?</string>
+    <string name="ui_extras_replace_every_setting_the_fuel_log" formatted="false">सारी सेटिंग्स, फ़्यूल लॉग और ट्रिप हिस्ट्री इस बैकअप से बदल दें? अभी वाले की कॉपी पहले सेव हो जाएगी।</string>
+    <string name="ui_extras_restored_restarting" formatted="false">रिस्टोर हो गया; फिर से शुरू हो रहा है</string>
+    <string name="ui_extras_couldn_t_restore_n" formatted="false">रिस्टोर नहीं हो सका: %1$s</string>
+    <string name="ui_extras_this_unit_has_no_accessibility_settings" formatted="false">इस यूनिट में एक्सेसिबिलिटी सेटिंग्स स्क्रीन नहीं है</string>
+    <string name="ui_extras_this_unit_has_no_notification_access" formatted="false">इस यूनिट में नोटिफ़िकेशन एक्सेस स्क्रीन नहीं है</string>
+    <string name="ui_extras_n_swipe_sideways" formatted="false">"%1$s  (साइड में स्वाइप करें)"</string>
+    <string name="ui_extras_n_min_idle_while_parked" formatted="false">खड़ी गाड़ी में %1$s मिनट खाली रहने पर</string>
+    <string name="ui_extras_n_found_last_time" formatted="false">पिछली बार %1$s मिले</string>
+    <string name="ui_extras_n_c" formatted="false">%1$s °C</string>
+    <string name="ui_extras_n_apps" formatted="false">%1$s ऐप्स</string>
+    <string name="ui_extras_n_drives_recorded" formatted="false">%1$s ड्राइव रिकॉर्ड हुईं</string>
+    <string name="ui_extras_n_hours_of_driving" formatted="false">%1$s घंटे ड्राइविंग के बाद</string>
+    <string name="ui_extras_n_of_full_volume" formatted="false">पूरी आवाज़ का %1$s%%</string>
+    <string name="ui_extras_n_litres" formatted="false">%1$s लीटर</string>
+    <string name="ui_extras_n_km_of_driving" formatted="false">%1$s km ड्राइविंग बचने पर</string>
+    <string name="ui_extras_parking_ends_at_n" formatted="false">पार्किंग %1$s पर खत्म</string>
+    <string name="ui_extras_n_minutes_with_the_engine_off" formatted="false">इंजन बंद होने के %1$s मिनट बाद</string>
+    <string name="ui_extras_n_aqi_m" formatted="false">%1$s, AQI %2$s</string>
+    <string name="ui_extras_last_wash_n_days_ago" formatted="false">आखिरी धुलाई %1$s दिन पहले</string>
+    <string name="ui_extras_n_days" formatted="false">%1$s दिन</string>
+    <string name="ui_extras_n_m_places_seen_tap_to" formatted="false">%1$s (%2$s जगहें देखीं); भूलने के लिए टैप करें</string>
+    <string name="ui_extras_n_signals_and_toll_plazas_tap" formatted="false">%1$s सिग्नल और टोल प्लाज़ा; भूलने के लिए टैप करें</string>
+    <string name="ui_extras_n_or_say_hotspot" formatted="false">\"%1$s\"; या बोलें \"hotspot\"</string>
+    <string name="ui_extras_keep_below_n_km_h" formatted="false">%1$s km/h से नीचे रखें</string>
+    <string name="ui_extras_accident_help_is_off" formatted="false">" (एक्सीडेंट मदद बंद है)"</string>
+    <string name="ui_extras_n_spot_tap_to_clear" formatted="false">%1$s जगह; मिटाने के लिए टैप करें</string>
+    <string name="ui_extras_n_spots_tap_to_clear_all" formatted="false">%1$s जगहें; सब मिटाने के लिए टैप करें</string>
+    <string name="ui_extras_camera_n_of_m" formatted="false">कैमरा %1$s / %2$s</string>
+    <string name="ui_extras_n_gb_oldest_clips_deleted_first" formatted="false">%1$s GB, सबसे पुराने क्लिप पहले डिलीट</string>
+    <string name="ui_extras_n_saved_in_openrath_dashcam_saved" formatted="false">%1$s OpenRath/dashcam/saved में सेव</string>
+    <string name="ui_extras_n_of_4_added_say_documents" formatted="false">4 में से %1$s जोड़े; दिखाने के लिए बोलें \"documents\"</string>
+    <string name="ui_extras_no_phone_number" formatted="false">" (फ़ोन नंबर नहीं)"</string>
+    <string name="ui_extras_profiles_off" formatted="false">"(प्रोफ़ाइल बंद) "</string>
+    <string name="ui_extras_n_volume_m" formatted="false">%1$s, आवाज़ %2$s</string>
+    <string name="ui_extras_now" formatted="false">"  · अभी"</string>
+    <string name="ui_extras_from_n_to_m_music_at" formatted="false">%1$s से %2$s तक, म्यूज़िक %3$s%% पर</string>
+    <string name="ui_extras_last_n_s" formatted="false">पिछला %1$s s</string>
+    <string name="ui_extras_best_n_s" formatted="false">"  ·  सबसे अच्छा %1$s s"</string>
+    <string name="ui_extras_n_days_recorded" formatted="false">%1$s दिन रिकॉर्ड हुए</string>
+    <string name="ui_extras_n_found" formatted="false">%1$s मिले</string>
+    <string name="ui_extras_on_last_n" formatted="false">चालू; पिछला %1$s</string>
+    <string name="ui_extras_n_saved" formatted="false">%1$s सेव</string>
+    <string name="ui_extras_music_keeps_playing_tap_to_wake" formatted="false">म्यूज़िक चलता रहेगा; जगाने के लिए टैप करें</string>
+    <string name="ui_extras_after_a_repair" formatted="false">मरम्मत के बाद</string>
+    <string name="ui_extras_press_it_when_asked_then_choose" formatted="false">कहने पर दबाएँ, फिर चुनें कि यह क्या करे</string>
+    <string name="ui_extras_nothing_extra_tap_to_choose" formatted="false">कुछ और नहीं (चुनने के लिए टैप करें)</string>
+    <string name="ui_extras_off_turn_on_openrath_in_accessibility" formatted="false">बंद: Accessibility में OpenRath चालू करें</string>
+    <string name="ui_extras_who_it_s_from" formatted="false">किसका है</string>
+    <string name="ui_extras_who_it_s_from_and_the" formatted="false">किसका है और मैसेज</string>
+    <string name="ui_extras_allowed" formatted="false">अनुमति है</string>
+    <string name="ui_extras_needed_tap_to_allow" formatted="false">ज़रूरी: अनुमति देने के लिए टैप करें</string>
+    <string name="ui_extras_dhabas_cafes_and_petrol_pumps_ahead" formatted="false">आगे के ढाबे, कैफ़े और पेट्रोल पंप</string>
+    <string name="ui_extras_on_settings_need_the_pin" formatted="false">चालू: Settings के लिए PIN चाहिए</string>
+    <string name="ui_extras_limits_volume_and_speed_locks_settings" formatted="false">आवाज़ और स्पीड सीमित, Settings लॉक</string>
+    <string name="ui_extras_hindi_english_words_understood_too" formatted="false">हिंदी (अंग्रेज़ी शब्द भी समझता है)</string>
+    <string name="ui_extras_english_hindi_words_understood_too" formatted="false">अंग्रेज़ी (हिंदी शब्द भी समझता है)</string>
+    <string name="ui_extras_or_tap_the_mic_on_the" formatted="false">या मैप पर माइक टैप करें, या स्टीयरिंग का बटन</string>
+    <string name="ui_extras_off_settings_features" formatted="false">बंद (Settings > फ़ीचर)</string>
+    <string name="ui_extras_on_drag_it_anywhere_over_maps" formatted="false">चालू; मैप और म्यूज़िक के ऊपर कहीं भी खींचें</string>
+    <string name="ui_extras_needs_permission_tap_to_allow" formatted="false">अनुमति चाहिए; देने के लिए टैप करें</string>
+    <string name="ui_extras_radio_calls_music_volume_places" formatted="false">रेडियो, कॉल, म्यूज़िक, आवाज़, जगहें</string>
+    <string name="ui_extras_for_15_seconds_tap_the_black" formatted="false">15 सेकंड के लिए; खत्म करने के लिए काले हिस्से पर टैप करें</string>
+    <string name="ui_extras_off_switch_above" formatted="false">बंद (ऊपर वाला स्विच)</string>
+    <string name="ui_extras_the_quickest_time_to_leave_from" formatted="false">आपकी ड्राइव से, निकलने का सबसे तेज़ समय</string>
+    <string name="ui_extras_no_spot_saved_yet" formatted="false">अभी कोई जगह सेव नहीं</string>
+    <string name="ui_extras_shows_a_qr_code" formatted="false">QR कोड दिखाता है</string>
+    <string name="ui_extras_a_qr_code_with_where_you" formatted="false">आपकी जगह और रास्ते वाला QR कोड; या बोलें \"share my trip\"</string>
+    <string name="ui_extras_a_upi_qr_code_for_each" formatted="false">हर हिस्से के लिए UPI QR कोड; या बोलें \"split the cost\"</string>
+    <string name="ui_extras_not_set_asked_the_first_time" formatted="false">सेट नहीं: पहली बार बाँटने पर पूछा जाएगा</string>
+    <string name="ui_extras_a_reminder_on_your_phone_or" formatted="false">आपके फ़ोन पर रिमाइंडर; या बोलें \"parking timer\"</string>
+    <string name="ui_extras_not_known_yet" formatted="false">अभी पता नहीं</string>
+    <string name="ui_extras_shown_only" formatted="false">सिर्फ़ दिखाया जाता है</string>
+    <string name="ui_extras_spoken_and_shown_once_a_day" formatted="false">बोला और दिखाया जाता है, दिन में एक बार</string>
+    <string name="ui_extras_tap_after_a_wash" formatted="false">धुलाई के बाद टैप करें</string>
+    <string name="ui_extras_km_time_petrol_tolls_score_or" formatted="false">km, समय, पेट्रोल, टोल, स्कोर; या बोलें \"weekly report\"</string>
+    <string name="ui_extras_tap_to_see_it" formatted="false">देखने के लिए टैप करें</string>
+    <string name="ui_extras_needs_a_camera" formatted="false">कैमरा चाहिए</string>
+    <string name="ui_extras_none_yet" formatted="false">अभी कोई नहीं</string>
+    <string name="ui_extras_a_code_passengers_scan_to_join" formatted="false">सवारी इसे स्कैन करके हॉटस्पॉट से जुड़ें</string>
+    <string name="ui_extras_on_switched_on_by_hand" formatted="false">चालू (हाथ से चालू किया)</string>
+    <string name="ui_extras_on_the_weather_says_fog" formatted="false">चालू: मौसम में कोहरा है</string>
+    <string name="ui_extras_off_comes_on_by_itself_in" formatted="false">बंद; कोहरे में अपने आप चालू, या बोलें \"fog mode\"</string>
+    <string name="ui_extras_not_set_accident_help_calls_112" formatted="false">सेट नहीं (एक्सीडेंट मदद तभी 112 पर कॉल करेगी जब आप टैप करें)</string>
+    <string name="ui_extras_shows_the_countdown_doesn_t_call" formatted="false">काउंटडाउन दिखाता है; कॉल नहीं करता</string>
+    <string name="ui_extras_or_say_waterlogging_or_set_a" formatted="false">या बोलें \"waterlogging\", या स्टीयरिंग का बटन सेट करें</string>
+    <string name="ui_extras_none_found" formatted="false">कोई नहीं मिला</string>
+    <string name="ui_extras_nearest_workshops_with_a_call_button" formatted="false">पास की वर्कशॉप, कॉल बटन के साथ</string>
+    <string name="ui_extras_not_set_tap_mine_next_to" formatted="false">सेट नहीं: सर्विस सेंटर लिस्ट में किसी के आगे Mine टैप करें</string>
+    <string name="ui_extras_spot_the_colour_number_plates_how" formatted="false">रंग ढूँढो, नंबर प्लेट, कितनी दूर; बोलें \"games\"</string>
+    <string name="ui_extras_none_chosen" formatted="false">कोई नहीं चुना</string>
+    <string name="ui_extras_no_drivers_yet_tap_to_add" formatted="false">अभी कोई ड्राइवर नहीं: जोड़ने के लिए टैप करें</string>
+    <string name="ui_extras_gently_a_step_every_30_km" formatted="false">हल्का (हर 30 km/h पर एक स्टेप)</string>
+    <string name="ui_extras_medium_every_20_km_h" formatted="false">मध्यम (हर 20 km/h पर)</string>
+    <string name="ui_extras_strongly_every_15_km_h" formatted="false">ज़्यादा (हर 15 km/h पर)</string>
+    <string name="ui_extras_no_full_run_yet" formatted="false">अभी कोई पूरा रन नहीं</string>
+    <string name="ui_extras_to_openrath_backup" formatted="false">OpenRath/backup में</string>
+    <string name="ui_extras_on_none_yet" formatted="false">चालू; अभी कोई नहीं</string>
+    <string name="ui_extras_free_and_open_source_gpl_3" formatted="false">मुफ़्त और ओपन सोर्स (GPL-3.0)</string>
+    <string name="ui_extras_what_leaves_the_unit_and_what" formatted="false">क्या यूनिट से बाहर जाता है, और क्या नहीं</string>
+    <string name="ui_extras_see_it_and_share_it" formatted="false">देखें और शेयर करें</string>
+    <string name="ui_extras_also_sent_daily_to_your_organisation" formatted="false">रोज़ आपकी संस्था को भी भेजी जाती है</string>
+    <string name="ui_extras_choose_the_pin" formatted="false">PIN चुनें</string>
+    <string name="ui_extras_change_the_pin" formatted="false">PIN बदलें</string>
+    <string name="ui_extras_usage_report" formatted="false">इस्तेमाल रिपोर्ट</string>
+    <string name="ui_extras_set_by_your_organisation" formatted="false">आपकी संस्था ने सेट किया</string>
+    <string name="ui_extras_the_radio_service_isn_t_connected" formatted="false">रेडियो सर्विस जुड़ी नहीं है</string>
+    <string name="ui_extras_scan_for_stations" formatted="false">स्टेशन स्कैन करें</string>
+    <string name="ui_extras_scan_again" formatted="false">फिर से स्कैन करें</string>
+    <string name="ui_extras_playing" formatted="false">"   (चल रहा है)"</string>
+    <string name="ui_extras_fm_stations" formatted="false">FM स्टेशन</string>
+    <string name="ui_extras_n_fm_stations" formatted="false">%1$s FM स्टेशन</string>
+    <string name="ui_extras_scanning_the_fm_band" formatted="false">FM बैंड स्कैन हो रहा है…</string>
+    <string name="ui_extras_scanning_for_fm_stations" formatted="false">FM स्टेशन स्कैन हो रहे हैं…</string>
+    <string name="ui_extras_scanning_for_fm_stations_n_found" formatted="false">FM स्टेशन स्कैन हो रहे हैं…\n%1$s मिले, अभी %2$s पर</string>
+    <string name="ui_extras_no_stations_found_open_the_stock" formatted="false">कोई स्टेशन नहीं मिला। स्टॉक रेडियो एक बार खोलकर उसका स्कैन (या AS) चलाएँ, फिर दोबारा कोशिश करें।</string>
+    <string name="ui_extras_n_stations_found_tap_scan_to" formatted="false">%1$s स्टेशन मिले। चुनने के लिए SCAN टैप करें।</string>
+    <string name="ui_extras_couldn_t_reach_n_fm" formatted="false">%1$s FM तक नहीं पहुँच सके</string>
+    <string name="ui_extras_dashcam_clip_saved" formatted="false">डैशकैम क्लिप सेव हो गई</string>
+    <string name="ui_extras_fm_radio" formatted="false">FM रेडियो</string>
+    <string name="ui_extras_tap_play_to_listen" formatted="false">सुनने के लिए प्ले टैप करें</string>
+    <string name="ui_extras_tap_play_to_start_the_radio" formatted="false">रेडियो शुरू करने के लिए प्ले टैप करें</string>
+    <string name="ui_extras_tap_play_to_switch_the_tuner" formatted="false">ट्यूनर चालू करने के लिए प्ले टैप करें</string>
+    <string name="ui_extras_playing_2" formatted="false">चल रहा है</string>
+    <string name="ui_extras_no_number" formatted="false">कोई नंबर नहीं</string>
+    <string name="ui_extras_the_stereo_has_no_phone_app" formatted="false">स्टीरियो में कॉल के लिए फ़ोन ऐप नहीं है</string>
+    <string name="ui_extras_this_stereo_s_radio_app_is" formatted="false">इस स्टीरियो का रेडियो ऐप उसकी अपनी स्क्रीन से चलता है</string>
+    <string name="ui_extras_topway_s_phone_service_isn_t" formatted="false">Topway की फ़ोन सर्विस जुड़ी नहीं है</string>
+    <string name="ui_extras_no_phone_connected" formatted="false">कोई फ़ोन जुड़ा नहीं</string>
+    <string name="ui_extras_the_stereo_s_phone_service_didn" formatted="false">स्टीरियो की फ़ोन सर्विस ने जवाब नहीं दिया</string>
+    <string name="ui_extras_the_stereo_s_radio_service_isn" formatted="false">स्टीरियो की रेडियो सर्विस जुड़ी नहीं है</string>
+    <string name="ui_extras_the_stereo_s_radio_service_didn" formatted="false">स्टीरियो की रेडियो सर्विस ने जवाब नहीं दिया</string>
+    <string name="ui_extras_the_stereo_s_radio_didn_t" formatted="false">स्टीरियो के रेडियो ने जवाब नहीं दिया</string>
+    <string name="ui_extras_can_t_create_n_allow_storage" formatted="false">%1$s नहीं बना सके (स्टोरेज की अनुमति दें?)</string>
+    <string name="ui_extras_not_an_openrath_backup" formatted="false">यह OpenRath बैकअप नहीं है</string>
+    <string name="ui_extras_play_pause" formatted="false">प्ले / पॉज़</string>
+    <string name="ui_extras_next_track_or_station" formatted="false">अगला गाना या स्टेशन</string>
+    <string name="ui_extras_previous_track_or_station" formatted="false">पिछला गाना या स्टेशन</string>
+    <string name="ui_extras_mute" formatted="false">म्यूट</string>
+    <string name="ui_extras_volume_up" formatted="false">आवाज़ बढ़ाएँ</string>
+    <string name="ui_extras_volume_down" formatted="false">आवाज़ घटाएँ</string>
+    <string name="ui_extras_answer_call" formatted="false">कॉल उठाएँ</string>
+    <string name="ui_extras_end_call" formatted="false">कॉल काटें</string>
+    <string name="ui_extras_voice_command" formatted="false">वॉइस कमांड</string>
+    <string name="ui_extras_open_navigation" formatted="false">नेविगेशन खोलें</string>
+    <string name="ui_extras_open_the_radio" formatted="false">रेडियो खोलें</string>
+    <string name="ui_extras_open_music" formatted="false">म्यूज़िक खोलें</string>
+    <string name="ui_extras_show_the_dashboard" formatted="false">डैशबोर्ड दिखाएँ</string>
+    <string name="ui_extras_screen_off_on" formatted="false">स्क्रीन बंद / चालू</string>
+    <string name="ui_extras_next_dashboard_page" formatted="false">डैशबोर्ड का अगला पेज</string>
+    <string name="ui_extras_save_the_dashcam_clip" formatted="false">डैशकैम क्लिप सेव करें</string>
+    <string name="ui_extras_mark_a_waterlogging_spot" formatted="false">पानी भरने की जगह मार्क करें</string>
+    <string name="ui_extras_next_driver" formatted="false">अगला ड्राइवर</string>
+    <string name="ui_extras_show_the_car_documents" formatted="false">गाड़ी के कागज़ दिखाएँ</string>
+    <string name="ui_extras_fog_mode_on_off" formatted="false">फ़ॉग मोड चालू / बंद</string>
+    <string name="ui_extras_share_the_trip_qr_code" formatted="false">ट्रिप शेयर करें (QR कोड)</string>
+    <string name="ui_extras_split_the_cost_upi_qr" formatted="false">खर्च बाँटें (UPI QR)</string>
+    <string name="ui_extras_guest_wi_fi_code" formatted="false">मेहमान Wi-Fi कोड</string>
+    <string name="ui_extras_read_the_news_aloud" formatted="false">खबरें पढ़कर सुनाएँ</string>
+    <string name="ui_extras_cab_menu" formatted="false">कैब मेन्यू</string>
+    <string name="ui_extras_fare_meter_start_stop" formatted="false">किराया मीटर शुरू / बंद</string>
+    <string name="ui_extras_cab_sos" formatted="false">कैब SOS</string>
+    <string name="ui_extras_car_and_speed" formatted="false">गाड़ी और स्पीड</string>
+    <string name="ui_extras_clock_and_date" formatted="false">घड़ी और तारीख</string>
+    <string name="ui_extras_map" formatted="false">मैप</string>
+    <string name="ui_extras_radio" formatted="false">रेडियो</string>
+    <string name="ui_extras_music" formatted="false">म्यूज़िक</string>
+    <string name="ui_extras_trip_computer" formatted="false">ट्रिप कंप्यूटर</string>
+    <string name="ui_extras_news_top_5_headlines" formatted="false">खबरें (टॉप 5 सुर्खियाँ)</string>
+    <string name="ui_extras_cab_driver_earnings_meter" formatted="false">कैब ड्राइवर (कमाई, मीटर)</string>
+    <string name="ui_extras_performance_fps_cpu_temperature" formatted="false">परफ़ॉर्मेंस (FPS, CPU, तापमान)</string>
+    <string name="ui_extras_widget_from_another_app" formatted="false">दूसरे ऐप का विजेट</string>
+    <string name="ui_extras_second_widget" formatted="false">दूसरा विजेट</string>
+    <string name="ui_extras_navigation" formatted="false">नेविगेशन</string>
+    <string name="ui_extras_bluetooth" formatted="false">Bluetooth</string>
+    <string name="ui_extras_all_apps" formatted="false">सभी ऐप्स</string>
+    <string-array name="ui_extras">
+        <item>@string/ui_extras_carrying_on_where_you_left_off</item>
+        <item>@string/ui_extras_switch_on_widgets_from_other_apps</item>
+        <item>@string/ui_extras_no_widget_empty_box</item>
+        <item>@string/ui_extras_no_apps_on_the_unit_offer</item>
+        <item>@string/ui_extras_choose_a_widget</item>
+        <item>@string/ui_extras_this_unit_doesn_t_let_launchers</item>
+        <item>@string/ui_extras_cancel</item>
+        <item>@string/ui_extras_close</item>
+        <item>@string/ui_extras_ok</item>
+        <item>@string/ui_extras_save</item>
+        <item>@string/ui_extras_done</item>
+        <item>@string/ui_extras_clear</item>
+        <item>@string/ui_extras_forget</item>
+        <item>@string/ui_extras_delete</item>
+        <item>@string/ui_extras_restore</item>
+        <item>@string/ui_extras_keep</item>
+        <item>@string/ui_extras_adapter_n</item>
+        <item>@string/ui_extras_choose</item>
+        <item>@string/ui_extras_clear_fault_codes</item>
+        <item>@string/ui_extras_status_n</item>
+        <item>@string/ui_extras_engine_obd_ii</item>
+        <item>@string/ui_extras_no_paired_bluetooth_devices</item>
+        <item>@string/ui_extras_plug_the_elm327_adapter_into_the</item>
+        <item>@string/ui_extras_bluetooth_settings</item>
+        <item>@string/ui_extras_which_one_is_the_obd_ii</item>
+        <item>@string/ui_extras_connecting_to_n_keep_the_ignition</item>
+        <item>@string/ui_extras_not_connected_to_the_adapter_n</item>
+        <item>@string/ui_extras_asking_the_engine_computer</item>
+        <item>@string/ui_extras_no_answer_from_the_engine_computer</item>
+        <item>@string/ui_extras_no_fault_codes</item>
+        <item>@string/ui_extras_fault_codes</item>
+        <item>@string/ui_extras_the_engine_computer_reports_nothing_stored</item>
+        <item>@string/ui_extras_a_code_points_at_where_to</item>
+        <item>@string/ui_extras_clear_the_fault_codes</item>
+        <item>@string/ui_extras_this_also_turns_off_the_check</item>
+        <item>@string/ui_extras_cleared</item>
+        <item>@string/ui_extras_find_my_tyre_sensors</item>
+        <item>@string/ui_extras_units_n</item>
+        <item>@string/ui_extras_warn_below_n_psi</item>
+        <item>@string/ui_extras_tyre_pressure</item>
+        <item>@string/ui_extras_listening_sensors_send_every_few_seconds</item>
+        <item>@string/ui_extras_finding_tyre_sensors</item>
+        <item>@string/ui_extras_assign_wheels</item>
+        <item>@string/ui_extras_no_sensors_heard_yet</item>
+        <item>@string/ui_extras_all_four_sensors_placed</item>
+        <item>@string/ui_extras_tap_a_sensor_to_choose_its</item>
+        <item>@string/ui_extras_front_left</item>
+        <item>@string/ui_extras_front_right</item>
+        <item>@string/ui_extras_rear_left</item>
+        <item>@string/ui_extras_rear_right</item>
+        <item>@string/ui_extras_enter_a_number</item>
+        <item>@string/ui_extras_petrol_price_a_litre_empty_use</item>
+        <item>@string/ui_extras_cng_cylinder_kg</item>
+        <item>@string/ui_extras_fuel_tank_litres</item>
+        <item>@string/ui_extras_minutes_before_parked_music_pauses</item>
+        <item>@string/ui_extras_days_between_car_washes</item>
+        <item>@string/ui_extras_pin_saved</item>
+        <item>@string/ui_extras_radio_fm_91_1_radio_chalao</item>
+        <item>@string/ui_extras_noted_the_next_reminder_is_in</item>
+        <item>@string/ui_extras_forget_all_learnt_speed_breakers</item>
+        <item>@string/ui_extras_forget_all_learnt_waiting_times</item>
+        <item>@string/ui_extras_holidays_with_heavy_traffic</item>
+        <item>@string/ui_extras_the_warning_comes_once_a_day</item>
+        <item>@string/ui_extras_clear_all_n_waterlogging_spots</item>
+        <item>@string/ui_extras_saving_the_last_two_minutes</item>
+        <item>@string/ui_extras_put_the_map_on_the_dashboard</item>
+        <item>@string/ui_extras_service_centre_s_phone_number</item>
+        <item>@string/ui_extras_your_equalizer</item>
+        <item>@string/ui_extras_your_equalizer_2</item>
+        <item>@string/ui_extras_n_sound_equalizer</item>
+        <item>@string/ui_extras_n_sound_volume_steps_5_to</item>
+        <item>@string/ui_extras_stop_completely_then_accelerate_the_time</item>
+        <item>@string/ui_extras_forget_the_best_time</item>
+        <item>@string/ui_extras_delete_every_recorded_route_on_the</item>
+        <item>@string/ui_extras_saved_n</item>
+        <item>@string/ui_extras_couldn_t_back_up_n</item>
+        <item>@string/ui_extras_press_the_steering_wheel_button_now</item>
+        <item>@string/ui_extras_press_and_release_it_once_waiting</item>
+        <item>@string/ui_extras_nothing_arrived_this_button_may_be</item>
+        <item>@string/ui_extras_forget_this_button</item>
+        <item>@string/ui_extras_what_should_n_do</item>
+        <item>@string/ui_extras_nothing_extra</item>
+        <item>@string/ui_extras_holding_n_down_should</item>
+        <item>@string/ui_extras_show_messages_from</item>
+        <item>@string/ui_extras_60_hz_bass</item>
+        <item>@string/ui_extras_910_hz_voice</item>
+        <item>@string/ui_extras_14_khz_treble</item>
+        <item>@string/ui_extras_custom</item>
+        <item>@string/ui_extras_flat</item>
+        <item>@string/ui_extras_preset_n_tap_to_change</item>
+        <item>@string/ui_extras_bass_boost_n_10_tap_to</item>
+        <item>@string/ui_extras_turn_off</item>
+        <item>@string/ui_extras_no_routes_recorded_yet</item>
+        <item>@string/ui_extras_route_recording_is_off_in_settings</item>
+        <item>@string/ui_extras_all_n_days</item>
+        <item>@string/ui_extras_export_which_day</item>
+        <item>@string/ui_extras_saved_n_files_in_m</item>
+        <item>@string/ui_extras_couldn_t_export_n</item>
+        <item>@string/ui_extras_no_backups_in_openrath_backup_or</item>
+        <item>@string/ui_extras_restore_which_backup</item>
+        <item>@string/ui_extras_replace_every_setting_the_fuel_log</item>
+        <item>@string/ui_extras_restored_restarting</item>
+        <item>@string/ui_extras_couldn_t_restore_n</item>
+        <item>@string/ui_extras_this_unit_has_no_accessibility_settings</item>
+        <item>@string/ui_extras_this_unit_has_no_notification_access</item>
+        <item>@string/ui_extras_n_swipe_sideways</item>
+        <item>@string/ui_extras_n_min_idle_while_parked</item>
+        <item>@string/ui_extras_n_found_last_time</item>
+        <item>@string/ui_extras_n_c</item>
+        <item>@string/ui_extras_n_apps</item>
+        <item>@string/ui_extras_n_drives_recorded</item>
+        <item>@string/ui_extras_n_hours_of_driving</item>
+        <item>@string/ui_extras_n_of_full_volume</item>
+        <item>@string/ui_extras_n_litres</item>
+        <item>@string/ui_extras_n_km_of_driving</item>
+        <item>@string/ui_extras_parking_ends_at_n</item>
+        <item>@string/ui_extras_n_minutes_with_the_engine_off</item>
+        <item>@string/ui_extras_n_aqi_m</item>
+        <item>@string/ui_extras_last_wash_n_days_ago</item>
+        <item>@string/ui_extras_n_days</item>
+        <item>@string/ui_extras_n_m_places_seen_tap_to</item>
+        <item>@string/ui_extras_n_signals_and_toll_plazas_tap</item>
+        <item>@string/ui_extras_n_or_say_hotspot</item>
+        <item>@string/ui_extras_keep_below_n_km_h</item>
+        <item>@string/ui_extras_accident_help_is_off</item>
+        <item>@string/ui_extras_n_spot_tap_to_clear</item>
+        <item>@string/ui_extras_n_spots_tap_to_clear_all</item>
+        <item>@string/ui_extras_camera_n_of_m</item>
+        <item>@string/ui_extras_n_gb_oldest_clips_deleted_first</item>
+        <item>@string/ui_extras_n_saved_in_openrath_dashcam_saved</item>
+        <item>@string/ui_extras_n_of_4_added_say_documents</item>
+        <item>@string/ui_extras_no_phone_number</item>
+        <item>@string/ui_extras_profiles_off</item>
+        <item>@string/ui_extras_n_volume_m</item>
+        <item>@string/ui_extras_now</item>
+        <item>@string/ui_extras_from_n_to_m_music_at</item>
+        <item>@string/ui_extras_last_n_s</item>
+        <item>@string/ui_extras_best_n_s</item>
+        <item>@string/ui_extras_n_days_recorded</item>
+        <item>@string/ui_extras_n_found</item>
+        <item>@string/ui_extras_on_last_n</item>
+        <item>@string/ui_extras_n_saved</item>
+        <item>@string/ui_extras_music_keeps_playing_tap_to_wake</item>
+        <item>@string/ui_extras_after_a_repair</item>
+        <item>@string/ui_extras_press_it_when_asked_then_choose</item>
+        <item>@string/ui_extras_nothing_extra_tap_to_choose</item>
+        <item>@string/ui_extras_off_turn_on_openrath_in_accessibility</item>
+        <item>@string/ui_extras_who_it_s_from</item>
+        <item>@string/ui_extras_who_it_s_from_and_the</item>
+        <item>@string/ui_extras_allowed</item>
+        <item>@string/ui_extras_needed_tap_to_allow</item>
+        <item>@string/ui_extras_dhabas_cafes_and_petrol_pumps_ahead</item>
+        <item>@string/ui_extras_on_settings_need_the_pin</item>
+        <item>@string/ui_extras_limits_volume_and_speed_locks_settings</item>
+        <item>@string/ui_extras_hindi_english_words_understood_too</item>
+        <item>@string/ui_extras_english_hindi_words_understood_too</item>
+        <item>@string/ui_extras_or_tap_the_mic_on_the</item>
+        <item>@string/ui_extras_off_settings_features</item>
+        <item>@string/ui_extras_on_drag_it_anywhere_over_maps</item>
+        <item>@string/ui_extras_needs_permission_tap_to_allow</item>
+        <item>@string/ui_extras_radio_calls_music_volume_places</item>
+        <item>@string/ui_extras_for_15_seconds_tap_the_black</item>
+        <item>@string/ui_extras_off_switch_above</item>
+        <item>@string/ui_extras_the_quickest_time_to_leave_from</item>
+        <item>@string/ui_extras_no_spot_saved_yet</item>
+        <item>@string/ui_extras_shows_a_qr_code</item>
+        <item>@string/ui_extras_a_qr_code_with_where_you</item>
+        <item>@string/ui_extras_a_upi_qr_code_for_each</item>
+        <item>@string/ui_extras_not_set_asked_the_first_time</item>
+        <item>@string/ui_extras_a_reminder_on_your_phone_or</item>
+        <item>@string/ui_extras_not_known_yet</item>
+        <item>@string/ui_extras_shown_only</item>
+        <item>@string/ui_extras_spoken_and_shown_once_a_day</item>
+        <item>@string/ui_extras_tap_after_a_wash</item>
+        <item>@string/ui_extras_km_time_petrol_tolls_score_or</item>
+        <item>@string/ui_extras_tap_to_see_it</item>
+        <item>@string/ui_extras_needs_a_camera</item>
+        <item>@string/ui_extras_none_yet</item>
+        <item>@string/ui_extras_a_code_passengers_scan_to_join</item>
+        <item>@string/ui_extras_on_switched_on_by_hand</item>
+        <item>@string/ui_extras_on_the_weather_says_fog</item>
+        <item>@string/ui_extras_off_comes_on_by_itself_in</item>
+        <item>@string/ui_extras_not_set_accident_help_calls_112</item>
+        <item>@string/ui_extras_shows_the_countdown_doesn_t_call</item>
+        <item>@string/ui_extras_or_say_waterlogging_or_set_a</item>
+        <item>@string/ui_extras_none_found</item>
+        <item>@string/ui_extras_nearest_workshops_with_a_call_button</item>
+        <item>@string/ui_extras_not_set_tap_mine_next_to</item>
+        <item>@string/ui_extras_spot_the_colour_number_plates_how</item>
+        <item>@string/ui_extras_none_chosen</item>
+        <item>@string/ui_extras_no_drivers_yet_tap_to_add</item>
+        <item>@string/ui_extras_gently_a_step_every_30_km</item>
+        <item>@string/ui_extras_medium_every_20_km_h</item>
+        <item>@string/ui_extras_strongly_every_15_km_h</item>
+        <item>@string/ui_extras_no_full_run_yet</item>
+        <item>@string/ui_extras_to_openrath_backup</item>
+        <item>@string/ui_extras_on_none_yet</item>
+        <item>@string/ui_extras_free_and_open_source_gpl_3</item>
+        <item>@string/ui_extras_what_leaves_the_unit_and_what</item>
+        <item>@string/ui_extras_see_it_and_share_it</item>
+        <item>@string/ui_extras_also_sent_daily_to_your_organisation</item>
+        <item>@string/ui_extras_choose_the_pin</item>
+        <item>@string/ui_extras_change_the_pin</item>
+        <item>@string/ui_extras_usage_report</item>
+        <item>@string/ui_extras_set_by_your_organisation</item>
+        <item>@string/ui_extras_the_radio_service_isn_t_connected</item>
+        <item>@string/ui_extras_scan_for_stations</item>
+        <item>@string/ui_extras_scan_again</item>
+        <item>@string/ui_extras_playing</item>
+        <item>@string/ui_extras_fm_stations</item>
+        <item>@string/ui_extras_n_fm_stations</item>
+        <item>@string/ui_extras_scanning_the_fm_band</item>
+        <item>@string/ui_extras_scanning_for_fm_stations</item>
+        <item>@string/ui_extras_scanning_for_fm_stations_n_found</item>
+        <item>@string/ui_extras_no_stations_found_open_the_stock</item>
+        <item>@string/ui_extras_n_stations_found_tap_scan_to</item>
+        <item>@string/ui_extras_couldn_t_reach_n_fm</item>
+        <item>@string/ui_extras_dashcam_clip_saved</item>
+        <item>@string/ui_extras_fm_radio</item>
+        <item>@string/ui_extras_tap_play_to_listen</item>
+        <item>@string/ui_extras_tap_play_to_start_the_radio</item>
+        <item>@string/ui_extras_tap_play_to_switch_the_tuner</item>
+        <item>@string/ui_extras_playing_2</item>
+        <item>@string/ui_extras_no_number</item>
+        <item>@string/ui_extras_the_stereo_has_no_phone_app</item>
+        <item>@string/ui_extras_this_stereo_s_radio_app_is</item>
+        <item>@string/ui_extras_topway_s_phone_service_isn_t</item>
+        <item>@string/ui_extras_no_phone_connected</item>
+        <item>@string/ui_extras_the_stereo_s_phone_service_didn</item>
+        <item>@string/ui_extras_the_stereo_s_radio_service_isn</item>
+        <item>@string/ui_extras_the_stereo_s_radio_service_didn</item>
+        <item>@string/ui_extras_the_stereo_s_radio_didn_t</item>
+        <item>@string/ui_extras_can_t_create_n_allow_storage</item>
+        <item>@string/ui_extras_not_an_openrath_backup</item>
+        <item>@string/ui_extras_play_pause</item>
+        <item>@string/ui_extras_next_track_or_station</item>
+        <item>@string/ui_extras_previous_track_or_station</item>
+        <item>@string/ui_extras_mute</item>
+        <item>@string/ui_extras_volume_up</item>
+        <item>@string/ui_extras_volume_down</item>
+        <item>@string/ui_extras_answer_call</item>
+        <item>@string/ui_extras_end_call</item>
+        <item>@string/ui_extras_voice_command</item>
+        <item>@string/ui_extras_open_navigation</item>
+        <item>@string/ui_extras_open_the_radio</item>
+        <item>@string/ui_extras_open_music</item>
+        <item>@string/ui_extras_show_the_dashboard</item>
+        <item>@string/ui_extras_screen_off_on</item>
+        <item>@string/ui_extras_next_dashboard_page</item>
+        <item>@string/ui_extras_save_the_dashcam_clip</item>
+        <item>@string/ui_extras_mark_a_waterlogging_spot</item>
+        <item>@string/ui_extras_next_driver</item>
+        <item>@string/ui_extras_show_the_car_documents</item>
+        <item>@string/ui_extras_fog_mode_on_off</item>
+        <item>@string/ui_extras_share_the_trip_qr_code</item>
+        <item>@string/ui_extras_split_the_cost_upi_qr</item>
+        <item>@string/ui_extras_guest_wi_fi_code</item>
+        <item>@string/ui_extras_read_the_news_aloud</item>
+        <item>@string/ui_extras_cab_menu</item>
+        <item>@string/ui_extras_fare_meter_start_stop</item>
+        <item>@string/ui_extras_cab_sos</item>
+        <item>@string/ui_extras_car_and_speed</item>
+        <item>@string/ui_extras_clock_and_date</item>
+        <item>@string/ui_extras_map</item>
+        <item>@string/ui_extras_radio</item>
+        <item>@string/ui_extras_music</item>
+        <item>@string/ui_extras_trip_computer</item>
+        <item>@string/ui_extras_news_top_5_headlines</item>
+        <item>@string/ui_extras_cab_driver_earnings_meter</item>
+        <item>@string/ui_extras_performance_fps_cpu_temperature</item>
+        <item>@string/ui_extras_widget_from_another_app</item>
+        <item>@string/ui_extras_second_widget</item>
+        <item>@string/ui_extras_navigation</item>
+        <item>@string/ui_extras_bluetooth</item>
+        <item>@string/ui_extras_all_apps</item>
+    </string-array>
+</resources>

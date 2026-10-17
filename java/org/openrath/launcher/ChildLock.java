@@ -53,20 +53,20 @@ final class ChildLock {
         Set<String> chosen = apps(p);
         final boolean[] on = new boolean[pkgs.size()];
         for (int i = 0; i < on.length; i++) on[i] = chosen.contains(pkgs.get(i));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Lock these apps while moving")
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Lock these apps while moving"))
                 .setMultiChoiceItems(names.toArray(new String[0]), on, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w, boolean v) {
                         on[w] = v;
                     }
-                }).setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                }).setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < on.length; i++) if (on[i]) sb.append(pkgs.get(i)).append(',');
                 p.put("lockedApps", sb.toString());
             }
-        }).setNegativeButton("Cancel", null).show();
+        }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private ChildLock() {

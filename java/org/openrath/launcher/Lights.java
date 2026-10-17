@@ -202,13 +202,13 @@ final class Lights {
     static Set<String> scanActions(Context c) {
         Set<String> found = new LinkedHashSet<>();
         if (!Crash.begin("reading system apps")) {
-            stats = "skipped reading system apps (it crashed before)";
+            stats = Hindi.t("skipped reading system apps (it crashed before)");
             return found;
         }
         try {
             scanInto(c, found);
         } catch (Throwable e) {
-            stats = "reading system apps failed: " + e;
+            stats = Hindi.f("reading system apps failed: %1$s", e);
         }
         Crash.end();
         return found;
@@ -247,7 +247,7 @@ final class Lights {
             // odex'd system apps keep their code next to the apk; the manifest still helps
             if (found.size() > 400) break;
         }
-        stats = "listening for " + found.size() + " broadcasts from " + apps + " system apps";
+        stats = Hindi.f("listening for %1$s broadcasts from %2$s system apps", found.size(), apps);
     }
 
     private static byte[] bytes(InputStream in) throws java.io.IOException {
@@ -319,10 +319,9 @@ final class Lights {
             else if (k.startsWith("xtget:")) n[1]++;
             else if (!k.startsWith("uimode") && !k.startsWith("tw:")) n[3]++;
         }
-        lastCounts = n[3] + " settings, " + n[0] + " system properties, " + n[2] + " backlight files, "
-                + n[1] + " broadcast values, " + (setupSpy == null ? "no Topway MCU link (" + Tw.spyError + ")"
-                : n[4] + " Topway MCU values from " + Tw.spyCodesOpen + " codes")
-                + " received";
+        lastCounts = Hindi.f("%1$s settings, %2$s system properties, %3$s backlight files, %4$s broadcast values, %5$s received",
+                n[3], n[0], n[2], n[1], setupSpy == null ? Hindi.f("no Topway MCU link (%1$s)", Tw.spyError)
+                : Hindi.f("%1$s Topway MCU values from %2$s codes", n[4], Tw.spyCodesOpen));
         return m;
     }
 
@@ -397,7 +396,7 @@ final class Lights {
 
     /** How a learnt key reads in the setup's list. */
     static String label(Candidate c) {
-        return (dims(c.key, c.off, c.on) ? "Screen dimming: " : "") + c.key;
+        return (dims(c.key, c.off, c.on) ? Hindi.t("Screen dimming:") + " " : "") + c.key;
     }
 
     // ------------------------------------------------------------------ the setup dialogs
@@ -426,7 +425,7 @@ final class Lights {
     /** The same three-step setup for any on/off signal the unit may pass on: a door, the seat belt. */
     static void learn(final Activity a, final Prefs prefs, String what, final Done done) {
         kind = what;
-        final ProgressDialog wait = ProgressDialog.show(a, null, "Looking for the " + noun() + " signal…", true);
+        final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.f("Looking for the %1$s signal…", Hindi.t(noun())), true);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -456,7 +455,7 @@ final class Lights {
     private static void listenWide(Context c, Set<String> actions) {
         if (deep) {
             if (!Crash.begin("deep search listening")) {
-                stats = "deep search listening skipped (it stopped the app before)";
+                stats = Hindi.t("deep search listening skipped (it stopped the app before)");
                 return;
             }
             wideRunning = true;
@@ -514,19 +513,19 @@ final class Lights {
     private static void step(final Activity a, final Prefs prefs, final Done done,
                              final List<Map<String, String>> shots, final String[] steps, final int i) {
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(noun().substring(0, 1).toUpperCase(Locale.US) + noun().substring(1) + " setup  " + (i + 1) + "/3")
-                .setMessage(steps[i])
+                .setTitle(Hindi.f("%1$s setup  %2$s/3", Hindi.t(noun()).substring(0, 1).toUpperCase(Locale.US) + Hindi.t(noun()).substring(1), i + 1))
+                .setMessage(Hindi.t(steps[i]))
                 .setCancelable(false)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(Hindi.t("Cancel"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         stopListening(a);
                     }
                 })
-                .setPositiveButton("Next", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Next"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
-                        final ProgressDialog wait = ProgressDialog.show(a, null, "Reading the unit…", true);
+                        final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.t("Reading the unit…"), true);
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -554,14 +553,14 @@ final class Lights {
         stopListening(a);
         AlertDialog.Builder b = new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert);
         if (found.isEmpty()) {
-            b.setTitle("No " + noun() + " signal found")
-                    .setMessage(("lights".equals(kind) ? "Nothing this app can read changed with the headlights, so the unit may not pass the "
+            b.setTitle(Hindi.f("No %1$s signal found", Hindi.t(noun())))
+                    .setMessage(("lights".equals(kind) ? Hindi.t("Nothing this app can read changed with the headlights, so the unit may not pass the "
                             + "signal on to apps. Check that the unit's illumination wire is connected, or set the "
-                            + "car's lights to always on or always off from this menu."
-                            : "Nothing this app can read changed. Most units only learn about doors and seat belts through a "
-                            + "CAN bus decoder box; without one, the unit never hears about them.")
-                            + "\n\nWhat it checked: " + lastCounts + ", " + stats + ".")
-                    .setPositiveButton("OK", null).show();
+                            + "car's lights to always on or always off from this menu.")
+                            : Hindi.t("Nothing this app can read changed. Most units only learn about doors and seat belts through a "
+                            + "CAN bus decoder box; without one, the unit never hears about them."))
+                            + "\n\n" + Hindi.f("What it checked: %1$s, %2$s.", lastCounts, stats))
+                    .setPositiveButton(Hindi.t("OK"), null).show();
             return;
         }
         if (found.size() == 1) {
@@ -574,14 +573,14 @@ final class Lights {
             Candidate c = list.get(i);
             items[i] = (i == 0 ? "★ " : "") + label(c) + "   (" + shorten(c.off) + " → " + shorten(c.on) + ")";
         }
-        b.setTitle("These followed the " + noun() + "; pick one (★ = best guess)")
+        b.setTitle(Hindi.f("These followed the %1$s; pick one (★ = best guess)", Hindi.t(noun())))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int which) {
                         save(a, prefs, list.get(which), done);
                     }
                 })
-                .setNegativeButton("Cancel", null).show();
+                .setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static String shorten(String s) {
@@ -591,14 +590,14 @@ final class Lights {
     private static void save(Activity a, Prefs prefs, Candidate c, Done done) {
         if (!"lights".equals(kind)) {
             prefs.setSignal(kind, c.key, c.off, c.on);
-            Toast.makeText(a, "The " + noun() + " will follow " + c.key, Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.f("The %1$s will follow %2$s", Hindi.t(noun()), c.key), Toast.LENGTH_LONG).show();
             done.done();
             return;
         }
         prefs.setLightSignal(c.key, c.off, c.on);
         prefs.setLights("auto");
-        Toast.makeText(a, dims(c.key, c.off, c.on) ? "Headlights will follow the screen dimming (" + c.key + ")"
-                : "Headlights will follow " + c.key, Toast.LENGTH_LONG).show();
+        Toast.makeText(a, dims(c.key, c.off, c.on) ? Hindi.f("Headlights will follow the screen dimming (%1$s)", c.key)
+                : Hindi.f("Headlights will follow %1$s", c.key), Toast.LENGTH_LONG).show();
         done.done();
     }
 
@@ -684,7 +683,7 @@ final class Lights {
     }
 
     static void indicatorSetup(final Activity a, final Prefs prefs, final Done done) {
-        final ProgressDialog wait = ProgressDialog.show(a, null, "Looking for the indicator signal…", true);
+        final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.t("Looking for the indicator signal…"), true);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -708,19 +707,19 @@ final class Lights {
                 "Switch the LEFT indicator on. Tap Next and leave it blinking for 4 seconds.",
                 "Switch the left one off and the RIGHT indicator on. Tap Next and leave it blinking for 4 seconds."};
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Indicator setup  " + (i + 1) + "/3")
-                .setMessage(steps[i])
+                .setTitle(Hindi.f("Indicator setup  %1$s/3", i + 1))
+                .setMessage(Hindi.t(steps[i]))
                 .setCancelable(false)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(Hindi.t("Cancel"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         stopListening(a);
                     }
                 })
-                .setPositiveButton("Next", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Next"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
-                        final ProgressDialog wait = ProgressDialog.show(a, null, "Watching for 4 seconds…", true);
+                        final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.t("Watching for 4 seconds…"), true);
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -751,23 +750,23 @@ final class Lights {
         final Side r = bestSide(runs.get(0), runs.get(2), runs.get(1), "right");
         AlertDialog.Builder b = new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert);
         if (l == null && r == null) {
-            b.setTitle("No indicator signal found")
-                    .setMessage("Nothing this app can read changed with the indicators. Many units only get the "
-                            + "indicators through a CAN bus decoder box; without one, the unit never learns about them."
-                            + "\n\nWhat it checked: " + lastCounts + ", " + stats + ".")
-                    .setPositiveButton("OK", null).show();
+            b.setTitle(Hindi.t("No indicator signal found"))
+                    .setMessage(Hindi.t("Nothing this app can read changed with the indicators. Many units only get the "
+                            + "indicators through a CAN bus decoder box; without one, the unit never learns about them.")
+                            + "\n\n" + Hindi.f("What it checked: %1$s, %2$s.", lastCounts, stats))
+                    .setPositiveButton(Hindi.t("OK"), null).show();
             return;
         }
         StringBuilder m = new StringBuilder();
-        m.append("Left: ").append(l == null ? "not found" : l.key + "  (" + shorten(l.off) + " → " + shorten(join(l.on)) + ")");
-        m.append("\n\nRight: ").append(r == null ? "not found" : r.key + "  (" + shorten(r.off) + " → " + shorten(join(r.on)) + ")");
+        m.append(Hindi.t("Left:")).append(' ').append(l == null ? Hindi.t("not found") : l.key + "  (" + shorten(l.off) + " → " + shorten(join(l.on)) + ")");
+        m.append("\n\n").append(Hindi.t("Right:")).append(' ').append(r == null ? Hindi.t("not found") : r.key + "  (" + shorten(r.off) + " → " + shorten(join(r.on)) + ")");
         if (l != null && r != null && l.key.equals(r.key) && l.on.equals(r.on)) {
-            m.append("\n\nBoth sides look the same, so the car will show both arrows for either indicator.");
+            m.append("\n\n").append(Hindi.t("Both sides look the same, so the car will show both arrows for either indicator."));
         }
-        b.setTitle("Indicators found")
+        b.setTitle(Hindi.t("Indicators found"))
                 .setMessage(m.toString())
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setNegativeButton(Hindi.t("Cancel"), null)
+                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         prefs.setSignal("left", l == null ? null : l.key, l == null ? "" : l.off, l == null ? "" : join(l.on));

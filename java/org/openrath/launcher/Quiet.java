@@ -48,7 +48,11 @@ final class Quiet {
     }
 
     static String hour(int h) {
-        return h == 0 ? "midnight" : h == 12 ? "noon" : (h % 12) + (h < 12 ? " am" : " pm");
+        if (h == 0) return Hindi.t("midnight");
+        if (h == 12) return Hindi.t("noon");
+        // Hindi says the part of the day ("रात 2 बजे"), which am/pm alone doesn't tell
+        if (Hindi.on) return Hindi.f(h < 4 || h >= 20 ? "%1$s at night" : h < 12 ? "%1$s in the morning" : h < 16 ? "%1$s in the afternoon" : "%1$s in the evening", h % 12);
+        return String.format(java.util.Locale.US, h < 12 ? "%1$s am" : "%1$s pm", h % 12);
     }
 
     private Quiet() {

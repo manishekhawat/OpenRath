@@ -234,7 +234,7 @@ final class MtcUnit extends Unit {
     String call(Context c, String n) {
         String num = n == null ? "" : n.replaceAll("[^0-9+*#]", "");
         if (bt == null || num.isEmpty()) return super.call(c, n);
-        if (transact(T_DIAL, num, false) == null) return "the stereo's phone service didn't answer";
+        if (transact(T_DIAL, num, false) == null) return Hindi.t("the stereo's phone service didn't answer");
         callAt = System.currentTimeMillis();
         callDir = "out";
         return null;
@@ -275,7 +275,7 @@ final class MtcUnit extends Unit {
                 : set("av_focus_loss=fm") & set("av_channel_exit=fm");
         if (ok) fmOn = on;
         if (ok && on && p != null && freq.isEmpty()) fmTune(p, p.fmFreq());
-        return ok ? null : "the stereo's radio didn't answer";
+        return ok ? null : Hindi.t("the stereo's radio didn't answer");
     }
 
     @Override
@@ -303,7 +303,7 @@ final class MtcUnit extends Unit {
         s.title = (freq.isEmpty() ? p.fmFreq() : freq) + "  FM";
         s.playing = fmPlaying() ? Boolean.TRUE : fmOn;
         boolean on = s.playing != null ? s.playing : localOn;
-        s.sub = !note.isEmpty() && on ? note : !ps.isEmpty() ? ps : on ? "FM radio" : "Tap play to listen";
+        s.sub = !note.isEmpty() && on ? note : !ps.isEmpty() ? ps : on ? Hindi.t("FM radio") : Hindi.t("Tap play to listen");
         return s;
     }
 

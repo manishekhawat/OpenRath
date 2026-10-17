@@ -579,7 +579,7 @@ final class Hub implements LocationListener {
                             String say = Air.alert(aqiNow, nowMs, prefs.longNum("aqiTold", 0));
                             if (say != null) {
                                 prefs.putLong("aqiTold", nowMs);
-                                android.widget.Toast.makeText(ctx, "Air quality: " + Air.band(aqiNow) + " (AQI " + aqiNow + ")",
+                                android.widget.Toast.makeText(ctx, Hindi.f("Air quality: %1$s (AQI %2$s)", Hindi.t(Air.band(aqiNow)), aqiNow),
                                         android.widget.Toast.LENGTH_LONG).show();
                                 if (ctx instanceof Cards.Host) ((Cards.Host) ctx).speak(say);
                             }
@@ -630,6 +630,13 @@ final class Hub implements LocationListener {
         } catch (Exception ignored) {
         }
         return null;
+    }
+
+    /** The rain line for the screen, in the chosen language (rainSoon itself stays English for the voice). */
+    static String showRain(String r) {
+        if (r == null) return "";
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("Rain in about (\\d+) min").matcher(r);
+        return m.matches() ? Hindi.f("Rain in about %1$s min", m.group(1)) : Hindi.t(r);
     }
 
     // WMO weather codes, as used by Open-Meteo

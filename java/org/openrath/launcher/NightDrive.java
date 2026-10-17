@@ -92,7 +92,7 @@ final class NightDrive extends View {
         paint.setLetterSpacing(0);
         cv.drawText(new SimpleDateFormat("h:mm", Locale.US).format(new Date()), cx, area.top + size * 0.35f, paint);
         paint.setTextSize(Math.max(12, size * 0.09f));
-        cv.drawText("Tap here to leave night-drive mode", cx, area.bottom - size * 0.12f, paint);
+        cv.drawText(Hindi.t("Tap here to leave night-drive mode"), cx, area.bottom - size * 0.12f, paint);
     }
 
     @Override

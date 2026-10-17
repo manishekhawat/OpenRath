@@ -49,7 +49,7 @@ final class AppPicker {
                         done.picked(list.get(which).activityInfo.packageName);
                     }
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(Hindi.t("Cancel"), null)
                 .show();
     }
 

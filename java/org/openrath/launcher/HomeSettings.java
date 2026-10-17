@@ -21,9 +21,9 @@ final class HomeSettings {
     static void tryTuner(final HomeActivity a) {
         if (Tuner.chosen(a.prefs)) {
             new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                    .setTitle("Built-in FM tuner is on")
-                    .setPositiveButton("Keep it", null)
-                    .setNegativeButton("Use the stock radio again", new android.content.DialogInterface.OnClickListener() {
+                    .setTitle(Hindi.t("Built-in FM tuner is on"))
+                    .setPositiveButton(Hindi.t("Keep it"), null)
+                    .setNegativeButton(Hindi.t("Use the stock radio again"), new android.content.DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(android.content.DialogInterface d, int w) {
                             Tuner.stop(a);
@@ -33,24 +33,24 @@ final class HomeSettings {
                     }).show();
             return;
         }
-        Toast.makeText(a, "Trying the FM chip…", Toast.LENGTH_SHORT).show();
+        Toast.makeText(a, Hindi.t("Trying the FM chip…"), Toast.LENGTH_SHORT).show();
         String err = Tuner.play(a, a.prefs, true);
         String report = android.text.TextUtils.join("\n", Tuner.steps);
         if (err != null) {
             Tuner.stop(a);
             a.prefs.put("fmTuner", "no");
             new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                    .setTitle("The built-in tuner can't play on this unit")
-                    .setMessage(report + "\n\nOpenRath keeps using the stock radio app for FM. Please send a photo of this.")
-                    .setPositiveButton("OK", null).show();
+                    .setTitle(Hindi.t("The built-in tuner can't play on this unit"))
+                    .setMessage(report + "\n\n" + Hindi.t("OpenRath keeps using the stock radio app for FM. Please send a photo of this."))
+                    .setPositiveButton(Hindi.t("OK"), null).show();
             if (a.settingsView != null) a.settingsView.refresh();
             return;
         }
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Can you hear FM " + Tuner.freqText() + "?")
-                .setMessage(report + "\n\nTurn the volume up if it's quiet. If it plays, OpenRath will play FM by itself from now on: "
-                        + "no stock radio app, no screen opening.")
-                .setPositiveButton("Yes, use it", new android.content.DialogInterface.OnClickListener() {
+                .setTitle(Hindi.f("Can you hear FM %1$s?", Tuner.freqText()))
+                .setMessage(report + "\n\n" + Hindi.t("Turn the volume up if it's quiet. If it plays, OpenRath will play FM by itself from now on: "
+                        + "no stock radio app, no screen opening."))
+                .setPositiveButton(Hindi.t("Yes, use it"), new android.content.DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(android.content.DialogInterface d, int w) {
                         a.prefs.put("fmTuner", "own");
@@ -59,7 +59,7 @@ final class HomeSettings {
                         a.hub.notifyIfChanged(true);
                     }
                 })
-                .setNegativeButton("No sound", new android.content.DialogInterface.OnClickListener() {
+                .setNegativeButton(Hindi.t("No sound"), new android.content.DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(android.content.DialogInterface d, int w) {
                         Tuner.stop(a);
@@ -146,7 +146,7 @@ final class HomeSettings {
         if (Crash.last() != null) b.append("Last problem: ").append(Crash.last()).append("\n");
         b.append("Weather: ").append(a.hub.temp).append(" ").append(a.hub.weather).append(" ").append(a.hub.place);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Diagnostics").setMessage(b.toString()).setPositiveButton("OK", null).show();
+                .setTitle(Hindi.t("Diagnostics")).setMessage(b.toString()).setPositiveButton(Hindi.t("OK"), null).show();
     }
 
     /** Settings again from scratch (a new language), without asking for the valet PIN again. */
@@ -160,11 +160,11 @@ final class HomeSettings {
     /** Seven taps on the version turn developer mode on, as on Android itself. */
     static void versionTapped(final HomeActivity a) {
         if (Managed.devBlocked(a.prefs)) {
-            Toast.makeText(a, "Developer mode: " + Managed.NOTE.toLowerCase(java.util.Locale.US), Toast.LENGTH_SHORT).show();
+            Toast.makeText(a, Hindi.f("Developer mode: %1$s", Hindi.t(Managed.NOTE).toLowerCase(java.util.Locale.US)), Toast.LENGTH_SHORT).show();
             return;
         }
         if (Features.dev(a.prefs)) {
-            Toast.makeText(a, "Developer mode is already on", Toast.LENGTH_SHORT).show();
+            Toast.makeText(a, Hindi.t("Developer mode is already on"), Toast.LENGTH_SHORT).show();
             return;
         }
         long now = System.currentTimeMillis();
@@ -172,41 +172,41 @@ final class HomeSettings {
         a.devTapAt = now;
         if (a.devTaps >= 7) {
             a.prefs.put("devMode", "on");
-            Toast.makeText(a, "Developer mode is on: every switch, diagnostics and tests are in Settings", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("Developer mode is on: every switch, diagnostics and tests are in Settings"), Toast.LENGTH_LONG).show();
             if (a.settingsView != null) a.settingsView.refresh();
         } else if (a.devTaps >= 3) {
-            Toast.makeText(a, (7 - a.devTaps) + " more taps for developer mode", Toast.LENGTH_SHORT).show();
+            Toast.makeText(a, Hindi.f("%1$s more taps for developer mode", String.valueOf(7 - a.devTaps)), Toast.LENGTH_SHORT).show();
         }
     }
 
     /** Simple, Full or Custom. At first start Simple is ticked; "Not now" keeps everything as it is. */
     static void askLevel(final HomeActivity a, final boolean first) {
         if (Managed.levelLocked(a.prefs)) {
-            if (!first) Toast.makeText(a, "OpenRath level: " + Managed.NOTE.toLowerCase(java.util.Locale.US), Toast.LENGTH_SHORT).show();
+            if (!first) Toast.makeText(a, Hindi.f("OpenRath level: %1$s", Hindi.t(Managed.NOTE).toLowerCase(java.util.Locale.US)), Toast.LENGTH_SHORT).show();
             return;
         }
         final int[] pick = {first ? Features.SIMPLE : Features.level(a.prefs)};
         String[] items = new String[Features.LEVELS.length];
-        for (int i = 0; i < items.length; i++) items[i] = Features.LEVEL_NAMES[i] + "\n" + Features.LEVEL_ABOUT[i];
+        for (int i = 0; i < items.length; i++) items[i] = Hindi.t(Features.LEVEL_NAMES[i]) + "\n" + Hindi.t(Features.LEVEL_ABOUT[i]);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(first ? "How much should OpenRath show?" : "OpenRath level")
+                .setTitle(first ? Hindi.t("How much should OpenRath show?") : Hindi.t("OpenRath level"))
                 .setSingleChoiceItems(items, pick[0], new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         pick[0] = w;
                     }
                 })
-                .setPositiveButton("Use this", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Use this"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         Features.setLevel(a.prefs, pick[0]);
-                        Toast.makeText(a, Features.LEVEL_NAMES[pick[0]] + ". Change it any time in Settings > OpenRath level",
+                        Toast.makeText(a, Hindi.f("%1$s. Change it any time in Settings > OpenRath level", Hindi.t(Features.LEVEL_NAMES[pick[0]])),
                                 Toast.LENGTH_LONG).show();
                         Extras.featuresChanged(a);
                         if (a.settingsView != null) a.settingsView.refresh();
                     }
                 })
-                .setNegativeButton(first ? "Not now" : "Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(first ? Hindi.t("Not now") : Hindi.t("Cancel"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         if (first) a.prefs.put("level", "custom");   // asked once; everything stays as it was
@@ -217,9 +217,9 @@ final class HomeSettings {
     static void pickPicture(final HomeActivity a, int which) {
         Intent i = new Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE);
         try {
-            a.startActivityForResult(Intent.createChooser(i, "Choose a picture"), 61 + which);
+            a.startActivityForResult(Intent.createChooser(i, Hindi.t("Choose a picture")), 61 + which);
         } catch (Exception e) {
-            Toast.makeText(a, "No app on the unit can pick pictures. Put a PNG in a theme pack instead (Make a theme to edit).", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("No app on the unit can pick pictures. Put a PNG in a theme pack instead (Make a theme to edit)."), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -230,8 +230,8 @@ final class HomeSettings {
         int pad = Ui.px(20);
         box.setPadding(pad, pad / 2, pad, 0);
         final android.widget.EditText name = new android.widget.EditText(a), num = new android.widget.EditText(a);
-        name.setHint("Name");
-        num.setHint("Phone number");
+        name.setHint(Hindi.t("Name"));
+        num.setHint(Hindi.t("Phone number"));
         num.setInputType(android.text.InputType.TYPE_CLASS_PHONE);
         if (f != null) {
             name.setText(f[0]);
@@ -240,16 +240,16 @@ final class HomeSettings {
         box.addView(name);
         box.addView(num);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Favourite " + (i + 1) + " (empty to remove)")
+                .setTitle(Hindi.f("Favourite %1$s (empty to remove)", String.valueOf(i + 1)))
                 .setView(box)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         String n = name.getText().toString().trim().replace("|", " "), p = num.getText().toString().trim();
                         a.prefs.put("fav" + (i + 1), n.isEmpty() || p.isEmpty() ? "" : n + "|" + p);
                         a.hub.notifyIfChanged(true);
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     static void cycle(final HomeActivity a, String what, String[] all) {
@@ -265,16 +265,16 @@ final class HomeSettings {
         e.setSingleLine(true);
         e.setSelectAllOnFocus(true);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Name under the car (empty to hide)")
+                .setTitle(Hindi.t("Name under the car (empty to hide)"))
                 .setView(e)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         a.prefs.setWelcome(e.getText().toString().trim());
                         a.hub.notifyIfChanged(true);
                     }
                 })
-                .setNegativeButton("Cancel", null).show();
+                .setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     /** Pick a station or song from the player's list, loading the list first if needed. */
@@ -282,7 +282,7 @@ final class HomeSettings {
         final java.util.List<Player.Track> list = web ? Player.stations : Player.songs;
         if (list.isEmpty()) {
             final android.app.ProgressDialog wait = android.app.ProgressDialog.show(a, null,
-                    web ? "Finding stations…" : "Looking for music…", true);
+                    web ? Hindi.t("Finding stations…") : Hindi.t("Looking for music…"), true);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -293,7 +293,7 @@ final class HomeSettings {
                         public void run() {
                             wait.dismiss();
                             if (l.isEmpty()) {
-                                Toast.makeText(a, web ? "Web radio unreachable" : "No music files found",
+                                Toast.makeText(a, web ? Hindi.t("Web radio unreachable") : Hindi.t("No music files found"),
                                         Toast.LENGTH_LONG).show();
                                 return;
                             }
@@ -312,7 +312,7 @@ final class HomeSettings {
             names[i] = t.sub.isEmpty() ? t.name : t.name + "  ·  " + t.sub;
         }
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(web ? "Online radio" : "Songs")
+                .setTitle(web ? Hindi.t("Online radio") : Hindi.t("Songs"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int which) {
@@ -320,14 +320,14 @@ final class HomeSettings {
                         Player.send(a, Player.PICK, web ? Player.WEB : Player.FILES, which);
                     }
                 })
-                .setNegativeButton("Close", null).show();
+                .setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     static Runnable pick(final HomeActivity a, final String key, final String name) {
         return new Runnable() {
             @Override
             public void run() {
-                AppPicker.show(a, "Choose the app for " + name, new AppPicker.Picked() {
+                AppPicker.show(a, Hindi.f("Choose the app for %1$s", Hindi.t(name)), new AppPicker.Picked() {
                     @Override
                     public void picked(String p) {
                         a.prefs.setApp(key, p);

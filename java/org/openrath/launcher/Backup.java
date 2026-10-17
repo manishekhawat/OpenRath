@@ -43,7 +43,7 @@ final class Backup {
     /** Write a backup now; returns the file. */
     static File make(Context c, String kind) throws Exception {
         File d = dir();
-        if (!d.isDirectory() && !d.mkdirs()) throw new IllegalStateException("can't create " + d + " (allow storage access?)");
+        if (!d.isDirectory() && !d.mkdirs()) throw new IllegalStateException(Hindi.f("can't create %1$s (allow storage access?)", d));
         String stamp = new SimpleDateFormat("yyyy-MM-dd-HHmm", Locale.US).format(new Date());
         File f = new File(d, "openrath-" + kind + "-" + stamp + ".zip");
         JSONObject all = new JSONObject();
@@ -117,7 +117,7 @@ final class Backup {
         ZipFile z = new ZipFile(f);
         try {
             ZipEntry je = z.getEntry("backup.json");
-            if (je == null) throw new IllegalStateException("not an OpenRath backup");
+            if (je == null) throw new IllegalStateException(Hindi.t("not an OpenRath backup"));
             JSONObject all = new JSONObject(read(z.getInputStream(je)));
             JSONObject prefs = all.getJSONObject("prefs");
             Set<String> allowed = new HashSet<>(Arrays.asList(PREFS));

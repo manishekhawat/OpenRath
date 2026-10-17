@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The words of the cab driver tools, family and car screens. Translations go in values-<language>/ui_cab.xml
+     with the same names; the ui_cab list ties each one to the English the code uses. -->
+<resources>
+    <string name="ui_cab_min" formatted="false">%1$s min</string>
+    <string name="ui_cab_h_min" formatted="false">%1$s h %2$s min</string>
+    <string name="ui_cab_expired_yesterday" formatted="false">%1$s expired yesterday</string>
+    <string name="ui_cab_expired_days_ago" formatted="false">%1$s expired %2$s days ago</string>
+    <string name="ui_cab_expires_today" formatted="false">%1$s expires today</string>
+    <string name="ui_cab_expires_in_1_day" formatted="false">%1$s expires in 1 day</string>
+    <string name="ui_cab_expires_in_days" formatted="false">%1$s expires in %2$s days</string>
+    <string name="ui_cab_target_reached_today_well_done" formatted="false">Target reached: %1$s today. Well done!</string>
+    <string name="ui_cab_you_ve_been_on_duty_for_hours_time_for_a" formatted="false">You\'ve been on duty for %1$s hours. Time for a proper break.</string>
+    <string name="ui_cab_turn_on_cab_driver_tools_in_settings_cab" formatted="false">Turn on Cab driver tools in Settings &gt; Cab driver</string>
+    <string name="ui_cab_meter_show_it" formatted="false">"Meter: %1$s  (show it)"</string>
+    <string name="ui_cab_start_the_fare_meter" formatted="false">Start the fare meter</string>
+    <string name="ui_cab_add_a_ride" formatted="false">Add a ride</string>
+    <string name="ui_cab_add_a_cost_fuel_toll_food" formatted="false">Add a cost (fuel, toll, food…)</string>
+    <string name="ui_cab_earnings_today_and_this_week" formatted="false">Earnings: today and this week</string>
+    <string name="ui_cab_ride_apps" formatted="false">Ride apps</string>
+    <string name="ui_cab_quiet_ride_on_tap_to_end" formatted="false">Quiet ride: on (tap to end)</string>
+    <string name="ui_cab_passenger_in_quiet_ride" formatted="false">Passenger in: quiet ride</string>
+    <string name="ui_cab_phrases_for_the_passenger" formatted="false">Phrases for the passenger</string>
+    <string name="ui_cab_pickup_hotspots_now" formatted="false">Pickup hotspots now</string>
+    <string name="ui_cab_cng_stations_near_here" formatted="false">CNG stations near here</string>
+    <string name="ui_cab_cng_fill_ups" formatted="false">CNG fill-ups</string>
+    <string name="ui_cab_ride_notes_and_lost_items" formatted="false">Ride notes and lost items</string>
+    <string name="ui_cab_papers_due" formatted="false">Papers due</string>
+    <string name="ui_cab_end_duty_on_for" formatted="false">End duty (on for %1$s)</string>
+    <string name="ui_cab_start_duty_now" formatted="false">Start duty now</string>
+    <string name="ui_cab_duty_ended_after" formatted="false">Duty ended after %1$s</string>
+    <string name="ui_cab_sos_send_my_location" formatted="false">SOS: send my location</string>
+    <string name="ui_cab_all_the_cab_tools_are_switched_off_in_se" formatted="false">All the cab tools are switched off in Settings &gt; Cab driver</string>
+    <string name="ui_cab_close" formatted="false">Close</string>
+    <string name="ui_cab_cab_today_net_1_ride" formatted="false">"Cab  ·  today %1$s net, 1 ride"</string>
+    <string name="ui_cab_cab_today_net_rides" formatted="false">"Cab  ·  today %1$s net, %2$s rides"</string>
+    <string name="ui_cab_no_ride_apps_found_install_uber_driver_o" formatted="false">No ride apps found. Install Uber Driver, Ola Driver, Rapido Captain or another from the Play Store.</string>
+    <string name="ui_cab_quiet_ride_music_down_messages_not_read" formatted="false">Quiet ride: music down, messages not read aloud</string>
+    <string name="ui_cab_quiet_ride_ended" formatted="false">Quiet ride ended</string>
+    <string name="ui_cab_say_to_the_passenger" formatted="false">Say to the passenger (%1$s)</string>
+    <string name="ui_cab_no_voice_on_the_unit_so_here_it_is_in_en" formatted="false">No %1$s voice on the unit, so here it is in English</string>
+    <string name="ui_cab_language" formatted="false">Language</string>
+    <string name="ui_cab_phrases_in" formatted="false">Phrases in</string>
+    <string name="ui_cab_add_your_own" formatted="false">Add your own</string>
+    <string name="ui_cab_type_it_in_any_language" formatted="false">Type it in any language</string>
+    <string name="ui_cab_your_own_phrase" formatted="false">Your own phrase</string>
+    <string name="ui_cab_save" formatted="false">Save</string>
+    <string name="ui_cab_cancel" formatted="false">Cancel</string>
+    <string name="ui_cab_pickup_hotspots" formatted="false">Pickup hotspots</string>
+    <string name="ui_cab_not_enough_rides_around_this_hour_yet_ea" formatted="false">Not enough rides around this hour yet. Each ride you log (or meter) remembers where it started; places with two or more rides around this time of day show here.</string>
+    <string name="ui_cab_ok" formatted="false">OK</string>
+    <string name="ui_cab_km_away" formatted="false">"%1$s km away  ·  "</string>
+    <string name="ui_cab_rides_around_00" formatted="false">"%1$s rides around %2$s:00   (%3$s)"</string>
+    <string name="ui_cab_where_you_got_rides_at_this_hour_tap_to" formatted="false">Where you got rides at this hour (tap to drive there)</string>
+    <string name="ui_cab_needs_a_map_app_google_maps_organic_maps" formatted="false">Needs a map app (Google Maps, Organic Maps or OsmAnd)</string>
+    <string name="ui_cab_cng_km_kg_average_last_a_km" formatted="false">"CNG  ·  %1$s km/kg average, %2$s last, ₹%3$s a km"</string>
+    <string name="ui_cab_no_cng_fills_yet" formatted="false">No CNG fills yet</string>
+    <string name="ui_cab_cng_km_kg_shows_after_two_fills" formatted="false">"CNG  ·  km/kg shows after two fills"</string>
+    <string name="ui_cab_add_a_fill" formatted="false">Add a fill</string>
+    <string name="ui_cab_kg" formatted="false">Kg</string>
+    <string name="ui_cab_amount_paid" formatted="false">Amount paid (₹)</string>
+    <string name="ui_cab_odometer_km" formatted="false">Odometer (km)</string>
+    <string name="ui_cab_add_a_cng_fill" formatted="false">Add a CNG fill</string>
+    <string name="ui_cab_enter_the_kg_and_the_odometer_as_numbers" formatted="false">Enter the kg and the odometer as numbers</string>
+    <string name="ui_cab_no_notes_yet" formatted="false">No notes yet</string>
+    <string name="ui_cab_ride_notes" formatted="false">Ride notes</string>
+    <string name="ui_cab_lost_item_photo" formatted="false">Lost item photo</string>
+    <string name="ui_cab_add_a_note" formatted="false">Add a note</string>
+    <string name="ui_cab_passenger_s_name_what_was_left_a_phone_n" formatted="false">Passenger\'s name, what was left, a phone number…</string>
+    <string name="ui_cab_note" formatted="false">Note</string>
+    <string name="ui_cab_what_was_left_and_by_whom" formatted="false">What was left, and by whom?</string>
+    <string name="ui_cab_left_in_the_car" formatted="false">Left in the car</string>
+    <string name="ui_cab_saved_in_ride_notes" formatted="false">Saved in Ride notes</string>
+    <string name="ui_cab_photo_saved" formatted="false">Photo saved</string>
+    <string name="ui_cab_no_camera_free_for_a_photo_so_it_s_a_not" formatted="false">No camera free for a photo, so it\'s a note only</string>
+    <string name="ui_cab_taking_a_photo_with_the_car_s_camera" formatted="false">Taking a photo with the car\'s camera…</string>
+    <string name="ui_cab_left_in_the_car_2" formatted="false">"Left in the car: "</string>
+    <string name="ui_cab_delete" formatted="false">Delete</string>
+    <string name="ui_cab_tap_to_set_the_expiry_date" formatted="false">%1$s: tap to set the expiry date</string>
+    <string name="ui_cab_papers_reminded_15_days_ahead" formatted="false">Papers (reminded 15 days ahead)</string>
+    <string name="ui_cab_fare" formatted="false">Fare (₹)</string>
+    <string name="ui_cab_enter_the_fare_in_rupees" formatted="false">Enter the fare in rupees</string>
+    <string name="ui_cab_amount" formatted="false">Amount (₹)</string>
+    <string name="ui_cab_add_a_cost" formatted="false">Add a cost</string>
+    <string name="ui_cab_enter_the_amount_in_rupees" formatted="false">Enter the amount in rupees</string>
+    <string name="ui_cab_net" formatted="false">%1$s: %2$s net</string>
+    <string name="ui_cab_1_ride_costs" formatted="false">"1 ride %1$s,  costs %2$s"</string>
+    <string name="ui_cab_rides_costs" formatted="false">"%1$s rides %2$s,  costs %3$s"</string>
+    <string name="ui_cab_this_week_by_app" formatted="false">"This week by app: "</string>
+    <string name="ui_cab_today_by_payment" formatted="false">"Today by payment: "</string>
+    <string name="ui_cab_daily_target_reached" formatted="false">Daily target %1$s: reached</string>
+    <string name="ui_cab_daily_target_to_go" formatted="false">Daily target %1$s: %2$s to go</string>
+    <string name="ui_cab_earnings" formatted="false">Earnings</string>
+    <string name="ui_cab_all_entries" formatted="false">All entries</string>
+    <string name="ui_cab_nothing_logged_yet" formatted="false">Nothing logged yet</string>
+    <string name="ui_cab_rides_and_costs_tap_one_to_delete_it" formatted="false">Rides and costs (tap one to delete it)</string>
+    <string name="ui_cab_delete_this_entry" formatted="false">Delete this entry?</string>
+    <string name="ui_cab_keep" formatted="false">Keep</string>
+    <string name="ui_cab_hide" formatted="false">Hide</string>
+    <string name="ui_cab_stop_and_charge" formatted="false">Stop and charge</string>
+    <string name="ui_cab_km_min_waiting" formatted="false">"%1$s km   ·   %2$s min waiting   ·   %3$s"</string>
+    <string name="ui_cab_night_charge" formatted="false">Night charge +%1$s%%</string>
+    <string name="ui_cab_for_the_first_km_then_a_km" formatted="false">%1$s for the first %2$s km, then %3$s a km</string>
+    <string name="ui_cab_km_min_waiting_2" formatted="false">%1$s km, %2$s min waiting</string>
+    <string name="ui_cab_night_charge_2" formatted="false">, night charge</string>
+    <string name="ui_cab_fare_2" formatted="false">Fare %1$s</string>
+    <string name="ui_cab_save_it_to_the_earnings_log" formatted="false">Save it to the earnings log?</string>
+    <string name="ui_cab_paid_in_cash" formatted="false">Paid in cash</string>
+    <string name="ui_cab_upi_qr" formatted="false">UPI QR</string>
+    <string name="ui_cab_paid_by_upi" formatted="false">Paid by UPI</string>
+    <string name="ui_cab_pay" formatted="false">Pay %1$s</string>
+    <string name="ui_cab_scan_with_any_upi_app_gpay_phonepe_paytm" formatted="false">Scan with any UPI app (GPay, PhonePe, Paytm, BHIM); the fare is filled in. Pays %1$s.</string>
+    <string name="ui_cab_set_your_upi_id_in_settings_cab_driver_t" formatted="false">Set your UPI id in Settings &gt; Cab driver to show a QR code</string>
+    <string name="ui_cab_don_t_save" formatted="false">Don\'t save</string>
+    <string name="ui_cab_contact_name" formatted="false">Contact %1$s: name</string>
+    <string name="ui_cab_contact_phone_number" formatted="false">Contact %1$s: phone number</string>
+    <string name="ui_cab_sos_contacts" formatted="false">SOS contacts</string>
+    <string name="ui_cab_sos_texts_them_where_the_car_is_without" formatted="false">SOS texts them where the car is. Without a SIM in the stereo it calls the first one through your phone instead.</string>
+    <string name="ui_cab_no_sos_contacts_yet" formatted="false">No SOS contacts yet</string>
+    <string name="ui_cab_add_two_people_to_text_in_an_emergency" formatted="false">Add two people to text in an emergency.</string>
+    <string name="ui_cab_add_them" formatted="false">Add them</string>
+    <string name="ui_cab_call_112" formatted="false">Call 112</string>
+    <string name="ui_cab_and" formatted="false">%1$s and %2$s</string>
+    <string name="ui_cab_sending_sos_with_your_location_to" formatted="false">Sending SOS with your location to %1$s</string>
+    <string name="ui_cab_sos_sent_to" formatted="false">SOS sent to %1$s.</string>
+    <string name="ui_cab_the_stereo_can_t_send_texts_no_sim_so_it" formatted="false">The stereo can\'t send texts (no SIM), so it\'s calling %1$s through your phone.\nScan the code with your phone to send the SOS text.</string>
+    <string name="ui_cab_sos_text" formatted="false">SOS text</string>
+    <string name="ui_cab_scan_to_send_the_sos_text_from_your_phon" formatted="false">Scan to send the SOS text from your phone.</string>
+    <string name="ui_cab_net_2" formatted="false">%1$s net</string>
+    <string name="ui_cab_hours_on_duty" formatted="false">%1$s hours on duty</string>
+    <string name="ui_cab_for_km_km_waiting_4_s_min_after_5_s_min" formatted="false">%1$s for %2$s km, %3$s/km, waiting %4$s/min after %5$s min, night +%6$s%%</string>
+    <string name="ui_cab_your_upi_id" formatted="false">Your UPI id</string>
+    <string name="ui_cab_that_doesn_t_look_like_a_upi_id_name_ban" formatted="false">That doesn\'t look like a UPI id (name@bank)</string>
+    <string name="ui_cab_of_full" formatted="false">%1$s%% of full</string>
+    <string name="ui_cab_e_g_dl_1r_ab_1234" formatted="false">e.g. DL 1R AB 1234</string>
+    <string name="ui_cab_vehicle_number" formatted="false">Vehicle number</string>
+    <string name="ui_cab_of_6_set" formatted="false">"  (%1$s of 6 set)"</string>
+    <string name="ui_cab_entries" formatted="false">%1$s entries</string>
+    <string name="ui_cab_delete_every_ride_and_cost_in_the_log" formatted="false">Delete every ride and cost in the log?</string>
+    <string name="ui_cab_delete_all" formatted="false">Delete all</string>
+    <string name="ui_cab_enter_a_number" formatted="false">Enter a number</string>
+    <string name="ui_cab_fare_meter_rates" formatted="false">Fare meter rates</string>
+    <string name="ui_cab_left_seat" formatted="false">Left seat</string>
+    <string name="ui_cab_right_seat" formatted="false">Right seat</string>
+    <string name="ui_cab_who_sees_a_car_this_colour_first_tap_you" formatted="false">Who sees a car this colour first? Tap your name.</string>
+    <string name="ui_cab_car" formatted="false">%1$s car</string>
+    <string name="ui_cab_long_press_a_name_to_change_it_scores_st" formatted="false">Long-press a name to change it. Scores start again each day.</string>
+    <string name="ui_cab_player_s_name" formatted="false">Player\'s name</string>
+    <string name="ui_cab_number_plates_from_other_states_of_found" formatted="false">Number plates from other states: %1$s of %2$s found today</string>
+    <string name="ui_cab_search_for_a_place_on_the_map_first_or_s" formatted="false">Search for a place on the map first,\nor save Home or Office there.</string>
+    <string name="ui_cab_straight_line_distance_the_road_is_a_lit" formatted="false">"Straight-line distance; the road is a little longer.  Tap the place to change it, long-press to give it a name."</string>
+    <string name="ui_cab_km_to" formatted="false">km to %1$s</string>
+    <string name="ui_cab_e_g_nani_s_house" formatted="false">e.g. Nani\'s house</string>
+    <string name="ui_cab_call_this_place" formatted="false">Call this place</string>
+    <string name="ui_cab_not_added" formatted="false">"  (not added)"</string>
+    <string name="ui_cab_import_from_openrath_documents" formatted="false">Import from OpenRath/documents</string>
+    <string name="ui_cab_car_documents" formatted="false">Car documents</string>
+    <string name="ui_cab_show" formatted="false">Show</string>
+    <string name="ui_cab_replace_with_another_photo" formatted="false">Replace with another photo</string>
+    <string name="ui_cab_remove" formatted="false">Remove</string>
+    <string name="ui_cab_removed" formatted="false">%1$s removed</string>
+    <string name="ui_cab_no_picture_picker_on_this_unit_copy_the" formatted="false">No picture picker on this unit. Copy the photo to %1$s named %2$s.jpg, then use Import.</string>
+    <string name="ui_cab_saved" formatted="false">%1$s saved</string>
+    <string name="ui_cab_couldn_t_use_that_photo" formatted="false">Couldn\'t use that photo: %1$s</string>
+    <string name="ui_cab_nothing_to_import_put_photos_named_rc_in" formatted="false">Nothing to import. Put photos named rc, insurance, puc or licence (.jpg or .png) in %1$s.</string>
+    <string name="ui_cab_imported_you_can_delete_the_copies_in_op" formatted="false">Imported: %1$s. You can delete the copies in OpenRath/documents now.</string>
+    <string name="ui_cab_no_documents_added_yet_settings_car_car" formatted="false">No documents added yet: Settings &gt; Car &gt; Car documents</string>
+    <string name="ui_cab_tap_for_the_next_of" formatted="false">"   ·   tap for the next (%1$s of %2$s)"</string>
+    <string name="ui_cab_valet_mode_is_on_enter_the_pin" formatted="false">Valet mode is on. Enter the PIN</string>
+    <string name="ui_cab_wrong_pin" formatted="false">Wrong PIN</string>
+    <string name="ui_cab_valet_mode_is_off" formatted="false">Valet mode is off</string>
+    <string name="ui_cab_valet_mode_is_on_volume_up_to_warning_ab" formatted="false">Valet mode is on: volume up to %1$s%%, warning above %2$s km/h, Settings locked</string>
+    <string name="ui_cab_choose_a_4_digit_pin_for_valet_mode" formatted="false">Choose a 4-digit PIN for valet mode</string>
+    <string name="ui_cab_use_4_to_8_digits" formatted="false">Use 4 to 8 digits</string>
+    <string name="ui_cab_lock_these_apps_while_moving" formatted="false">Lock these apps while moving</string>
+    <string name="ui_cab_hello" formatted="false">Hello %1$s</string>
+    <string name="ui_cab_add_drivers_in_settings_family_first" formatted="false">Add drivers in Settings &gt; Family first</string>
+    <string name="ui_cab_add_a_driver" formatted="false">Add a driver…</string>
+    <string name="ui_cab_remove_a_driver" formatted="false">Remove a driver…</string>
+    <string name="ui_cab_who_s_driving" formatted="false">Who\'s driving?</string>
+    <string name="ui_cab_name" formatted="false">Name</string>
+    <string name="ui_cab_add_a_driver_2" formatted="false">Add a driver</string>
+    <string name="ui_cab_your_current_settings_become_this_driver" formatted="false">Your current settings become this driver\'s. Add a second driver to switch between them.</string>
+    <string name="ui_cab_add" formatted="false">Add</string>
+    <string name="ui_cab_added" formatted="false">%1$s added</string>
+    <string name="ui_cab_switch_to_another_driver_to_remove" formatted="false">Switch to another driver to remove %1$s</string>
+    <string name="ui_cab_remove_a_driver_2" formatted="false">Remove a driver</string>
+    <string name="ui_cab_name_e_g_papa" formatted="false">Name (e.g. Papa)</string>
+    <string name="ui_cab_phone_number" formatted="false">Phone number</string>
+    <string name="ui_cab_emergency_contact" formatted="false">Emergency contact</string>
+    <string name="ui_cab_called_after_a_crash_if_nobody_taps_i_m" formatted="false">Called after a crash if nobody taps \"I\'m OK\" within 30 seconds. The phone must be paired by Bluetooth.</string>
+    <string name="ui_cab_are_you_ok_test" formatted="false">"Are you OK?  (test)"</string>
+    <string name="ui_cab_are_you_ok" formatted="false">Are you OK?</string>
+    <string name="ui_cab_a_very_hard_stop_was_detected_set_an_eme" formatted="false">A very hard stop was detected. Set an emergency contact in Settings &gt; Driving to be called.</string>
+    <string name="ui_cab_a_very_hard_stop_was_detected_calling_in" formatted="false">A very hard stop was detected. Calling %1$s in %2$s seconds.</string>
+    <string name="ui_cab_i_m_ok" formatted="false">I\'m OK</string>
+    <string name="ui_cab_call_now" formatted="false">Call now</string>
+    <string name="ui_cab_where_the_car_is" formatted="false">Where the car is</string>
+    <string name="ui_cab_scan_to_open_the_spot_in_google_maps" formatted="false">Scan to open the spot in Google Maps.</string>
+    <string name="ui_cab_the_car_is_at_scan_for_the_spot_in_googl" formatted="false">The car is at\n%1$s\nScan for the spot in Google Maps</string>
+    <string name="ui_cab_test_would_call_read_out_the_place_below" formatted="false">Test: would call %1$s. Read out the place below. Tap \"I\'m OK\" to close.</string>
+    <string name="ui_cab_calling_read_out_the_place_below_tap_i_m" formatted="false">Calling %1$s. Read out the place below. Tap \"I\'m OK\" to close.</string>
+    <string name="ui_cab_no_emergency_contact_is_set_tap_call_112" formatted="false">No emergency contact is set. Tap \"Call 112\" if you need help.</string>
+    <string name="ui_cab_hold_the_phone_about_30_cm_away_straight" formatted="false">Hold the phone about 30 cm away, straight on.</string>
+    <string name="ui_cab_done" formatted="false">Done</string>
+    <string name="ui_cab_driven_km_in_h_min" formatted="false">Driven: %1$s km in %2$s h %3$s min</string>
+    <string name="ui_cab_average_km_h" formatted="false">" (average %1$s km/h)"</string>
+    <string name="ui_cab_petrol" formatted="false">Petrol: ₹%1$s</string>
+    <string name="ui_cab_a_km" formatted="false">" (₹%1$s a km)"</string>
+    <string name="ui_cab_tolls" formatted="false">Tolls: ₹%1$s</string>
+    <string name="ui_cab_driving_score_out_of_100" formatted="false">Driving score: %1$s out of 100</string>
+    <string name="ui_cab_best_drive" formatted="false">Best drive: %1$s</string>
+    <string name="ui_cab_needs_work" formatted="false">Needs work: %1$s</string>
+    <string name="ui_cab_turn_on_split_the_cost_by_upi_in_setting" formatted="false">Turn on \"Split the cost by UPI\" in Settings &gt; Features</string>
+    <string name="ui_cab_your_upi_id_like_name_okbank" formatted="false">Your UPI id (like name@okbank)</string>
+    <string name="ui_cab_total_to_split_last_fill_up_shown" formatted="false">Total to split, ₹ (last fill-up shown)</string>
+    <string name="ui_cab_total_to_split" formatted="false">Total to split, ₹</string>
+    <string name="ui_cab_how_many_people_you_included" formatted="false">How many people, you included?</string>
+    <string name="ui_cab_at_least_2_people" formatted="false">At least 2 people</string>
+    <string name="ui_cab_pay_each" formatted="false">Pay ₹%1$s each</string>
+    <string name="ui_cab_split_ways_each_person_scans_this_with_a" formatted="false">₹%1$s split %2$s ways. Each person scans this with any UPI app (GPay, PhonePe, Paytm, BHIM); the amount is filled in. Pays %3$s.</string>
+    <string name="ui_cab_turn_on_paid_parking_reminder_in_setting" formatted="false">Turn on \"Paid parking reminder\" in Settings &gt; Features</string>
+    <string name="ui_cab_parking_paid_for" formatted="false">Parking paid for</string>
+    <string name="ui_cab_30_minutes" formatted="false">30 minutes</string>
+    <string name="ui_cab_1_hour" formatted="false">1 hour</string>
+    <string name="ui_cab_2_hours" formatted="false">2 hours</string>
+    <string name="ui_cab_3_hours" formatted="false">3 hours</string>
+    <string name="ui_cab_4_hours" formatted="false">4 hours</string>
+    <string name="ui_cab_parking_ends_at" formatted="false">Parking ends at %1$s</string>
+    <string name="ui_cab_scan_with_your_phone_to_add_a_reminder_t" formatted="false">Scan with your phone to add a reminder to its calendar, 10 minutes before the parking runs out. The car\'s screen switches off with the engine, so the phone does the reminding.</string>
+    <string name="ui_cab_time_for_a_wash" formatted="false">Time for a wash?</string>
+    <string name="ui_cab_it_s_been_days_since_the_last_car_wash_a" formatted="false">It\'s been %1$s days since the last car wash, and no rain is expected for the next two days.</string>
+    <string name="ui_cab_washed_today" formatted="false">Washed today</string>
+    <string name="ui_cab_later" formatted="false">Later</string>
+    <string name="ui_cab_your_week_in_the_car" formatted="false">Your week in the car</string>
+    <string name="ui_cab_no_camera_on_this_unit_so_no_parking_pho" formatted="false">No camera on this unit, so no parking photo</string>
+    <string name="ui_cab_no_parking_photo_yet_one_is_taken_when_y" formatted="false">No parking photo yet: one is taken when you park</string>
+    <string name="ui_cab_taken_tap_to_close" formatted="false">Taken %1$s. Tap to close.</string>
+    <string name="ui_cab_turn_on_guest_wi_fi_in_settings_features" formatted="false">Turn on \"Guest Wi-Fi\" in Settings &gt; Features</string>
+    <string name="ui_cab_hotspot_name_as_set_on_the_unit" formatted="false">Hotspot name (as set on the unit)</string>
+    <string name="ui_cab_e_g_mycar" formatted="false">e.g. MyCar</string>
+    <string name="ui_cab_hotspot_password" formatted="false">Hotspot password</string>
+    <string name="ui_cab_guest_wi_fi" formatted="false">Guest Wi-Fi</string>
+    <string name="ui_cab_android_only_lets_the_unit_s_own_setting" formatted="false">Android only lets the unit\'s own settings switch the hotspot on. Turn it on there, come back, then show the code for passengers to join.</string>
+    <string name="ui_cab_show_the_code" formatted="false">Show the code</string>
+    <string name="ui_cab_join_the_car_s_wi_fi" formatted="false">Join the car\'s Wi-Fi</string>
+    <string name="ui_cab_point_a_phone_camera_at_this_to_join_it" formatted="false">Point a phone camera at this to join \"%1$s\". It shares the unit\'s mobile data.</string>
+    <string name="ui_cab_hotspot_settings" formatted="false">Hotspot settings</string>
+    <string name="ui_cab_open_the_unit_s_settings_network_hotspot" formatted="false">Open the unit\'s Settings &gt; Network &gt; Hotspot</string>
+    <string name="ui_cab_welcome_to_openrath" formatted="false">Welcome to OpenRath</string>
+    <string name="ui_cab_there_s_a_backup_here_from_made_by_dzire" formatted="false">There\'s a backup here from %1$s, made by Dzire Home. Bring back those settings, the fuel log and trips?</string>
+    <string name="ui_cab_there_s_a_backup_here_from_bring_back_th" formatted="false">There\'s a backup here from %1$s. Bring back those settings, the fuel log and trips?</string>
+    <string name="ui_cab_bring_them_back" formatted="false">Bring them back</string>
+    <string name="ui_cab_restored_restarting" formatted="false">Restored; restarting</string>
+    <string name="ui_cab_couldn_t_restore" formatted="false">Couldn\'t restore: %1$s</string>
+    <string name="ui_cab_start_fresh" formatted="false">Start fresh</string>
+    <string name="ui_cab_another_brand" formatted="false">Another brand…</string>
+    <string name="ui_cab_which_car_is_this_pick_the_brand" formatted="false">Which car is this? Pick the brand</string>
+    <string name="ui_cab_brand" formatted="false">Brand</string>
+    <string name="ui_cab_e_g_ford" formatted="false">e.g. Ford</string>
+    <string name="ui_cab_you_can_set_up_the_car_any_time_in_setti" formatted="false">You can set up the car any time in Settings &gt; Car</string>
+    <string name="ui_cab_model" formatted="false">Model</string>
+    <string name="ui_cab_e_g_ecosport" formatted="false">e.g. Ecosport</string>
+    <string name="ui_cab_another_model" formatted="false">Another model…</string>
+    <string name="ui_cab_which_model" formatted="false">%1$s: which model?</string>
+    <string name="ui_cab_what_shape_is_it" formatted="false">What shape is it?</string>
+    <string name="ui_cab_what_does_it_run_on" formatted="false">What does it run on?</string>
+    <string name="ui_cab_cng_cylinder_kg_leave_empty_if_unsure" formatted="false">CNG cylinder, kg (leave empty if unsure)</string>
+    <string name="ui_cab_fuel_tank_litres_leave_empty_if_unsure" formatted="false">Fuel tank, litres (leave empty if unsure)</string>
+    <string name="ui_cab_set_up_change_it_any_time_in_settings_ca" formatted="false">%1$s set up. Change it any time in Settings &gt; Car.</string>
+    <string name="ui_cab_car_2" formatted="false">Car</string>
+    <string name="ui_cab_not_set" formatted="false">not set</string>
+    <string name="ui_cab_360_view" formatted="false">"360 VIEW  ·  %1$s"</string>
+    <string name="ui_cab_your_car" formatted="false">YOUR CAR</string>
+    <string name="ui_cab_car_colour" formatted="false">Car colour</string>
+    <string name="ui_cab_car_shape" formatted="false">Car shape</string>
+    <string name="ui_cab_number_plate_e_g_dl_3c_ab_1234" formatted="false">Number plate (e.g. DL 3C AB 1234)</string>
+    <string name="ui_cab_this_screen" formatted="false">"This screen, "</string>
+    <string name="ui_cab_make_a_boot_logo_and_animation_for" formatted="false">Make a boot logo and animation for</string>
+    <string name="ui_cab_making_the_boot_animation" formatted="false">Making the boot animation</string>
+    <string name="ui_cab_drawing_frame_of" formatted="false">Drawing frame %1$s of %2$s…</string>
+    <string name="ui_cab_couldn_t_make_them" formatted="false">Couldn\'t make them</string>
+    <string name="ui_cab_saved_in" formatted="false">Saved in %1$s.</string>
+    <string name="ui_cab_saved_in_and_on" formatted="false">Saved in %1$s and on %2$s.</string>
+    <string name="ui_cab_copy_bootlogo_bmp_and_bootanimation_zip" formatted="false">Copy bootlogo.bmp and bootanimation.zip to the top folder of a USB stick, plus bootlogo.bmp into a folder named logo on it (with the file manager, or from a computer), and plug it into the stereo.</string>
+    <string name="ui_cab_they_re_already_on_the_usb_stick_keep_it" formatted="false">They\'re already on the USB stick; keep it plugged in.</string>
+    <string name="ui_cab_still_boot_logo_safe_1_open_the_stereo_s" formatted="false">STILL BOOT LOGO (safe):\n1. Open the stereo\'s Settings, then Factory settings (the code is in the stereo\'s manual or from the seller).\n2. Find Logo, Car logo or Boot logo, choose Custom or Import, and pick bootlogo.bmp.\n3. Note which logo was chosen before, so you can go back to it.</string>
+    <string name="ui_cab_boot_animation" formatted="false">BOOT ANIMATION:</string>
+    <string name="ui_cab_this_stereo_has_open_it_and_import_boota" formatted="false">This stereo has \"%1$s\". Open it and import bootanimation.zip from the USB stick.</string>
+    <string name="ui_cab_some_stereos_have_a_boot_animation_app_i" formatted="false">Some stereos have a Boot animation app (in the app list, or in Factory settings) that imports bootanimation.zip from a USB stick.</string>
+    <string name="ui_cab_without_one_it_needs_a_computer_with_adb" formatted="false">Without one it needs a computer with ADB, and a mistake can stop the stereo from starting, so follow BOOT.md in OpenRath\'s source carefully and keep a copy of the original.</string>
+    <string name="ui_cab_boot_logo_and_animation_made" formatted="false">Boot logo and animation made</string>
+    <string name="ui_cab_open" formatted="false">Open %1$s</string>
+    <string name="ui_cab_couldn_t_open_it" formatted="false">Couldn\'t open it</string>
+    <string name="ui_cab_backgroundgradient_needs_colours_like_3a" formatted="false">backgroundGradient needs colours like #3A0D5C</string>
+    <string name="ui_cab_colour_isn_t_a_colour_like_d8dce2" formatted="false">Colour %1$s isn\'t a colour like #D8DCE2</string>
+    <string name="ui_cab_couldn_t_read_theme_json" formatted="false">Couldn\'t read %1$s/theme.json: %2$s</string>
+    <string name="ui_cab_app" formatted="false">App</string>
+    <string name="ui_cab_paid_by" formatted="false">Paid by</string>
+    <string name="ui_cab_for" formatted="false">For</string>
+    <string name="ui_cab_cash" formatted="false">Cash</string>
+    <string name="ui_cab_in_the_app" formatted="false">In the app</string>
+    <string name="ui_cab_fuel_or_cng" formatted="false">Fuel or CNG</string>
+    <string name="ui_cab_toll" formatted="false">Toll</string>
+    <string name="ui_cab_parking" formatted="false">Parking</string>
+    <string name="ui_cab_food" formatted="false">Food</string>
+    <string name="ui_cab_commission" formatted="false">Commission</string>
+    <string name="ui_cab_repair" formatted="false">Repair</string>
+    <string name="ui_cab_other" formatted="false">Other</string>
+    <string name="ui_cab_street" formatted="false">Street</string>
+    <string name="ui_cab_meter" formatted="false">Meter</string>
+    <string name="ui_cab_today" formatted="false">Today</string>
+    <string name="ui_cab_yesterday" formatted="false">Yesterday</string>
+    <string name="ui_cab_this_week_from_monday" formatted="false">This week (from Monday)</string>
+    <string name="ui_cab_last_30_days" formatted="false">Last 30 days</string>
+    <string name="ui_cab_permit" formatted="false">Permit</string>
+    <string name="ui_cab_fitness_certificate" formatted="false">Fitness certificate</string>
+    <string name="ui_cab_driver_badge" formatted="false">Driver badge</string>
+    <string name="ui_cab_road_tax" formatted="false">Road tax</string>
+    <string name="ui_cab_insurance" formatted="false">Insurance</string>
+    <string name="ui_cab_puc_certificate" formatted="false">PUC certificate</string>
+    <string name="ui_cab_hindi" formatted="false">Hindi</string>
+    <string name="ui_cab_english" formatted="false">English</string>
+    <string name="ui_cab_marathi" formatted="false">Marathi</string>
+    <string name="ui_cab_kannada" formatted="false">Kannada</string>
+    <string name="ui_cab_tamil" formatted="false">Tamil</string>
+    <string name="ui_cab_telugu" formatted="false">Telugu</string>
+    <string name="ui_cab_bengali" formatted="false">Bengali</string>
+    <string name="ui_cab_switch_them_on_above" formatted="false">switch them on above</string>
+    <string name="ui_cab_long_press_any_box_on_the_dashboard_and" formatted="false">long-press any box on the dashboard and pick Cab driver</string>
+    <string name="ui_cab_not_set_the_meter_can_show_a_qr_code_to" formatted="false">not set: the meter can show a QR code to pay you</string>
+    <string name="ui_cab_starts_and_ends_with_the_fare_meter" formatted="false">starts and ends with the fare meter</string>
+    <string name="ui_cab_only_from_the_cab_menu" formatted="false">only from the Cab menu</string>
+    <string name="ui_cab_not_set_goes_in_the_sos_text" formatted="false">not set (goes in the SOS text)</string>
+    <string name="ui_cab_permit_fitness_badge_road_tax_insurance" formatted="false">permit, fitness, badge, road tax, insurance, PUC: not set</string>
+    <string name="ui_cab_base_fare" formatted="false">Base fare (₹)</string>
+    <string name="ui_cab_km_included_in_the_base_fare" formatted="false">Km included in the base fare</string>
+    <string name="ui_cab_a_km_after_that" formatted="false">₹ a km after that</string>
+    <string name="ui_cab_waiting_a_minute" formatted="false">Waiting ₹ a minute</string>
+    <string name="ui_cab_free_waiting_minutes" formatted="false">Free waiting minutes</string>
+    <string name="ui_cab_night_charge_11_pm_to_5_am" formatted="false">Night charge, 11 pm to 5 am (%)</string>
+    <string name="ui_cab_daily_target_net" formatted="false">Daily target (₹ net)</string>
+    <string name="ui_cab_spot_the_colour" formatted="false">Spot the colour</string>
+    <string name="ui_cab_number_plates" formatted="false">Number plates</string>
+    <string name="ui_cab_how_far" formatted="false">How far?</string>
+    <string name="ui_cab_white" formatted="false">White</string>
+    <string name="ui_cab_silver" formatted="false">Silver</string>
+    <string name="ui_cab_black" formatted="false">Black</string>
+    <string name="ui_cab_red" formatted="false">Red</string>
+    <string name="ui_cab_blue" formatted="false">Blue</string>
+    <string name="ui_cab_grey" formatted="false">Grey</string>
+    <string name="ui_cab_brown" formatted="false">Brown</string>
+    <string name="ui_cab_yellow" formatted="false">Yellow</string>
+    <string name="ui_cab_green" formatted="false">Green</string>
+    <string name="ui_cab_orange" formatted="false">Orange</string>
+    <string name="ui_cab_delhi" formatted="false">Delhi</string>
+    <string name="ui_cab_haryana" formatted="false">Haryana</string>
+    <string name="ui_cab_uttar_pradesh" formatted="false">Uttar Pradesh</string>
+    <string name="ui_cab_rajasthan" formatted="false">Rajasthan</string>
+    <string name="ui_cab_punjab" formatted="false">Punjab</string>
+    <string name="ui_cab_chandigarh" formatted="false">Chandigarh</string>
+    <string name="ui_cab_himachal" formatted="false">Himachal</string>
+    <string name="ui_cab_uttarakhand" formatted="false">Uttarakhand</string>
+    <string name="ui_cab_jammu_kashmir" formatted="false">Jammu &amp; Kashmir</string>
+    <string name="ui_cab_maharashtra" formatted="false">Maharashtra</string>
+    <string name="ui_cab_gujarat" formatted="false">Gujarat</string>
+    <string name="ui_cab_madhya_pradesh" formatted="false">Madhya Pradesh</string>
+    <string name="ui_cab_karnataka" formatted="false">Karnataka</string>
+    <string name="ui_cab_tamil_nadu" formatted="false">Tamil Nadu</string>
+    <string name="ui_cab_kerala" formatted="false">Kerala</string>
+    <string name="ui_cab_andhra_pradesh" formatted="false">Andhra Pradesh</string>
+    <string name="ui_cab_telangana" formatted="false">Telangana</string>
+    <string name="ui_cab_west_bengal" formatted="false">West Bengal</string>
+    <string name="ui_cab_bihar" formatted="false">Bihar</string>
+    <string name="ui_cab_odisha" formatted="false">Odisha</string>
+    <string name="ui_cab_goa" formatted="false">Goa</string>
+    <string name="ui_cab_assam" formatted="false">Assam</string>
+    <string name="ui_cab_jharkhand" formatted="false">Jharkhand</string>
+    <string name="ui_cab_chhattisgarh" formatted="false">Chhattisgarh</string>
+    <string name="ui_cab_bharat_series" formatted="false">Bharat series</string>
+    <string name="ui_cab_where_we_re_going" formatted="false">Where we\'re going</string>
+    <string name="ui_cab_home" formatted="false">Home</string>
+    <string name="ui_cab_office" formatted="false">Office</string>
+    <string name="ui_cab_rc_registration" formatted="false">RC (registration)</string>
+    <string name="ui_cab_driving_licence" formatted="false">Driving licence</string>
+    <string name="ui_cab_this_app_is_locked_while_the_car_is_movi" formatted="false">This app is locked while the car is moving</string>
+    <string name="ui_cab_petrol_2" formatted="false">Petrol</string>
+    <string name="ui_cab_diesel" formatted="false">Diesel</string>
+    <string name="ui_cab_petrol_hybrid" formatted="false">Petrol hybrid</string>
+    <string name="ui_cab_electric" formatted="false">Electric</string>
+    <string name="ui_cab_hatchback" formatted="false">Hatchback</string>
+    <string name="ui_cab_saloon_sedan" formatted="false">Saloon (sedan)</string>
+    <string name="ui_cab_muv_people_carrier" formatted="false">MUV / people carrier</string>
+    <string name="ui_cab_pearl_white" formatted="false">Pearl white</string>
+    <string name="ui_cab_beige" formatted="false">Beige</string>
+    <string name="ui_cab_top" formatted="false">Top</string>
+    <string name="ui_cab_front" formatted="false">Front</string>
+    <string name="ui_cab_left" formatted="false">Left</string>
+    <string name="ui_cab_right" formatted="false">Right</string>
+    <string name="ui_cab_rear" formatted="false">Rear</string>
+    <string name="ui_cab_colour" formatted="false">Colour</string>
+    <string name="ui_cab_shape" formatted="false">Shape</string>
+    <string name="ui_cab_plate" formatted="false">Plate</string>
+    <string name="ui_cab_360_camera" formatted="false">360 camera</string>
+    <string-array name="ui_cab">
+        <item>@string/ui_cab_min</item>
+        <item>@string/ui_cab_h_min</item>
+        <item>@string/ui_cab_expired_yesterday</item>
+        <item>@string/ui_cab_expired_days_ago</item>
+        <item>@string/ui_cab_expires_today</item>
+        <item>@string/ui_cab_expires_in_1_day</item>
+        <item>@string/ui_cab_expires_in_days</item>
+        <item>@string/ui_cab_target_reached_today_well_done</item>
+        <item>@string/ui_cab_you_ve_been_on_duty_for_hours_time_for_a</item>
+        <item>@string/ui_cab_turn_on_cab_driver_tools_in_settings_cab</item>
+        <item>@string/ui_cab_meter_show_it</item>
+        <item>@string/ui_cab_start_the_fare_meter</item>
+        <item>@string/ui_cab_add_a_ride</item>
+        <item>@string/ui_cab_add_a_cost_fuel_toll_food</item>
+        <item>@string/ui_cab_earnings_today_and_this_week</item>
+        <item>@string/ui_cab_ride_apps</item>
+        <item>@string/ui_cab_quiet_ride_on_tap_to_end</item>
+        <item>@string/ui_cab_passenger_in_quiet_ride</item>
+        <item>@string/ui_cab_phrases_for_the_passenger</item>
+        <item>@string/ui_cab_pickup_hotspots_now</item>
+        <item>@string/ui_cab_cng_stations_near_here</item>
+        <item>@string/ui_cab_cng_fill_ups</item>
+        <item>@string/ui_cab_ride_notes_and_lost_items</item>
+        <item>@string/ui_cab_papers_due</item>
+        <item>@string/ui_cab_end_duty_on_for</item>
+        <item>@string/ui_cab_start_duty_now</item>
+        <item>@string/ui_cab_duty_ended_after</item>
+        <item>@string/ui_cab_sos_send_my_location</item>
+        <item>@string/ui_cab_all_the_cab_tools_are_switched_off_in_se</item>
+        <item>@string/ui_cab_close</item>
+        <item>@string/ui_cab_cab_today_net_1_ride</item>
+        <item>@string/ui_cab_cab_today_net_rides</item>
+        <item>@string/ui_cab_no_ride_apps_found_install_uber_driver_o</item>
+        <item>@string/ui_cab_quiet_ride_music_down_messages_not_read</item>
+        <item>@string/ui_cab_quiet_ride_ended</item>
+        <item>@string/ui_cab_say_to_the_passenger</item>
+        <item>@string/ui_cab_no_voice_on_the_unit_so_here_it_is_in_en</item>
+        <item>@string/ui_cab_language</item>
+        <item>@string/ui_cab_phrases_in</item>
+        <item>@string/ui_cab_add_your_own</item>
+        <item>@string/ui_cab_type_it_in_any_language</item>
+        <item>@string/ui_cab_your_own_phrase</item>
+        <item>@string/ui_cab_save</item>
+        <item>@string/ui_cab_cancel</item>
+        <item>@string/ui_cab_pickup_hotspots</item>
+        <item>@string/ui_cab_not_enough_rides_around_this_hour_yet_ea</item>
+        <item>@string/ui_cab_ok</item>
+        <item>@string/ui_cab_km_away</item>
+        <item>@string/ui_cab_rides_around_00</item>
+        <item>@string/ui_cab_where_you_got_rides_at_this_hour_tap_to</item>
+        <item>@string/ui_cab_needs_a_map_app_google_maps_organic_maps</item>
+        <item>@string/ui_cab_cng_km_kg_average_last_a_km</item>
+        <item>@string/ui_cab_no_cng_fills_yet</item>
+        <item>@string/ui_cab_cng_km_kg_shows_after_two_fills</item>
+        <item>@string/ui_cab_add_a_fill</item>
+        <item>@string/ui_cab_kg</item>
+        <item>@string/ui_cab_amount_paid</item>
+        <item>@string/ui_cab_odometer_km</item>
+        <item>@string/ui_cab_add_a_cng_fill</item>
+        <item>@string/ui_cab_enter_the_kg_and_the_odometer_as_numbers</item>
+        <item>@string/ui_cab_no_notes_yet</item>
+        <item>@string/ui_cab_ride_notes</item>
+        <item>@string/ui_cab_lost_item_photo</item>
+        <item>@string/ui_cab_add_a_note</item>
+        <item>@string/ui_cab_passenger_s_name_what_was_left_a_phone_n</item>
+        <item>@string/ui_cab_note</item>
+        <item>@string/ui_cab_what_was_left_and_by_whom</item>
+        <item>@string/ui_cab_left_in_the_car</item>
+        <item>@string/ui_cab_saved_in_ride_notes</item>
+        <item>@string/ui_cab_photo_saved</item>
+        <item>@string/ui_cab_no_camera_free_for_a_photo_so_it_s_a_not</item>
+        <item>@string/ui_cab_taking_a_photo_with_the_car_s_camera</item>
+        <item>@string/ui_cab_left_in_the_car_2</item>
+        <item>@string/ui_cab_delete</item>
+        <item>@string/ui_cab_tap_to_set_the_expiry_date</item>
+        <item>@string/ui_cab_papers_reminded_15_days_ahead</item>
+        <item>@string/ui_cab_fare</item>
+        <item>@string/ui_cab_enter_the_fare_in_rupees</item>
+        <item>@string/ui_cab_amount</item>
+        <item>@string/ui_cab_add_a_cost</item>
+        <item>@string/ui_cab_enter_the_amount_in_rupees</item>
+        <item>@string/ui_cab_net</item>
+        <item>@string/ui_cab_1_ride_costs</item>
+        <item>@string/ui_cab_rides_costs</item>
+        <item>@string/ui_cab_this_week_by_app</item>
+        <item>@string/ui_cab_today_by_payment</item>
+        <item>@string/ui_cab_daily_target_reached</item>
+        <item>@string/ui_cab_daily_target_to_go</item>
+        <item>@string/ui_cab_earnings</item>
+        <item>@string/ui_cab_all_entries</item>
+        <item>@string/ui_cab_nothing_logged_yet</item>
+        <item>@string/ui_cab_rides_and_costs_tap_one_to_delete_it</item>
+        <item>@string/ui_cab_delete_this_entry</item>
+        <item>@string/ui_cab_keep</item>
+        <item>@string/ui_cab_hide</item>
+        <item>@string/ui_cab_stop_and_charge</item>
+        <item>@string/ui_cab_km_min_waiting</item>
+        <item>@string/ui_cab_night_charge</item>
+        <item>@string/ui_cab_for_the_first_km_then_a_km</item>
+        <item>@string/ui_cab_km_min_waiting_2</item>
+        <item>@string/ui_cab_night_charge_2</item>
+        <item>@string/ui_cab_fare_2</item>
+        <item>@string/ui_cab_save_it_to_the_earnings_log</item>
+        <item>@string/ui_cab_paid_in_cash</item>
+        <item>@string/ui_cab_upi_qr</item>
+        <item>@string/ui_cab_paid_by_upi</item>
+        <item>@string/ui_cab_pay</item>
+        <item>@string/ui_cab_scan_with_any_upi_app_gpay_phonepe_paytm</item>
+        <item>@string/ui_cab_set_your_upi_id_in_settings_cab_driver_t</item>
+        <item>@string/ui_cab_don_t_save</item>
+        <item>@string/ui_cab_contact_name</item>
+        <item>@string/ui_cab_contact_phone_number</item>
+        <item>@string/ui_cab_sos_contacts</item>
+        <item>@string/ui_cab_sos_texts_them_where_the_car_is_without</item>
+        <item>@string/ui_cab_no_sos_contacts_yet</item>
+        <item>@string/ui_cab_add_two_people_to_text_in_an_emergency</item>
+        <item>@string/ui_cab_add_them</item>
+        <item>@string/ui_cab_call_112</item>
+        <item>@string/ui_cab_and</item>
+        <item>@string/ui_cab_sending_sos_with_your_location_to</item>
+        <item>@string/ui_cab_sos_sent_to</item>
+        <item>@string/ui_cab_the_stereo_can_t_send_texts_no_sim_so_it</item>
+        <item>@string/ui_cab_sos_text</item>
+        <item>@string/ui_cab_scan_to_send_the_sos_text_from_your_phon</item>
+        <item>@string/ui_cab_net_2</item>
+        <item>@string/ui_cab_hours_on_duty</item>
+        <item>@string/ui_cab_for_km_km_waiting_4_s_min_after_5_s_min</item>
+        <item>@string/ui_cab_your_upi_id</item>
+        <item>@string/ui_cab_that_doesn_t_look_like_a_upi_id_name_ban</item>
+        <item>@string/ui_cab_of_full</item>
+        <item>@string/ui_cab_e_g_dl_1r_ab_1234</item>
+        <item>@string/ui_cab_vehicle_number</item>
+        <item>@string/ui_cab_of_6_set</item>
+        <item>@string/ui_cab_entries</item>
+        <item>@string/ui_cab_delete_every_ride_and_cost_in_the_log</item>
+        <item>@string/ui_cab_delete_all</item>
+        <item>@string/ui_cab_enter_a_number</item>
+        <item>@string/ui_cab_fare_meter_rates</item>
+        <item>@string/ui_cab_left_seat</item>
+        <item>@string/ui_cab_right_seat</item>
+        <item>@string/ui_cab_who_sees_a_car_this_colour_first_tap_you</item>
+        <item>@string/ui_cab_car</item>
+        <item>@string/ui_cab_long_press_a_name_to_change_it_scores_st</item>
+        <item>@string/ui_cab_player_s_name</item>
+        <item>@string/ui_cab_number_plates_from_other_states_of_found</item>
+        <item>@string/ui_cab_search_for_a_place_on_the_map_first_or_s</item>
+        <item>@string/ui_cab_straight_line_distance_the_road_is_a_lit</item>
+        <item>@string/ui_cab_km_to</item>
+        <item>@string/ui_cab_e_g_nani_s_house</item>
+        <item>@string/ui_cab_call_this_place</item>
+        <item>@string/ui_cab_not_added</item>
+        <item>@string/ui_cab_import_from_openrath_documents</item>
+        <item>@string/ui_cab_car_documents</item>
+        <item>@string/ui_cab_show</item>
+        <item>@string/ui_cab_replace_with_another_photo</item>
+        <item>@string/ui_cab_remove</item>
+        <item>@string/ui_cab_removed</item>
+        <item>@string/ui_cab_no_picture_picker_on_this_unit_copy_the</item>
+        <item>@string/ui_cab_saved</item>
+        <item>@string/ui_cab_couldn_t_use_that_photo</item>
+        <item>@string/ui_cab_nothing_to_import_put_photos_named_rc_in</item>
+        <item>@string/ui_cab_imported_you_can_delete_the_copies_in_op</item>
+        <item>@string/ui_cab_no_documents_added_yet_settings_car_car</item>
+        <item>@string/ui_cab_tap_for_the_next_of</item>
+        <item>@string/ui_cab_valet_mode_is_on_enter_the_pin</item>
+        <item>@string/ui_cab_wrong_pin</item>
+        <item>@string/ui_cab_valet_mode_is_off</item>
+        <item>@string/ui_cab_valet_mode_is_on_volume_up_to_warning_ab</item>
+        <item>@string/ui_cab_choose_a_4_digit_pin_for_valet_mode</item>
+        <item>@string/ui_cab_use_4_to_8_digits</item>
+        <item>@string/ui_cab_lock_these_apps_while_moving</item>
+        <item>@string/ui_cab_hello</item>
+        <item>@string/ui_cab_add_drivers_in_settings_family_first</item>
+        <item>@string/ui_cab_add_a_driver</item>
+        <item>@string/ui_cab_remove_a_driver</item>
+        <item>@string/ui_cab_who_s_driving</item>
+        <item>@string/ui_cab_name</item>
+        <item>@string/ui_cab_add_a_driver_2</item>
+        <item>@string/ui_cab_your_current_settings_become_this_driver</item>
+        <item>@string/ui_cab_add</item>
+        <item>@string/ui_cab_added</item>
+        <item>@string/ui_cab_switch_to_another_driver_to_remove</item>
+        <item>@string/ui_cab_remove_a_driver_2</item>
+        <item>@string/ui_cab_name_e_g_papa</item>
+        <item>@string/ui_cab_phone_number</item>
+        <item>@string/ui_cab_emergency_contact</item>
+        <item>@string/ui_cab_called_after_a_crash_if_nobody_taps_i_m</item>
+        <item>@string/ui_cab_are_you_ok_test</item>
+        <item>@string/ui_cab_are_you_ok</item>
+        <item>@string/ui_cab_a_very_hard_stop_was_detected_set_an_eme</item>
+        <item>@string/ui_cab_a_very_hard_stop_was_detected_calling_in</item>
+        <item>@string/ui_cab_i_m_ok</item>
+        <item>@string/ui_cab_call_now</item>
+        <item>@string/ui_cab_where_the_car_is</item>
+        <item>@string/ui_cab_scan_to_open_the_spot_in_google_maps</item>
+        <item>@string/ui_cab_the_car_is_at_scan_for_the_spot_in_googl</item>
+        <item>@string/ui_cab_test_would_call_read_out_the_place_below</item>
+        <item>@string/ui_cab_calling_read_out_the_place_below_tap_i_m</item>
+        <item>@string/ui_cab_no_emergency_contact_is_set_tap_call_112</item>
+        <item>@string/ui_cab_hold_the_phone_about_30_cm_away_straight</item>
+        <item>@string/ui_cab_done</item>
+        <item>@string/ui_cab_driven_km_in_h_min</item>
+        <item>@string/ui_cab_average_km_h</item>
+        <item>@string/ui_cab_petrol</item>
+        <item>@string/ui_cab_a_km</item>
+        <item>@string/ui_cab_tolls</item>
+        <item>@string/ui_cab_driving_score_out_of_100</item>
+        <item>@string/ui_cab_best_drive</item>
+        <item>@string/ui_cab_needs_work</item>
+        <item>@string/ui_cab_turn_on_split_the_cost_by_upi_in_setting</item>
+        <item>@string/ui_cab_your_upi_id_like_name_okbank</item>
+        <item>@string/ui_cab_total_to_split_last_fill_up_shown</item>
+        <item>@string/ui_cab_total_to_split</item>
+        <item>@string/ui_cab_how_many_people_you_included</item>
+        <item>@string/ui_cab_at_least_2_people</item>
+        <item>@string/ui_cab_pay_each</item>
+        <item>@string/ui_cab_split_ways_each_person_scans_this_with_a</item>
+        <item>@string/ui_cab_turn_on_paid_parking_reminder_in_setting</item>
+        <item>@string/ui_cab_parking_paid_for</item>
+        <item>@string/ui_cab_30_minutes</item>
+        <item>@string/ui_cab_1_hour</item>
+        <item>@string/ui_cab_2_hours</item>
+        <item>@string/ui_cab_3_hours</item>
+        <item>@string/ui_cab_4_hours</item>
+        <item>@string/ui_cab_parking_ends_at</item>
+        <item>@string/ui_cab_scan_with_your_phone_to_add_a_reminder_t</item>
+        <item>@string/ui_cab_time_for_a_wash</item>
+        <item>@string/ui_cab_it_s_been_days_since_the_last_car_wash_a</item>
+        <item>@string/ui_cab_washed_today</item>
+        <item>@string/ui_cab_later</item>
+        <item>@string/ui_cab_your_week_in_the_car</item>
+        <item>@string/ui_cab_no_camera_on_this_unit_so_no_parking_pho</item>
+        <item>@string/ui_cab_no_parking_photo_yet_one_is_taken_when_y</item>
+        <item>@string/ui_cab_taken_tap_to_close</item>
+        <item>@string/ui_cab_turn_on_guest_wi_fi_in_settings_features</item>
+        <item>@string/ui_cab_hotspot_name_as_set_on_the_unit</item>
+        <item>@string/ui_cab_e_g_mycar</item>
+        <item>@string/ui_cab_hotspot_password</item>
+        <item>@string/ui_cab_guest_wi_fi</item>
+        <item>@string/ui_cab_android_only_lets_the_unit_s_own_setting</item>
+        <item>@string/ui_cab_show_the_code</item>
+        <item>@string/ui_cab_join_the_car_s_wi_fi</item>
+        <item>@string/ui_cab_point_a_phone_camera_at_this_to_join_it</item>
+        <item>@string/ui_cab_hotspot_settings</item>
+        <item>@string/ui_cab_open_the_unit_s_settings_network_hotspot</item>
+        <item>@string/ui_cab_welcome_to_openrath</item>
+        <item>@string/ui_cab_there_s_a_backup_here_from_made_by_dzire</item>
+        <item>@string/ui_cab_there_s_a_backup_here_from_bring_back_th</item>
+        <item>@string/ui_cab_bring_them_back</item>
+        <item>@string/ui_cab_restored_restarting</item>
+        <item>@string/ui_cab_couldn_t_restore</item>
+        <item>@string/ui_cab_start_fresh</item>
+        <item>@string/ui_cab_another_brand</item>
+        <item>@string/ui_cab_which_car_is_this_pick_the_brand</item>
+        <item>@string/ui_cab_brand</item>
+        <item>@string/ui_cab_e_g_ford</item>
+        <item>@string/ui_cab_you_can_set_up_the_car_any_time_in_setti</item>
+        <item>@string/ui_cab_model</item>
+        <item>@string/ui_cab_e_g_ecosport</item>
+        <item>@string/ui_cab_another_model</item>
+        <item>@string/ui_cab_which_model</item>
+        <item>@string/ui_cab_what_shape_is_it</item>
+        <item>@string/ui_cab_what_does_it_run_on</item>
+        <item>@string/ui_cab_cng_cylinder_kg_leave_empty_if_unsure</item>
+        <item>@string/ui_cab_fuel_tank_litres_leave_empty_if_unsure</item>
+        <item>@string/ui_cab_set_up_change_it_any_time_in_settings_ca</item>
+        <item>@string/ui_cab_car_2</item>
+        <item>@string/ui_cab_not_set</item>
+        <item>@string/ui_cab_360_view</item>
+        <item>@string/ui_cab_your_car</item>
+        <item>@string/ui_cab_car_colour</item>
+        <item>@string/ui_cab_car_shape</item>
+        <item>@string/ui_cab_number_plate_e_g_dl_3c_ab_1234</item>
+        <item>@string/ui_cab_this_screen</item>
+        <item>@string/ui_cab_make_a_boot_logo_and_animation_for</item>
+        <item>@string/ui_cab_making_the_boot_animation</item>
+        <item>@string/ui_cab_drawing_frame_of</item>
+        <item>@string/ui_cab_couldn_t_make_them</item>
+        <item>@string/ui_cab_saved_in</item>
+        <item>@string/ui_cab_saved_in_and_on</item>
+        <item>@string/ui_cab_copy_bootlogo_bmp_and_bootanimation_zip</item>
+        <item>@string/ui_cab_they_re_already_on_the_usb_stick_keep_it</item>
+        <item>@string/ui_cab_still_boot_logo_safe_1_open_the_stereo_s</item>
+        <item>@string/ui_cab_boot_animation</item>
+        <item>@string/ui_cab_this_stereo_has_open_it_and_import_boota</item>
+        <item>@string/ui_cab_some_stereos_have_a_boot_animation_app_i</item>
+        <item>@string/ui_cab_without_one_it_needs_a_computer_with_adb</item>
+        <item>@string/ui_cab_boot_logo_and_animation_made</item>
+        <item>@string/ui_cab_open</item>
+        <item>@string/ui_cab_couldn_t_open_it</item>
+        <item>@string/ui_cab_backgroundgradient_needs_colours_like_3a</item>
+        <item>@string/ui_cab_colour_isn_t_a_colour_like_d8dce2</item>
+        <item>@string/ui_cab_couldn_t_read_theme_json</item>
+        <item>@string/ui_cab_app</item>
+        <item>@string/ui_cab_paid_by</item>
+        <item>@string/ui_cab_for</item>
+        <item>@string/ui_cab_cash</item>
+        <item>@string/ui_cab_in_the_app</item>
+        <item>@string/ui_cab_fuel_or_cng</item>
+        <item>@string/ui_cab_toll</item>
+        <item>@string/ui_cab_parking</item>
+        <item>@string/ui_cab_food</item>
+        <item>@string/ui_cab_commission</item>
+        <item>@string/ui_cab_repair</item>
+        <item>@string/ui_cab_other</item>
+        <item>@string/ui_cab_street</item>
+        <item>@string/ui_cab_meter</item>
+        <item>@string/ui_cab_today</item>
+        <item>@string/ui_cab_yesterday</item>
+        <item>@string/ui_cab_this_week_from_monday</item>
+        <item>@string/ui_cab_last_30_days</item>
+        <item>@string/ui_cab_permit</item>
+        <item>@string/ui_cab_fitness_certificate</item>
+        <item>@string/ui_cab_driver_badge</item>
+        <item>@string/ui_cab_road_tax</item>
+        <item>@string/ui_cab_insurance</item>
+        <item>@string/ui_cab_puc_certificate</item>
+        <item>@string/ui_cab_hindi</item>
+        <item>@string/ui_cab_english</item>
+        <item>@string/ui_cab_marathi</item>
+        <item>@string/ui_cab_kannada</item>
+        <item>@string/ui_cab_tamil</item>
+        <item>@string/ui_cab_telugu</item>
+        <item>@string/ui_cab_bengali</item>
+        <item>@string/ui_cab_switch_them_on_above</item>
+        <item>@string/ui_cab_long_press_any_box_on_the_dashboard_and</item>
+        <item>@string/ui_cab_not_set_the_meter_can_show_a_qr_code_to</item>
+        <item>@string/ui_cab_starts_and_ends_with_the_fare_meter</item>
+        <item>@string/ui_cab_only_from_the_cab_menu</item>
+        <item>@string/ui_cab_not_set_goes_in_the_sos_text</item>
+        <item>@string/ui_cab_permit_fitness_badge_road_tax_insurance</item>
+        <item>@string/ui_cab_base_fare</item>
+        <item>@string/ui_cab_km_included_in_the_base_fare</item>
+        <item>@string/ui_cab_a_km_after_that</item>
+        <item>@string/ui_cab_waiting_a_minute</item>
+        <item>@string/ui_cab_free_waiting_minutes</item>
+        <item>@string/ui_cab_night_charge_11_pm_to_5_am</item>
+        <item>@string/ui_cab_daily_target_net</item>
+        <item>@string/ui_cab_spot_the_colour</item>
+        <item>@string/ui_cab_number_plates</item>
+        <item>@string/ui_cab_how_far</item>
+        <item>@string/ui_cab_white</item>
+        <item>@string/ui_cab_silver</item>
+        <item>@string/ui_cab_black</item>
+        <item>@string/ui_cab_red</item>
+        <item>@string/ui_cab_blue</item>
+        <item>@string/ui_cab_grey</item>
+        <item>@string/ui_cab_brown</item>
+        <item>@string/ui_cab_yellow</item>
+        <item>@string/ui_cab_green</item>
+        <item>@string/ui_cab_orange</item>
+        <item>@string/ui_cab_delhi</item>
+        <item>@string/ui_cab_haryana</item>
+        <item>@string/ui_cab_uttar_pradesh</item>
+        <item>@string/ui_cab_rajasthan</item>
+        <item>@string/ui_cab_punjab</item>
+        <item>@string/ui_cab_chandigarh</item>
+        <item>@string/ui_cab_himachal</item>
+        <item>@string/ui_cab_uttarakhand</item>
+        <item>@string/ui_cab_jammu_kashmir</item>
+        <item>@string/ui_cab_maharashtra</item>
+        <item>@string/ui_cab_gujarat</item>
+        <item>@string/ui_cab_madhya_pradesh</item>
+        <item>@string/ui_cab_karnataka</item>
+        <item>@string/ui_cab_tamil_nadu</item>
+        <item>@string/ui_cab_kerala</item>
+        <item>@string/ui_cab_andhra_pradesh</item>
+        <item>@string/ui_cab_telangana</item>
+        <item>@string/ui_cab_west_bengal</item>
+        <item>@string/ui_cab_bihar</item>
+        <item>@string/ui_cab_odisha</item>
+        <item>@string/ui_cab_goa</item>
+        <item>@string/ui_cab_assam</item>
+        <item>@string/ui_cab_jharkhand</item>
+        <item>@string/ui_cab_chhattisgarh</item>
+        <item>@string/ui_cab_bharat_series</item>
+        <item>@string/ui_cab_where_we_re_going</item>
+        <item>@string/ui_cab_home</item>
+        <item>@string/ui_cab_office</item>
+        <item>@string/ui_cab_rc_registration</item>
+        <item>@string/ui_cab_driving_licence</item>
+        <item>@string/ui_cab_this_app_is_locked_while_the_car_is_movi</item>
+        <item>@string/ui_cab_petrol_2</item>
+        <item>@string/ui_cab_diesel</item>
+        <item>@string/ui_cab_petrol_hybrid</item>
+        <item>@string/ui_cab_electric</item>
+        <item>@string/ui_cab_hatchback</item>
+        <item>@string/ui_cab_saloon_sedan</item>
+        <item>@string/ui_cab_muv_people_carrier</item>
+        <item>@string/ui_cab_pearl_white</item>
+        <item>@string/ui_cab_beige</item>
+        <item>@string/ui_cab_top</item>
+        <item>@string/ui_cab_front</item>
+        <item>@string/ui_cab_left</item>
+        <item>@string/ui_cab_right</item>
+        <item>@string/ui_cab_rear</item>
+        <item>@string/ui_cab_colour</item>
+        <item>@string/ui_cab_shape</item>
+        <item>@string/ui_cab_plate</item>
+        <item>@string/ui_cab_360_camera</item>
+    </string-array>
+</resources>

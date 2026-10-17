@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!-- A stand-in for a fleet's device-management app, for the on-device tests only. Made device owner on
+     a fresh emulator with adb, it sets OpenRath's managed settings the way a console would. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.openrath.fleet">
+    <application android:label="OpenRath fleet test" android:hasCode="true">
+        <receiver android:name="org.openrath.fleet.Admin" android:exported="true"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data android:name="android.app.device_admin" android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+    </application>
+    <instrumentation android:name="org.openrath.fleet.Setup" android:targetPackage="org.openrath.fleet"
+        android:label="Set OpenRath's managed settings" />
+</manifest>

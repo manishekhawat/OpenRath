@@ -170,10 +170,10 @@ final class News {
     static String age(long now) {
         if (at <= 0) return "";
         long m = (now - at) / 60000;
-        if (m < 1) return "just now";
-        if (m < 60) return m + " min ago";
+        if (m < 1) return Hindi.t("just now");
+        if (m < 60) return Hindi.f("%1$s min ago", m);
         long h = m / 60;
-        return h < 48 ? h + " h ago" : h / 24 + " days ago";
+        return h < 48 ? Hindi.f("%1$s h ago", h) : Hindi.f("%1$s days ago", h / 24);
     }
 
     private static String get(String url) throws java.io.IOException {

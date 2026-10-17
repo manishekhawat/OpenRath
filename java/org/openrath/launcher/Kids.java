@@ -76,7 +76,7 @@ final class Kids {
     }
 
     static String player(Prefs p, int i) {
-        return p.str("kid" + (i + 1), i == 0 ? "Left seat" : "Right seat");
+        return p.str("kid" + (i + 1), Hindi.t(i == 0 ? "Left seat" : "Right seat"));
     }
 
     // ------------------------------------------------------------------ the screen
@@ -93,7 +93,7 @@ final class Kids {
         final TextView[] tab = new TextView[names.length];
         for (int i = 0; i < names.length; i++) {
             final int k = i;
-            tab[i] = pill(a, names[i], 0xFF2C3A50, 18);
+            tab[i] = pill(a, Hindi.t(names[i]), 0xFF2C3A50, 18);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, Ui.px(54), i == 3 ? 0.6f : 1f);
             lp.rightMargin = Ui.px(10);
             tabs.addView(tab[i], lp);
@@ -142,13 +142,13 @@ final class Kids {
         final int[] cur = {rnd.nextInt(COLOURS.length)};
         final TextView card = Ui.text(a, 64, 0xFFFFFFFF, "sans-serif-medium", Gravity.CENTER);
         final TextView hint = Ui.text(a, 18, 0xFFC8D2E0, "sans-serif", Gravity.CENTER);
-        hint.setText("Who sees a car this colour first? Tap your name.");
+        hint.setText(Hindi.t("Who sees a car this colour first? Tap your name."));
         final Runnable paint = new Runnable() {
             @Override
             public void run() {
                 String[] c = COLOURS[cur[0]];
                 int col = 0xFF000000 | Integer.parseInt(c[1].substring(1), 16);
-                card.setText(c[0] + " car");
+                card.setText(Hindi.f("%1$s car", Hindi.t(c[0])));
                 boolean light = "White".equals(c[0]) || "Silver".equals(c[0]) || "Yellow".equals(c[0]);
                 card.setTextColor(light ? 0xFF1B2330 : 0xFFFFFFFF);
                 tint(card, col);
@@ -193,7 +193,7 @@ final class Kids {
         label(p, btn);
         v.addView(row);
         TextView foot = Ui.text(a, 13, 0xFF8FA0B6, "sans-serif", Gravity.CENTER);
-        foot.setText("Long-press a name to change it. Scores start again each day.");
+        foot.setText(Hindi.t("Long-press a name to change it. Scores start again each day."));
         foot.setPadding(0, Ui.px(8), 0, 0);
         v.addView(foot);
         return v;
@@ -209,15 +209,15 @@ final class Kids {
         e.setText(player(p, i));
         e.setSelectAllOnFocus(true);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Player's name").setView(e)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setTitle(Hindi.t("Player's name")).setView(e)
+                .setPositiveButton(Hindi.t("OK"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         String n = e.getText().toString().trim();
                         if (!n.isEmpty()) p.put("kid" + (i + 1), n);
                         done.run();
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static View plates(final Activity a, final Prefs p) {
@@ -230,9 +230,9 @@ final class Kids {
         GridLayout g = new GridLayout(a);
         g.setColumnCount(5);
         final List<String> got = found(p);
-        head.setText("Number plates from other states: " + got.size() + " of " + STATES.length + " found today");
+        head.setText(Hindi.f("Number plates from other states: %1$s of %2$s found today", got.size(), STATES.length));
         for (final String[] st : STATES) {
-            final TextView t = pill(a, st[0] + "\n" + st[1], got.contains(st[0]) ? 0xFF2E7D4F : 0xFF2C3A50, 15);
+            final TextView t = pill(a, st[0] + "\n" + Hindi.t(st[1]), got.contains(st[0]) ? 0xFF2E7D4F : 0xFF2C3A50, 15);
             t.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View x) {
@@ -240,7 +240,7 @@ final class Kids {
                     else got.add(st[0]);
                     setFound(p, got);
                     tint(t, got.contains(st[0]) ? 0xFF2E7D4F : 0xFF2C3A50);
-                    head.setText("Number plates from other states: " + got.size() + " of " + STATES.length + " found today");
+                    head.setText(Hindi.f("Number plates from other states: %1$s of %2$s found today", got.size(), STATES.length));
                 }
             });
             GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
@@ -273,7 +273,7 @@ final class Kids {
         final List<String[]> ts = targets(p);
         if (ts.isEmpty()) {
             TextView t = Ui.text(a, 22, 0xFFFFFFFF, "sans-serif", Gravity.CENTER);
-            t.setText("Search for a place on the map first,\nor save Home or Office there.");
+            t.setText(Hindi.t("Search for a place on the map first,\nor save Home or Office there."));
             v.addView(t);
             return v;
         }
@@ -281,7 +281,7 @@ final class Kids {
         final TextView big = Ui.text(a, 150, 0xFFFFFFFF, "sans-serif-light", Gravity.CENTER);
         final TextView to = Ui.text(a, 30, 0xFFC8D2E0, "sans-serif", Gravity.CENTER);
         TextView note = Ui.text(a, 14, 0xFF8FA0B6, "sans-serif", Gravity.CENTER);
-        note.setText("Straight-line distance; the road is a little longer.  Tap the place to change it, long-press to give it a name.");
+        note.setText(Hindi.t("Straight-line distance; the road is a little longer.  Tap the place to change it, long-press to give it a name."));
         v.addView(big);
         v.addView(to);
         v.addView(note);
@@ -291,7 +291,7 @@ final class Kids {
                 String[] t = ts.get(at[0]);
                 double m = Drive.fixAt == 0 ? -1 : Geo.dist(Drive.latNow, Drive.lonNow, Double.parseDouble(t[1]), Double.parseDouble(t[2]));
                 big.setText(km(m));
-                to.setText("km to " + t[0]);
+                to.setText(Hindi.f("km to %1$s", Hindi.t(t[0])));
                 v.removeCallbacks(this);
                 if (dlg.isShowing() && v.isAttachedToWindow()) v.postDelayed(this, 2000);
             }
@@ -311,18 +311,18 @@ final class Kids {
                 if (at[0] != 0 || p.str("dest", "").isEmpty()) return false;
                 final EditText e = new EditText(a);
                 e.setSingleLine(true);
-                e.setHint("e.g. Nani's house");
+                e.setHint(Hindi.t("e.g. Nani's house"));
                 e.setText(p.str("destNick", ""));
                 new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                        .setTitle("Call this place").setView(e)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        .setTitle(Hindi.t("Call this place")).setView(e)
+                        .setPositiveButton(Hindi.t("OK"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 p.put("destNick", e.getText().toString().trim());
                                 ts.get(0)[0] = p.str("destNick", "").isEmpty() ? ts.get(0)[0] : p.str("destNick", "");
                                 tick.run();
                             }
-                        }).setNegativeButton("Cancel", null).show();
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
                 return true;
             }
         });

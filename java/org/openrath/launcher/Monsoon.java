@@ -33,13 +33,13 @@ final class Monsoon {
     /** Remember the car's spot as one that floods (the last 200; one per 100 m). */
     static void mark(Context c, Prefs p) {
         if (Drive.fixAt == 0) {
-            Toast.makeText(c, "No GPS position yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(c, Hindi.t("No GPS position yet"), Toast.LENGTH_SHORT).show();
             return;
         }
         List<double[]> l = spots(p);
         for (double[] s : l)
             if (Geo.dist(s[0], s[1], Drive.latNow, Drive.lonNow) < 100) {
-                Toast.makeText(c, "This spot is already marked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(c, Hindi.t("This spot is already marked"), Toast.LENGTH_SHORT).show();
                 return;
             }
         l.add(new double[]{Drive.latNow, Drive.lonNow, System.currentTimeMillis()});
@@ -48,7 +48,7 @@ final class Monsoon {
             a.put(new JSONArray().put(String.valueOf(l.get(i)[0])).put(String.valueOf(l.get(i)[1])).put((long) l.get(i)[2]));
         }
         p.put("floodSpots", a.toString());
-        Toast.makeText(c, "Marked as a waterlogging spot", Toast.LENGTH_SHORT).show();
+        Toast.makeText(c, Hindi.t("Marked as a waterlogging spot"), Toast.LENGTH_SHORT).show();
     }
 
     static void clear(Prefs p) {

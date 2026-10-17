@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hindi for the dashboard boxes, media and weather. Machine-drafted: a native speaker should check it (docs/TRANSLATING.md). -->
+<resources>
+    <string name="ui_cards_offline" formatted="false">ऑफ़लाइन</string>
+    <string name="ui_cards_weather" formatted="false">मौसम</string>
+    <string name="ui_cards_clear" formatted="false">साफ़</string>
+    <string name="ui_cards_partly_cloudy" formatted="false">हल्के बादल</string>
+    <string name="ui_cards_cloudy" formatted="false">बादल</string>
+    <string name="ui_cards_fog" formatted="false">कोहरा</string>
+    <string name="ui_cards_drizzle" formatted="false">बूंदाबांदी</string>
+    <string name="ui_cards_rain" formatted="false">बारिश</string>
+    <string name="ui_cards_snow" formatted="false">बर्फ़</string>
+    <string name="ui_cards_showers" formatted="false">बौछारें</string>
+    <string name="ui_cards_snow_showers" formatted="false">बर्फ़ की बौछारें</string>
+    <string name="ui_cards_thunderstorm" formatted="false">आंधी-तूफ़ान</string>
+    <string name="ui_cards_raining_now" formatted="false">अभी बारिश हो रही है</string>
+    <string name="ui_cards_rain_in_about_x_min" formatted="false">लगभग %1$s मिनट में बारिश</string>
+    <string name="ui_cards_rain_likely_this_hour" formatted="false">इस घंटे बारिश की संभावना</string>
+    <string name="ui_cards_rain_likely_within_2_hours" formatted="false">2 घंटे में बारिश की संभावना</string>
+    <string name="ui_cards_offline_forecast_from_x_min_ago" formatted="false">ऑफ़लाइन · %1$s मिनट पहले का पूर्वानुमान</string>
+    <string name="ui_cards_offline_forecast_from_x_h_ago" formatted="false">ऑफ़लाइन · %1$s घंटे पहले का पूर्वानुमान</string>
+    <string name="ui_cards_offline_forecast_from_x_days_ago" formatted="false">ऑफ़लाइन · %1$s दिन पहले का पूर्वानुमान</string>
+    <string name="ui_cards_air_quality_x_aqi_x" formatted="false">हवा की गुणवत्ता: %1$s (AQI %2$s)</string>
+    <string name="ui_cards_unknown" formatted="false">पता नहीं</string>
+    <string name="ui_cards_good" formatted="false">अच्छी</string>
+    <string name="ui_cards_satisfactory" formatted="false">संतोषजनक</string>
+    <string name="ui_cards_moderate" formatted="false">मध्यम</string>
+    <string name="ui_cards_poor" formatted="false">ख़राब</string>
+    <string name="ui_cards_very_poor" formatted="false">बहुत ख़राब</string>
+    <string name="ui_cards_severe" formatted="false">गंभीर</string>
+    <string name="ui_cards_read_aloud" formatted="false">"▶  पढ़कर सुनाएं"</string>
+    <string name="ui_cards_stop" formatted="false">"■  रोकें"</string>
+    <string name="ui_cards_top_news" formatted="false">मुख्य ख़बरें</string>
+    <string name="ui_cards_x_news" formatted="false">%1$s ख़बरें</string>
+    <string name="ui_cards_offline_2" formatted="false">, ऑफ़लाइन</string>
+    <string name="ui_cards_the_news_box_is_switched_off_in_settings_features" formatted="false">ख़बरों का बॉक्स सेटिंग्स > फ़ीचर्स में बंद है।</string>
+    <string name="ui_cards_getting_the_headlines" formatted="false">सुर्ख़ियां ला रहे हैं…</string>
+    <string name="ui_cards_headlines_show_here_when_there_s_internet" formatted="false">इंटरनेट होने पर सुर्ख़ियां यहां दिखेंगी।</string>
+    <string name="ui_cards_top_stories" formatted="false">मुख्य ख़बरें</string>
+    <string name="ui_cards_india" formatted="false">भारत</string>
+    <string name="ui_cards_world" formatted="false">दुनिया</string>
+    <string name="ui_cards_business" formatted="false">कारोबार</string>
+    <string name="ui_cards_sports" formatted="false">खेल</string>
+    <string name="ui_cards_technology" formatted="false">टेक्नोलॉजी</string>
+    <string name="ui_cards_entertainment" formatted="false">मनोरंजन</string>
+    <string name="ui_cards_just_now" formatted="false">अभी-अभी</string>
+    <string name="ui_cards_x_min_ago" formatted="false">%1$s मिनट पहले</string>
+    <string name="ui_cards_x_h_ago" formatted="false">%1$s घंटे पहले</string>
+    <string name="ui_cards_x_days_ago" formatted="false">%1$s दिन पहले</string>
+    <string name="ui_cards_today" formatted="false">आज</string>
+    <string name="ui_cards_drive_time" formatted="false">ड्राइव समय</string>
+    <string name="ui_cards_avg_km_h" formatted="false">औसत KM/H</string>
+    <string name="ui_cards_parked_x" formatted="false">%1$s पार्क की</string>
+    <string name="ui_cards_this_drive_x_km" formatted="false">इस ड्राइव में %1$s km</string>
+    <string name="ui_cards_x_petrol_today" formatted="false">आज ₹%1$s का पेट्रोल</string>
+    <string name="ui_cards_score_x" formatted="false">स्कोर %1$s</string>
+    <string name="ui_cards_tolls_x_this_month" formatted="false">इस महीने टोल ₹%1$s</string>
+    <string name="ui_cards_fuel" formatted="false">ईंधन</string>
+    <string name="ui_cards_last_tank" formatted="false">पिछला टैंक</string>
+    <string name="ui_cards_average" formatted="false">औसत</string>
+    <string name="ui_cards_last_tank_km_l" formatted="false">पिछला टैंक KM/L</string>
+    <string name="ui_cards_average_km_l" formatted="false">औसत KM/L</string>
+    <string name="ui_cards_tap_to_add_your_first_fill_up" formatted="false">पहली बार टंकी भरवाना जोड़ने के लिए टैप करें</string>
+    <string name="ui_cards_mileage_shows_after_two_full_tank_fill_ups" formatted="false">दो बार फ़ुल टैंक भरवाने के बाद माइलेज दिखेगा</string>
+    <string name="ui_cards_x_fill_ups_last_x" formatted="false">"%1$s बार भरवाया  ·  पिछली बार %2$s"</string>
+    <string name="ui_cards_cab_today" formatted="false">"कैब  ·  आज"</string>
+    <string name="ui_cards_earned" formatted="false">कमाई</string>
+    <string name="ui_cards_rides" formatted="false">राइड</string>
+    <string name="ui_cards_net" formatted="false">शुद्ध</string>
+    <string name="ui_cards_turn_on_cab_driver_tools_in_settings_cab_driver" formatted="false">सेटिंग्स > कैब ड्राइवर में कैब ड्राइवर टूल चालू करें</string>
+    <string name="ui_cards_meter_x_x_km_x_min_waiting" formatted="false">"मीटर %1$s  ·  %2$s km  ·  %3$s मिनट इंतज़ार"</string>
+    <string name="ui_cards_target_x_reached" formatted="false">लक्ष्य %1$s पूरा</string>
+    <string name="ui_cards_x_to_the_target" formatted="false">लक्ष्य में %1$s बाकी</string>
+    <string name="ui_cards_on_duty_x" formatted="false">ड्यूटी पर %1$s</string>
+    <string name="ui_cards_tap_for_the_meter_rides_and_sos" formatted="false">मीटर, राइड और SOS के लिए टैप करें</string>
+    <string name="ui_cards_quiet_ride" formatted="false">शांत राइड</string>
+    <string name="ui_cards_performance" formatted="false">परफ़ॉर्मेंस</string>
+    <string name="ui_cards_temp_c" formatted="false">तापमान °C</string>
+    <string name="ui_cards_frame_ms" formatted="false">फ़्रेम ms</string>
+    <string name="ui_cards_whole_unit_x_cpu_this_app_x" formatted="false">पूरी यूनिट %1$s%% CPU, यह ऐप %2$s%%</string>
+    <string name="ui_cards_cpu_is_this_app_s_share_android_hides_the_whole_un" formatted="false">CPU इस ऐप का हिस्सा है; Android पूरी यूनिट का आंकड़ा नहीं दिखाता</string>
+    <string name="ui_cards_engine" formatted="false">इंजन</string>
+    <string name="ui_cards_coolant_c" formatted="false">कूलेंट °C</string>
+    <string name="ui_cards_battery_v" formatted="false">बैटरी V</string>
+    <string name="ui_cards_engine_data_is_off_in_settings_car" formatted="false">इंजन डेटा सेटिंग्स > कार में बंद है</string>
+    <string name="ui_cards_tap_to_choose_your_obd_ii_bluetooth_adapter" formatted="false">अपना OBD-II Bluetooth एडॉप्टर चुनने के लिए टैप करें</string>
+    <string name="ui_cards_load_x" formatted="false">लोड %1$s%%</string>
+    <string name="ui_cards_1_fault_code" formatted="false">1 फ़ॉल्ट कोड</string>
+    <string name="ui_cards_x_fault_codes" formatted="false">%1$s फ़ॉल्ट कोड</string>
+    <string name="ui_cards_no_fault_codes" formatted="false">कोई फ़ॉल्ट कोड नहीं</string>
+    <string name="ui_cards_tyres" formatted="false">टायर</string>
+    <string name="ui_cards_front_l" formatted="false">आगे बायां</string>
+    <string name="ui_cards_front_r" formatted="false">आगे दायां</string>
+    <string name="ui_cards_rear_l" formatted="false">पीछे बायां</string>
+    <string name="ui_cards_rear_r" formatted="false">पीछे दायां</string>
+    <string name="ui_cards_tyres_x" formatted="false">"टायर  ·  %1$s"</string>
+    <string name="ui_cards_tyre_sensors_are_off_in_settings_car" formatted="false">टायर सेंसर सेटिंग्स > कार में बंद हैं</string>
+    <string name="ui_cards_tap_to_find_your_tyre_sensors" formatted="false">अपने टायर सेंसर ढूंढने के लिए टैप करें</string>
+    <string name="ui_cards_front_left_x_c_x" formatted="false">"आगे बायां %1$s°C  ·  %2$s"</string>
+    <string name="ui_cards_tap_to_choose_a_widget_from_another_app_long_press" formatted="false">दूसरे ऐप का विजेट चुनने के लिए टैप करें\n(बॉक्स में कुछ और रखने के लिए देर तक दबाएं)</string>
+    <string name="ui_cards_widgets_are_off_in_settings_home_screen" formatted="false">विजेट सेटिंग्स > होम स्क्रीन में बंद हैं</string>
+    <string name="ui_cards_lights_off" formatted="false">लाइट बंद</string>
+    <string name="ui_cards_lights_on" formatted="false">लाइट चालू</string>
+    <string name="ui_cards_lights_tap_to_set_up" formatted="false">लाइट: सेट अप के लिए टैप करें</string>
+    <string name="ui_cards_welcome" formatted="false">स्वागत है</string>
+    <string name="ui_cards_engine_hot_x_c" formatted="false">"इंजन गर्म  %1$s°C"</string>
+    <string name="ui_cards_speed_camera_x_m" formatted="false">"स्पीड कैमरा  %1$s m"</string>
+    <string name="ui_cards_phone" formatted="false">फ़ोन</string>
+    <string name="ui_cards_phone_2" formatted="false">फ़ोन</string>
+    <string name="ui_cards_answer" formatted="false">उठाएं</string>
+    <string name="ui_cards_end" formatted="false">काटें</string>
+    <string name="ui_cards_the_stereo_isn_t_ready" formatted="false">स्टीरियो तैयार नहीं है</string>
+    <string name="ui_cards_calling_x" formatted="false">%1$s को कॉल कर रहे हैं…</string>
+    <string name="ui_cards_couldn_t_call_x" formatted="false">कॉल नहीं हो सका: %1$s</string>
+    <string name="ui_cards_phone_connected" formatted="false">"फ़ोन  ·  जुड़ा है"</string>
+    <string name="ui_cards_phone_not_connected" formatted="false">"फ़ोन  ·  जुड़ा नहीं"</string>
+    <string name="ui_cards_call" formatted="false">कॉल</string>
+    <string name="ui_cards_call_in_progress_or_ringing" formatted="false">कॉल चल रहा है या घंटी बज रही है</string>
+    <string name="ui_cards_called_x" formatted="false">%1$s कॉल किया</string>
+    <string name="ui_cards_called_you_x" formatted="false">%1$s आपको कॉल आया</string>
+    <string name="ui_cards_last_call_x" formatted="false">पिछला कॉल %1$s</string>
+    <string name="ui_cards_tap_to_call_back" formatted="false">वापस कॉल के लिए टैप करें</string>
+    <string name="ui_cards_phone_connected_2" formatted="false">फ़ोन जुड़ा है</string>
+    <string name="ui_cards_no_phone_connected" formatted="false">कोई फ़ोन नहीं जुड़ा</string>
+    <string name="ui_cards_your_last_call_shows_here" formatted="false">आपका पिछला कॉल यहां दिखेगा</string>
+    <string name="ui_cards_pair_your_phone_in_the_bluetooth_app" formatted="false">Bluetooth ऐप में अपना फ़ोन जोड़ें</string>
+    <string name="ui_cards_scan" formatted="false">स्कैन</string>
+    <string name="ui_cards_fm_didn_t_start_x" formatted="false">FM शुरू नहीं हुआ: %1$s</string>
+    <string name="ui_cards_online_radio" formatted="false">ऑनलाइन रेडियो</string>
+    <string name="ui_cards_fm_radio" formatted="false">FM रेडियो</string>
+    <string name="ui_cards_music_files" formatted="false">म्यूज़िक फ़ाइलें</string>
+    <string name="ui_cards_music_app" formatted="false">म्यूज़िक ऐप</string>
+    <string name="ui_cards_auto" formatted="false">ऑटो</string>
+    <string name="ui_cards_online_radio_2" formatted="false">ऑनलाइन रेडियो</string>
+    <string name="ui_cards_music_files_2" formatted="false">म्यूज़िक फ़ाइलें</string>
+    <string name="ui_cards_connecting" formatted="false">जोड़ रहे हैं…</string>
+    <string name="ui_cards_tap_play_for_indian_stations" formatted="false">भारतीय स्टेशनों के लिए प्ले दबाएं</string>
+    <string name="ui_cards_tap_play_for_music_on_the_unit_or_usb" formatted="false">यूनिट या USB के गाने सुनने के लिए प्ले दबाएं</string>
+    <string name="ui_cards_fm_radio_2" formatted="false">FM रेडियो</string>
+    <string name="ui_cards_music_app_2" formatted="false">म्यूज़िक ऐप</string>
+    <string name="ui_cards_tap_to_open_the_radio" formatted="false">रेडियो खोलने के लिए टैप करें</string>
+    <string name="ui_cards_tap_to_open_the_music_app" formatted="false">म्यूज़िक ऐप खोलने के लिए टैप करें</string>
+    <string name="ui_cards_can_t_play_this_one" formatted="false">यह नहीं चल सकता</string>
+    <string name="ui_cards_station_unavailable_trying_the_next" formatted="false">स्टेशन उपलब्ध नहीं, अगला आज़मा रहे हैं</string>
+    <string name="ui_cards_can_t_play_this_file_skipping" formatted="false">यह फ़ाइल नहीं चल सकती, छोड़ रहे हैं</string>
+    <string name="ui_cards_web_radio_unreachable" formatted="false">वेब रेडियो से संपर्क नहीं हो रहा</string>
+    <string name="ui_cards_no_playable_music_files" formatted="false">चलाने लायक कोई म्यूज़िक फ़ाइल नहीं</string>
+    <string name="ui_cards_another_app_is_playing" formatted="false">दूसरा ऐप चल रहा है</string>
+    <string name="ui_cards_finding_stations" formatted="false">स्टेशन ढूंढ रहे हैं…</string>
+    <string name="ui_cards_looking_for_music" formatted="false">गाने ढूंढ रहे हैं…</string>
+    <string name="ui_cards_no_music_files_found" formatted="false">कोई म्यूज़िक फ़ाइल नहीं मिली</string>
+    <string name="ui_cards_player" formatted="false">प्लेयर</string>
+    <string name="ui_cards_web_radio" formatted="false">वेब रेडियो</string>
+    <string name="ui_cards_music" formatted="false">म्यूज़िक</string>
+    <string name="ui_cards_topway_mcu_link_no_radio_service" formatted="false">Topway MCU लिंक (रेडियो सर्विस नहीं)</string>
+    <string name="ui_cards_open_the_radio_app_then_back_to_the_dashboard" formatted="false">रेडियो ऐप खोलें, फिर डैशबोर्ड पर वापस</string>
+    <string name="ui_cards_radio_app_s_service_x" formatted="false">रेडियो ऐप की सर्विस %1$s</string>
+    <string name="ui_cards_x_then_back_to_the_dashboard" formatted="false">%1$s, फिर डैशबोर्ड पर वापस</string>
+    <string name="ui_cards_no_mcu_link_on_this_unit" formatted="false">इस यूनिट में MCU लिंक नहीं है</string>
+    <string name="ui_cards_the_radio_app_isn_t_installed" formatted="false">रेडियो ऐप इंस्टॉल नहीं है</string>
+    <string name="ui_cards_not_ready" formatted="false">तैयार नहीं</string>
+    <string name="ui_cards_service_wasn_t_running" formatted="false">सर्विस चल नहीं रही थी</string>
+    <string name="ui_cards_the_radio_app_refused" formatted="false">रेडियो ऐप ने मना कर दिया</string>
+    <string name="ui_cards_radio_service_not_connected" formatted="false">रेडियो सर्विस से जुड़ा नहीं</string>
+    <string name="ui_cards_start_fm_first_then_try_each_until_fm_stops" formatted="false">पहले FM चालू करें, फिर FM बंद होने तक एक-एक करके आज़माएं</string>
+    <string name="ui_cards_try_each_until_fm_starts_playing" formatted="false">FM चलने तक एक-एक करके आज़माएं</string>
+    <string name="ui_cards_x_didn_t_run_x" formatted="false">%1$s नहीं चला: %2$s</string>
+    <string name="ui_cards_try_another" formatted="false">दूसरा आज़माएं</string>
+    <string name="ui_cards_close" formatted="false">बंद करें</string>
+    <string name="ui_cards_did_the_fm_radio_stop" formatted="false">क्या FM रेडियो बंद हुआ?</string>
+    <string name="ui_cards_is_the_fm_radio_playing_now_with_the_dashboard_sti" formatted="false">क्या अब FM रेडियो चल रहा है, और डैशबोर्ड सामने ही है?</string>
+    <string name="ui_cards_yes_use_this" formatted="false">हां, यही लें</string>
+    <string name="ui_cards_no_try_another" formatted="false">नहीं, दूसरा आज़माएं</string>
+    <string name="ui_cards_midnight" formatted="false">आधी रात</string>
+    <string name="ui_cards_noon" formatted="false">दोपहर 12 बजे</string>
+    <string name="ui_cards_x_am" formatted="false">सुबह %1$s बजे</string>
+    <string name="ui_cards_x_pm" formatted="false">शाम %1$s बजे</string>
+    <string name="ui_cards_flat" formatted="false">फ़्लैट</string>
+    <string name="ui_cards_bass" formatted="false">बेस</string>
+    <string name="ui_cards_vocal" formatted="false">वोकल</string>
+    <string name="ui_cards_rock" formatted="false">रॉक</string>
+    <string name="ui_cards_pop" formatted="false">पॉप</string>
+    <string name="ui_cards_classical" formatted="false">क्लासिकल</string>
+    <string name="ui_cards_custom" formatted="false">कस्टम</string>
+    <string name="ui_cards_city" formatted="false">शहर</string>
+    <string name="ui_cards_highway" formatted="false">हाईवे</string>
+    <string name="ui_cards_night" formatted="false">रात</string>
+    <string name="ui_cards_hour_night" formatted="false">रात %1$s बजे</string>
+    <string name="ui_cards_hour_morning" formatted="false">सुबह %1$s बजे</string>
+    <string name="ui_cards_hour_afternoon" formatted="false">दोपहर %1$s बजे</string>
+    <string name="ui_cards_hour_evening" formatted="false">शाम %1$s बजे</string>
+</resources>

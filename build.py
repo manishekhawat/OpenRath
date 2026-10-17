@@ -3,8 +3,8 @@
 usage: python3 build.py OUTDIR     build the signed APK into OUTDIR
        python3 build.py test       compile and run the unit tests (tests/)
        python3 build.py androidtest OUTDIR
-                                   build the on-device tests (androidTest/) into OUTDIR/openrath-test.apk;
-                                   run them with adb (see androidTest/java/.../Smoke.java)
+                                   build the on-device tests (androidTest/) into OUTDIR/openrath-test.apk
+                                   and OUTDIR/openrath-fleet.apk; run them with adb (.github/workflows/device-tests.yml)
 
 Artwork is drawn by art/lib. Tools: $THEME_TOOLS (or tools/.tools) holding apktool.jar, signer.jar
 (tools/fetch_tools.sh), android.jar (API 34) and d8.jar (build-tools 34; dx.jar still works) from the
@@ -83,7 +83,7 @@ def white(polys, size):
     im.putalpha(Image.fromarray(a))
     return im
 X = 2.4   # images are drawn for a 600 px tall screen times X, then scaled down on the unit
-VERSION_CODE, VERSION_NAME = 41, '1.33'
+VERSION_CODE, VERSION_NAME = 42, '1.34'
 # Oldest Android the APK installs on (29 = Android 10). It targets Android 14.
 MIN_SDK = 29
 
@@ -306,40 +306,54 @@ def build(outdir):
 
 
 def androidtest(outdir):
-    """openrath-test.apk: the on-device tests, signed with the app's key so they can run inside it."""
+    """openrath-test.apk: the on-device tests, signed with the app's key so they run inside it; and
+    openrath-fleet.apk: a stand-in device-management app that sets OpenRath's managed settings, so the
+    tests can check them as a fleet would see them."""
+    jar = str(TOOLS / 'android.jar')
     work = Path(outdir) / '.work-test'
     shutil.rmtree(work, ignore_errors=True)
-    app, tests, d8out, apk = work / 'app', work / 'classes', work / 'd8', work / 'apk'
-    for d in (app, tests, d8out, apk / 'res' / 'values'):
-        d.mkdir(parents=True)
-    jar = str(TOOLS / 'android.jar')
+    app = work / 'app'
+    app.mkdir(parents=True)
     subprocess.run(['javac', '-nowarn', '--release', '8', '-encoding', 'UTF-8', '-cp', jar, '-d', str(app)]
                    + [str(p) for p in (HERE / 'java').rglob('*.java')], check=True)
-    subprocess.run(['javac', '-nowarn', '--release', '8', '-encoding', 'UTF-8', '-cp', f'{jar}:{app}', '-d', str(tests)]
-                   + [str(p) for p in (HERE / 'androidTest' / 'java').rglob('*.java')], check=True)
-    # only the tests go in the APK: the app's own classes come from the installed app
+    out = [test_apk(work / 'test', HERE / 'androidTest', app, '126', Path(outdir) / 'openrath-test.apk'),
+           test_apk(work / 'fleet', HERE / 'androidTest' / 'fleet', None, '125', Path(outdir) / 'openrath-fleet.apk')]
+    shutil.rmtree(work)
+    return '\n'.join(str(p) for p in out)
+
+
+def test_apk(work, src, app, package_id, final):
+    """One test APK from src/AndroidManifest.xml, src/java and src/res; with `app`, OpenRath's classes
+    are on the class path but not in the APK (they come from the installed app)."""
+    jar = str(TOOLS / 'android.jar')
+    classes, d8out, apk = work / 'classes', work / 'd8', work / 'apk'
+    for d in (classes, d8out, apk / 'res' / 'values'):
+        d.mkdir(parents=True)
+    cp = f'{jar}:{app}' if app else jar
+    subprocess.run(['javac', '-nowarn', '--release', '8', '-encoding', 'UTF-8', '-cp', cp, '-d', str(classes)]
+                   + [str(p) for p in (src / 'java').rglob('*.java')], check=True)
     if (TOOLS / 'd8.jar').exists():
         subprocess.run(['java', '-cp', str(TOOLS / 'd8.jar'), 'com.android.tools.r8.D8', '--release', '--min-api', str(MIN_SDK),
-                        '--lib', jar, '--classpath', str(app), '--output', str(d8out)]
-                       + [str(p) for p in sorted(tests.rglob('*.class'))], check=True)
+                        '--lib', jar, '--output', str(d8out)] + (['--classpath', str(app)] if app else [])
+                       + [str(p) for p in sorted(classes.rglob('*.class'))], check=True)
         shutil.move(str(d8out / 'classes.dex'), str(apk / 'classes.dex'))
     else:
-        for p in tests.rglob('*.class'):
+        for p in classes.rglob('*.class'):
             c = bytearray(p.read_bytes()); c[7] = 50; p.write_bytes(bytes(c))
         subprocess.run(['java', '-cp', str(TOOLS / 'dx.jar'), 'com.android.dx.command.Main', '--dex',
-                        f'--output={apk / "classes.dex"}', str(tests)], check=True)
-    shutil.copy(HERE / 'androidTest' / 'AndroidManifest.xml', apk)
-    (apk / 'res' / 'values' / 'strings.xml').write_text('<resources><string name="t">OpenRath tests</string></resources>\n')
-    (apk / 'apktool.yml').write_text(APKTOOL_YML.replace('home.apk', 'test.apk').replace("forcedPackageId: '127'", "forcedPackageId: '126'"))
+                        f'--output={apk / "classes.dex"}', str(classes)], check=True)
+    shutil.copy(src / 'AndroidManifest.xml', apk)
+    if (src / 'res').is_dir():
+        shutil.copytree(src / 'res', apk / 'res', dirs_exist_ok=True)
+    (apk / 'res' / 'values' / 'test_name.xml').write_text('<resources><string name="test_name">OpenRath tests</string></resources>\n')
+    (apk / 'apktool.yml').write_text(APKTOOL_YML.replace('home.apk', 'test.apk').replace("forcedPackageId: '127'", f"forcedPackageId: '{package_id}'"))
     unsigned = work / 'unsigned.apk'
     subprocess.run(['java', '-jar', str(TOOLS / 'apktool.jar'), 'b', str(apk), '-o', str(unsigned),
                     '--use-aapt2', '-p', str(TOOLS / 'framework')], check=True)
     ks, alias, sp, kp = signing()
     subprocess.run(['java', '-jar', str(TOOLS / 'signer.jar'), '-a', str(unsigned), '-o', str(work / 'signed'),
                     '--ks', str(ks), '--ksAlias', alias, '--ksPass', sp, '--ksKeyPass', kp, '--allowResign'], check=True)
-    final = Path(outdir) / 'openrath-test.apk'
     shutil.move(next((work / 'signed').glob('*.apk')), final)
-    shutil.rmtree(work)
     return final
 
 

@@ -173,20 +173,20 @@ final class Coach {
             if (x[1] < 0.02) continue;
             if (s.length() > 0) s.append(", ");
             int i = (int) x[0];
-            if (i == 0) s.append(t.idleSec / 60).append(" min idling");
-            else if (i == 1) s.append(t.starts).append(t.starts == 1 ? " hard start" : " hard starts");
-            else s.append(Math.max(1, t.fastSec / 60)).append(" min above 90 km/h");
+            if (i == 0) s.append(Hindi.f("%1$s min idling", t.idleSec / 60));
+            else if (i == 1) s.append(Hindi.f(t.starts == 1 ? "%1$s hard start" : "%1$s hard starts", t.starts));
+            else s.append(Hindi.f("%1$s min above 90 km/h", Math.max(1, t.fastSec / 60)));
         }
-        return s.length() == 0 ? "smooth drive" : s.toString();
+        return s.length() == 0 ? Hindi.t("smooth drive") : s.toString();
     }
 
     /** The one tip for the habit that cost most overall. */
     static String tip(double[] sum) {
         int worst = sum[0] >= sum[1] && sum[0] >= sum[2] ? 0 : sum[1] >= sum[2] ? 1 : 2;
-        if (total(sum) < 0.05) return "Your driving is already easy on fuel.";
-        if (worst == 0) return "Idling costs the most. Switch off for waits longer than a minute, like level crossings.";
-        if (worst == 1) return "Hard starts cost the most. Pull away gently and change up by 2,000 rpm.";
-        return "Speed costs the most. Holding 80 instead of 100 km/h saves about a fifth of the fuel on the highway.";
+        if (total(sum) < 0.05) return Hindi.t("Your driving is already easy on fuel.");
+        if (worst == 0) return Hindi.t("Idling costs the most. Switch off for waits longer than a minute, like level crossings.");
+        if (worst == 1) return Hindi.t("Hard starts cost the most. Pull away gently and change up by 2,000 rpm.");
+        return Hindi.t("Speed costs the most. Holding 80 instead of 100 km/h saves about a fifth of the fuel on the highway.");
     }
 
     static List<Trip> trips(Prefs p) {
@@ -216,10 +216,10 @@ final class Coach {
     static void show(Activity a, Prefs p) {
         List<Trip> all = trips(p);
         if (all.isEmpty()) {
-            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Mileage coach")
-                    .setMessage("No drives recorded yet. After your next drive of a kilometre or more, this shows "
-                            + "which drives used the most extra fuel, and why.")
-                    .setPositiveButton("OK", null).show();
+            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Mileage coach"))
+                    .setMessage(Hindi.t("No drives recorded yet. After your next drive of a kilometre or more, this shows "
+                            + "which drives used the most extra fuel, and why."))
+                    .setPositiveButton(Hindi.t("OK"), null).show();
             return;
         }
         final double kmpl = Fuel.stats(p).avgKmpl > 0 ? Fuel.stats(p).avgKmpl : DEFAULT_KMPL;
@@ -237,25 +237,25 @@ final class Coach {
             }
         });
         StringBuilder s = new StringBuilder();
-        s.append(String.format(Locale.US, "Your last %d drives used about %.1f litres more than they needed",
-                all.size(), total(sum)));
-        if (price > 0) s.append(String.format(Locale.US, " (about ₹%d)", Math.round(total(sum) * price)));
-        s.append(".\n\n").append(tip(sum)).append("\n\nThe drives that used the most extra fuel:\n");
+        s.append(Hindi.f("Your last %1$s drives used about %2$s litres more than they needed",
+                all.size(), String.format(Locale.US, "%.1f", total(sum))));
+        if (price > 0) s.append(' ').append(Hindi.f("(about ₹%1$s)", Math.round(total(sum) * price)));
+        s.append(".\n\n").append(tip(sum)).append("\n\n").append(Hindi.t("The drives that used the most extra fuel:")).append('\n');
         SimpleDateFormat f = new SimpleDateFormat("EEE d MMM, h:mm a", Locale.US);
         for (int i = 0; i < Math.min(8, sorted.size()); i++) {
             Trip t = sorted.get(i);
             double[] w = waste(t, kmpl);
-            s.append("\n• ").append(f.format(new Date(t.start))).append(String.format(Locale.US, "  ·  %.1f km, %d min", t.km, t.minutes()));
+            s.append("\n• ").append(f.format(new Date(t.start))).append("  ·  ").append(Hindi.f("%1$s km, %2$s min", String.format(Locale.US, "%.1f", t.km), t.minutes()));
             s.append("\n   ").append(reasons(t, w));
             if (total(w) >= 0.02) {
-                s.append(String.format(Locale.US, "  (about %.2f l", total(w)));
-                if (price > 0) s.append(String.format(Locale.US, ", ₹%d", Math.round(total(w) * price)));
-                s.append(" extra)");
+                String l = String.format(Locale.US, "%.2f", total(w));
+                s.append("  (").append(price > 0 ? Hindi.f("about %1$s l, ₹%2$s extra", l, Math.round(total(w) * price))
+                        : Hindi.f("about %1$s l extra", l)).append(')');
             }
         }
-        s.append("\n\nEstimates for a 1.2 litre petrol engine, using ").append(Fuel.fmt(kmpl)).append(" km/l.");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Mileage coach")
-                .setMessage(s.toString()).setPositiveButton("OK", null).show();
+        s.append("\n\n").append(Hindi.f("Estimates for a 1.2 litre petrol engine, using %1$s km/l.", Fuel.fmt(kmpl)));
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Mileage coach"))
+                .setMessage(s.toString()).setPositiveButton(Hindi.t("OK"), null).show();
     }
 
     private Coach() {

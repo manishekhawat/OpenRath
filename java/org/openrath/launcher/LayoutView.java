@@ -156,13 +156,13 @@ final class LayoutView extends View implements Hub.Listener {
             String name = action.substring(6);
             double[] ll = place(name);
             if (ll == null)
-                Toast.makeText(a, "Save " + name + " on the map first (the star in the map box)", Toast.LENGTH_LONG).show();
+                Toast.makeText(a, Hindi.f("Save %1$s on the map first (the star in the map box)", Hindi.t(name)), Toast.LENGTH_LONG).show();
             else a.navigate(ll[0], ll[1], name);
         } else if (action.startsWith("fav:")) {
             final int i = Integer.parseInt(action.substring(4));
             String pkg = favourite(i);
             if (pkg == null) pickFavourite(i);
-            else if (ChildLock.blocked(prefs, pkg)) Toast.makeText(a, ChildLock.SORRY, Toast.LENGTH_SHORT).show();
+            else if (ChildLock.blocked(prefs, pkg)) Toast.makeText(a, Hindi.t(ChildLock.SORRY), Toast.LENGTH_SHORT).show();
             else {
                 Intent in = a.getPackageManager().getLaunchIntentForPackage(pkg);
                 if (in == null) pickFavourite(i);
@@ -182,7 +182,7 @@ final class LayoutView extends View implements Hub.Listener {
             final String n = action.substring(5);
             if ("apps".equals(n) || "settings".equals(n) || "user".equals(n) || "dash".equals(n)) return false;
             final String key = dockKey(n);
-            AppPicker.show(a, "App for " + label(n), new AppPicker.Picked() {
+            AppPicker.show(a, Hindi.f("App for %1$s", Hindi.t(label(n))), new AppPicker.Picked() {
                 @Override
                 public void picked(String pkg) {
                     prefs.setApp(key, pkg);
@@ -224,7 +224,7 @@ final class LayoutView extends View implements Hub.Listener {
     }
 
     private void pickFavourite(final int i) {
-        AppPicker.show(a, "Choose an app", new AppPicker.Picked() {
+        AppPicker.show(a, Hindi.t("Choose an app"), new AppPicker.Picked() {
             @Override
             public void picked(String pkg) {
                 String[] s = prefs.str("layApps", "").split(",", -1);
@@ -479,7 +479,7 @@ final class LayoutView extends View implements Hub.Listener {
             }
             float gy = p.y + (p.h - size) / 2 - (p.labels ? 8 : 0);
             glyph(c, it, cx - size / 2, gy, size, p.ink);
-            if (p.labels) text(c, label(it), cx, gy + size + 16, 13, p.ink, MED, "mm");
+            if (p.labels) text(c, Hindi.t(label(it)), cx, gy + size + 16, 13, p.ink, MED, "mm");
         }
     }
 
@@ -514,7 +514,7 @@ final class LayoutView extends View implements Hub.Listener {
 
     /** What's playing, from our own player, another app, or the radio. */
     static final class Now {
-        String title = "Nothing playing", sub = "Tap to choose music";
+        String title = Hindi.t("Nothing playing"), sub = Hindi.t("Tap to choose music");
         boolean playing, radio, idle = true;
         Bitmap art;
         float progress = -1;
@@ -592,6 +592,15 @@ final class LayoutView extends View implements Hub.Listener {
         return new SimpleDateFormat(f, Locale.US).format(new Date());
     }
 
+    /** Today's name, and "11 Oct", in the owner's language (the numbers as they are). */
+    private static String weekday() {
+        return Hindi.t(fmt("EEEE"));
+    }
+
+    private static String dayMonth() {
+        return fmt("d") + " " + Hindi.t(fmt("MMM"));
+    }
+
     private String time() {
         return fmt(h24() ? "HH:mm" : "h:mm");
     }
@@ -666,7 +675,7 @@ final class LayoutView extends View implements Hub.Listener {
                 String km = Drive.todayKm < 100 ? Fuel.fmt(Drive.todayKm) : String.valueOf(Math.round(Drive.todayKm));
                 text(c, km + " km", p.x + p.w / 2, p.y + p.h * 0.42f, 40, p.ink, MED, "mm");
                 String pl = a.hub.place;
-                text(c, pl == null || pl.isEmpty() ? "today" : "today · " + pl, p.x + p.w / 2, p.y + p.h * 0.42f + 40, 15, p.sub, REG, "mm");
+                text(c, pl == null || pl.isEmpty() ? Hindi.t("today") : Hindi.f("today · %1$s", pl), p.x + p.w / 2, p.y + p.h * 0.42f + 40, 15, p.sub, REG, "mm");
             } else if ("dock".equals(kind)) {
                 List<String> items = dockItems(p);
                 int n = items.size() + (p.clock ? 1 : 0);
@@ -691,18 +700,18 @@ final class LayoutView extends View implements Hub.Listener {
         String st = p.style.isEmpty() ? "digital" : p.style;
         if ("digital".equals(st)) {
             text(c, time(), cx, cy - 6, h * 0.26f, p.ink, MED, "mm");
-            text(c, fmt("d MMM"), cx, cy + h * 0.17f, h * 0.09f, p.sub, REG, "mm");
+            text(c, dayMonth(), cx, cy + h * 0.17f, h * 0.09f, p.sub, REG, "mm");
         } else if ("digital-line".equals(st)) {
             text(c, time(), x, y + h * 0.5f, h * 0.62f, p.ink, MED, "ls");
-            text(c, fmt("EEEE") + "   " + fmt("d MMM"), x + 4, y + h * 0.82f, h * 0.14f, p.sub, REG, "ls");
+            text(c, weekday() + "   " + dayMonth(), x + 4, y + h * 0.82f, h * 0.14f, p.sub, REG, "ls");
         } else if ("analog-date".equals(st)) {
-            text(c, fmt("EEEE") + "  " + fmt("d MMM"), cx, y + 16, 17, p.sub, REG, "mt");
+            text(c, weekday() + "  " + dayMonth(), cx, y + 16, 17, p.sub, REG, "mt");
             analog(c, cx, y + 60 + (h - 60) / 2, Math.min(w, h - 60) * 0.42f, p.ink, p.sub, p.accent, 12, true, 0);
         } else if ("analog-digital".equals(st)) {
             float r = h * 0.38f;
             analog(c, x + 16 + r, cy, r, p.ink, p.sub, p.accent, 12, false, 0xFFFFFFFF);
             text(c, time(), x + 32 + 2 * r, cy - 2, h * 0.3f, p.ink, MED, "ls");
-            text(c, fmt("EEEE"), x + 34 + 2 * r, cy + h * 0.2f, h * 0.13f, p.sub, REG, "ls");
+            text(c, weekday(), x + 34 + 2 * r, cy + h * 0.2f, h * 0.13f, p.sub, REG, "ls");
         } else if ("wall".equals(st)) {
             float r = h * 0.4f;
             analog(c, x + 20 + r, cy, r, p.ink, p.sub, p.accent, 60, false, 0xFFFFFFFF);
@@ -714,7 +723,7 @@ final class LayoutView extends View implements Hub.Listener {
             analog(c, cx, cy, Math.min(w, h) * 0.42f, p.ink, p.sub, p.accent, 12, true, 0);
         } else if ("digital-analog".equals(st)) {
             text(c, time(), x, y + h * 0.55f, h * 0.38f, p.ink, MED, "ls");
-            text(c, fmt("EEEE"), x + 2, y + h * 0.8f, h * 0.14f, p.sub, REG, "ls");
+            text(c, weekday(), x + 2, y + h * 0.8f, h * 0.14f, p.sub, REG, "ls");
             float r = h * 0.42f;
             analog(c, x + w - r - 6, cy, r, p.ink, p.sub, 0, 60, false, 0);
         }
@@ -778,14 +787,14 @@ final class LayoutView extends View implements Hub.Listener {
     private void weather(Canvas c, Layouts.Part p) {
         Hub hb = a.hub;
         float x = p.x, y = p.y, w = p.w, h = p.h, cx = x + w / 2, cy = y + h / 2;
-        String st = p.style, temp = hb.temp, desc = hb.weather, place = hb.place == null ? "" : hb.place;
+        String st = p.style, temp = hb.temp, desc = Hindi.t(hb.weather), place = hb.place == null ? "" : hb.place;
         if ("bubble".equals(st)) {
             text(c, temp, cx, cy - 4, h * 0.26f, p.ink, MED, "mm");
             text(c, fit(desc, h * 0.085f, w * 0.8f, REG), cx, cy + h * 0.17f, h * 0.085f, p.sub, REG, "mm");
         } else if ("detail".equals(st)) {
             text(c, temp, x + 6, y + 70, 72, p.ink, BOLD, "ls");
             text(c, place, x + w, y + 18, 14, p.sub, REG, "rt");
-            String[][] rows = {{"Humidity", hb.humidity}, {"Wind", hb.wind}, {"Air pressure", hb.pressure}};
+            String[][] rows = {{Hindi.t("Humidity"), hb.humidity}, {Hindi.t("Wind"), hb.wind}, {Hindi.t("Air pressure"), hb.pressure}};
             for (int i = 0; i < rows.length; i++) {
                 float yy = y + 118 + i * 38;
                 text(c, rows[i][0], x + 6, yy, 15, p.sub, REG, "lm");
@@ -799,7 +808,7 @@ final class LayoutView extends View implements Hub.Listener {
             String t = temp.replace("°", "°C");
             text(c, t, x, y + 40, 40, p.ink, MED, "ls");
             text(c, desc, x + width(t, 40, MED) + 12, y + 40, 15, p.sub, REG, "ls");
-            String line2 = place + (hb.humidity.isEmpty() ? "" : (place.isEmpty() ? "" : "  ·  ") + "humidity " + hb.humidity);
+            String line2 = place + (hb.humidity.isEmpty() ? "" : (place.isEmpty() ? "" : "  ·  ") + Hindi.f("humidity %1$s", hb.humidity));
             text(c, line2, x + 2, y + 70, 14, p.sub, REG, "ls");
         } else if ("calendar".equals(st)) {
             text(c, today() == null ? temp : range(), cx, y + 64, 19, p.ink, BOLD, "mm");
@@ -821,7 +830,7 @@ final class LayoutView extends View implements Hub.Listener {
     private void forecast(Canvas c, Layouts.Part p) {
         List<String[]> f = a.hub.forecast;
         if (f == null || f.size() < 2) {
-            text(c, "Forecast after the first weather update", p.x + p.w / 2, p.y + p.h / 2, 12, p.sub, REG, "mm");
+            text(c, Hindi.t("Forecast after the first weather update"), p.x + p.w / 2, p.y + p.h / 2, 12, p.sub, REG, "mm");
             return;
         }
         int n = Math.min(4, f.size() - 1);
@@ -835,7 +844,7 @@ final class LayoutView extends View implements Hub.Listener {
                 Date dt = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(d[0]);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(dt);
-                day = DAYS[cal.get(Calendar.DAY_OF_WEEK) - 1];
+                day = Hindi.t(DAYS[cal.get(Calendar.DAY_OF_WEEK) - 1]);
             } catch (Exception ignored) {
             }
             text(c, day, cx, p.y + 92, 13, p.sub, REG, "mm");
@@ -988,7 +997,7 @@ final class LayoutView extends View implements Hub.Listener {
             disc(c, x + h / 2, cy, h * 0.38f, n.art);
             float tx = x + h + 6, tw = w - h - 30;
             glyph(c, n.radio ? "radio" : "music", tx, y + 36, 18, ink);
-            text(c, n.radio ? "Radio" : "Music", tx + 26, y + 45, 15, ink, MED, "lm");
+            text(c, n.radio ? Hindi.t("Radio") : Hindi.t("Music"), tx + 26, y + 45, 15, ink, MED, "lm");
             text(c, fit(t, 22, tw, MED), tx, y + 88, 22, ink, MED, "lm");
             fill.setShader(null);
             line.setColor(p.accent);
@@ -1061,7 +1070,7 @@ final class LayoutView extends View implements Hub.Listener {
             controls(c, x + 80, y + h - 70, w - 160, 36, ink, n.playing);
         } else if ("wide".equals(st)) {
             glyph(c, n.radio ? "radio" : "music", x + 22, y + 20, 16, sub);
-            text(c, n.radio ? "Radio" : "Music", x + 46, y + 28, 13, sub, REG, "lm");
+            text(c, n.radio ? Hindi.t("Radio") : Hindi.t("Music"), x + 46, y + 28, 13, sub, REG, "lm");
             text(c, fit(t, 26, w * 0.6f, MED), x + 22, y + 72, 26, ink, MED, "lm");
             controls(c, x + 10, y + 108, w * 0.55f, 28, ink, n.playing);
             disc(c, x + w - 90, cy + 4, 66, n.art);
@@ -1072,13 +1081,13 @@ final class LayoutView extends View implements Hub.Listener {
 
     private String[] stat(String it) {
         Location f = a.hub.fix;
-        if ("temp".equals(it)) return new String[]{"Temp (°C)", a.hub.temp};
-        if ("altitude".equals(it)) return new String[]{"Altitude", altitude()};
+        if ("temp".equals(it)) return new String[]{Hindi.t("Temp (°C)"), a.hub.temp};
+        if ("altitude".equals(it)) return new String[]{Hindi.t("Altitude"), altitude()};
         if ("direction".equals(it)) {
             double hd = heading();
-            return new String[]{hd < 0 ? "Direction" : "Direction " + Layouts.compass(hd), hd < 0 ? "--" : Math.round(hd) + "°"};
+            return new String[]{hd < 0 ? Hindi.t("Direction") : Hindi.f("Direction %1$s", Layouts.compass(hd)), hd < 0 ? "--" : Math.round(hd) + "°"};
         }
-        if ("pressure".equals(it)) return new String[]{"Air pressure", a.hub.pressure.isEmpty() ? "--" : a.hub.pressure};
+        if ("pressure".equals(it)) return new String[]{Hindi.t("Air pressure"), a.hub.pressure.isEmpty() ? "--" : a.hub.pressure};
         if ("tyres".equals(it)) {
             StringBuilder v = new StringBuilder();
             boolean warn = false;
@@ -1089,9 +1098,9 @@ final class LayoutView extends View implements Hub.Listener {
                 if (!Tpms.warning(prefs, w).isEmpty()) warn = true;
             }
             String unit = "bar".equals(prefs.str("tpmsUnit", "psi")) ? "bar" : "psi";
-            return new String[]{warn ? "Tyres: check the pressures" : "Tyres (" + unit + ")", v.toString()};
+            return new String[]{warn ? Hindi.t("Tyres: check the pressures") : Hindi.f("Tyres (%1$s)", unit), v.toString()};
         }
-        if (f == null) return new String[]{"Position", "--"};
+        if (f == null) return new String[]{Hindi.t("Position"), "--"};
         double la = f.getLatitude(), lo = f.getLongitude();
         return new String[]{String.format(Locale.US, "%.4f° %s", Math.abs(lo), lo >= 0 ? "E" : "W"),
                 String.format(Locale.US, "%.4f° %s", Math.abs(la), la >= 0 ? "N" : "S")};
@@ -1193,13 +1202,13 @@ final class LayoutView extends View implements Hub.Listener {
         hits.add(new Hit(x, y, w, h, "user"));
         if ("line".equals(p.style)) {
             avatar(c, x + 16, y + 20, 16);
-            text(c, name.isEmpty() ? "Let's go!" : "Let's go, " + name + "!", x + 44, y + h / 2, 16, p.sub, REG, "lm");
+            text(c, name.isEmpty() ? Hindi.t("Let's go!") : Hindi.f("Let's go, %1$s!", name), x + 44, y + h / 2, 16, p.sub, REG, "lm");
             return;
         }
         float r = h * 0.34f;
         avatar(c, x + 18 + r, y + h / 2, r);
-        text(c, fit(name.isEmpty() ? "Hello" : name, 20, w - 2 * r - 44, BOLD), x + 30 + 2 * r, y + h / 2 - 10, 20, p.ink, BOLD, "lm");
-        text(c, "Drive safe", x + 30 + 2 * r, y + h / 2 + 16, 13, p.sub, REG, "lm");
+        text(c, fit(name.isEmpty() ? Hindi.t("Hello") : name, 20, w - 2 * r - 44, BOLD), x + 30 + 2 * r, y + h / 2 - 10, 20, p.ink, BOLD, "lm");
+        text(c, Hindi.t("Drive safe"), x + 30 + 2 * r, y + h / 2 + 16, 13, p.sub, REG, "lm");
     }
 
     // ---- favourite apps
@@ -1234,7 +1243,7 @@ final class LayoutView extends View implements Hub.Listener {
                 line.setStrokeWidth(2.5f);
                 c.drawLine(cx - s * 0.18f, ty + s / 2, cx + s * 0.18f, ty + s / 2, line);
                 c.drawLine(cx, ty + s / 2 - s * 0.18f, cx, ty + s / 2 + s * 0.18f, line);
-                text(c, "Add app", cx, cy + s / 2 + 6, 11, p.ink, REG, "mm");
+                text(c, Hindi.t("Add app"), cx, cy + s / 2 + 6, 11, p.ink, REG, "mm");
             }
         }
     }

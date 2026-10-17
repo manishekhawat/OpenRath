@@ -27,8 +27,9 @@ final class Weather {
     /** "Offline · forecast from 3 h ago", under the weather. */
     static String savedNote(long savedAt, long nowMs) {
         long m = Math.max(0, (nowMs - savedAt) / 60000);
-        String age = m < 60 ? m + " min ago" : m < 48 * 60 ? m / 60 + " h ago" : m / 1440 + " days ago";
-        return "Offline · forecast from " + age;
+        return m < 60 ? Hindi.f("Offline · forecast from %1$s min ago", m)
+                : m < 48 * 60 ? Hindi.f("Offline · forecast from %1$s h ago", m / 60)
+                : Hindi.f("Offline · forecast from %1$s days ago", m / 1440);
     }
 
     private Weather() {
