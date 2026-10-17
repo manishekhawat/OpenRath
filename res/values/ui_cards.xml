@@ -190,6 +190,7 @@
     <string name="ui_cards_hour_morning" formatted="false">%1$s in the morning</string>
     <string name="ui_cards_hour_afternoon" formatted="false">%1$s in the afternoon</string>
     <string name="ui_cards_hour_evening" formatted="false">%1$s in the evening</string>
+    <string name="ui_cards_no_webview" formatted="false">The map needs Android System WebView. Install or turn it on in Android\'s settings.</string>
     <string-array name="ui_cards">
         <item>@string/ui_cards_offline</item>
         <item>@string/ui_cards_weather</item>
@@ -379,5 +380,6 @@
         <item>@string/ui_cards_hour_morning</item>
         <item>@string/ui_cards_hour_afternoon</item>
         <item>@string/ui_cards_hour_evening</item>
+        <item>@string/ui_cards_no_webview</item>
     </string-array>
 </resources>
