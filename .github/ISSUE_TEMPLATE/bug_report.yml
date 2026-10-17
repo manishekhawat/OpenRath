@@ -25,7 +25,7 @@ body:
     id: android
     attributes:
       label: Android version
-      description: OpenRath needs Android 10 or newer.
+      description: OpenRath needs Android 8.0 or newer.
       placeholder: "10"
     validations:
       required: true

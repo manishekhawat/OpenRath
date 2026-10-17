@@ -1,4 +1,4 @@
-# Runs the on-device tests (androidTest/) on an emulator: the oldest Android OpenRath supports and the one it targets.
+# Runs the on-device tests (androidTest/) on an emulator: the oldest Android OpenRath supports (8.0) and the one it targets.
 name: device tests
 on:
   pull_request:
@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api: [29, 34]
+        api: [26, 34]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5

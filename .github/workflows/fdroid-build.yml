@@ -32,7 +32,7 @@ jobs:
         run: |
           $ANDROID_HOME/build-tools/34.0.0/aapt2 dump badging out/openrath-unsigned.apk | head -3
           $ANDROID_HOME/build-tools/34.0.0/aapt2 dump badging out/openrath-unsigned.apk | grep -q "package: name='org.openrath.launcher'"
-          $ANDROID_HOME/build-tools/34.0.0/aapt2 dump badging out/openrath-unsigned.apk | grep -q "sdkVersion:'29'"
+          $ANDROID_HOME/build-tools/34.0.0/aapt2 dump badging out/openrath-unsigned.apk | grep -q "sdkVersion:'26'"
           ! unzip -l out/openrath-unsigned.apk | grep -q "META-INF/.*\.\(RSA\|SF\)"
       - uses: actions/upload-artifact@v4
         with: { name: openrath-unsigned-apk, path: out/openrath-unsigned.apk }
