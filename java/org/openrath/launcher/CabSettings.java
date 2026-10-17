@@ -34,13 +34,13 @@ final class CabSettings {
         };
         r.add(new SettingsView.Row(g, "Cab box", "long-press any box on the dashboard and pick Cab driver", null));
         if (Features.on(p, "cabTarget")) {
-            r.add(new SettingsView.Row(g, "Daily target", Cab.rs(p.num("cabTargetRs", 2000)) + " net", new Runnable() {
+            r.add(new SettingsView.Row(g, "Daily target", Hindi.f("%1$s net", Cab.rs(p.num("cabTargetRs", 2000))), new Runnable() {
                 @Override
                 public void run() {
                     ask(a, "Daily target (₹ net)", String.valueOf(p.num("cabTargetRs", 2000)), "cabTargetRs", redo);
                 }
             }));
-            r.add(new SettingsView.Row(g, "Break reminder after", p.num("cabDutyH", 10) + " hours on duty", new Runnable() {
+            r.add(new SettingsView.Row(g, "Break reminder after", Hindi.f("%1$s hours on duty", p.num("cabDutyH", 10)), new Runnable() {
                 @Override
                 public void run() {
                     int[] steps = {8, 9, 10, 11, 12, 0};
@@ -53,8 +53,8 @@ final class CabSettings {
         }
         if (Features.on(p, "cabMeter")) {
             final Cab.Rates rt = CabMeter.rates(p);
-            r.add(new SettingsView.Row(g, "Fare meter rates", Cab.rs(rt.base) + " for " + Fuel.fmt(rt.baseKm) + " km, " + Cab.rs(rt.perKm) + "/km, waiting "
-                    + Cab.rs(rt.waitPerMin) + "/min after " + Math.round(rt.freeWait) + " min, night +" + Math.round(rt.nightPct) + "%", new Runnable() {
+            r.add(new SettingsView.Row(g, "Fare meter rates", Hindi.f("%1$s for %2$s km, %3$s/km, waiting %4$s/min after %5$s min, night +%6$s%%",
+                    Cab.rs(rt.base), Fuel.fmt(rt.baseKm), Cab.rs(rt.perKm), Cab.rs(rt.waitPerMin), Math.round(rt.freeWait), Math.round(rt.nightPct)), new Runnable() {
                 @Override
                 public void run() {
                     meterRates(a, redo);
@@ -70,24 +70,24 @@ final class CabSettings {
                     e.setHint("name@bank");
                     e.setText(p.str("upiId", ""));
                     new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setTitle("Your UPI id").setView(e)
-                            .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                            .setTitle(Hindi.t("Your UPI id")).setView(e)
+                            .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface d, int w) {
                                     String v = e.getText().toString().trim();
                                     if (!v.isEmpty() && !Errands.validVpa(v)) {
-                                        Toast.makeText(a, "That doesn't look like a UPI id (name@bank)", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(a, Hindi.t("That doesn't look like a UPI id (name@bank)"), Toast.LENGTH_LONG).show();
                                         return;
                                     }
                                     p.put("upiId", v);
                                     redo.run();
                                 }
-                            }).setNegativeButton("Cancel", null).show();
+                            }).setNegativeButton(Hindi.t("Cancel"), null).show();
                 }
             }));
         }
         if (Features.on(p, "cabQuiet")) {
-            r.add(new SettingsView.Row(g, "Quiet ride volume", p.num("cabQuietPct", 30) + "% of full", new Runnable() {
+            r.add(new SettingsView.Row(g, "Quiet ride volume", Hindi.f("%1$s%% of full", p.num("cabQuietPct", 30)), new Runnable() {
                 @Override
                 public void run() {
                     int v = p.num("cabQuietPct", 30);
@@ -119,17 +119,17 @@ final class CabSettings {
                 @Override
                 public void run() {
                     final EditText e = new EditText(a);
-                    e.setHint("e.g. DL 1R AB 1234");
+                    e.setHint(Hindi.t("e.g. DL 1R AB 1234"));
                     e.setText(p.str("cabVehicle", ""));
                     new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setTitle("Vehicle number").setView(e)
-                            .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                            .setTitle(Hindi.t("Vehicle number")).setView(e)
+                            .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface d, int w) {
                                     p.put("cabVehicle", e.getText().toString().trim().toUpperCase(Locale.US));
                                     redo.run();
                                 }
-                            }).setNegativeButton("Cancel", null).show();
+                            }).setNegativeButton(Hindi.t("Cancel"), null).show();
                 }
             }));
         }
@@ -144,10 +144,10 @@ final class CabSettings {
                 set++;
                 if (d < best) {
                     best = d;
-                    soonest = Cab.dueText(Cab.PAPER_NAMES[i], d);
+                    soonest = Cab.dueShow(Cab.PAPER_NAMES[i], d);
                 }
             }
-            r.add(new SettingsView.Row(g, "Papers due dates", set == 0 ? "permit, fitness, badge, road tax, insurance, PUC: not set" : soonest + "  (" + set + " of 6 set)",
+            r.add(new SettingsView.Row(g, "Papers due dates", set == 0 ? "permit, fitness, badge, road tax, insurance, PUC: not set" : soonest + Hindi.f("  (%1$s of 6 set)", set),
                     new Runnable() {
                         @Override
                         public void run() {
@@ -167,18 +167,18 @@ final class CabSettings {
             }));
         }
         if (Features.on(p, "cabEarnings")) {
-            r.add(new SettingsView.Row(g, "Clear the earnings log", Cab.log(p).size() + " entries", new Runnable() {
+            r.add(new SettingsView.Row(g, "Clear the earnings log", Hindi.f("%1$s entries", Cab.log(p).size()), new Runnable() {
                 @Override
                 public void run() {
                     new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setMessage("Delete every ride and cost in the log?")
-                            .setPositiveButton("Delete all", new DialogInterface.OnClickListener() {
+                            .setMessage(Hindi.t("Delete every ride and cost in the log?"))
+                            .setPositiveButton(Hindi.t("Delete all"), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface d, int w) {
                                     Cab.save(p, new ArrayList<Cab.Entry>());
                                     redo.run();
                                 }
-                            }).setNegativeButton("Keep", null).show();
+                            }).setNegativeButton(Hindi.t("Keep"), null).show();
                 }
             }));
         }
@@ -189,18 +189,18 @@ final class CabSettings {
         e.setInputType(InputType.TYPE_CLASS_NUMBER);
         e.setText(value);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(title).setView(e)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setTitle(Hindi.t(title)).setView(e)
+                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         try {
                             a.prefs.put(key, String.valueOf(Integer.parseInt(e.getText().toString().trim())));
                             done.run();
                         } catch (Exception ex) {
-                            Toast.makeText(a, "Enter a number", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(a, Hindi.t("Enter a number"), Toast.LENGTH_SHORT).show();
                         }
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private static void meterRates(final HomeActivity a, final Runnable done) {
@@ -214,15 +214,15 @@ final class CabSettings {
         final EditText[] f = new EditText[keys.length];
         for (int i = 0; i < keys.length; i++) {
             TextView t = new TextView(a);
-            t.setText(labels[i]);
+            t.setText(Hindi.t(labels[i]));
             box.addView(t);
             f[i] = Cab.number(box, "", Fuel.fmt(vals[i]).replace(".0", ""));
         }
         android.widget.ScrollView sv = new android.widget.ScrollView(a);
         sv.addView(box);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Fare meter rates").setView(sv)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setTitle(Hindi.t("Fare meter rates")).setView(sv)
+                .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         for (int i = 0; i < keys.length; i++) {
@@ -231,7 +231,7 @@ final class CabSettings {
                         }
                         done.run();
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private CabSettings() {

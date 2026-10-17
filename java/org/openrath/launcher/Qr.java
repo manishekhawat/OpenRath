@@ -80,14 +80,14 @@ final class Qr {
         col.setOrientation(LinearLayout.VERTICAL);
         col.setPadding(Ui.px(10), 0, Ui.px(28), 0);
         TextView t = Ui.text(a, 26, 0xFF111111, "sans-serif-medium", Gravity.LEFT);
-        t.setText(title);
+        t.setText(Hindi.t(title));
         col.addView(t);
         TextView c = Ui.text(a, 18, 0xFF333333, "sans-serif", Gravity.LEFT);
-        c.setText(caption + "\n\nHold the phone about 30 cm away, straight on.");
+        c.setText(Hindi.t(caption) + "\n\n" + Hindi.t("Hold the phone about 30 cm away, straight on."));
         c.setPadding(0, Ui.px(12), 0, Ui.px(24));
         col.addView(c);
         TextView done = Ui.text(a, 20, 0xFFFFFFFF, "sans-serif-medium", Gravity.CENTER);
-        done.setText("Done");
+        done.setText(Hindi.t("Done"));
         done.setBackgroundColor(0xFF2F6FD6);
         done.setOnClickListener(new View.OnClickListener() {
             @Override

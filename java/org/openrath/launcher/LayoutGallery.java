@@ -87,11 +87,11 @@ final class LayoutGallery extends LinearLayout {
             }
             tile.addView(pic, new LayoutParams(-1, -2));
             TextView name = Ui.text(c, 17, Ui.SILVER, "sans-serif-medium", Gravity.LEFT);
-            name.setText(on ? ch[1] + "   ✓ in use" : ch[1]);
+            name.setText(on ? Hindi.f("%1$s   ✓ in use", Hindi.t(ch[1])) : Hindi.t(ch[1]));
             name.setPadding(Ui.px(6), Ui.px(10), Ui.px(6), 0);
             tile.addView(name);
             TextView desc = Ui.text(c, 13, Ui.SILVER_DIM, "sans-serif", Gravity.LEFT);
-            desc.setText(ch[2]);
+            desc.setText(Hindi.t(ch[2]));
             desc.setPadding(Ui.px(6), Ui.px(4), Ui.px(6), 0);
             tile.addView(desc);
             tile.setOnClickListener(new OnClickListener() {

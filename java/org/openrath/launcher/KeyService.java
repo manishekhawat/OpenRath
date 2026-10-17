@@ -32,7 +32,7 @@ public class KeyService extends AccessibilityService {
         if (prefs == null) prefs = new Prefs(this);
         if (ChildLock.blocked(prefs, e.getPackageName().toString())) {
             performGlobalAction(GLOBAL_ACTION_HOME);
-            android.widget.Toast.makeText(this, ChildLock.SORRY, android.widget.Toast.LENGTH_SHORT).show();
+            android.widget.Toast.makeText(this, Hindi.t(ChildLock.SORRY), android.widget.Toast.LENGTH_SHORT).show();
         }
     }
 

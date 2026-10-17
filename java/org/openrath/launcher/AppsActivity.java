@@ -69,7 +69,7 @@ public class AppsActivity extends Activity {
             public void onItemClick(AdapterView<?> a, View v, int i, long id) {
                 ResolveInfo r = apps.get(i);
                 if (ChildLock.blocked(new Prefs(AppsActivity.this), r.activityInfo.packageName)) {
-                    android.widget.Toast.makeText(AppsActivity.this, ChildLock.SORRY, android.widget.Toast.LENGTH_SHORT).show();
+                    android.widget.Toast.makeText(AppsActivity.this, Hindi.t(ChildLock.SORRY), android.widget.Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Intent in = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)

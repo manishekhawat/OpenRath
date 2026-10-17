@@ -244,10 +244,10 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     private void foreground() {
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification.Builder b;
-        nm.createNotificationChannel(new NotificationChannel("drive", "Trip computer", NotificationManager.IMPORTANCE_MIN));
+        nm.createNotificationChannel(new NotificationChannel("drive", Hindi.t("Trip computer"), NotificationManager.IMPORTANCE_MIN));
         b = new Notification.Builder(this, "drive");
         b.setSmallIcon(getApplicationInfo().icon).setContentTitle("OpenRath")
-                .setContentText("Trip computer and speed alerts").setOngoing(true);
+                .setContentText(Hindi.t("Trip computer and speed alerts")).setOngoing(true);
         try {
             startForeground(8, b.build());
         } catch (RuntimeException e) {
@@ -586,7 +586,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
                         }
                     }
                 } catch (Throwable t) {
-                    err = "speed data unreachable";
+                    err = Hindi.t("speed data unreachable");
                 }
                 final int fl = lim;
                 final List<double[]> fc = cams;

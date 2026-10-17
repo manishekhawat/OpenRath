@@ -44,7 +44,7 @@ final class Peek {
      * a closer look. A theme plugin only holds pictures; the logic is in these.
      */
     static void save(final Activity a) {
-        final ProgressDialog wait = ProgressDialog.show(a, null, "Copying the stock launcher…", true);
+        final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.t("Copying the stock launcher…"), true);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -90,13 +90,13 @@ final class Peek {
                         if (ok) saved.add(name + " (" + f[0].length() / 1024 + " KB)");
                     }
                 }
-                if (saved.isEmpty()) out.append("Nothing could be copied. Android may not let apps read the stock apps on this unit.");
+                if (saved.isEmpty()) out.append(Hindi.t("Nothing could be copied. Android may not let apps read the stock apps on this unit."));
                 else {
-                    out.append("Copied to:\n");
+                    out.append(Hindi.t("Copied to:")).append("\n");
                     for (File d : dirs) if (d.isDirectory()) out.append("  ").append(d.getPath()).append('\n');
                     out.append("\n");
                     for (String s : saved) out.append(s).append('\n');
-                    out.append("\nSend the files ending in .apk and .vdex (or .odex) for the launcher.");
+                    out.append("\n").append(Hindi.t("Send the files ending in .apk and .vdex (or .odex) for the launcher."));
                 }
                 a.runOnUiThread(new Runnable() {
                     @Override
@@ -106,20 +106,22 @@ final class Peek {
                         } catch (Throwable ignored) {
                         }
                         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                                .setTitle("Stock launcher copied").setMessage(out.toString())
-                                .setPositiveButton("OK", null).show();
+                                .setTitle(Hindi.t("Stock launcher copied")).setMessage(out.toString())
+                                .setPositiveButton(Hindi.t("OK"), null).show();
                     }
                 });
             }
         }).start();
     }
 
+    private static final String SKIPPED = "Skipped: reading the stock apps stopped OpenRath before.\nUse Help > Clear the crash note to try again.";
+
     static void run(final Activity a) {
         if (!Crash.begin("reading the stock launcher")) {
-            show(a, "Skipped: reading the stock apps stopped OpenRath before.\nUse Help > Clear the crash note to try again.");
+            show(a, SKIPPED);
             return;
         }
-        final ProgressDialog wait = ProgressDialog.show(a, null, "Reading the stock launcher and radio…", true);
+        final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.t("Reading the stock launcher and radio…"), true);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -260,11 +262,11 @@ final class Peek {
             FileWriter w = new FileWriter(f);
             w.write(text);
             w.close();
-            saved = "Saved to " + f.getPath() + "\n\n";
+            saved = Hindi.f("Saved to %1$s", f.getPath()) + "\n\n";
         } catch (Throwable ignored) {
         }
         TextView t = new TextView(a);
-        t.setText(saved + text);
+        t.setText(saved + Hindi.t(text));   // the report itself stays in English; only the note above is translated
         t.setTextSize(10);
         t.setTextColor(0xFFE0E0E0);
         t.setTextIsSelectable(true);
@@ -273,9 +275,9 @@ final class Peek {
         ScrollView sv = new ScrollView(a);
         sv.addView(t);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("How the stock launcher does it (photograph each screen)")
+                .setTitle(Hindi.t("How the stock launcher does it (photograph each screen)"))
                 .setView(sv)
-                .setPositiveButton("OK", null).show();
+                .setPositiveButton(Hindi.t("OK"), null).show();
     }
 
     private Peek() {

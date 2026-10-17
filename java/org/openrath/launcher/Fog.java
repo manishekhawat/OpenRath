@@ -28,8 +28,8 @@ final class Fog extends View {
     /** "Bend to the right in 150 m", "Road ahead looks straight", or "" when the road isn't known. */
     static String bendText(double m, int dir) {
         if (m < 0) return "";
-        if (m < 25) return dir > 0 ? "Bend to the right now" : "Bend to the left now";
-        return (dir > 0 ? "Bend to the right in " : "Bend to the left in ") + (Math.round(m / 10) * 10) + " m";
+        if (m < 25) return dir > 0 ? Hindi.t("Bend to the right now") : Hindi.t("Bend to the left now");
+        return Hindi.f(dir > 0 ? "Bend to the right in %1$s m" : "Bend to the left in %1$s m", Math.round(m / 10) * 10);
     }
 
     interface Closed {
@@ -82,10 +82,10 @@ final class Fog extends View {
         c.drawText("km/h", cx, h * 0.52f + 40 * k, paint);
         paint.setTextSize(30 * k);
         paint.setColor(over ? 0xFFFFB02E : 0xFFCFE3FF);
-        c.drawText(over ? "Fog: slow down to " + g : "Fog: keep below " + g + " km/h", cx, h * 0.72f, paint);
+        c.drawText(over ? Hindi.f("Fog: slow down to %1$s", g) : Hindi.f("Fog: keep below %1$s km/h", g), cx, h * 0.72f, paint);
         paint.setTextSize(20 * k);
         paint.setColor(0xFF9AA4B0);
-        c.drawText("Low beams and fog lamps on  ·  keep a long gap", cx, h * 0.80f, paint);
+        c.drawText(Hindi.t("Low beams and fog lamps on  ·  keep a long gap"), cx, h * 0.80f, paint);
 
         // the bend ahead
         float bx = w * 0.74f, by = h * 0.42f, r = 130 * k;
@@ -127,11 +127,11 @@ final class Fog extends View {
         c.drawPath(head, paint);
         paint.setTextSize(28 * k);
         paint.setColor(0xFFE6E9EE);
-        String t = m < 0 ? "No bend known ahead" : bendText(m, dir);
+        String t = m < 0 ? Hindi.t("No bend known ahead") : bendText(m, dir);
         c.drawText(t, bx, by + r + 60 * k, paint);
         paint.setTextSize(16 * k);
         paint.setColor(0xFF6E7884);
-        c.drawText("Tap to close for this drive", w / 2, h - 20 * k, paint);
+        c.drawText(Hindi.t("Tap to close for this drive"), w / 2, h - 20 * k, paint);
         postInvalidateDelayed(500);
     }
 }

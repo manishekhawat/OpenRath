@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hindi for the driving screens and dialogs. Machine-drafted: a native speaker should check it (docs/TRANSLATING.md). -->
+<resources>
+    <string name="ui_driving_trip_computer" formatted="false">ट्रिप कंप्यूटर</string>
+    <string name="ui_driving_trip_computer_and_speed_alerts" formatted="false">ट्रिप कंप्यूटर और स्पीड अलर्ट</string>
+    <string name="ui_driving_speed_data_unreachable" formatted="false">स्पीड डेटा नहीं मिल रहा</string>
+    <string name="ui_driving_bend_to_the_right_now" formatted="false">अभी दाएँ मोड़</string>
+    <string name="ui_driving_bend_to_the_left_now" formatted="false">अभी बाएँ मोड़</string>
+    <string name="ui_driving_bend_to_the_right_in_m" formatted="false">%1$s m में दाएँ मोड़</string>
+    <string name="ui_driving_bend_to_the_left_in_m" formatted="false">%1$s m में बाएँ मोड़</string>
+    <string name="ui_driving_fog_slow_down_to" formatted="false">कोहरा: %1$s तक धीमे चलें</string>
+    <string name="ui_driving_fog_keep_below_km_h" formatted="false">कोहरा: %1$s km/h से कम रखें</string>
+    <string name="ui_driving_low_beams_and_fog_lamps_on_keep" formatted="false">"लो बीम और फ़ॉग लैंप चालू  ·  लंबी दूरी रखें"</string>
+    <string name="ui_driving_no_bend_known_ahead" formatted="false">आगे कोई मोड़ पता नहीं</string>
+    <string name="ui_driving_tap_to_close_for_this_drive" formatted="false">इस ड्राइव के लिए बंद करने को टैप करें</string>
+    <string name="ui_driving_no_gps_position_yet" formatted="false">अभी GPS लोकेशन नहीं मिली</string>
+    <string name="ui_driving_this_spot_is_already_marked" formatted="false">यह जगह पहले से मार्क है</string>
+    <string name="ui_driving_marked_as_a_waterlogging_spot" formatted="false">जलभराव वाली जगह के रूप में मार्क किया</string>
+    <string name="ui_driving_tap_here_to_leave_night_drive_mode" formatted="false">नाइट-ड्राइव मोड से निकलने के लिए यहाँ टैप करें</string>
+    <string name="ui_driving_not_enough_drives_yet_after_three_or" formatted="false">अभी काफ़ी ड्राइव नहीं हुईं। एक ही दो जगहों के बीच तीन या ज़्यादा ड्राइव के बाद, यहाँ दिखेगा कि निकलने के समय के हिसाब से ड्राइव में कितना समय लगता है।</string>
+    <string name="ui_driving_to_drives_about_km" formatted="false">%1$s से %2$s: %3$s ड्राइव, लगभग %4$s km</string>
+    <string name="ui_driving_leaving_min_on_average_drive" formatted="false">%1$s–%2$s पर निकलें: औसतन %3$s मिनट (%4$s ड्राइव)</string>
+    <string name="ui_driving_leaving_min_on_average_drives" formatted="false">%1$s–%2$s पर निकलें: औसतन %3$s मिनट (%4$s ड्राइव)</string>
+    <string name="ui_driving_quickest_leave_between_and" formatted="false">सबसे जल्दी: %1$s और %2$s के बीच निकलें।</string>
+    <string name="ui_driving_commute_insights" formatted="false">रोज़ के सफ़र की जानकारी</string>
+    <string name="ui_driving_save_home_and_office_on_the_map" formatted="false">यहाँ नाम देखने के लिए मैप पर घर और ऑफ़िस सेव करें (स्टार से)।</string>
+    <string name="ui_driving_home" formatted="false">घर</string>
+    <string name="ui_driving_office" formatted="false">ऑफ़िस</string>
+    <string name="ui_driving_ok" formatted="false">ठीक है</string>
+    <string name="ui_driving_min_idling" formatted="false">%1$s मिनट आइडलिंग</string>
+    <string name="ui_driving_hard_start" formatted="false">%1$s तेज़ स्टार्ट</string>
+    <string name="ui_driving_hard_starts" formatted="false">%1$s तेज़ स्टार्ट</string>
+    <string name="ui_driving_min_above_90_km_h" formatted="false">%1$s मिनट 90 km/h से ऊपर</string>
+    <string name="ui_driving_smooth_drive" formatted="false">आरामदायक ड्राइव</string>
+    <string name="ui_driving_your_driving_is_already_easy_on_fuel" formatted="false">आपकी ड्राइविंग पहले से ही ईंधन बचाने वाली है।</string>
+    <string name="ui_driving_idling_costs_the_most_switch_off_for" formatted="false">आइडलिंग सबसे महँगी पड़ती है। एक मिनट से ज़्यादा रुकना हो, जैसे रेलवे फाटक पर, तो इंजन बंद करें।</string>
+    <string name="ui_driving_hard_starts_cost_the_most_pull_away" formatted="false">तेज़ स्टार्ट सबसे महँगे पड़ते हैं। आराम से चलाएँ और 2,000 rpm तक गियर बदल लें।</string>
+    <string name="ui_driving_speed_costs_the_most_holding_80_instead" formatted="false">तेज़ रफ़्तार सबसे महँगी पड़ती है। हाईवे पर 100 की जगह 80 km/h पर चलने से करीब पाँचवाँ हिस्सा ईंधन बचता है।</string>
+    <string name="ui_driving_mileage_coach" formatted="false">माइलेज कोच</string>
+    <string name="ui_driving_no_drives_recorded_yet_after_your_next" formatted="false">अभी कोई ड्राइव रिकॉर्ड नहीं हुई। एक किलोमीटर या ज़्यादा की अगली ड्राइव के बाद यहाँ दिखेगा कि किन ड्राइव में सबसे ज़्यादा फ़ालतू ईंधन लगा, और क्यों।</string>
+    <string name="ui_driving_your_last_drives_used_about_litres_more" formatted="false">आपकी पिछली %1$s ड्राइव में ज़रूरत से लगभग %2$s लीटर ज़्यादा ईंधन लगा</string>
+    <string name="ui_driving_about" formatted="false">(लगभग ₹%1$s)</string>
+    <string name="ui_driving_the_drives_that_used_the_most_extra" formatted="false">जिन ड्राइव में सबसे ज़्यादा फ़ालतू ईंधन लगा:</string>
+    <string name="ui_driving_km_min" formatted="false">%1$s km, %2$s मिनट</string>
+    <string name="ui_driving_about_l_extra" formatted="false">लगभग %1$s लीटर, ₹%2$s ज़्यादा</string>
+    <string name="ui_driving_about_l_extra_2" formatted="false">लगभग %1$s लीटर ज़्यादा</string>
+    <string name="ui_driving_estimates_for_a_1_2_litre_petrol" formatted="false">1.2 लीटर पेट्रोल इंजन के लिए अनुमान, %1$s km/l के हिसाब से।</string>
+    <string name="ui_driving_not_known_yet_add_a_fill_up" formatted="false">अभी पता नहीं: भरे गए पैसे के साथ फ़िल-अप जोड़ें, या टैप करके डालें</string>
+    <string name="ui_driving_a_litre_your_figure" formatted="false">₹%1$s प्रति लीटर (आपका डाला हुआ)</string>
+    <string name="ui_driving_a_litre_from_your_fill_ups" formatted="false">₹%1$s प्रति लीटर (आपके फ़िल-अप से)</string>
+    <string name="ui_driving_a_litre_from_your_fill_ups_2" formatted="false">₹%1$s प्रति लीटर (आपके फ़िल-अप से, %2$s)</string>
+    <string name="ui_driving_litres" formatted="false">लीटर</string>
+    <string name="ui_driving_amount_paid_or_leave_empty_for_a" formatted="false">भरे गए पैसे (₹), या ₹%1$s प्रति लीटर के लिए खाली छोड़ें</string>
+    <string name="ui_driving_amount_paid" formatted="false">भरे गए पैसे (₹)</string>
+    <string name="ui_driving_odometer_km" formatted="false">ओडोमीटर (km)</string>
+    <string name="ui_driving_filled_the_tank_to_full" formatted="false">टंकी फ़ुल भरवाई</string>
+    <string name="ui_driving_add_a_fill_up" formatted="false">फ़िल-अप जोड़ें</string>
+    <string name="ui_driving_save" formatted="false">सेव करें</string>
+    <string name="ui_driving_mileage_dropped" formatted="false">माइलेज घट गया</string>
+    <string name="ui_driving_enter_the_litres_and_the_odometer_as" formatted="false">लीटर और ओडोमीटर नंबर में डालें</string>
+    <string name="ui_driving_cancel" formatted="false">रद्द करें</string>
+    <string name="ui_driving_part_fill" formatted="false">(आधी भरवाई)</string>
+    <string name="ui_driving_no_fill_ups_yet" formatted="false">अभी कोई फ़िल-अप नहीं</string>
+    <string name="ui_driving_fill_ups_tap_one_to_delete_it" formatted="false">फ़िल-अप (हटाने के लिए टैप करें)</string>
+    <string name="ui_driving_delete_this_fill_up" formatted="false">यह फ़िल-अप हटाएँ?</string>
+    <string name="ui_driving_delete" formatted="false">हटाएँ</string>
+    <string name="ui_driving_keep" formatted="false">रखें</string>
+    <string name="ui_driving_close" formatted="false">बंद करें</string>
+    <string name="ui_driving_not_known_yet_add_a_fill_up_2" formatted="false">अभी पता नहीं: \"फ़ुल भरवाई\" टिक करके फ़िल-अप जोड़ें</string>
+    <string name="ui_driving_about_km_of_petrol_left" formatted="false">लगभग %1$s km का पेट्रोल बचा</string>
+    <string name="ui_driving_oil_change" formatted="false">ऑयल बदलना</string>
+    <string name="ui_driving_tyre_rotation" formatted="false">टायर रोटेशन</string>
+    <string name="ui_driving_wheel_alignment_and_balancing" formatted="false">व्हील अलाइनमेंट और बैलेंसिंग</string>
+    <string name="ui_driving_general_service" formatted="false">जनरल सर्विस</string>
+    <string name="ui_driving_insurance_renewal" formatted="false">इंश्योरेंस रिन्यूअल</string>
+    <string name="ui_driving_puc_certificate" formatted="false">PUC सर्टिफ़िकेट</string>
+    <string name="ui_driving_due_date_not_set" formatted="false">तारीख़ सेट नहीं</string>
+    <string name="ui_driving_overdue_since" formatted="false">%1$s से बाकी</string>
+    <string name="ui_driving_due_today" formatted="false">आज करवाना है</string>
+    <string name="ui_driving_due_days" formatted="false">%1$s को (%2$s दिन)</string>
+    <string name="ui_driving_every_km_last_one_not_set" formatted="false">हर %1$s km; पिछली बार का सेट नहीं</string>
+    <string name="ui_driving_overdue_by_km" formatted="false">%1$s km ज़्यादा हो गए</string>
+    <string name="ui_driving_in_km_every_km" formatted="false">%1$s km में (हर %2$s km)</string>
+    <string name="ui_driving_next_due_date" formatted="false">%1$s: अगली तारीख़</string>
+    <string name="ui_driving_done_today_at_km" formatted="false">आज करवाया (%1$s km पर)</string>
+    <string name="ui_driving_last_done_at_a_different_km" formatted="false">पिछली बार किसी और km पर करवाया</string>
+    <string name="ui_driving_change_how_often_now_every_km" formatted="false">कितनी बार, बदलें (अभी हर %1$s km)</string>
+    <string name="ui_driving_odometer_reading_now_km" formatted="false">अभी ओडोमीटर रीडिंग (km)</string>
+    <string name="ui_driving_odometer_when_it_was_last_done_km" formatted="false">पिछली बार करवाते समय ओडोमीटर (km)</string>
+    <string name="ui_driving_every_how_many_km" formatted="false">हर कितने km पर?</string>
+    <string name="ui_driving_toll_paid" formatted="false">दिया गया टोल (₹)</string>
+    <string name="ui_driving_this_week" formatted="false">इस हफ़्ते</string>
+    <string name="ui_driving_last_week" formatted="false">पिछले हफ़्ते</string>
+    <string name="ui_driving_this_month" formatted="false">इस महीने</string>
+    <string name="ui_driving_last_month" formatted="false">पिछले महीने</string>
+    <string name="ui_driving_today_s_driving_score_100_harsh_brakes" formatted="false">आज का ड्राइविंग स्कोर: %1$s / 100 (%2$s तेज़ ब्रेक, %3$s तेज़ स्टार्ट, %4$s मिनट लिमिट से ऊपर)</string>
+    <string name="ui_driving_trip_history" formatted="false">ट्रिप हिस्ट्री</string>
+    <string name="ui_driving_km_h_min" formatted="false">%1$s km, %2$s घंटे %3$s मिनट</string>
+    <string name="ui_driving_fuel" formatted="false">, ईंधन ₹%1$s</string>
+    <string name="ui_driving_tolls" formatted="false">, टोल ₹%1$s</string>
+    <string name="ui_driving_score_2" formatted="false">, स्कोर %1$s</string>
+    <string name="ui_driving_skipped_reading_system_apps_it_crashed_before" formatted="false">सिस्टम ऐप पढ़ना छोड़ा (पिछली बार क्रैश हुआ था)</string>
+    <string name="ui_driving_reading_system_apps_failed" formatted="false">सिस्टम ऐप पढ़ नहीं पाए: %1$s</string>
+    <string name="ui_driving_listening_for_broadcasts_from_system_apps" formatted="false">%2$s सिस्टम ऐप के %1$s ब्रॉडकास्ट सुन रहे हैं</string>
+    <string name="ui_driving_settings_system_properties_backlight_files_broadcast_values" formatted="false">%1$s सेटिंग्स, %2$s सिस्टम प्रॉपर्टी, %3$s बैकलाइट फ़ाइलें, %4$s ब्रॉडकास्ट वैल्यू, %5$s मिलीं</string>
+    <string name="ui_driving_no_topway_mcu_link" formatted="false">Topway MCU से कनेक्शन नहीं (%1$s)</string>
+    <string name="ui_driving_topway_mcu_values_from_codes" formatted="false">%2$s कोड से %1$s Topway MCU वैल्यू</string>
+    <string name="ui_driving_screen_dimming" formatted="false">स्क्रीन डिमिंग:</string>
+    <string name="ui_driving_door" formatted="false">दरवाज़े</string>
+    <string name="ui_driving_seat_belt" formatted="false">सीट-बेल्ट</string>
+    <string name="ui_driving_headlight" formatted="false">हेडलाइट</string>
+    <string name="ui_driving_looking_for_the_signal" formatted="false">%1$s का सिग्नल खोज रहे हैं…</string>
+    <string name="ui_driving_deep_search_listening_skipped_it_stopped_the" formatted="false">गहरी खोज में सुनना छोड़ा (पिछली बार ऐप रुक गया था)</string>
+    <string name="ui_driving_setup_3" formatted="false">"%1$s सेटअप  %2$s/3"</string>
+    <string name="ui_driving_close_all_the_doors_then_tap_next" formatted="false">सारे दरवाज़े बंद करें। फिर आगे दबाएँ।</string>
+    <string name="ui_driving_now_open_the_driver_s_door_and" formatted="false">अब ड्राइवर का दरवाज़ा खोलें और खुला रखें। आगे दबाएँ।</string>
+    <string name="ui_driving_close_the_door_again_then_tap_next" formatted="false">दरवाज़ा फिर बंद करें, फिर आगे दबाएँ।</string>
+    <string name="ui_driving_sit_in_the_driver_s_seat_with" formatted="false">सीट बेल्ट खोलकर ड्राइवर की सीट पर बैठें। फिर आगे दबाएँ।</string>
+    <string name="ui_driving_now_fasten_the_seat_belt_tap_next" formatted="false">अब सीट बेल्ट लगाएँ। आगे दबाएँ।</string>
+    <string name="ui_driving_unfasten_it_again_then_tap_next" formatted="false">इसे फिर खोलें, फिर आगे दबाएँ।</string>
+    <string name="ui_driving_turn_the_car_s_headlights_on_then" formatted="false">कार की हेडलाइट चालू करें, फिर बंद करें और बंद ही रहने दें। फिर आगे दबाएँ।</string>
+    <string name="ui_driving_now_turn_the_headlights_on_wait_until" formatted="false">अब हेडलाइट चालू करें। स्क्रीन स्थिर होने तक रुकें, फिर आगे दबाएँ।</string>
+    <string name="ui_driving_turn_the_headlights_off_again_wait_a" formatted="false">हेडलाइट फिर बंद करें, थोड़ा रुकें, फिर आगे दबाएँ।</string>
+    <string name="ui_driving_next" formatted="false">आगे</string>
+    <string name="ui_driving_reading_the_unit" formatted="false">यूनिट पढ़ रहे हैं…</string>
+    <string name="ui_driving_no_signal_found" formatted="false">%1$s का कोई सिग्नल नहीं मिला</string>
+    <string name="ui_driving_nothing_this_app_can_read_changed_with" formatted="false">हेडलाइट के साथ ऐसा कुछ नहीं बदला जो यह ऐप पढ़ सके, इसलिए शायद यूनिट यह सिग्नल ऐप तक नहीं भेजती। देखें कि यूनिट का इल्यूमिनेशन तार जुड़ा है, या इसी मेन्यू से कार की लाइट हमेशा चालू या हमेशा बंद सेट करें।</string>
+    <string name="ui_driving_nothing_this_app_can_read_changed_most" formatted="false">ऐसा कुछ नहीं बदला जो यह ऐप पढ़ सके। ज़्यादातर यूनिट को दरवाज़ों और सीट बेल्ट का पता CAN bus डिकोडर बॉक्स से ही चलता है; उसके बिना यूनिट को कभी पता नहीं चलता।</string>
+    <string name="ui_driving_what_it_checked" formatted="false">क्या जाँचा: %1$s, %2$s।</string>
+    <string name="ui_driving_these_followed_the_pick_one_best_guess" formatted="false">ये %1$s के साथ बदले; एक चुनें (★ = सबसे सही अंदाज़ा)</string>
+    <string name="ui_driving_the_will_follow" formatted="false">%1$s अब %2$s से चलेगा</string>
+    <string name="ui_driving_headlights_will_follow_the_screen_dimming" formatted="false">हेडलाइट अब स्क्रीन डिमिंग से चलेगी (%1$s)</string>
+    <string name="ui_driving_headlights_will_follow" formatted="false">हेडलाइट अब %1$s से चलेगी</string>
+    <string name="ui_driving_looking_for_the_indicator_signal" formatted="false">इंडिकेटर का सिग्नल खोज रहे हैं…</string>
+    <string name="ui_driving_switch_both_indicators_off_and_the_hazard" formatted="false">दोनों इंडिकेटर (और हैज़र्ड लाइट) बंद करें। आगे दबाएँ और 4 सेकंड रुकें।</string>
+    <string name="ui_driving_switch_the_left_indicator_on_tap_next" formatted="false">बायाँ इंडिकेटर चालू करें। आगे दबाएँ और 4 सेकंड तक जलने-बुझने दें।</string>
+    <string name="ui_driving_switch_the_left_one_off_and_the" formatted="false">बायाँ बंद करें और दायाँ इंडिकेटर चालू करें। आगे दबाएँ और 4 सेकंड तक जलने-बुझने दें।</string>
+    <string name="ui_driving_indicator_setup_3" formatted="false">"इंडिकेटर सेटअप  %1$s/3"</string>
+    <string name="ui_driving_watching_for_4_seconds" formatted="false">4 सेकंड तक देख रहे हैं…</string>
+    <string name="ui_driving_no_indicator_signal_found" formatted="false">इंडिकेटर का कोई सिग्नल नहीं मिला</string>
+    <string name="ui_driving_nothing_this_app_can_read_changed_with_2" formatted="false">इंडिकेटर के साथ ऐसा कुछ नहीं बदला जो यह ऐप पढ़ सके। कई यूनिट को इंडिकेटर का पता CAN bus डिकोडर बॉक्स से ही चलता है; उसके बिना यूनिट को कभी पता नहीं चलता।</string>
+    <string name="ui_driving_left" formatted="false">बायाँ:</string>
+    <string name="ui_driving_not_found" formatted="false">नहीं मिला</string>
+    <string name="ui_driving_right" formatted="false">दायाँ:</string>
+    <string name="ui_driving_both_sides_look_the_same_so_the" formatted="false">दोनों तरफ़ एक जैसे दिखते हैं, इसलिए किसी भी इंडिकेटर पर कार दोनों तीर दिखाएगी।</string>
+    <string name="ui_driving_indicators_found" formatted="false">इंडिकेटर मिल गए</string>
+    <string name="ui_driving_not_set_up" formatted="false">सेट अप नहीं</string>
+    <string name="ui_driving_connecting" formatted="false">कनेक्ट हो रहा है…</string>
+    <string name="ui_driving_bluetooth_is_off" formatted="false">Bluetooth बंद है</string>
+    <string name="ui_driving_adapter_can_t_reach_the_car_ignition" formatted="false">अडैप्टर कार से नहीं जुड़ पा रहा (इग्निशन चालू है?)</string>
+    <string name="ui_driving_connected" formatted="false">कनेक्टेड</string>
+    <string name="ui_driving_not_connected" formatted="false">कनेक्ट नहीं: %1$s</string>
+    <string name="ui_driving_adapter_disconnected" formatted="false">अडैप्टर डिस्कनेक्ट हो गया</string>
+    <string name="ui_driving_air_flow_sensor_reading_out_of_range" formatted="false">एयर फ़्लो सेंसर की रीडिंग सीमा से बाहर</string>
+    <string name="ui_driving_coolant_temperature_sensor" formatted="false">कूलेंट टेम्परेचर सेंसर</string>
+    <string name="ui_driving_throttle_position_sensor" formatted="false">थ्रॉटल पोज़िशन सेंसर</string>
+    <string name="ui_driving_oxygen_sensor_front" formatted="false">ऑक्सीजन सेंसर (आगे वाला)</string>
+    <string name="ui_driving_oxygen_sensor_slow_front" formatted="false">ऑक्सीजन सेंसर धीमा (आगे वाला)</string>
+    <string name="ui_driving_engine_running_lean" formatted="false">इंजन लीन चल रहा है (हवा ज़्यादा)</string>
+    <string name="ui_driving_engine_running_rich" formatted="false">इंजन रिच चल रहा है (ईंधन ज़्यादा)</string>
+    <string name="ui_driving_random_misfire" formatted="false">कभी-कभी मिसफ़ायर</string>
+    <string name="ui_driving_misfire_cylinder_1" formatted="false">मिसफ़ायर, सिलेंडर 1</string>
+    <string name="ui_driving_misfire_cylinder_2" formatted="false">मिसफ़ायर, सिलेंडर 2</string>
+    <string name="ui_driving_misfire_cylinder_3" formatted="false">मिसफ़ायर, सिलेंडर 3</string>
+    <string name="ui_driving_misfire_cylinder_4" formatted="false">मिसफ़ायर, सिलेंडर 4</string>
+    <string name="ui_driving_crankshaft_position_sensor" formatted="false">क्रैंकशाफ़्ट पोज़िशन सेंसर</string>
+    <string name="ui_driving_camshaft_position_sensor" formatted="false">कैमशाफ़्ट पोज़िशन सेंसर</string>
+    <string name="ui_driving_catalytic_converter_efficiency_low" formatted="false">कैटेलिटिक कन्वर्टर की क्षमता कम</string>
+    <string name="ui_driving_small_fuel_vapour_evap_leak" formatted="false">ईंधन भाप (EVAP) में छोटा लीक</string>
+    <string name="ui_driving_large_fuel_vapour_evap_leak_check_the" formatted="false">ईंधन भाप (EVAP) में बड़ा लीक; फ़्यूल कैप जाँचें</string>
+    <string name="ui_driving_vehicle_speed_sensor" formatted="false">गाड़ी का स्पीड सेंसर</string>
+    <string name="ui_driving_idle_air_control" formatted="false">आइडल एयर कंट्रोल</string>
+    <string name="ui_driving_battery_voltage_low" formatted="false">बैटरी वोल्टेज कम</string>
+    <string name="ui_driving_battery_voltage_high" formatted="false">बैटरी वोल्टेज ज़्यादा</string>
+    <string name="ui_driving_gearbox_control_fault" formatted="false">गियरबॉक्स कंट्रोल में ख़राबी</string>
+    <string name="ui_driving_look_this_code_up_for_your_car" formatted="false">अपनी कार के लिए यह कोड खोजकर देखें</string>
+    <string name="ui_driving_off" formatted="false">बंद</string>
+    <string name="ui_driving_this_unit_can_t_scan_for_bluetooth" formatted="false">यह यूनिट Bluetooth LE स्कैन नहीं कर सकती</string>
+    <string name="ui_driving_scan_failed" formatted="false">स्कैन नहीं हुआ (%1$s)</string>
+    <string name="ui_driving_listening" formatted="false">सुन रहे हैं</string>
+    <string name="ui_driving_can_t_scan" formatted="false">स्कैन नहीं कर सकते: %1$s</string>
+    <string name="ui_driving_tyre_low" formatted="false">%1$s टायर में हवा कम</string>
+    <string name="ui_driving_tyre_hot" formatted="false">%1$s टायर गरम</string>
+    <string name="ui_driving_sensor_battery_low" formatted="false">%1$s सेंसर की बैटरी कम</string>
+    <string name="ui_driving_needs_camera_permission_open_settings_once_to" formatted="false">कैमरा की अनुमति चाहिए: अनुमति देने के लिए एक बार सेटिंग्स खोलें</string>
+    <string name="ui_driving_no_camera_found_plug_in_the_usb" formatted="false">कोई कैमरा नहीं मिला: USB डैशकैम लगाएँ</string>
+    <string name="ui_driving_recording_clip_saved" formatted="false">रिकॉर्डिंग · क्लिप सेव हुई</string>
+    <string name="ui_driving_recording" formatted="false">रिकॉर्डिंग</string>
+    <string name="ui_driving_camera_error" formatted="false">कैमरा में गड़बड़ी: %1$s</string>
+    <string name="ui_driving_reverse" formatted="false">रिवर्स</string>
+    <string name="ui_driving_check_around_the_car_this_closes_when" formatted="false">कार के चारों ओर देखें। रिवर्स से निकलते ही यह बंद हो जाएगा।</string>
+    <string name="ui_driving_the_stereo_has_no_spoken_voice_yet" formatted="false">स्टीरियो में अभी बोलने वाली आवाज़ नहीं है। सेटिंग्स > Map and navigation > Spoken voice से दो टैप में मिल जाएगी।</string>
+    <string name="ui_driving_the_voice_couldn_t_read_this_aloud" formatted="false">आवाज़ इसे पढ़ नहीं पाई। Android सेटिंग्स में स्टीरियो का text-to-speech जाँचें।</string>
+    <string name="ui_driving_this_unit_has_no_page_for_that" formatted="false">इस यूनिट में उस अनुमति का पेज नहीं है</string>
+</resources>

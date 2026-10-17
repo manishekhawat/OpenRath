@@ -32,12 +32,12 @@ final class Chores {
         box.setPadding(pad, pad / 2, pad, 0);
         box.addView(e);
         new AlertDialog.Builder(a, DIALOG).setTitle(title).setView(box)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("OK"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         then.set(e.getText().toString().trim());
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     // ------------------------------------------------------------------ splitting the cost
@@ -52,16 +52,16 @@ final class Chores {
     static void split(final HomeActivity a) {
         final Prefs p = a.prefs;
         if (!Features.on(p, "split")) {
-            Toast.makeText(a, "Turn on \"Split the cost by UPI\" in Settings > Features", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("Turn on \"Split the cost by UPI\" in Settings > Features"), Toast.LENGTH_LONG).show();
             return;
         }
         if (!Errands.validVpa(p.str("upiId", ""))) {
-            text(a, "Your UPI id (like name@okbank)", "name@bank", p.str("upiId", ""), InputType.TYPE_CLASS_TEXT
+            text(a, Hindi.t("Your UPI id (like name@okbank)"), "name@bank", p.str("upiId", ""), InputType.TYPE_CLASS_TEXT
                     | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS, new Extras.Num() {
                 @Override
                 public void set(String v) {
                     if (!Errands.validVpa(v)) {
-                        Toast.makeText(a, "That doesn't look like a UPI id (name@bank)", Toast.LENGTH_LONG).show();
+                        Toast.makeText(a, Hindi.t("That doesn't look like a UPI id (name@bank)"), Toast.LENGTH_LONG).show();
                         return;
                     }
                     p.put("upiId", v);
@@ -71,25 +71,25 @@ final class Chores {
             return;
         }
         double fill = lastFill(p);
-        Extras.number(a, "Total to split, ₹" + (fill > 0 ? " (last fill-up shown)" : ""), fill > 0 ? String.valueOf(Math.round(fill)) : "",
+        Extras.number(a, Hindi.t(fill > 0 ? "Total to split, ₹ (last fill-up shown)" : "Total to split, ₹"), fill > 0 ? String.valueOf(Math.round(fill)) : "",
                 new Extras.Num() {
                     @Override
                     public void set(String v) {
                         if (v.isEmpty()) return;
                         final double total = Double.parseDouble(v);
-                        Extras.number(a, "How many people, you included?", p.str("splitPeople", "2"), new Extras.Num() {
+                        Extras.number(a, Hindi.t("How many people, you included?"), p.str("splitPeople", "2"), new Extras.Num() {
                             @Override
                             public void set(String n) {
                                 int people = n.isEmpty() ? 2 : (int) Double.parseDouble(n);
                                 if (people < 2) {
-                                    Toast.makeText(a, "At least 2 people", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(a, Hindi.t("At least 2 people"), Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 p.put("splitPeople", String.valueOf(people));
                                 int each = Errands.share(total, people);
-                                Qr.show(a, "Pay ₹" + each + " each", Errands.upiLink(p.str("upiId", ""), p.str("upiName", ""), each, "Trip share"),
-                                        "₹" + Math.round(total) + " split " + people + " ways. Each person scans this with any UPI app "
-                                                + "(GPay, PhonePe, Paytm, BHIM); the amount is filled in. Pays " + p.str("upiId", "") + ".");
+                                Qr.show(a, Hindi.f("Pay ₹%1$s each", each), Errands.upiLink(p.str("upiId", ""), p.str("upiName", ""), each, "Trip share"),
+                                        Hindi.f("₹%1$s split %2$s ways. Each person scans this with any UPI app "
+                                                + "(GPay, PhonePe, Paytm, BHIM); the amount is filled in. Pays %3$s.", Math.round(total), people, p.str("upiId", "")));
                             }
                         });
                     }
@@ -101,22 +101,22 @@ final class Chores {
     static void parkingTimer(final HomeActivity a) {
         final Prefs p = a.prefs;
         if (!Features.on(p, "parkTimer")) {
-            Toast.makeText(a, "Turn on \"Paid parking reminder\" in Settings > Features", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("Turn on \"Paid parking reminder\" in Settings > Features"), Toast.LENGTH_LONG).show();
             return;
         }
         final int[] mins = {30, 60, 120, 180, 240};
-        new AlertDialog.Builder(a, DIALOG).setTitle("Parking paid for")
-                .setItems(new String[]{"30 minutes", "1 hour", "2 hours", "3 hours", "4 hours"}, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Parking paid for"))
+                .setItems(new String[]{Hindi.t("30 minutes"), Hindi.t("1 hour"), Hindi.t("2 hours"), Hindi.t("3 hours"), Hindi.t("4 hours")}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         long now = System.currentTimeMillis();
                         long end = now + mins[w] * 60000L;
                         p.putLong("parkEnds", end);
-                        Qr.show(a, "Parking ends at " + Errands.clock(end), Errands.parkingLink(now, mins[w]),
-                                "Scan with your phone to add a reminder to its calendar, 10 minutes before the parking runs out. "
-                                        + "The car's screen switches off with the engine, so the phone does the reminding.");
+                        Qr.show(a, Hindi.f("Parking ends at %1$s", Errands.clock(end)), Errands.parkingLink(now, mins[w]),
+                                Hindi.t("Scan with your phone to add a reminder to its calendar, 10 minutes before the parking runs out. "
+                                        + "The car's screen switches off with the engine, so the phone does the reminding."));
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     // ------------------------------------------------------------------ car wash
@@ -135,15 +135,15 @@ final class Chores {
         p.put("washAsked", today);
         final Prefs fp = p;
         long days = (System.currentTimeMillis() - last) / 86400000L;
-        new AlertDialog.Builder(a, DIALOG).setTitle("Time for a wash?")
-                .setMessage("It's been " + days + " days since the last car wash, and no rain is expected for the next two days.")
-                .setPositiveButton("Washed today", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Time for a wash?"))
+                .setMessage(Hindi.f("It's been %1$s days since the last car wash, and no rain is expected for the next two days.", days))
+                .setPositiveButton(Hindi.t("Washed today"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         fp.putLong("washAt", System.currentTimeMillis());
                     }
                 })
-                .setNegativeButton("Later", null).show();
+                .setNegativeButton(Hindi.t("Later"), null).show();
     }
 
     // ------------------------------------------------------------------ weekly report
@@ -205,7 +205,7 @@ final class Chores {
                 + Coach.reasons(worst, Coach.waste(worst, kmpl));
         String text = Errands.weekly(km, sec, Care.spent(Fuel.log(p), from, t), Care.spent(Care.tolls(p), from, t),
                 scored > 0 ? scoreSum / scored : -1, b, w);
-        new AlertDialog.Builder(a, DIALOG).setTitle("Your week in the car").setMessage(text).setPositiveButton("OK", null).show();
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Your week in the car")).setMessage(text).setPositiveButton(Hindi.t("OK"), null).show();
     }
 
     // ------------------------------------------------------------------ parking photo
@@ -213,8 +213,8 @@ final class Chores {
     static void parkPhoto(HomeActivity a) {
         java.io.File f = Snap.file();
         if (!f.exists()) {
-            Toast.makeText(a, Dashcam.cameras() == 0 ? "No camera on this unit, so no parking photo"
-                    : "No parking photo yet: one is taken when you park", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t(Dashcam.cameras() == 0 ? "No camera on this unit, so no parking photo"
+                    : "No parking photo yet: one is taken when you park"), Toast.LENGTH_LONG).show();
             return;
         }
         final android.app.Dialog d = new android.app.Dialog(a, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -229,8 +229,7 @@ final class Chores {
         });
         d.setContentView(img);
         d.show();
-        Toast.makeText(a, "Taken " + new java.text.SimpleDateFormat("EEE h:mm a", java.util.Locale.US).format(new java.util.Date(f.lastModified()))
-                + ". Tap to close.", Toast.LENGTH_LONG).show();
+        Toast.makeText(a, Hindi.f("Taken %1$s. Tap to close.", new java.text.SimpleDateFormat("EEE h:mm a", java.util.Locale.US).format(new java.util.Date(f.lastModified()))), Toast.LENGTH_LONG).show();
     }
 
     // ------------------------------------------------------------------ guest Wi-Fi
@@ -239,15 +238,15 @@ final class Chores {
     static void hotspot(final HomeActivity a) {
         final Prefs p = a.prefs;
         if (!Features.on(p, "hotspot")) {
-            Toast.makeText(a, "Turn on \"Guest Wi-Fi\" in Settings > Features", Toast.LENGTH_LONG).show();
+            Toast.makeText(a, Hindi.t("Turn on \"Guest Wi-Fi\" in Settings > Features"), Toast.LENGTH_LONG).show();
             return;
         }
         if (p.str("apName", "").isEmpty()) {
-            text(a, "Hotspot name (as set on the unit)", "e.g. MyCar", "", InputType.TYPE_CLASS_TEXT, new Extras.Num() {
+            text(a, Hindi.t("Hotspot name (as set on the unit)"), Hindi.t("e.g. MyCar"), "", InputType.TYPE_CLASS_TEXT, new Extras.Num() {
                 @Override
                 public void set(final String name) {
                     if (name.isEmpty()) return;
-                    text(a, "Hotspot password", "", "", InputType.TYPE_CLASS_TEXT, new Extras.Num() {
+                    text(a, Hindi.t("Hotspot password"), "", "", InputType.TYPE_CLASS_TEXT, new Extras.Num() {
                         @Override
                         public void set(String pass) {
                             p.put("apName", name);
@@ -259,17 +258,17 @@ final class Chores {
             });
             return;
         }
-        new AlertDialog.Builder(a, DIALOG).setTitle("Guest Wi-Fi")
-                .setMessage("Android only lets the unit's own settings switch the hotspot on. Turn it on there, come back, "
-                        + "then show the code for passengers to join.")
-                .setPositiveButton("Show the code", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Guest Wi-Fi"))
+                .setMessage(Hindi.t("Android only lets the unit's own settings switch the hotspot on. Turn it on there, come back, "
+                        + "then show the code for passengers to join."))
+                .setPositiveButton(Hindi.t("Show the code"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
-                        Qr.show(a, "Join the car's Wi-Fi", Errands.wifiQr(p.str("apName", ""), p.str("apPass", "")),
-                                "Point a phone camera at this to join \"" + p.str("apName", "") + "\". It shares the unit's mobile data.");
+                        Qr.show(a, Hindi.t("Join the car's Wi-Fi"), Errands.wifiQr(p.str("apName", ""), p.str("apPass", "")),
+                                Hindi.f("Point a phone camera at this to join \"%1$s\". It shares the unit's mobile data.", p.str("apName", "")));
                     }
                 })
-                .setNeutralButton("Hotspot settings", new DialogInterface.OnClickListener() {
+                .setNeutralButton(Hindi.t("Hotspot settings"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         String[][] tries = {{"com.android.settings", "com.android.settings.TetherSettings"},
@@ -284,11 +283,11 @@ final class Chores {
                         try {
                             a.startActivity(new android.content.Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
                         } catch (Throwable e) {
-                            Toast.makeText(a, "Open the unit's Settings > Network > Hotspot", Toast.LENGTH_LONG).show();
+                            Toast.makeText(a, Hindi.t("Open the unit's Settings > Network > Hotspot"), Toast.LENGTH_LONG).show();
                         }
                     }
                 })
-                .setNegativeButton("Close", null).show();
+                .setNegativeButton(Hindi.t("Close"), null).show();
     }
 
     // ------------------------------------------------------------------ start-up summary

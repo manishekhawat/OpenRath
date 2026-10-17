@@ -19,12 +19,19 @@ final class SettingsRows {
         return i < 0 ? c : Prefs.CONTENT_NAMES[i];
     }
 
+    /** A list's names in the owner's language, for a dialog. */
+    private static String[] tr(String[] en) {
+        String[] out = new String[en.length];
+        for (int i = 0; i < en.length; i++) out[i] = Hindi.t(en[i]);
+        return out;
+    }
+
     private static String appName(android.content.pm.PackageManager pm, String pkg) {
         if (pkg == null) return "not chosen";
         try {
             return String.valueOf(pm.getApplicationLabel(pm.getApplicationInfo(pkg, 0)));
         } catch (Exception e) {
-            return pkg + " (not installed)";
+            return Hindi.f("%1$s (not installed)", pkg);
         }
     }
 
@@ -37,32 +44,32 @@ final class SettingsRows {
         if (!opts.isEmpty()) {
             int shown = 0;
             for (String o : opts) if (Layouts.shown(a.prefs, cur.id, o)) shown++;
-            r.add(new SettingsView.Row(g, "Show on this layout", shown + " of " + opts.size() + " parts", new Runnable() {
+            r.add(new SettingsView.Row(g, "Show on this layout", Hindi.f("%1$s of %2$s parts", String.valueOf(shown), String.valueOf(opts.size())), new Runnable() {
                 @Override
                 public void run() {
                     final String[] names = new String[opts.size()];
                     final boolean[] on = new boolean[opts.size()];
                     for (int i = 0; i < names.length; i++) {
                         String n = Layouts.OPT_NAMES.get(opts.get(i));
-                        names[i] = n == null ? opts.get(i) : n;
+                        names[i] = n == null ? opts.get(i) : Hindi.t(n);
                         on[i] = Layouts.shown(a.prefs, cur.id, opts.get(i));
                     }
                     new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setTitle("Show on " + cur.name)
+                            .setTitle(Hindi.f("Show on %1$s", Hindi.t(cur.name)))
                             .setMultiChoiceItems(names, on, new DialogInterface.OnMultiChoiceClickListener() {
                                 @Override
                                 public void onClick(DialogInterface d, int i, boolean b) {
                                     on[i] = b;
                                 }
                             })
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(Hindi.t("OK"), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface d, int w) {
                                     for (int i = 0; i < on.length; i++) Layouts.setShown(a.prefs, cur.id, opts.get(i), on[i]);
                                     a.layoutChanged();
                                     if (a.settingsView != null) a.settingsView.refresh();
                                 }
-                            }).setNegativeButton("Cancel", null).show();
+                            }).setNegativeButton(Hindi.t("Cancel"), null).show();
                 }
             }));
         }
@@ -70,7 +77,7 @@ final class SettingsRows {
         if (stats != null) {
             java.util.List<String> now = Layouts.statItems(a.prefs, cur.id, stats);
             StringBuilder v = new StringBuilder();
-            for (String it : now) v.append(v.length() == 0 ? "" : ", ").append(Layouts.statName(it).toLowerCase(java.util.Locale.US));
+            for (String it : now) v.append(v.length() == 0 ? "" : ", ").append(Hindi.t(Layouts.statName(it)).toLowerCase(java.util.Locale.US));
             r.add(new SettingsView.Row(g, "Details in the list", v.length() == 0 ? "none" : v.toString(), new Runnable() {
                 @Override
                 public void run() {
@@ -79,25 +86,25 @@ final class SettingsRows {
                     final String[] names = new String[order.size()];
                     final boolean[] on = new boolean[order.size()];
                     for (int i = 0; i < names.length; i++) {
-                        names[i] = Layouts.statName(order.get(i));
+                        names[i] = Hindi.t(Layouts.statName(order.get(i)));
                         on[i] = showing.contains(order.get(i));
                     }
                     new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setTitle("Details on " + cur.name)
+                            .setTitle(Hindi.f("Details on %1$s", Hindi.t(cur.name)))
                             .setMultiChoiceItems(names, on, new DialogInterface.OnMultiChoiceClickListener() {
                                 @Override
                                 public void onClick(DialogInterface d, int i, boolean b) {
                                     on[i] = b;
                                 }
                             })
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(Hindi.t("OK"), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface d, int w) {
                                     for (int i = 0; i < on.length; i++) Layouts.setStat(a.prefs, cur.id, stats, order.get(i), on[i]);
                                     a.layoutChanged();
                                     if (a.settingsView != null) a.settingsView.refresh();
                                 }
-                            }).setNegativeButton("Cancel", null).show();
+                            }).setNegativeButton(Hindi.t("Cancel"), null).show();
                 }
             }));
             r.add(new SettingsView.Row(g, "Order of the details", "tap one to put it first", new Runnable() {
@@ -105,26 +112,26 @@ final class SettingsRows {
                 public void run() {
                     final java.util.List<String> order = Layouts.statItems(a.prefs, cur.id, stats);
                     if (order.size() < 2) {
-                        Toast.makeText(a, "Show two or more details first", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(a, Hindi.t("Show two or more details first"), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     String[] names = new String[order.size()];
-                    for (int i = 0; i < names.length; i++) names[i] = (i + 1) + ".  " + Layouts.statName(order.get(i));
+                    for (int i = 0; i < names.length; i++) names[i] = (i + 1) + ".  " + Hindi.t(Layouts.statName(order.get(i)));
                     new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setTitle("Put first")
+                            .setTitle(Hindi.t("Put first"))
                             .setItems(names, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface d, int w) {
                                     Layouts.toTop(a.prefs, cur.id, stats, order.get(w));
                                     a.layoutChanged();
                                 }
-                            }).setNegativeButton("Done", null).show();
+                            }).setNegativeButton(Hindi.t("Done"), null).show();
                 }
             }));
         }
         if (Layouts.part(cur, "user") != null) {
             String n = a.prefs.str("layUser", "");
-            r.add(new SettingsView.Row(g, "Driver's name", n.isEmpty() ? (Profiles.current(a.prefs).isEmpty() ? "not set" : Profiles.current(a.prefs) + " (driver profile)") : n,
+            r.add(new SettingsView.Row(g, "Driver's name", n.isEmpty() ? (Profiles.current(a.prefs).isEmpty() ? "not set" : Hindi.f("%1$s (driver profile)", Profiles.current(a.prefs))) : n,
                     new Runnable() {
                         @Override
                         public void run() {
@@ -132,15 +139,15 @@ final class SettingsRows {
                             e.setSingleLine(true);
                             e.setText(a.prefs.str("layUser", ""));
                             new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                                    .setTitle("Driver's name").setView(e)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    .setTitle(Hindi.t("Driver's name")).setView(e)
+                                    .setPositiveButton(Hindi.t("OK"), new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface d, int w) {
                                             a.prefs.put("layUser", e.getText().toString().trim());
                                             a.layoutChanged();
                                             if (a.settingsView != null) a.settingsView.refresh();
                                         }
-                                    }).setNegativeButton("Cancel", null).show();
+                                    }).setNegativeButton(Hindi.t("Cancel"), null).show();
                         }
                     }));
         }
@@ -159,7 +166,7 @@ final class SettingsRows {
                 a.prefs.put("layMirror", Layouts.mirrorOn(a.prefs) ? "off" : "on");
                 a.layoutChanged();
                 if (Layouts.mirrorOn(a.prefs))
-                    Toast.makeText(a, "Tap the new button to choose your mirroring app", Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.t("Tap the new button to choose your mirroring app"), Toast.LENGTH_LONG).show();
             }
         }));
         r.add(new SettingsView.Row(g, "Background movement", Layouts.animOn(a.prefs) ? "gentle, while driving" : "off", new Runnable() {
@@ -180,10 +187,10 @@ final class SettingsRows {
                 a.prefs.put("layWall", next);
                 if (!"layout".equals(next) && Layouts.myWalls().isEmpty())
                     new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setTitle("Add your pictures")
-                            .setMessage("Copy pictures (JPG or PNG) to " + Layouts.wallDir().getPath()
-                                    + " on the unit, with a USB stick or a file manager. Until then the layout's own picture shows.")
-                            .setPositiveButton("OK", null).show();
+                            .setTitle(Hindi.t("Add your pictures"))
+                            .setMessage(Hindi.f("Copy pictures (JPG or PNG) to %1$s on the unit, with a USB stick or a file manager. Until then the layout's own picture shows.",
+                                    Layouts.wallDir().getPath()))
+                            .setPositiveButton(Hindi.t("OK"), null).show();
                 a.layoutChanged();
             }
         }));
@@ -193,7 +200,7 @@ final class SettingsRows {
                 public void run() {
                     a.prefs.put("layApps", "");
                     a.layoutChanged();
-                    Toast.makeText(a, "Cleared. Tap a tile on the layout to choose its app.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.t("Cleared. Tap a tile on the layout to choose its app."), Toast.LENGTH_LONG).show();
                 }
             }));
         }
@@ -211,12 +218,12 @@ final class SettingsRows {
         String g = "Dashboard";
         for (int i = 0; i < Prefs.SLOTS; i++) {
             final int slot = i;
-            r.add(new SettingsView.Row(g, HomeDialogs.slotName(a, i), contentName(a.prefs.slot(i)), new Runnable() {
+            r.add(new SettingsView.Row(g, HomeDialogs.slotName(a, i), Hindi.t(contentName(a.prefs.slot(i))), new Runnable() {
                 @Override
                 public void run() {
                     new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setTitle(HomeDialogs.slotName(a, slot) + " shows")
-                            .setSingleChoiceItems(Prefs.CONTENT_NAMES, java.util.Arrays.asList(Prefs.CONTENTS).indexOf(a.prefs.slot(slot)),
+                            .setTitle(Hindi.f("%1$s shows", Hindi.t(HomeDialogs.slotName(a, slot))))
+                            .setSingleChoiceItems(tr(Prefs.CONTENT_NAMES), java.util.Arrays.asList(Prefs.CONTENTS).indexOf(a.prefs.slot(slot)),
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface d, int which) {
@@ -225,7 +232,7 @@ final class SettingsRows {
                                             d.dismiss();
                                         }
                                     })
-                            .setNegativeButton("Cancel", null).show();
+                            .setNegativeButton(Hindi.t("Cancel"), null).show();
                 }
             }));
         }
@@ -240,19 +247,19 @@ final class SettingsRows {
             @Override
             public void run() {
                 String[] names = new String[sizes.length];
-                for (int i = 0; i < sizes.length; i++) names[i] = sizes[i] + "%" + (sizes[i] == 100 ? " (as designed)" : "");
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle("Size of text and boxes")
+                for (int i = 0; i < sizes.length; i++) names[i] = sizes[i] + "%" + (sizes[i] == 100 ? Hindi.t(" (as designed)") : "");
+                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Size of text and boxes"))
                         .setItems(names, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 a.prefs.put("uiScale", String.valueOf(sizes[w]));
                                 a.restyle();
                             }
-                        }).setNegativeButton("Cancel", null).show();
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
         final String[] turns = {"auto", "landscape", "portrait"};
-        r.add(new SettingsView.Row(g, "Screen way up", a.prefs.str("turn", "auto") + (Ui.portrait(a.dash.getWidth(), a.dash.getHeight()) ? ", boxes stacked" : ""), new Runnable() {
+        r.add(new SettingsView.Row(g, "Screen way up", Ui.portrait(a.dash.getWidth(), a.dash.getHeight()) ? Hindi.f("%1$s, boxes stacked", Hindi.t(a.prefs.str("turn", "auto"))) : a.prefs.str("turn", "auto"), new Runnable() {
             @Override
             public void run() {
                 int i = java.util.Arrays.asList(turns).indexOf(a.prefs.str("turn", "auto"));
@@ -310,15 +317,15 @@ final class SettingsRows {
             @Override
             public void run() {
                 new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                        .setMessage("Put the boxes and chosen apps back as they were at the start? Your name, sources and learnt car signals stay.")
-                        .setPositiveButton("Reset", new DialogInterface.OnClickListener() {
+                        .setMessage(Hindi.t("Put the boxes and chosen apps back as they were at the start? Your name, sources and learnt car signals stay."))
+                        .setPositiveButton(Hindi.t("Reset"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 a.prefs.reset();
                                 a.build();
                             }
                         })
-                        .setNegativeButton("Cancel", null).show();
+                        .setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
 
@@ -328,11 +335,11 @@ final class SettingsRows {
         // ---- Themes: the gallery, then ways to make and share themes
         g = "Themes";
         r.add(new SettingsView.Row(g, "", null, null));
-        r.add(new SettingsView.Row(g, "Accent colour (car paint)", Theme.json().has("colours") && Theme.json().optJSONObject("colours").has("accent") ? "set by " + Theme.name : a.prefs.str("theme", Ui.THEMES[0]), new Runnable() {
+        r.add(new SettingsView.Row(g, "Accent colour (car paint)", Theme.json().has("colours") && Theme.json().optJSONObject("colours").has("accent") ? Hindi.f("set by %1$s", Theme.name) : a.prefs.str("theme", Ui.THEMES[0]), new Runnable() {
             @Override
             public void run() {
                 new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                        .setTitle("Match the car's colour")
+                        .setTitle(Hindi.t("Match the car's colour"))
                         .setSingleChoiceItems(Ui.THEMES, Math.max(0, java.util.Arrays.asList(Ui.THEMES).indexOf(a.prefs.str("theme", Ui.THEMES[0]))),
                                 new DialogInterface.OnClickListener() {
                                     @Override
@@ -341,7 +348,7 @@ final class SettingsRows {
                                         d.dismiss();
                                         a.restyle();
                                     }
-                                }).setNegativeButton("Cancel", null).show();
+                                }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
         if (Features.on(a.prefs, "bootArt")) r.add(new SettingsView.Row(g, "Boot logo and animation", "make them with your car's badge and name", new Runnable() {
@@ -350,7 +357,7 @@ final class SettingsRows {
                 BootArt.menu(a);
             }
         }));
-        r.add(new SettingsView.Row(g, "Make your own theme", "copies " + Theme.name + " to OpenRath/themes to edit", new Runnable() {
+        r.add(new SettingsView.Row(g, "Make your own theme", Hindi.f("copies %1$s to OpenRath/themes to edit", Theme.name), new Runnable() {
             @Override
             public void run() {
                 try {
@@ -358,12 +365,12 @@ final class SettingsRows {
                     for (int i = 2; new java.io.File(Theme.root(), folder).exists(); i++) folder = "my-theme-" + i;
                     java.io.File d = Theme.starter(a, folder);
                     new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setTitle("Theme created")
-                            .setMessage("Edit the files in " + d.getPath() + " (on a PC over USB, or with a file manager). "
-                                    + "HOW-TO.txt in that folder explains each file. It is now in the list above; tap it to use it, and again after each edit.")
-                            .setPositiveButton("OK", null).show();
+                            .setTitle(Hindi.t("Theme created"))
+                            .setMessage(Hindi.f("Edit the files in %1$s (on a PC over USB, or with a file manager). "
+                                    + "HOW-TO.txt in that folder explains each file. It is now in the list above; tap it to use it, and again after each edit.", d.getPath()))
+                            .setPositiveButton(Hindi.t("OK"), null).show();
                 } catch (Exception e) {
-                    Toast.makeText(a, "Couldn't create it: " + e.getMessage() + " (allow storage access?)", Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.f("Couldn't create it: %1$s (allow storage access?)", e.getMessage()), Toast.LENGTH_LONG).show();
                 }
             }
         }));
@@ -372,13 +379,13 @@ final class SettingsRows {
             public void run() {
                 final java.util.List<java.io.File> zips = Theme.zipsInDownload();
                 if (zips.isEmpty()) {
-                    Toast.makeText(a, "No .zip files in Download", Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.t("No .zip files in Download"), Toast.LENGTH_LONG).show();
                     return;
                 }
                 String[] names = new String[zips.size()];
                 for (int i = 0; i < names.length; i++) names[i] = zips.get(i).getName();
                 new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                        .setTitle("Import which theme?")
+                        .setTitle(Hindi.t("Import which theme?"))
                         .setItems(names, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -386,12 +393,12 @@ final class SettingsRows {
                                     String folder = Theme.importZip(zips.get(w));
                                     a.prefs.put("themePack", folder);
                                     a.restyle();
-                                    Toast.makeText(a, "Theme \"" + folder + "\" is on", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(a, Hindi.f("Theme \"%1$s\" is on", folder), Toast.LENGTH_LONG).show();
                                 } catch (Exception e) {
-                                    Toast.makeText(a, "Not a theme: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(a, Hindi.f("Not a theme: %1$s", e.getMessage()), Toast.LENGTH_LONG).show();
                                 }
                             }
-                        }).setNegativeButton("Cancel", null).show();
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
 
@@ -416,7 +423,7 @@ final class SettingsRows {
             r.add(new SettingsView.Row(g, "Stereo's 360 camera app", cam == null ? "none found (pick one)" : a.appLabel(cam), new Runnable() {
                 @Override
                 public void run() {
-                    AppPicker.show(a, "The 360 camera app", new AppPicker.Picked() {
+                    AppPicker.show(a, Hindi.t("The 360 camera app"), new AppPicker.Picked() {
                         @Override
                         public void picked(String pkg) {
                             a.prefs.setApp("cam360", pkg);
@@ -434,15 +441,15 @@ final class SettingsRows {
                 e.setText(Car.name(a.prefs));
                 e.setSelectAllOnFocus(true);
                 new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                        .setTitle("Name beside the logo (e.g. SWIFT, BALENO)")
+                        .setTitle(Hindi.t("Name beside the logo (e.g. SWIFT, BALENO)"))
                         .setView(e)
-                        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 a.prefs.put("carName", e.getText().toString().trim());
                                 a.restyle();
                             }
-                        }).setNegativeButton("Cancel", null).show();
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
         String[] picNames = {"Car picture, lights off", "Car picture, lights on", "Brand logo"};
@@ -523,11 +530,11 @@ final class SettingsRows {
         r.add(new SettingsView.Row(g, "FM radio app", appName(pm, a.prefs.app("media:radio")), HomeSettings.pick(a, "media:radio", "Radio")));
         String fp = a.prefs.fmCmd("play"), fs0 = a.prefs.fmCmd("stop");
         if (a.topway()) r.add(new SettingsView.Row(g, "FM radio test (find how this unit starts FM)",
-                fp.isEmpty() ? "not done yet" : "start: " + Fm.label(fp) + (fs0.isEmpty() ? "" : ", stop: " + Fm.label(fs0)), new Runnable() {
+                fp.isEmpty() ? "not done yet" : fs0.isEmpty() ? Hindi.f("start: %1$s", Fm.label(fp)) : Hindi.f("start: %1$s, stop: %2$s", Fm.label(fp), Fm.label(fs0)), new Runnable() {
             @Override
             public void run() {
                 if (a.hub.xt == null || !a.hub.xt.ready()) {
-                    Toast.makeText(a, "Topway's radio service isn't connected; only the MCU link can be tried", Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.t("Topway's radio service isn't connected; only the MCU link can be tried"), Toast.LENGTH_LONG).show();
                 }
                 Fm.test(a, a.prefs, a.hub.xt != null && a.hub.xt.ready() ? a.hub.xt : null, a.hub.fm, false);
             }
@@ -550,9 +557,9 @@ final class SettingsRows {
                 e.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 e.setText(a.prefs.fmFreq());
                 new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                        .setTitle("FM frequency (MHz)")
+                        .setTitle(Hindi.t("FM frequency (MHz)"))
                         .setView(e)
-                        .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 try {
@@ -561,7 +568,7 @@ final class SettingsRows {
                                 } catch (Exception ignored) {
                                 }
                             }
-                        }).setNegativeButton("Cancel", null).show();
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
         r.add(new SettingsView.Row(g, "Music plays", musicSrc[Math.max(0, java.util.Arrays.asList(Prefs.MUSIC_SRC).indexOf(a.prefs.source("music")))],
@@ -581,7 +588,7 @@ final class SettingsRows {
             @Override
             public void run() {
                 Player.songs.clear();
-                Toast.makeText(a, "Music files are found again on the next play", Toast.LENGTH_LONG).show();
+                Toast.makeText(a, Hindi.t("Music files are found again on the next play"), Toast.LENGTH_LONG).show();
             }
         }));
         r.add(new SettingsView.Row(g, "Music app", appName(pm, a.prefs.app("media:music")), HomeSettings.pick(a, "media:music", "Music")));
@@ -590,27 +597,27 @@ final class SettingsRows {
             public void run() {
                 try {
                     a.startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
-                    Toast.makeText(a, "Turn on OpenRath in this list", Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.t("Turn on OpenRath in this list"), Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
-                    Toast.makeText(a, "This unit has no notification access screen", Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.t("This unit has no notification access screen"), Toast.LENGTH_LONG).show();
                 }
             }
         }));
 
         // ---- Map and navigation
         g = "Map and navigation";
-        if (Features.on(a.prefs, "offlineMap")) r.add(new SettingsView.Row(g, "Map kept for no internet", "about " + Tiles.sizeMb()
-                + " MB of places you've seen; tap to clear", new Runnable() {
+        if (Features.on(a.prefs, "offlineMap")) r.add(new SettingsView.Row(g, "Map kept for no internet", Hindi.f("about %1$s MB of places you've seen; tap to clear",
+                String.valueOf(Tiles.sizeMb())), new Runnable() {
             @Override
             public void run() {
                 new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                        .setMessage("Delete the kept map? Places will show again once seen with internet.")
-                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        .setMessage(Hindi.t("Delete the kept map? Places will show again once seen with internet."))
+                        .setPositiveButton(Hindi.t("Delete"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 Tiles.clear();
                             }
-                        }).setNegativeButton("Cancel", null).show();
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
         String offNav = OfflineNav.app(a, a.prefs);
@@ -635,7 +642,7 @@ final class SettingsRows {
                 for (Intent t : tries) {
                     try {
                         a.startActivity(t.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-                        Toast.makeText(a, "Download English (India) and Hindi, on Wi-Fi", Toast.LENGTH_LONG).show();
+                        Toast.makeText(a, Hindi.t("Download English (India) and Hindi, on Wi-Fi"), Toast.LENGTH_LONG).show();
                         return;
                     } catch (Exception ignored) {
                     }
@@ -650,7 +657,7 @@ final class SettingsRows {
         }));
         r.add(new SettingsView.Row(g, "Navigation button opens", appName(pm, a.prefs.app("dock:navi")), HomeSettings.pick(a, "dock:navi", "Navigation")));
         r.add(new SettingsView.Row(g, "Save the parking spot here", Drive.parkAt == 0 ? "none saved"
-                : "saved " + Cards.TripCard.ago(Drive.parkAt), new Runnable() {
+                : Hindi.f("saved %1$s", Cards.TripCard.ago(Drive.parkAt)), new Runnable() {
             @Override
             public void run() {
                 a.parkHere();
@@ -665,7 +672,7 @@ final class SettingsRows {
                 a.prefs.setAlertsOn(!a.prefs.alertsOn());
             }
         }));
-        r.add(new SettingsView.Row(g, "Warn above a speed anywhere", a.prefs.warnSpeed() == 0 ? "off" : a.prefs.warnSpeed() + " km/h", new Runnable() {
+        r.add(new SettingsView.Row(g, "Warn above a speed anywhere", a.prefs.warnSpeed() == 0 ? "off" : Hindi.f("%1$s km/h", String.valueOf(a.prefs.warnSpeed())), new Runnable() {
             @Override
             public void run() {
                 int[] steps = {0, 80, 90, 100, 110, 120};
@@ -674,7 +681,7 @@ final class SettingsRows {
                 a.prefs.setWarnSpeed(steps[(i + 1) % steps.length]);
             }
         }));
-        r.add(new SettingsView.Row(g, "Start today's trip again", String.format(java.util.Locale.US, "today %.1f km", Drive.todayKm), new Runnable() {
+        r.add(new SettingsView.Row(g, "Start today's trip again", Hindi.f("today %1$s km", String.format(java.util.Locale.US, "%.1f", Drive.todayKm)), new Runnable() {
             @Override
             public void run() {
                 Drive.resetToday(a);
@@ -682,8 +689,8 @@ final class SettingsRows {
             }
         }));
         Fuel.Stats fs = Fuel.stats(a.prefs);
-        r.add(new SettingsView.Row(g, "Fuel log", fs.fills == 0 ? "no fill-ups yet" : fs.fills + " fill-ups"
-                + (fs.avgKmpl > 0 ? ", " + Fuel.fmt(fs.avgKmpl) + " km/l" : ""), new Runnable() {
+        r.add(new SettingsView.Row(g, "Fuel log", fs.fills == 0 ? "no fill-ups yet" : fs.avgKmpl > 0
+                ? Hindi.f("%1$s fill-ups, %2$s km/l", String.valueOf(fs.fills), Fuel.fmt(fs.avgKmpl)) : Hindi.f("%1$s fill-ups", String.valueOf(fs.fills)), new Runnable() {
             @Override
             public void run() {
                 a.fuel();
@@ -724,10 +731,10 @@ final class SettingsRows {
                 });
             }
         }));
-        r.add(new SettingsView.Row(g, "Toll estimate per plaza", "₹" + a.prefs.num("tollRate", 100) + " (for route estimates)", new Runnable() {
+        r.add(new SettingsView.Row(g, "Toll estimate per plaza", Hindi.f("₹%1$s (for route estimates)", String.valueOf(a.prefs.num("tollRate", 100))), new Runnable() {
             @Override
             public void run() {
-                Care.number(a, "Typical car toll per plaza (₹)", String.valueOf(a.prefs.num("tollRate", 100)), new Care.Num() {
+                Care.number(a, Hindi.t("Typical car toll per plaza (₹)"), String.valueOf(a.prefs.num("tollRate", 100)), new Care.Num() {
                     @Override
                     public void got(double v) {
                         a.prefs.put("tollRate", String.valueOf(Math.round(v)));
@@ -745,7 +752,7 @@ final class SettingsRows {
                 if (a.settingsView != null) a.settingsView.refresh();
             }
         };
-        r.add(new SettingsView.Row(g, "Odometer", Care.odo(a.prefs) + " km (tap to correct)", new Runnable() {
+        r.add(new SettingsView.Row(g, "Odometer", Hindi.f("%1$s km (tap to correct)", String.valueOf(Care.odo(a.prefs))), new Runnable() {
             @Override
             public void run() {
                 Care.editOdo(a, a.prefs, careChanged);
@@ -789,8 +796,8 @@ final class SettingsRows {
                     }
                 }));
         if ("times".equals(l)) {
-            r.add(new SettingsView.Row(g, "Headlight times", Lights.hhmm(a.prefs.num("lightsFrom", 18 * 60 + 30)) + " to "
-                    + Lights.hhmm(a.prefs.num("lightsTo", 6 * 60 + 30)), new Runnable() {
+            r.add(new SettingsView.Row(g, "Headlight times", Hindi.f("%1$s to %2$s", Lights.hhmm(a.prefs.num("lightsFrom", 18 * 60 + 30)),
+                    Lights.hhmm(a.prefs.num("lightsTo", 6 * 60 + 30))), new Runnable() {
                 @Override
                 public void run() {
                     final int from = a.prefs.num("lightsFrom", 18 * 60 + 30), to = a.prefs.num("lightsTo", 6 * 60 + 30);
@@ -806,10 +813,10 @@ final class SettingsRows {
                                     a.openSettings();
                                 }
                             }, to / 60, to % 60, true).show();
-                            Toast.makeText(a, "Now the time they go off", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(a, Hindi.t("Now the time they go off"), Toast.LENGTH_SHORT).show();
                         }
                     }, from / 60, from % 60, true).show();
-                    Toast.makeText(a, "The time the headlights go on", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(a, Hindi.t("The time the headlights go on"), Toast.LENGTH_SHORT).show();
                 }
             }));
         }
@@ -823,8 +830,8 @@ final class SettingsRows {
         };
         final String[] revModes = {"lines", "app", "off"};
         final String[] revNames = {"show parking guide lines", "open the camera app", "do nothing"};
-        r.add(new SettingsView.Row(g, "In reverse", revNames[Math.max(0, java.util.Arrays.asList(revModes).indexOf(a.prefs.str("reverse", "lines")))]
-                + (a.hub.xt != null && a.hub.xt.has("getReverseStatus") ? "" : " (needs Topway's service)"), new Runnable() {
+        r.add(new SettingsView.Row(g, "In reverse", Hindi.t(revNames[Math.max(0, java.util.Arrays.asList(revModes).indexOf(a.prefs.str("reverse", "lines")))])
+                + (a.hub.xt != null && a.hub.xt.has("getReverseStatus") ? "" : Hindi.t(" (needs Topway's service)")), new Runnable() {
             @Override
             public void run() {
                 int i = java.util.Arrays.asList(revModes).indexOf(a.prefs.str("reverse", "lines"));
@@ -843,7 +850,7 @@ final class SettingsRows {
                     }
                 });
                 a.root.addView(v, new android.widget.FrameLayout.LayoutParams(-1, -1));
-                Toast.makeText(a, "Tap to close", Toast.LENGTH_SHORT).show();
+                Toast.makeText(a, Hindi.t("Tap to close"), Toast.LENGTH_SHORT).show();
             }
         }));
         r.add(new SettingsView.Row(g, "Headlight setup", a.prefs.lightSignal() == null ? "not set up" : "set up", new Runnable() {
@@ -918,7 +925,7 @@ final class SettingsRows {
                 a.startActivity(new Intent(Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         }));
-        r.add(new SettingsView.Row(g, "Version", "OpenRath " + a.versionName() + (Features.dev(a.prefs) ? ", developer mode" : ""), new Runnable() {
+        r.add(new SettingsView.Row(g, "Version", "OpenRath " + a.versionName() + (Features.dev(a.prefs) ? Hindi.t(", developer mode") : ""), new Runnable() {
             @Override
             public void run() {
                 HomeSettings.versionTapped(a);
@@ -942,7 +949,7 @@ final class SettingsRows {
     private static void levelRows(final HomeActivity a, java.util.List<SettingsView.Row> r) {
         final String g = "Level";
         int lv = Features.level(a.prefs);
-        r.add(new SettingsView.Row(g, "OpenRath level", Features.LEVEL_NAMES[lv] + ": " + Features.LEVEL_ABOUT[lv], new Runnable() {
+        r.add(new SettingsView.Row(g, "OpenRath level", Hindi.t(Features.LEVEL_NAMES[lv]) + ": " + Hindi.t(Features.LEVEL_ABOUT[lv]), new Runnable() {
             @Override
             public void run() {
                 HomeSettings.askLevel(a, false);
@@ -951,14 +958,15 @@ final class SettingsRows {
         r.add(new SettingsView.Row(g, "Every switch", "each level's features can still be turned on or off one by one, in their own section", new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(a, "Look under \"Turn on or off\" at the top of each section", Toast.LENGTH_LONG).show();
+                Toast.makeText(a, Hindi.t("Look under \"Turn on or off\" at the top of each section"), Toast.LENGTH_LONG).show();
             }
         }));
-        r.add(new SettingsView.Row(g, "Language", "hi".equals(Hindi.lang(a.prefs)) ? "हिन्दी (Settings screens)" : "English", new Runnable() {
+        r.add(new SettingsView.Row(g, "Language", "hi".equals(Hindi.lang(a.prefs)) ? "हिन्दी" : "English", new Runnable() {
             @Override
             public void run() {
                 a.prefs.put("lang", "hi".equals(Hindi.lang(a.prefs)) ? "en" : "hi");
                 Hindi.load(a, a.prefs);
+                a.build();   // the dashboard in the new language too
                 if (a.settingsView != null) HomeSettings.closeAndReopenSettings(a);
             }
         }));
@@ -968,7 +976,7 @@ final class SettingsRows {
                 public void run() {
                     a.prefs.put("devMode", "off");
                     a.devTaps = 0;
-                    Toast.makeText(a, "Developer mode is off", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(a, Hindi.t("Developer mode is off"), Toast.LENGTH_SHORT).show();
                     if (a.settingsView != null) a.settingsView.refresh();
                 }
             }));

@@ -52,11 +52,11 @@ final class Valet {
             ok.run();
             return;
         }
-        askPin(a, "Valet mode is on. Enter the PIN", new Pin() {
+        askPin(a, Hindi.t("Valet mode is on. Enter the PIN"), new Pin() {
             @Override
             public void entered(String pin) {
                 if (pin.equals(pin(p))) ok.run();
-                else Toast.makeText(a, "Wrong PIN", Toast.LENGTH_SHORT).show();
+                else Toast.makeText(a, Hindi.t("Wrong PIN"), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -68,7 +68,7 @@ final class Valet {
                 @Override
                 public void run() {
                     p.put("valet", "off");
-                    Toast.makeText(a, "Valet mode is off", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(a, Hindi.t("Valet mode is off"), Toast.LENGTH_SHORT).show();
                     changed.run();
                 }
             });
@@ -84,17 +84,16 @@ final class Valet {
             return;
         }
         p.put("valet", "on");
-        Toast.makeText(a, "Valet mode is on: volume up to " + volumeCap(p) + "%, warning above " + speed(p)
-                + " km/h, Settings locked", Toast.LENGTH_LONG).show();
+        Toast.makeText(a, Hindi.f("Valet mode is on: volume up to %1$s%%, warning above %2$s km/h, Settings locked", volumeCap(p), speed(p)), Toast.LENGTH_LONG).show();
         changed.run();
     }
 
     static void choosePin(final Activity a, final Prefs p, final Runnable done) {
-        askPin(a, "Choose a 4-digit PIN for valet mode", new Pin() {
+        askPin(a, Hindi.t("Choose a 4-digit PIN for valet mode"), new Pin() {
             @Override
             public void entered(String pin) {
                 if (!pin.matches("\\d{4,8}")) {
-                    Toast.makeText(a, "Use 4 to 8 digits", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(a, Hindi.t("Use 4 to 8 digits"), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 p.put("valetPin", pin);
@@ -116,13 +115,13 @@ final class Valet {
         box.setPadding(pad, pad / 2, pad, 0);
         box.addView(e);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(title).setView(box)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(Hindi.t("OK"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         then.entered(e.getText().toString().trim());
                     }
                 })
-                .setNegativeButton("Cancel", null).show();
+                .setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     private Valet() {

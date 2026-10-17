@@ -90,7 +90,7 @@ final class CabMeter {
         col.addView(info);
         LinearLayout row = new LinearLayout(a);
         row.setGravity(Gravity.CENTER);
-        TextView hide = button(a, "Hide", 0xFF33363C), stop = button(a, "Stop and charge", 0xFF1F6F45);
+        TextView hide = button(a, Hindi.t("Hide"), 0xFF33363C), stop = button(a, Hindi.t("Stop and charge"), 0xFF1F6F45);
         LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(Ui.px(260), Ui.px(76));
         bp.leftMargin = bp.rightMargin = Ui.px(14);
         row.addView(hide, bp);
@@ -108,9 +108,9 @@ final class CabMeter {
                 Cab.Rates r = rates(p);
                 fare.setText(Cab.rs(fareNow(p)));
                 long w = meterWaitMs(p) / 60000;
-                info.setText(Fuel.fmt(meterKm(p)) + " km   ·   " + w + " min waiting   ·   " + Cab.hm(System.currentTimeMillis() - p.longNum("cabMeterAt", 0))
-                        + (meterNight(p) ? "\nNight charge +" + Math.round(r.nightPct) + "%" : "")
-                        + "\n" + Cab.rs(r.base) + " for the first " + Fuel.fmt(r.baseKm) + " km, then " + Cab.rs(r.perKm) + " a km");
+                info.setText(Hindi.f("%1$s km   ·   %2$s min waiting   ·   %3$s", Fuel.fmt(meterKm(p)), w, Cab.hm(System.currentTimeMillis() - p.longNum("cabMeterAt", 0)))
+                        + (meterNight(p) ? "\n" + Hindi.f("Night charge +%1$s%%", Math.round(r.nightPct)) : "")
+                        + "\n" + Hindi.f("%1$s for the first %2$s km, then %3$s a km", Cab.rs(r.base), Fuel.fmt(r.baseKm), Cab.rs(r.perKm)));
                 fare.postDelayed(this, 1000);
             }
         };
@@ -144,7 +144,7 @@ final class CabMeter {
         final double km = meterKm(p);
         final double lat = dbl(p, "cabMeterLat", 0), lon = dbl(p, "cabMeterLon", 0);
         long w = meterWaitMs(p) / 60000;
-        String said = Fuel.fmt(km) + " km, " + w + " min waiting" + (meterNight(p) ? ", night charge" : "");
+        String said = Hindi.f("%1$s km, %2$s min waiting", Fuel.fmt(km), w) + (meterNight(p) ? Hindi.t(", night charge") : "");
         p.putLong("cabMeterAt", 0);
         p.putLong("cabMeterWait", 0);
         Cab.waitMs = 0;
@@ -153,25 +153,25 @@ final class CabMeter {
         final boolean log = Cab.on(p, "cabEarnings");
         final String upi = p.str("upiId", "");
         AlertDialog.Builder b = new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle("Fare " + Cab.rs(f)).setMessage(said + (log ? "\n\nSave it to the earnings log?" : ""))
-                .setPositiveButton(log ? "Paid in cash" : "OK", new DialogInterface.OnClickListener() {
+                .setTitle(Hindi.f("Fare %1$s", Cab.rs(f))).setMessage(said + (log ? "\n\n" + Hindi.t("Save it to the earnings log?") : ""))
+                .setPositiveButton(Hindi.t(log ? "Paid in cash" : "OK"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int which) {
                         if (log) Cab.addRide(a, f, km, "Meter", "Cash", lat, lon);
                         a.hub.notifyIfChanged(true);
                     }
                 })
-                .setNeutralButton(Errands.validVpa(upi) ? "UPI QR" : "Paid by UPI", new DialogInterface.OnClickListener() {
+                .setNeutralButton(Hindi.t(Errands.validVpa(upi) ? "UPI QR" : "Paid by UPI"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int which) {
                         if (log) Cab.addRide(a, f, km, "Meter", "UPI", lat, lon);
-                        if (Errands.validVpa(upi)) Qr.show(a, "Pay " + Cab.rs(f), Errands.upiLink(upi, p.str("upiName", ""), (int) f, "Cab fare"),
-                                "Scan with any UPI app (GPay, PhonePe, Paytm, BHIM); the fare is filled in. Pays " + upi + ".");
-                        else Toast.makeText(a, "Set your UPI id in Settings > Cab driver to show a QR code", Toast.LENGTH_LONG).show();
+                        if (Errands.validVpa(upi)) Qr.show(a, Hindi.f("Pay %1$s", Cab.rs(f)), Errands.upiLink(upi, p.str("upiName", ""), (int) f, "Cab fare"),
+                                Hindi.f("Scan with any UPI app (GPay, PhonePe, Paytm, BHIM); the fare is filled in. Pays %1$s.", upi));
+                        else Toast.makeText(a, Hindi.t("Set your UPI id in Settings > Cab driver to show a QR code"), Toast.LENGTH_LONG).show();
                         a.hub.notifyIfChanged(true);
                     }
                 });
-        if (log) b.setNegativeButton("Don't save", null);
+        if (log) b.setNegativeButton(Hindi.t("Don't save"), null);
         b.show();
     }
 

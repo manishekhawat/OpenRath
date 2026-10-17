@@ -175,15 +175,16 @@ final class Errands {
     /** The week's report as lines: {km, hours, fuel ₹, tolls ₹, score, best, worst}; empty parts are skipped. */
     static String weekly(double km, long seconds, double fuelRs, double tollRs, int score, String best, String worst) {
         StringBuilder b = new StringBuilder();
-        b.append(String.format(Locale.US, "Driven: %.0f km in %d h %02d min", km, seconds / 3600, seconds % 3600 / 60));
-        if (km > 0 && seconds > 0) b.append(String.format(Locale.US, " (average %.0f km/h)", km / (seconds / 3600.0)));
+        b.append(Hindi.f("Driven: %1$s km in %2$s h %3$s min", String.format(Locale.US, "%.0f", km), seconds / 3600,
+                String.format(Locale.US, "%02d", seconds % 3600 / 60)));
+        if (km > 0 && seconds > 0) b.append(Hindi.f(" (average %1$s km/h)", String.format(Locale.US, "%.0f", km / (seconds / 3600.0))));
         b.append('\n');
-        if (fuelRs > 0) b.append(String.format(Locale.US, "Petrol: ₹%,.0f", fuelRs))
-                .append(km > 0 ? String.format(Locale.US, " (₹%.1f a km)", fuelRs / km) : "").append('\n');
-        if (tollRs > 0) b.append(String.format(Locale.US, "Tolls: ₹%,.0f", tollRs)).append('\n');
-        if (score >= 0) b.append("Driving score: ").append(score).append(" out of 100").append('\n');
-        if (best != null && !best.isEmpty()) b.append("Best drive: ").append(best).append('\n');
-        if (worst != null && !worst.isEmpty()) b.append("Needs work: ").append(worst).append('\n');
+        if (fuelRs > 0) b.append(Hindi.f("Petrol: ₹%1$s", String.format(Locale.US, "%,.0f", fuelRs)))
+                .append(km > 0 ? Hindi.f(" (₹%1$s a km)", String.format(Locale.US, "%.1f", fuelRs / km)) : "").append('\n');
+        if (tollRs > 0) b.append(Hindi.f("Tolls: ₹%1$s", String.format(Locale.US, "%,.0f", tollRs))).append('\n');
+        if (score >= 0) b.append(Hindi.f("Driving score: %1$s out of 100", score)).append('\n');
+        if (best != null && !best.isEmpty()) b.append(Hindi.f("Best drive: %1$s", best)).append('\n');
+        if (worst != null && !worst.isEmpty()) b.append(Hindi.f("Needs work: %1$s", worst)).append('\n');
         return b.toString().trim();
     }
 

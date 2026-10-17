@@ -21,6 +21,13 @@ jobs:
           echo "THEME_TOOLS=$THEME_TOOLS" >> $GITHUB_ENV
       - name: Unit tests
         run: python3 build.py test
+      - name: Nothing newer than Android 8.0 used by name
+        # MIN_SDK is 26: code may only reach newer Android through Build.VERSION checks with
+        # reflection or plain strings, so it has to compile against the Android 8.0 platform too
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-26" > /dev/null
+          mkdir -p $RUNNER_TEMP/api26
+          javac -nowarn --release 8 -encoding UTF-8 -cp $ANDROID_HOME/platforms/android-26/android.jar -d $RUNNER_TEMP/api26 $(find java -name '*.java')
       - name: APK
         run: python3 build.py out
       - uses: actions/upload-artifact@v4

@@ -27,7 +27,7 @@ final class Obd {
     static volatile int rpm = -1, kmh = -1, coolant = -1, load = -1;
     static volatile float volts = -1;
     static volatile long readAt;
-    static volatile String status = "Not set up", protocol = "";
+    static volatile String status = Hindi.t("Not set up"), protocol = "";
     static volatile boolean connected;
     static final List<String> codes = new ArrayList<>();
     static volatile long codesAt;
@@ -44,7 +44,7 @@ final class Obd {
     static void start(final Context c, final Prefs p) {
         final String mac = p.str("obdMac", "");
         if (mac.isEmpty()) {
-            status = "Not set up";
+            status = Hindi.t("Not set up");
             return;
         }
         if (thread != null && thread.isAlive()) return;
@@ -97,10 +97,10 @@ final class Obd {
         while (!stop) {
             BluetoothSocket s = null;
             try {
-                status = "Connecting…";
+                status = Hindi.t("Connecting…");
                 changed(c);
                 BluetoothAdapter a = BluetoothAdapter.getDefaultAdapter();
-                if (a == null || !a.isEnabled()) throw new IllegalStateException("Bluetooth is off");
+                if (a == null || !a.isEnabled()) throw new IllegalStateException(Hindi.t("Bluetooth is off"));
                 BluetoothDevice d = a.getRemoteDevice(mac);
                 a.cancelDiscovery();
                 try {
@@ -120,10 +120,10 @@ final class Obd {
                 for (String cmd : new String[]{"ATZ", "ATE0", "ATL0", "ATS0", "ATH0", "ATAT1", "ATSP0"}) ask(in, out, cmd, cmd.equals("ATZ") ? 3000 : 1500);
                 String first = ask(in, out, "0100", 10000);   // the adapter searches for the car's protocol here
                 if (first.contains("UNABLE") || first.contains("ERROR") || first.contains("NODATA") || first.contains("CANTCONNECT"))
-                    throw new IllegalStateException("adapter can't reach the car (ignition on?)");
+                    throw new IllegalStateException(Hindi.t("adapter can't reach the car (ignition on?)"));
                 protocol = clean(ask(in, out, "ATDP", 1500));
                 connected = true;
-                status = "Connected";
+                status = Hindi.t("Connected");
                 backoff = 5000;
                 changed(c);
                 int round = 0;
@@ -160,7 +160,7 @@ final class Obd {
                 }
             } catch (Throwable e) {
                 connected = false;
-                status = "Not connected: " + (e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
+                status = Hindi.f("Not connected: %1$s", e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
                 changed(c);
             } finally {
                 try {
@@ -196,7 +196,7 @@ final class Obd {
         while (System.currentTimeMillis() < end) {
             if (in.available() > 0) {
                 int b = in.read();
-                if (b < 0) throw new IllegalStateException("adapter disconnected");
+                if (b < 0) throw new IllegalStateException(Hindi.t("adapter disconnected"));
                 if (b == '>') break;
                 sb.append((char) b);
             } else Thread.sleep(10);
@@ -315,8 +315,8 @@ final class Obd {
                 {"P0455", "Large fuel vapour (EVAP) leak; check the fuel cap"}, {"P0500", "Vehicle speed sensor"},
                 {"P0505", "Idle air control"}, {"P0562", "Battery voltage low"}, {"P0563", "Battery voltage high"},
                 {"P0700", "Gearbox control fault"}};
-        for (String[] k : known) if (k[0].equals(code)) return k[1];
-        return "Look this code up for your car";
+        for (String[] k : known) if (k[0].equals(code)) return Hindi.t(k[1]);
+        return Hindi.t("Look this code up for your car");
     }
 
     private Obd() {

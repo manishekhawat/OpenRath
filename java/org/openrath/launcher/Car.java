@@ -190,15 +190,15 @@ final class Car {
             if (!found.isEmpty()) {
                 final File f = found.get(0);
                 String when = new java.text.SimpleDateFormat("d MMM yyyy", Locale.getDefault()).format(new java.util.Date(f.lastModified()));
-                new AlertDialog.Builder(a, DIALOG).setTitle("Welcome to OpenRath")
-                        .setMessage("There's a backup here from " + when + (f.getName().startsWith("dzire-home-") ? ", made by Dzire Home" : "")
-                                + ". Bring back those settings, the fuel log and trips?")
-                        .setPositiveButton("Bring them back", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Welcome to OpenRath"))
+                        .setMessage(Hindi.f(f.getName().startsWith("dzire-home-") ? "There's a backup here from %1$s, made by Dzire Home. Bring back those settings, the fuel log and trips?"
+                                : "There's a backup here from %1$s. Bring back those settings, the fuel log and trips?", when))
+                        .setPositiveButton(Hindi.t("Bring them back"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 try {
                                     Backup.restore(a, f);
-                                    Toast.makeText(a, "Restored; restarting", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(a, Hindi.t("Restored; restarting"), Toast.LENGTH_SHORT).show();
                                     a.dash.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
@@ -206,12 +206,12 @@ final class Car {
                                         }
                                     }, 1200);
                                 } catch (Exception e) {
-                                    Toast.makeText(a, "Couldn't restore: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(a, Hindi.f("Couldn't restore: %1$s", e.getMessage()), Toast.LENGTH_LONG).show();
                                     setup(a);
                                 }
                             }
                         })
-                        .setNegativeButton("Start fresh", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(Hindi.t("Start fresh"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 setup(a);
@@ -229,13 +229,13 @@ final class Car {
         final List<Brand> all = brands(a);
         String[] names = new String[all.size() + 1];
         for (int i = 0; i < all.size(); i++) names[i] = all.get(i).name;
-        names[all.size()] = "Another brand…";
-        new AlertDialog.Builder(a, DIALOG).setTitle("Which car is this? Pick the brand")
+        names[all.size()] = Hindi.t("Another brand…");
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Which car is this? Pick the brand"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         if (w < all.size()) model(a, all.get(w));
-                        else Chores.text(a, "Brand", "e.g. Ford", "", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS, new Extras.Num() {
+                        else Chores.text(a, Hindi.t("Brand"), Hindi.t("e.g. Ford"), "", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS, new Extras.Num() {
                             @Override
                             public void set(String v) {
                                 model(a, new Brand(idFor(v), v.isEmpty() ? "" : v));
@@ -243,11 +243,11 @@ final class Car {
                         });
                     }
                 })
-                .setNegativeButton("Later", new DialogInterface.OnClickListener() {
+                .setNegativeButton(Hindi.t("Later"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         a.prefs.put("carSetup", "yes");   // ask again only from Settings > Car
-                        Toast.makeText(a, "You can set up the car any time in Settings > Car", Toast.LENGTH_LONG).show();
+                        Toast.makeText(a, Hindi.t("You can set up the car any time in Settings > Car"), Toast.LENGTH_LONG).show();
                     }
                 }).setCancelable(false).show();
     }
@@ -260,25 +260,25 @@ final class Car {
             }
         };
         if (b.models.isEmpty()) {
-            Chores.text(a, "Model", "e.g. Ecosport", "", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS, then);
+            Chores.text(a, Hindi.t("Model"), Hindi.t("e.g. Ecosport"), "", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS, then);
             return;
         }
         String[] names = b.models.toArray(new String[b.models.size() + 1]);
-        names[b.models.size()] = "Another model…";
-        new AlertDialog.Builder(a, DIALOG).setTitle(b.name + ": which model?")
+        names[b.models.size()] = Hindi.t("Another model…");
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.f("%1$s: which model?", b.name))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         if (w < b.models.size()) then.set(b.models.get(w));
-                        else Chores.text(a, "Model", "", "", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS, then);
+                        else Chores.text(a, Hindi.t("Model"), "", "", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS, then);
                     }
                 }).setCancelable(false).show();
     }
 
     /** Hatchback or saloon, or SUV or MUV: picks the car picture's shape. */
     private static void body(final HomeActivity a, final Brand b, final String model) {
-        new AlertDialog.Builder(a, DIALOG).setTitle("What shape is it?")
-                .setItems(Car3D.SHAPE_NAMES, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("What shape is it?"))
+                .setItems(Cab.tr(Car3D.SHAPE_NAMES), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         // the 3D car takes the exact shape; the car picture has two
@@ -290,8 +290,8 @@ final class Car {
     }
 
     private static void fuel(final HomeActivity a, final Brand b, final String model) {
-        new AlertDialog.Builder(a, DIALOG).setTitle("What does it run on?")
-                .setItems(FUEL_NAMES, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("What does it run on?"))
+                .setItems(Cab.tr(FUEL_NAMES), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         final String f = FUELS[w];
@@ -299,7 +299,7 @@ final class Car {
                             save(a, b, model, f, 0);
                             return;
                         }
-                        Extras.number(a, "cng".equals(f) ? "CNG cylinder, kg (leave empty if unsure)" : "Fuel tank, litres (leave empty if unsure)",
+                        Extras.number(a, Hindi.t("cng".equals(f) ? "CNG cylinder, kg (leave empty if unsure)" : "Fuel tank, litres (leave empty if unsure)"),
                                 "", new Extras.Num() {
                                     @Override
                                     public void set(String v) {
@@ -329,7 +329,7 @@ final class Car {
         Ui.clearImages();
         a.restyle();
         String what = (b.name + " " + model).trim();
-        Toast.makeText(a, (what.isEmpty() ? "Car" : what) + " set up. Change it any time in Settings > Car.", Toast.LENGTH_LONG).show();
+        Toast.makeText(a, Hindi.f("%1$s set up. Change it any time in Settings > Car.", what.isEmpty() ? Hindi.t("Car") : what), Toast.LENGTH_LONG).show();
     }
 
     /** One line for Settings > Car. */
@@ -337,7 +337,7 @@ final class Car {
         String s = (brandName(p) + " " + model(p)).trim();
         String f = fuel(p);
         int i = java.util.Arrays.asList(FUELS).indexOf(f);
-        return (s.isEmpty() ? "not set" : s) + ", " + (i < 0 ? f : FUEL_NAMES[i]).toLowerCase(Locale.US);
+        return (s.isEmpty() ? Hindi.t("not set") : s) + ", " + (i < 0 ? f : Hindi.t(FUEL_NAMES[i])).toLowerCase(Locale.US);
     }
 
     private Car() {
