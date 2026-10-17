@@ -56,7 +56,7 @@ final class Cards {
         if (Prefs.CAR.equals(content)) card = new CarCard(c);
         else if (Prefs.CLOCK.equals(content)) card = new ClockCard(c);
         else if (Prefs.WEATHER.equals(content)) card = new WeatherCard(c);
-        else if (Prefs.MAP.equals(content)) card = new MapCard(c);
+        else if (Prefs.MAP.equals(content)) card = map(c);
         else if (Prefs.TRIP.equals(content)) card = new TripCard(c);
         else if (Prefs.FUEL.equals(content)) card = new FuelCard(c);
         else if (Prefs.PHONE.equals(content)) card = new PhoneCard(c);
@@ -71,6 +71,37 @@ final class Cards {
         card.slot = slot;
         card.setOnLongClickListener(card.edit);
         return card;
+    }
+
+    /** The map box, or a note when the unit has no working WebView (some stereos ship without one). */
+    static Card map(Context c) {
+        try {
+            return new MapCard(c);
+        } catch (Throwable e) {
+            return new NoMapCard(c);
+        }
+    }
+
+    static final class NoMapCard extends Card {
+        final TextView note = new TextView(getContext());
+
+        NoMapCard(Context c) {
+            super(c);
+            note.setText(Hindi.t("The map needs Android System WebView. Install or turn it on in Android's settings."));
+            note.setTextColor(Ui.SILVER_DIM);
+            note.setGravity(Gravity.CENTER);
+            addView(note, new LayoutParams(-1, -1));
+        }
+
+        @Override
+        void fit(int w, int h) {
+            note.setTextSize(0, Math.min(Math.max(w / 22f, 11 * Ui.k), h / 6f));
+            note.setPadding(w / 12, 0, w / 12, 0);
+        }
+
+        @Override
+        public void changed(Hub h) {
+        }
     }
 
     abstract static class Card extends FrameLayout implements Hub.Listener {

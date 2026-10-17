@@ -189,4 +189,5 @@
     <string name="ui_cards_hour_morning" formatted="false">सुबह %1$s बजे</string>
     <string name="ui_cards_hour_afternoon" formatted="false">दोपहर %1$s बजे</string>
     <string name="ui_cards_hour_evening" formatted="false">शाम %1$s बजे</string>
+    <string name="ui_cards_no_webview" formatted="false">नक्शे के लिए Android System WebView चाहिए। इसे इंस्टॉल करें या Android की सेटिंग में चालू करें।</string>
 </resources>

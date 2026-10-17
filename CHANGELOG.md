@@ -7,6 +7,7 @@ Newest first.
 - **Android 8.0 and newer again.** 1.33 needed Android 10; 1.34 installs on Android 8.0, 8.1 and 9 too, still built for Android 14.
 - **The whole app in Hindi**, not only Settings: the dashboard boxes, the map, phone, music and radio boxes, the cab tools, driving alerts on screen, dialogs and messages. Settings > OpenRath level > Language switches everything at once. Spoken prompts stay in English, because many stereos' voices can't speak Hindi. The Hindi is a draft for a native speaker to check.
 - Times in Hindi say the part of the day ("रात 2 बजे", "शाम 6 बजे").
+- The home screen opens on units with no working Android System WebView; the map box says what's missing instead of OpenRath closing.
 - For contributors: an on-device test of managed settings set by a real device-management app, more on-device tests (every layout, Settings in both languages, backup and restore), a check that OpenRath builds the way F-Droid's servers would, and a way to publish releases signed offline.
 
 ## 1.33: Ready for Android 14, fleets and translators
