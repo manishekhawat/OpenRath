@@ -163,7 +163,7 @@ final class Hub implements LocationListener {
         };
         android.content.IntentFilter f = new android.content.IntentFilter(Player.CHANGED);
         f.addAction(Drive.CHANGED);
-        ctx.registerReceiver(playerReceiver, f);
+        Compat.ownOnly(ctx, playerReceiver, f);
         handler.removeCallbacks(blink);
         if (leftSig != null || rightSig != null) handler.post(blink);
         handler.removeCallbacks(tick);

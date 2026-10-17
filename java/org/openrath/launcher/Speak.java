@@ -108,11 +108,9 @@ final class Speak {
     }
 
     private static void speak(String text, boolean flush, boolean longOne) {
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
-            tts.setAudioAttributes(new android.media.AudioAttributes.Builder()
-                    .setUsage(longOne ? android.media.AudioAttributes.USAGE_MEDIA : android.media.AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
-                    .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SPEECH).build());
-        }
+        tts.setAudioAttributes(new android.media.AudioAttributes.Builder()
+                .setUsage(longOne ? android.media.AudioAttributes.USAGE_MEDIA : android.media.AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
+                .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SPEECH).build());
         if (flush) finishLong();
         if (longOne) fmAside();
         List<String> parts = sentences(text, 380);

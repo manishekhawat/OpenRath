@@ -148,7 +148,7 @@ final class Lights {
         IntentFilter f = new IntentFilter();
         for (String a : actions) f.addAction(a);
         try {
-            Intent sticky = c.getApplicationContext().registerReceiver(r, f);
+            Intent sticky = Compat.fromOthers(c.getApplicationContext(), r, f);
             if (sticky != null) record(sticky);
         } catch (Throwable e) {
             return null;

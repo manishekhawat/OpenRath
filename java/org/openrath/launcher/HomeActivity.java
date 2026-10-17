@@ -46,17 +46,10 @@ public class HomeActivity extends Activity implements Cards.Host {
         root = new android.widget.FrameLayout(this);
         root.addView(dash, new android.widget.FrameLayout.LayoutParams(-1, -1));
         setContentView(root);
-        if (Build.VERSION.SDK_INT >= 23
-                && (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || checkSelfPermission(Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
-                || checkSelfPermission("android.permission.CALL_PHONE") != PackageManager.PERMISSION_GRANTED)) {
-            // calls and call state: the plain Android phone (Bluetooth hands-free through the system phone)
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_CALL_LOG, "android.permission.CALL_PHONE", "android.permission.READ_PHONE_STATE",
-                    "android.permission.ANSWER_PHONE_CALLS"}, 1);
-        }
+        // location, storage, Bluetooth, notifications and the plain Android phone (Bluetooth hands-free
+        // through the system phone), as this Android version names them
+        String[] missing = Compat.missing(this);
+        if (missing.length > 0) requestPermissions(missing, 1);
         findRadio();
         Drive.start(this);
         Keys.init(this);
@@ -67,7 +60,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         f.addAction(Drive.FUEL_LOW);
         f.addAction(Drive.CRASH);
         f.addAction(Drive.HIGHWAY);
-        registerReceiver(events, f);
+        Compat.ownOnly(this, events, f);
         build();
         handleIntent(getIntent());
     }
@@ -1377,7 +1370,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         b.append("\n");
         b.append("Last call: ").append(hub.lastCall == null ? "none seen yet" : hub.lastCall[1] + " " + hub.lastCall[0] + " " + hub.lastCall[2])
                 .append(hub.xt == null ? "" : ", last Bluetooth text \"" + hub.xt.btText + "\"")
-                .append(Build.VERSION.SDK_INT < 23 || checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED ? "" : ", call log not allowed").append("\n");
+                .append(checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED ? "" : ", call log not allowed").append("\n");
         b.append("Topway MCU link: ").append(!Tw.available() ? "not on this unit"
                 : hub.fm == null ? "present" : hub.fm.seen ? "FM " + hub.fm.frequency() + (hub.fm.on ? " (playing)" : "")
                 + (hub.fm.name.isEmpty() ? "" : " " + hub.fm.name) : "present, no answer from the tuner yet").append("\n");
@@ -2534,6 +2527,22 @@ public class HomeActivity extends Activity implements Cards.Host {
     private int devTaps;
     private long devTapAt;
 
+    /** Android 11+, once: the OpenRath folder (themes, backups, music, dashcam) needs all-files access. */
+    private boolean askAllFiles() {
+        if (!prefs.str("askedAllFiles", "").isEmpty() || !Compat.needsAllFiles()) return false;
+        prefs.put("askedAllFiles", "yes");
+        new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert).setTitle("Allow the OpenRath folder")
+                .setMessage("On this Android version OpenRath needs \"Allow access to manage all files\" to keep its backups, "
+                        + "themes, dashcam clips and documents in the OpenRath folder, and to find music on USB sticks.")
+                .setPositiveButton("Open the setting", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        Compat.askAllFiles(HomeActivity.this);
+                    }
+                }).setNegativeButton("Not now", null).show();
+        return true;
+    }
+
     /** Once: no voice engine on the unit, so offer Google's from the Play Store. */
     private boolean askVoice() {
         if (!prefs.str("askedVoice", "").isEmpty() || !Speak.engines(this).isEmpty()) return false;
@@ -2866,6 +2875,7 @@ public class HomeActivity extends Activity implements Cards.Host {
                     return;   // one question at a time
                 }
                 if (askVoice()) return;
+                if (askAllFiles()) return;
                 askForTrackInfo();
                 serviceBooking();
                 askOverlay();

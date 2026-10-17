@@ -113,10 +113,13 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     private long prevAt, lastHarsh;
 
     static void start(Context c) {
+        // Android 14 lets a location service start only once location is allowed; the permission
+        // answer starts it again (HomeActivity.onRequestPermissionsResult)
+        if (Build.VERSION.SDK_INT >= 34 && c.checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != android.content.pm.PackageManager.PERMISSION_GRANTED) return;
         Intent i = new Intent(c, Drive.class);
         try {
-            if (Build.VERSION.SDK_INT >= 26) c.startForegroundService(i);
-            else c.startService(i);
+            c.startForegroundService(i);
         } catch (Throwable ignored) {
         }
     }
@@ -161,7 +164,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         tts = new TextToSpeech(this, this);
         screen = new Resume.Screen();
         android.content.IntentFilter sf = new android.content.IntentFilter(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(screen, sf);
+        Compat.ownOnly(this, screen, sf);
     }
 
     private Resume.Screen screen;
@@ -241,13 +244,15 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     private void foreground() {
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification.Builder b;
-        if (Build.VERSION.SDK_INT >= 26) {
-            nm.createNotificationChannel(new NotificationChannel("drive", "Trip computer", NotificationManager.IMPORTANCE_MIN));
-            b = new Notification.Builder(this, "drive");
-        } else b = new Notification.Builder(this);
+        nm.createNotificationChannel(new NotificationChannel("drive", "Trip computer", NotificationManager.IMPORTANCE_MIN));
+        b = new Notification.Builder(this, "drive");
         b.setSmallIcon(getApplicationInfo().icon).setContentTitle("OpenRath")
                 .setContentText("Trip computer and speed alerts").setOngoing(true);
-        startForeground(8, b.build());
+        try {
+            startForeground(8, b.build());
+        } catch (RuntimeException e) {
+            stopSelf();   // not allowed now (Android 14 without location); started again once it is
+        }
     }
 
     // ------------------------------------------------------------------ trip computer

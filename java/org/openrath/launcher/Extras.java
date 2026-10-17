@@ -1451,7 +1451,7 @@ final class Extras {
     }
 
     static void featuresChanged(HomeActivity a) {
-        if (Features.on(a.prefs, "dashcam") && !Dashcam.allowed(a) && android.os.Build.VERSION.SDK_INT >= 23)
+        if (Features.on(a.prefs, "dashcam") && !Dashcam.allowed(a))
             a.requestPermissions(new String[]{android.Manifest.permission.CAMERA}, 3);
         Drive.start(a);   // starts or stops OBD, TPMS, backups to match
         a.hub.stop();
