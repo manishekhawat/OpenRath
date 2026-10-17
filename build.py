@@ -4,7 +4,8 @@ usage: python3 build.py OUTDIR     build the signed APK into OUTDIR
        python3 build.py test       compile and run the unit tests (tests/)
 
 Artwork is drawn by art/lib. Tools: $THEME_TOOLS (or tools/.tools) holding apktool.jar, signer.jar
-(tools/fetch_tools.sh), android.jar and dx.jar (from the Android SDK).
+(tools/fetch_tools.sh), android.jar (API 34) and d8.jar (build-tools 34; dx.jar still works) from the
+Android SDK.
 
 Signing: signing.json beside this file, {"keystore": path, "alias", "storePass", "keyPass"}, kept
 out of the repository; without it a debug key is made in ~/.openrath-debug.keystore. Keep using the
@@ -77,6 +78,8 @@ def white(polys, size):
     return im
 X = 2.4   # images are drawn for a 600 px tall screen times X, then scaled down on the unit
 VERSION_CODE, VERSION_NAME = 40, '1.32'
+# Oldest Android the APK installs on (27 = Android 8.1, 29 = Android 10). It targets Android 14.
+MIN_SDK = 27
 
 
 def wheel_mask(height):
@@ -172,8 +175,8 @@ packageInfo:
   forcedPackageId: '127'
   renameManifestPackage: null
 sdkInfo:
-  minSdkVersion: '21'
-  targetSdkVersion: '26'
+  minSdkVersion: '{MIN_SDK}'
+  targetSdkVersion: '34'
 sharedLibrary: false
 sparseResources: false
 usesFramework:
@@ -213,7 +216,16 @@ def dex(work, out):
     srcs = [str(p) for p in (HERE / 'java').rglob('*.java')]
     subprocess.run(['javac', '-nowarn', '--release', '8', '-encoding', 'UTF-8', '-cp', str(TOOLS / 'android.jar'),
                     '-d', str(classes)] + srcs, check=True)
-    # dx 1.7 only reads older class files; the code uses no Java 8 language features
+    if (TOOLS / 'd8.jar').exists():
+        # d8 (Android build-tools 30+), as the SDK uses today
+        d8out = work / 'd8'
+        d8out.mkdir()
+        subprocess.run(['java', '-cp', str(TOOLS / 'd8.jar'), 'com.android.tools.r8.D8', '--release', '--min-api', str(MIN_SDK),
+                        '--lib', str(TOOLS / 'android.jar'), '--output', str(d8out)]
+                       + [str(p) for p in sorted(classes.rglob('*.class'))], check=True)
+        shutil.move(str(d8out / 'classes.dex'), str(out))
+        return
+    # else dx: dx 1.7 only reads older class files; the code uses no Java 8 language features
     for p in classes.rglob('*.class'):
         b = bytearray(p.read_bytes()); b[7] = 50; p.write_bytes(bytes(b))
     subprocess.run(['java', '-cp', str(TOOLS / 'dx.jar'), 'com.android.dx.command.Main', '--dex',

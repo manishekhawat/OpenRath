@@ -1425,7 +1425,7 @@ final class Cab {
                             String name = f[i * 2].getText().toString().trim().replace('|', ' ');
                             p.put("cabSos" + (i + 1), n.isEmpty() ? "" : (name.isEmpty() ? n : name) + "|" + n);
                         }
-                        if (android.os.Build.VERSION.SDK_INT >= 23 && !canText(a))
+                        if (!canText(a))
                             a.requestPermissions(new String[]{android.Manifest.permission.SEND_SMS}, 6);
                         if (done != null) done.run();
                     }

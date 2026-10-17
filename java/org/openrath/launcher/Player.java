@@ -15,7 +15,6 @@ import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.MediaStore;
@@ -75,8 +74,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
 
     static void send(Context c, String action, String mode, int index) {
         Intent i = new Intent(c, Player.class).setAction(action).putExtra("mode", mode).putExtra("index", index);
-        if (Build.VERSION.SDK_INT >= 26) c.startForegroundService(i);
-        else c.startService(i);
+        c.startForegroundService(i);
     }
 
     static boolean online(Context c) {
@@ -457,16 +455,18 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
     private void foreground() {
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification.Builder b;
-        if (Build.VERSION.SDK_INT >= 26) {
-            nm.createNotificationChannel(new NotificationChannel("player", "Player", NotificationManager.IMPORTANCE_LOW));
-            b = new Notification.Builder(this, "player");
-        } else b = new Notification.Builder(this);
+        nm.createNotificationChannel(new NotificationChannel("player", "Player", NotificationManager.IMPORTANCE_LOW));
+        b = new Notification.Builder(this, "player");
         Track t = current();
         b.setSmallIcon(getApplicationInfo().icon)
                 .setContentTitle(t == null ? "OpenRath" : t.name)
                 .setContentText(WEB.equals(mode) ? "Web radio" : "Music")
                 .setOngoing(true);
-        startForeground(7, b.build());
+        try {
+            startForeground(7, b.build());
+        } catch (RuntimeException e) {
+            stopSelf();   // not allowed now; the next play starts it again
+        }
     }
 
     @Override

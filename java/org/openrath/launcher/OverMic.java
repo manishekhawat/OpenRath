@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.os.Build;
 import android.provider.Settings;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -21,7 +20,7 @@ final class OverMic {
     private static View shown;
 
     static boolean allowed(Context c) {
-        return Build.VERSION.SDK_INT < 23 || Settings.canDrawOverlays(c);
+        return Settings.canDrawOverlays(c);
     }
 
     static boolean wanted(Prefs p) {
@@ -59,8 +58,7 @@ final class OverMic {
         final WindowManager wm = (WindowManager) app.getSystemService(Context.WINDOW_SERVICE);
         final int size = Ui.px(64);
         final int sw = app.getResources().getDisplayMetrics().widthPixels, sh = app.getResources().getDisplayMetrics().heightPixels;
-        int type = Build.VERSION.SDK_INT >= 26 ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                : WindowManager.LayoutParams.TYPE_PHONE;
+        int type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         final WindowManager.LayoutParams lp = new WindowManager.LayoutParams(size, size, type,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 PixelFormat.TRANSLUCENT);
