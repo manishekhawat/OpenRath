@@ -1,0 +1,21 @@
+{
+  "name": "Auto",
+  "author": "OpenRath",
+  "description": "Soft dark grey cards and a light blue accent, like Android Auto",
+  "colours": {
+    "text": "#E8EAED",
+    "textDim": "#9AA0A6",
+    "accent": "#8AB4F8",
+    "edge": "#3C4043",
+    "panelTop": "#2D2E31",
+    "panel": "#28292C",
+    "background": "#1B1B1D",
+    "icons": "#E8EAED",
+    "road": "#303134",
+    "roadLine": "#8AB4F8"
+  },
+  "cornerRadius": 24,
+  "road": true,
+  "chromeText": false,
+  "welcomeTitle": "WELCOME"
+}

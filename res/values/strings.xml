@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OpenRath</string>
+    <string name="keys_service_name">OpenRath steering-wheel buttons</string>
+    <string name="keys_service_about">Lets the steering-wheel buttons you set up in OpenRath work while another app is on screen. It only looks at button presses, and only uses the ones you gave an action.</string>
+</resources>

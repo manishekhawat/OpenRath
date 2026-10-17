@@ -1,0 +1,16 @@
+{
+  "name": "Magma Grey",
+  "author": "OpenRath",
+  "description": "The original dark chrome look",
+  "colours": {
+    "text": "#D8DCE2",
+    "textDim": "#8A8F96",
+    "panelTop": "#111215",
+    "panel": "#0B0C0E",
+    "background": "#000000"
+  },
+  "cornerRadius": 14,
+  "road": true,
+  "chromeText": true,
+  "welcomeTitle": "WELCOME"
+}

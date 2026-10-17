@@ -1,0 +1,22 @@
+{
+  "name": "Light",
+  "author": "OpenRath",
+  "description": "Bright and easy to read in daylight",
+  "colours": {
+    "text": "#1B1D21",
+    "textDim": "#6A7079",
+    "accent": "#2563EB",
+    "edge": "#D3D7DD",
+    "panelTop": "#FFFFFF",
+    "panel": "#F3F4F6",
+    "background": "#E6E8EC",
+    "icons": "#2B2F36",
+    "road": "#C9CDD3",
+    "roadLine": "#FFFFFF"
+  },
+  "backgroundGradient": ["#F2F3F5", "#DADDE2"],
+  "cornerRadius": 18,
+  "road": true,
+  "chromeText": false,
+  "welcomeTitle": "WELCOME"
+}

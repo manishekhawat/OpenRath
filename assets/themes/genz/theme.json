@@ -1,0 +1,22 @@
+{
+  "name": "Gen Z",
+  "author": "OpenRath",
+  "description": "Purple night gradient with neon pink and mint",
+  "colours": {
+    "text": "#FFFFFF",
+    "textDim": "#CDB8F0",
+    "accent": "#00F0C8",
+    "edge": "#FF4FD8",
+    "panelTop": "#CC2A1250",
+    "panel": "#CC160A2E",
+    "background": "#12061F",
+    "icons": "#FF7AE6",
+    "road": "#2A1348",
+    "roadLine": "#00F0C8"
+  },
+  "backgroundGradient": ["#3A0D5C", "#1A0B3D", "#062A4A"],
+  "cornerRadius": 28,
+  "road": true,
+  "chromeText": false,
+  "welcomeTitle": "HEY"
+}

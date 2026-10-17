@@ -1,0 +1,17 @@
+{
+  "name": "Oxford Blue",
+  "author": "OpenRath",
+  "version": 1,
+  "colours": {
+    "text": "#E6ECF5",
+    "textDim": "#8B9BB4",
+    "accent": "#6F8FC8",
+    "edge": "#2E4468",
+    "panelTop": "#0F1826",
+    "panel": "#0A101A",
+    "background": "#05080D"
+  },
+  "cornerRadius": 18,
+  "road": true,
+  "welcomeTitle": "WELCOME"
+}

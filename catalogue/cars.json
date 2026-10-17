@@ -1,0 +1,1142 @@
+{
+  "generated": "2026-10-12",
+  "note": "IMPORTANT - PARTIAL, UNVERIFIED DATA. Every file name and 'page' URL below appeared as a real Wikimedia Commons file page in web-search results (site:commons.wikimedia.org). However, Commons file pages, the Commons API (api.php) and upload.wikimedia.org were NOT reachable from the research environment (fetches failed / proxy-blocked), so: 'url' (direct upload URL), 'licence', 'author' and 'usable' are null for every entry - none were verified. 'view' and 'year' are inferred from the file name only. Before bundling or displaying any item, query https://commons.wikimedia.org/w/api.php?action=query&titles=<file>&prop=imageinfo&iiprop=url|extmetadata&format=json and record LicenseShortName, Artist, Credit and the imageinfo url; reject any logo marked non-free/fair use or nominated for deletion. Null 'photo' means no suitable Commons file was found by search. Entries with a 'comment' have caveats (wrong generation, sister model, non-India market).",
+  "brands": [
+    {
+      "id": "maruti-suzuki",
+      "name": "Maruti Suzuki",
+      "logo": {
+        "file": "File:Maruti Suzuki logo.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Maruti_Suzuki_logo.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "swift",
+          "name": "Swift",
+          "photo": {
+            "file": "File:Suzuki SWIFT HYBRID MZ (5AA-ZCEDS) front.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Suzuki_SWIFT_HYBRID_MZ_(5AA-ZCEDS)_front.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2024",
+            "comment": "Japanese-market 4th-gen Swift (same generation as India 2024 Swift); India-spec photo not found"
+          }
+        },
+        {
+          "id": "dzire",
+          "name": "Dzire",
+          "photo": {
+            "file": "File:MIAS 2025 - All-new Suzuki Dzire Hybrid 05.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:MIAS_2025_-_All-new_Suzuki_Dzire_Hybrid_05.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": "2025",
+            "comment": "Current (4th) gen Dzire at Manila show; view not confirmed. Older India-spec alternative: File:Maruti Suzuki Dzire VXi VVT (front).JPG (3rd gen)"
+          }
+        },
+        {
+          "id": "baleno",
+          "name": "Baleno",
+          "photo": {
+            "file": "File:2022 Maruti Suzuki Baleno Alpha (India) front view.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2022_Maruti_Suzuki_Baleno_Alpha_(India)_front_view.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2022"
+          }
+        },
+        {
+          "id": "wagonr",
+          "name": "WagonR",
+          "photo": {
+            "file": "File:Maruti Suzuki - WagonR LXi (front).JPG",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Maruti_Suzuki_-_WagonR_LXi_(front).JPG",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": null,
+            "comment": "Generation not confirmed; may be an older WagonR"
+          }
+        },
+        {
+          "id": "alto-k10",
+          "name": "Alto K10",
+          "photo": {
+            "file": "File:Maruti Suzuki Alto K10 - front.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Maruti_Suzuki_Alto_K10_-_front.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": null,
+            "comment": "Generation not confirmed; may be the pre-2022 Alto K10"
+          }
+        },
+        {
+          "id": "brezza",
+          "name": "Brezza",
+          "photo": {
+            "file": "File:2022 Maruti Suzuki Brezza ZXi+ (India) front view 02.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2022_Maruti_Suzuki_Brezza_ZXi+_(India)_front_view_02.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2022"
+          }
+        },
+        {
+          "id": "ertiga",
+          "name": "Ertiga",
+          "photo": {
+            "file": "File:2019 Suzuki Ertiga GX (Indonesia) front view.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2019_Suzuki_Ertiga_GX_(Indonesia)_front_view.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2019",
+            "comment": "2nd gen (same as India); Indonesian-market trim"
+          }
+        },
+        {
+          "id": "fronx",
+          "name": "Fronx",
+          "photo": {
+            "file": "File:2023 Suzuki Fronx 1.2 Delta+ (India) front view.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2023_Suzuki_Fronx_1.2_Delta+_(India)_front_view.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2023"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hyundai",
+      "name": "Hyundai",
+      "logo": {
+        "file": "File:Hyundai Motor Company logo.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Hyundai_Motor_Company_logo.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "creta",
+          "name": "Creta",
+          "photo": {
+            "file": "File:2024 Hyundai Creta 1.5 MPi SX(O) (India) front view.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2024_Hyundai_Creta_1.5_MPi_SX(O)_(India)_front_view.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2024"
+          }
+        },
+        {
+          "id": "venue",
+          "name": "Venue",
+          "photo": {
+            "file": "File:Venue SX (O) 2022.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Venue_SX_(O)_2022.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": "2022",
+            "comment": "India trim name (SX(O)); 2025 2nd-gen Venue photo not searched"
+          }
+        },
+        {
+          "id": "i20",
+          "name": "i20",
+          "photo": {
+            "file": "File:2020 Hyundai i20 1.5 Asta (O) Diesel (India) front view.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2020_Hyundai_i20_1.5_Asta_(O)_Diesel_(India)_front_view.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2020",
+            "comment": "3rd gen (BI3), pre-facelift"
+          }
+        },
+        {
+          "id": "grand-i10-nios",
+          "name": "Grand i10 Nios",
+          "photo": {
+            "file": "File:2021 Hyundai Grand i10 Nios 1.0AT Standard red front view in Brunei.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2021_Hyundai_Grand_i10_Nios_1.0AT_Standard_red_front_view_in_Brunei.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2021",
+            "comment": "Brunei-market car, same model"
+          }
+        },
+        {
+          "id": "verna",
+          "name": "Verna",
+          "photo": {
+            "file": "File:2020 Hyundai Verna SX(O) 1.5 Diesel front view (India).png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2020_Hyundai_Verna_SX(O)_1.5_Diesel_front_view_(India).png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2020",
+            "comment": "PREVIOUS generation; no Commons photo of 2023+ Verna found"
+          }
+        },
+        {
+          "id": "exter",
+          "name": "Exter",
+          "photo": {
+            "file": "File:2023 Hyundai Exter SX (O).png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2023_Hyundai_Exter_SX_(O).png",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": "2023"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tata",
+      "name": "Tata Motors",
+      "logo": {
+        "file": "File:Tata Motors Logo.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Tata_Motors_Logo.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "nexon",
+          "name": "Nexon",
+          "photo": {
+            "file": "File:2020 Tata Nexon EV (India) front view.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2020_Tata_Nexon_EV_(India)_front_view.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2020",
+            "comment": "Nexon EV, pre-2023-facelift; no front photo of the 2023 facelift found (only rear: File:2023 Tata Nexon XZA+ rear view.jpg)"
+          }
+        },
+        {
+          "id": "punch",
+          "name": "Punch",
+          "photo": {
+            "file": "File:2021 Tata Punch Creative (India) front view 01.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2021_Tata_Punch_Creative_(India)_front_view_01.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2021"
+          }
+        },
+        {
+          "id": "tiago",
+          "name": "Tiago",
+          "photo": {
+            "file": "File:2022 Tata Tiago EV IB XZ+ Tech LR front view.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2022_Tata_Tiago_EV_IB_XZ+_Tech_LR_front_view.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2022",
+            "comment": "Tiago EV (same body as petrol Tiago facelift)"
+          }
+        },
+        {
+          "id": "altroz",
+          "name": "Altroz",
+          "photo": {
+            "file": "File:Tata Altroz front 20230617.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Tata_Altroz_front_20230617.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2023",
+            "comment": "Date from file name; pre-2025 facelift"
+          }
+        },
+        {
+          "id": "harrier",
+          "name": "Harrier",
+          "photo": null,
+          "comment": "No Commons photo found by search (results returned Toyota Harrier)"
+        },
+        {
+          "id": "safari",
+          "name": "Safari",
+          "photo": null,
+          "comment": "Only old-generation (pre-2021) Tata Safari photos found; current-gen not found"
+        }
+      ]
+    },
+    {
+      "id": "mahindra",
+      "name": "Mahindra",
+      "logo": {
+        "file": "File:Mahindra logo.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Mahindra_logo.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "Logo file found; Mahindra changed to the 'twin peaks' SUV emblem in 2021 - not confirmed which design this file shows. Licence not verified."
+      },
+      "models": [
+        {
+          "id": "scorpio-n",
+          "name": "Scorpio-N",
+          "photo": null,
+          "comment": "No Commons photo found; only 1st-gen Scorpio photos"
+        },
+        {
+          "id": "xuv700",
+          "name": "XUV700",
+          "photo": {
+            "file": "File:2021 Mahindra XUV700 2.2 AX7 (India) front view.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2021_Mahindra_XUV700_2.2_AX7_(India)_front_view.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2021",
+            "comment": "Has a File talk page - check for copyright/deletion discussion"
+          }
+        },
+        {
+          "id": "thar",
+          "name": "Thar",
+          "photo": {
+            "file": "File:Mahindra Thar SUV in \"Red Rage\" color at Ashiana Brahmanda, East Singbhum India (Ank Kumar, Infosys limited) 01.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Mahindra_Thar_SUV_in_%22Red_Rage%22_color_at_Ashiana_Brahmanda,_East_Singbhum_India_(Ank_Kumar,_Infosys_limited)_01.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": null,
+            "comment": "Red Rage colour implies 2nd-gen (2020+) Thar; view not confirmed"
+          }
+        },
+        {
+          "id": "thar-roxx",
+          "name": "Thar Roxx",
+          "photo": {
+            "file": "File:Mahindra Thar ROXX on rocks (cropped).jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Mahindra_Thar_ROXX_on_rocks_(cropped).jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": null
+          }
+        },
+        {
+          "id": "xuv-3xo",
+          "name": "XUV 3XO",
+          "photo": {
+            "file": "File:Mahindra XUV 3XO 2025.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Mahindra_XUV_3XO_2025.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": "2025"
+          }
+        },
+        {
+          "id": "bolero",
+          "name": "Bolero",
+          "photo": {
+            "file": "File:Mahindra Bolero GLX Front.JPG",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Mahindra_Bolero_GLX_Front.JPG",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": null,
+            "comment": "Older Bolero; Bolero Neo photo not found"
+          }
+        }
+      ]
+    },
+    {
+      "id": "kia",
+      "name": "Kia",
+      "logo": {
+        "file": "File:KIA logo3.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:KIA_logo3.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "Believed to be the 2021 'KIA' wordmark logo but NOT confirmed (KIA logo.svg / KIA logo2.svg also exist). Licence not verified."
+      },
+      "models": [
+        {
+          "id": "seltos",
+          "name": "Seltos",
+          "photo": {
+            "file": "File:Kia Seltos 2024.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Kia_Seltos_2024.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": "2024"
+          }
+        },
+        {
+          "id": "sonet",
+          "name": "Sonet",
+          "photo": {
+            "file": "File:Kia Sonet front view (India) 01.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Kia_Sonet_front_view_(India)_01.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": null,
+            "comment": "Probably pre-2024 facelift"
+          }
+        },
+        {
+          "id": "carens",
+          "name": "Carens",
+          "photo": {
+            "file": "File:2022 Kia Carens 1.4 Luxury Plus (India) front view 02.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2022_Kia_Carens_1.4_Luxury_Plus_(India)_front_view_02.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2022"
+          }
+        },
+        {
+          "id": "syros",
+          "name": "Syros",
+          "photo": null,
+          "comment": "Category:Kia Syros exists on Commons but no specific file identified"
+        }
+      ]
+    },
+    {
+      "id": "toyota",
+      "name": "Toyota",
+      "logo": {
+        "file": "File:Toyota carlogo.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Toyota_carlogo.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "Emblem-only file; Toyota_logo_(Red).svg also exists. Licence not verified."
+      },
+      "models": [
+        {
+          "id": "innova-crysta",
+          "name": "Innova Crysta",
+          "photo": {
+            "file": "File:Toyota Innova Crysta 2.4 Z front right.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Toyota_Innova_Crysta_2.4_Z_front_right.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front three-quarter (per file name)",
+            "year": null
+          }
+        },
+        {
+          "id": "innova-hycross",
+          "name": "Innova Hycross",
+          "photo": null,
+          "comment": "Not found; search results only showed Innova/Kijang (AN140)"
+        },
+        {
+          "id": "fortuner",
+          "name": "Fortuner",
+          "photo": {
+            "file": "File:2021 Toyota Fortuner SRZ 2.7 4x2 (Indonesia) front view 02.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2021_Toyota_Fortuner_SRZ_2.7_4x2_(Indonesia)_front_view_02.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2021",
+            "comment": "Indonesian-market facelift, same design as India"
+          }
+        },
+        {
+          "id": "urban-cruiser-hyryder",
+          "name": "Urban Cruiser Hyryder",
+          "photo": {
+            "file": "File:2022 Toyota Urban Cruiser Hyryder V Hybrid (India) front view.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2022_Toyota_Urban_Cruiser_Hyryder_V_Hybrid_(India)_front_view.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2022"
+          }
+        },
+        {
+          "id": "glanza",
+          "name": "Glanza",
+          "photo": {
+            "file": "File:Toyota Glanza 2022 Facelift.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Toyota_Glanza_2022_Facelift.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": "2022"
+          }
+        }
+      ]
+    },
+    {
+      "id": "honda",
+      "name": "Honda",
+      "logo": {
+        "file": "File:Honda.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Honda.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "Honda.svg / Honda logo.svg / Honda Logo.svg all exist; which is the current car 'H' mark not confirmed. Licence not verified."
+      },
+      "models": [
+        {
+          "id": "city",
+          "name": "City",
+          "photo": {
+            "file": "File:Honda City SV 2020.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Honda_City_SV_2020.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": "2020",
+            "comment": "7th-gen City sedan per name; India-spec not confirmed"
+          }
+        },
+        {
+          "id": "amaze",
+          "name": "Amaze",
+          "photo": {
+            "file": "File:Honda Amaze front view.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Honda_Amaze_front_view.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": null,
+            "comment": "Generation not confirmed; 3rd gen (Dec 2024) photo not found"
+          }
+        },
+        {
+          "id": "elevate",
+          "name": "Elevate",
+          "photo": {
+            "file": "File:2023 Honda Elevate VX (India) front view.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2023_Honda_Elevate_VX_(India)_front_view.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2023"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mg",
+      "name": "MG",
+      "logo": {
+        "file": "File:MG Motor 2021 logo.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:MG_Motor_2021_logo.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "hector",
+          "name": "Hector",
+          "photo": {
+            "file": "File:MG Hector Plus (India) front view (1).png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:MG_Hector_Plus_(India)_front_view_(1).png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": null,
+            "comment": "Hector Plus (6/7-seat variant); shares front design with Hector"
+          }
+        },
+        {
+          "id": "astor",
+          "name": "Astor",
+          "photo": {
+            "file": "File:2022 MG ZS Exclusive T-GDi 1.0 Front.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2022_MG_ZS_Exclusive_T-GDi_1.0_Front.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2022",
+            "comment": "UK MG ZS facelift - closely related to Astor but NOT the India Astor; consider null"
+          }
+        },
+        {
+          "id": "zs-ev",
+          "name": "ZS EV",
+          "photo": {
+            "file": "File:MG ZS EV Facelift 1X7A5867.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:MG_ZS_EV_Facelift_1X7A5867.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": null
+          }
+        },
+        {
+          "id": "comet-ev",
+          "name": "Comet EV",
+          "photo": {
+            "file": "File:MG Comet EV side view.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:MG_Comet_EV_side_view.jpg",
+            "licence": null,
+            "author": null,
+            "view": "side (per file name)",
+            "year": null,
+            "comment": "Only a side view found"
+          }
+        },
+        {
+          "id": "windsor-ev",
+          "name": "Windsor EV",
+          "photo": {
+            "file": "File:2024 Wuling Cloud EV in Pristine White taken in Bandung, West Java 40173 01.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2024_Wuling_Cloud_EV_in_Pristine_White_taken_in_Bandung,_West_Java_40173_01.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": "2024",
+            "comment": "Wuling Cloud EV (Indonesia) = badge-engineered twin of MG Windsor; different badges"
+          }
+        },
+        {
+          "id": "gloster",
+          "name": "Gloster",
+          "photo": {
+            "file": "File:2020 MG Gloster 2.0 Savvy (India) front view.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2020_MG_Gloster_2.0_Savvy_(India)_front_view.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2020"
+          }
+        }
+      ]
+    },
+    {
+      "id": "renault",
+      "name": "Renault",
+      "logo": {
+        "file": "File:Renault 2021.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Renault_2021.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "kwid",
+          "name": "Kwid",
+          "photo": {
+            "file": "File:2019 Renault Kwid RXT Facelift.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2019_Renault_Kwid_RXT_Facelift.png",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": "2019"
+          }
+        },
+        {
+          "id": "triber",
+          "name": "Triber",
+          "photo": {
+            "file": "File:Renault Triber (front view).png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Renault_Triber_(front_view).png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": null
+          }
+        },
+        {
+          "id": "kiger",
+          "name": "Kiger",
+          "photo": null,
+          "comment": "Category:Renault Kiger exists but no file identified"
+        }
+      ]
+    },
+    {
+      "id": "nissan",
+      "name": "Nissan",
+      "logo": {
+        "file": "File:Nissan 2020 logo.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Nissan_2020_logo.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "magnite",
+          "name": "Magnite",
+          "photo": {
+            "file": "File:2020 Nissan Magnite front view (India) 01.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2020_Nissan_Magnite_front_view_(India)_01.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2020",
+            "comment": "Pre-2024 facelift"
+          }
+        }
+      ]
+    },
+    {
+      "id": "volkswagen",
+      "name": "Volkswagen",
+      "logo": {
+        "file": "File:Volkswagen logo 2019.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Volkswagen_logo_2019.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "virtus",
+          "name": "Virtus",
+          "photo": {
+            "file": "File:2022 Volkswagen Virtus 1.5 GT (India) front view 01.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2022_Volkswagen_Virtus_1.5_GT_(India)_front_view_01.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2022"
+          }
+        },
+        {
+          "id": "taigun",
+          "name": "Taigun",
+          "photo": {
+            "file": "File:2021 Volkswagen Taigun 1.5 TSI GT (India) front view 01.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2021_Volkswagen_Taigun_1.5_TSI_GT_(India)_front_view_01.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2021"
+          }
+        }
+      ]
+    },
+    {
+      "id": "skoda",
+      "name": "Skoda",
+      "logo": {
+        "file": "File:Škoda Auto 2022 text logo.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:%C5%A0koda_Auto_2022_text_logo.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "2022 wordmark; the winged-arrow emblem may be a separate file. Licence not verified."
+      },
+      "models": [
+        {
+          "id": "kushaq",
+          "name": "Kushaq",
+          "photo": {
+            "file": "File:2021 Škoda Kushaq (India) front view.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2021_%C5%A0koda_Kushaq_(India)_front_view.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2021"
+          }
+        },
+        {
+          "id": "slavia",
+          "name": "Slavia",
+          "photo": {
+            "file": "File:2021 Škoda Slavia 1.5 TSI Style (India) front view.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2021_%C5%A0koda_Slavia_1.5_TSI_Style_(India)_front_view.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2021"
+          }
+        },
+        {
+          "id": "kylaq",
+          "name": "Kylaq",
+          "photo": {
+            "file": "File:2025 Skoda Kylaq.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2025_Skoda_Kylaq.png",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": "2025"
+          }
+        }
+      ]
+    },
+    {
+      "id": "citroen",
+      "name": "Citroën",
+      "logo": {
+        "file": "File:Citroen 2022.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Citroen_2022.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "c3",
+          "name": "C3",
+          "photo": {
+            "file": "File:2022 Citroën C3 Feel Puretech 110 (India) front view 02.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2022_Citro%C3%ABn_C3_Feel_Puretech_110_(India)_front_view_02.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2022"
+          }
+        },
+        {
+          "id": "basalt",
+          "name": "Basalt",
+          "photo": null,
+          "comment": "Not found"
+        },
+        {
+          "id": "c3-aircross",
+          "name": "C3 Aircross",
+          "photo": null,
+          "comment": "Only the European C3 Aircross found, which is a different car from the India C3 Aircross"
+        }
+      ]
+    },
+    {
+      "id": "jeep",
+      "name": "Jeep",
+      "logo": {
+        "file": "File:Jeep logo.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Jeep_logo.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "compass",
+          "name": "Compass",
+          "photo": {
+            "file": "File:Jeep-compass-2018-petrol-at-limited-india-front.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Jeep-compass-2018-petrol-at-limited-india-front.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2018",
+            "comment": "Pre-2021 facelift"
+          }
+        },
+        {
+          "id": "meridian",
+          "name": "Meridian",
+          "photo": {
+            "file": "File:2021 Jeep Commander Limited (Brazil) front view.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2021_Jeep_Commander_Limited_(Brazil)_front_view.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2021",
+            "comment": "Brazilian Jeep Commander = sister model of Meridian; not identical"
+          }
+        }
+      ]
+    },
+    {
+      "id": "byd",
+      "name": "BYD",
+      "logo": {
+        "file": "File:BYD Auto 2022 logo.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:BYD_Auto_2022_logo.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "atto-3",
+          "name": "Atto 3",
+          "photo": {
+            "file": "File:BYD Atto 3 front-left.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:BYD_Atto_3_front-left.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front three-quarter (per file name)",
+            "year": null
+          }
+        },
+        {
+          "id": "seal",
+          "name": "Seal",
+          "photo": null,
+          "comment": "Only Seal 05/06 (Chinese models) found; India Seal (BEV) is Category:BYD Seal (BEV), no file identified"
+        },
+        {
+          "id": "sealion-7",
+          "name": "Sealion 7",
+          "photo": {
+            "file": "File:2024 BYD Sealion 7 Performance AWD (Thailand) front view.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2024_BYD_Sealion_7_Performance_AWD_(Thailand)_front_view.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2024"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mercedes-benz",
+      "name": "Mercedes-Benz",
+      "logo": {
+        "file": "File:Mercedes-Benz Star 2022.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Mercedes-Benz_Star_2022.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "glc",
+          "name": "GLC",
+          "photo": {
+            "file": "File:Mercedes-Benz GLC 220 d 4MATIC (X254) front.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Mercedes-Benz_GLC_220_d_4MATIC_(X254)_front.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": null
+          }
+        },
+        {
+          "id": "e-class-lwb",
+          "name": "E-Class LWB",
+          "photo": {
+            "file": "File:Mercedes-Benz E-Class (V214) 001.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Mercedes-Benz_E-Class_(V214)_001.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": null,
+            "comment": "V214 = long-wheelbase model sold in India"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bmw",
+      "name": "BMW",
+      "logo": {
+        "file": "File:BMW logo (gray).svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:BMW_logo_(gray).svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "x1",
+          "name": "X1",
+          "photo": {
+            "file": "File:2023 BMW X1 U11 front view 01.png",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2023_BMW_X1_U11_front_view_01.png",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2023"
+          }
+        },
+        {
+          "id": "3-series-gl",
+          "name": "3 Series Gran Limousine",
+          "photo": null,
+          "comment": "Category:BMW G28 exists; only BMW i3 (G28) China files seen"
+        }
+      ]
+    },
+    {
+      "id": "audi",
+      "name": "Audi",
+      "logo": {
+        "file": "File:Audi-Logo 2016.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Audi-Logo_2016.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "q3",
+          "name": "Q3",
+          "photo": {
+            "file": "File:Audi Q3 F3 DSC 7496.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Audi_Q3_F3_DSC_7496.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": null
+          }
+        },
+        {
+          "id": "a4",
+          "name": "A4",
+          "photo": {
+            "file": "File:2020 Audi A4 S Line 35 TDi S-A facelift 2.0 Front.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2020_Audi_A4_S_Line_35_TDi_S-A_facelift_2.0_Front.jpg",
+            "licence": null,
+            "author": null,
+            "view": "front (per file name)",
+            "year": "2020"
+          }
+        }
+      ]
+    },
+    {
+      "id": "volvo",
+      "name": "Volvo",
+      "logo": {
+        "file": "File:Volvo-Iron-Mark-Black.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Volvo-Iron-Mark-Black.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "xc60",
+          "name": "XC60",
+          "photo": {
+            "file": "File:Volvo XC60 (SPA) FL 1X7A0185.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:Volvo_XC60_(SPA)_FL_1X7A0185.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": null,
+            "comment": "SPA facelift"
+          }
+        }
+      ]
+    },
+    {
+      "id": "lexus",
+      "name": "Lexus",
+      "logo": {
+        "file": "File:Lexus.svg",
+        "url": null,
+        "page": "https://commons.wikimedia.org/wiki/File:Lexus.svg",
+        "licence": null,
+        "usable": null,
+        "comment": "File page found via search; licence/trademark template not verified (Commons file pages and API unreachable from research environment). Check before use."
+      },
+      "models": [
+        {
+          "id": "es",
+          "name": "ES",
+          "photo": {
+            "file": "File:2022 Lexus ES 350 (GSZ10) 1X7A5794.jpg",
+            "url": null,
+            "page": "https://commons.wikimedia.org/wiki/File:2022_Lexus_ES_350_(GSZ10)_1X7A5794.jpg",
+            "licence": null,
+            "author": null,
+            "view": "unknown (file name gives no view)",
+            "year": "2022",
+            "comment": "ES 350; India sells ES 300h with same body"
+          }
+        }
+      ]
+    }
+  ]
+}
