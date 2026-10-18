@@ -2,6 +2,41 @@
 
 Newest first.
 
+## 1.35: Fewer, clearer settings
+
+- **About 45 fewer rows in Settings,** and every feature that stays still has its own on/off switch.
+- **Seven features removed:**
+  - The wrong-way warning and the overtaking warning: map data gave false alarms, and a wrong warning while driving is worse than none.
+  - The holiday traffic warning: it needed a festival calendar kept up to date every year.
+  - Commute insights.
+  - Hill (ghat) road tips.
+  - The car wash reminder.
+  - Accident help.
+- **Related switches are now one switch:**
+  - Parking: the spot, its photo, the QR code for your phone and the paid-parking reminder.
+  - Tolls: route estimates and the plaza countdown.
+  - Fuel and mileage: trip cost, mileage coach, fuel-low planner and the leak or theft check.
+  - Car service: reminders, the workshop finder and the booking call.
+  - Weather alerts: rain, monsoon waterlogging spots and poor air.
+  - Road learning: speed-breakers and waiting times.
+  - Daily and weekly summary.
+  - Car-signal reminders: headlights, doors and seat belts.
+  - Without internet: the offline map and the offline voice.
+- **One Mic button setting** (on the map only, floating, or floating over other apps) replaces the two mic switches.
+- **No more duplicates:**
+  - The moving road has one switch, for the dashboard and the picture layouts.
+  - Speed alerts are shown once.
+  - The home screen and the picture layouts use the same "Your name".
+- **One row instead of several:**
+  - Night dimming now includes how dark it gets.
+  - Car picture headlights now include the times.
+  - Choosing the layout's details now includes their order.
+  - "Music files" covers choosing a song and looking for files again.
+- **Trips, fuel and tolls** is one row that opens the trip menu. The trip menu now also has trip history, the driving score and toll payments.
+- **Hints are where they help:** the picture size is shown under the car picture rows, and long-press for a button's app is shown under the bar's position. A picture of your own now offers "Use the built-in one".
+- The performance box is now a developer-mode switch.
+- Fleets and backups that use the old switch names keep working; each old name follows the switch it became part of. Names of removed features are ignored.
+
 ## 1.34: All of OpenRath in Hindi, and Android 8 again
 
 - **Android 8.0 and newer again.** 1.33 needed Android 10; 1.34 installs on Android 8.0, 8.1 and 9 too, still built for Android 14.

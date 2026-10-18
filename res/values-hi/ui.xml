@@ -385,4 +385,43 @@
     <string name="ui_toll_in_2_km_about_100_with_a_fastag_lan" formatted="false">\"2 km में टोल, लगभग ₹100\", FASTag लेन की याद के साथ</string>
     <string name="ui_fm_91_1_call_mom_from_the_map_s_mic" formatted="false">\"FM 91.1\", \"मम्मी को कॉल करो\", \"घर ले चलो\" मैप के माइक से</string>
     <string name="ui_crash_and_usage_reports" formatted="false">क्रैश और उपयोग रिपोर्ट</string>
+    <string name="ui_saves_the_spot_after_90_seconds_standing_2" formatted="false">90 सेकंड रुकने पर जगह सेव करता है, फ़ोटो, फ़ोन के लिए QR कोड और पेड पार्किंग रिमाइंडर के साथ</string>
+    <string name="ui_tolls" formatted="false">टोल</string>
+    <string name="ui_toll_plazas_and_costs_on_a_planned_route" formatted="false">तय रास्ते पर टोल प्लाज़ा और खर्च, और FASTag लेन रिमाइंडर के साथ उलटी गिनती</string>
+    <string name="ui_fuel_and_mileage" formatted="false">ईंधन और माइलेज</string>
+    <string name="ui_trip_cost_from_your_city_s_petrol_price_" formatted="false">शहर के पेट्रोल दाम से सफ़र का खर्च, किन ड्राइव में ज़्यादा ईंधन लगा, टैंक कितनी दूर चलेगा, और रिसाव या चोरी की जाँच</string>
+    <string name="ui_car_service" formatted="false">कार सर्विस</string>
+    <string name="ui_oil_tyres_service_insurance_and_puc_remi" formatted="false">ऑयल, टायर, सर्विस, बीमा और PUC रिमाइंडर, पास के वर्कशॉप, और बुकिंग के लिए कॉल</string>
+    <string name="ui_weather_alerts" formatted="false">मौसम चेतावनी</string>
+    <string name="ui_rain_here_or_on_your_route_waterlogging_" formatted="false">यहाँ या रास्ते पर बारिश, आपके चिह्नित जलभराव वाले स्थान, और ख़राब हवा</string>
+    <string name="ui_road_learning" formatted="false">सड़क की याद</string>
+    <string name="ui_learns_speed_breakers_and_how_long_you_w" formatted="false">स्पीड ब्रेकर और सिग्नल व टोल पर इंतज़ार सीखता है, और अगली बार बताता है</string>
+    <string name="ui_daily_and_weekly_summary" formatted="false">रोज़ और हफ़्ते का सार</string>
+    <string name="ui_each_morning_weather_air_petrol_range_an" formatted="false">हर सुबह: मौसम, हवा, पेट्रोल रेंज और सर्विस। रविवार को: हफ़्ते के किमी, खर्च और स्कोर</string>
+    <string name="ui_car_signal_reminders" formatted="false">कार सिग्नल रिमाइंडर</string>
+    <string name="ui_headlights_after_sunset_doors_and_seat_b" formatted="false">सूर्यास्त के बाद हेडलाइट, दरवाज़े और सीट बेल्ट, आवाज़ से (Car signals में सेटअप चाहिए)</string>
+    <string name="ui_without_internet" formatted="false">बिना इंटरनेट</string>
+    <string name="ui_keeps_the_map_of_places_you_ve_seen_and_" formatted="false">देखी गई जगहों का नक्शा रखता है और ऑफ़लाइन स्पीच पैक इस्तेमाल करता है, जब Wi-Fi न हो</string>
+    <string name="ui_fm_91_1_call_mom_from_the_mic_choose_whe" formatted="false">माइक से \"FM 91.1\", \"call Mom\", \"घर ले चलो\"; माइक कहाँ रहे, होम स्क्रीन में चुनें</string>
+    <string name="ui_mic_button" formatted="false">माइक बटन</string>
+    <string name="ui_on_the_map_only" formatted="false">सिर्फ़ नक्शे पर</string>
+    <string name="ui_floating_on_the_home_screen" formatted="false">होम स्क्रीन पर तैरता हुआ</string>
+    <string name="ui_floating_also_over_other_apps" formatted="false">तैरता हुआ, दूसरे ऐप्स के ऊपर भी</string>
+    <string name="ui_needs_permission_tap_to_allow" formatted="false">; अनुमति चाहिए, देने के लिए टैप करें</string>
+    <string name="ui_change_the_order" formatted="false">क्रम बदलें</string>
+    <string name="ui_your_name" formatted="false">आपका नाम</string>
+    <string name="ui_your_name_on_the_home_screen_empty_to_hi" formatted="false">आपका नाम, होम स्क्रीन पर (छिपाने के लिए खाली छोड़ें)</string>
+    <string name="ui_1_s_2_s_darker" formatted="false">%1$s, %2$s%% गहरा</string>
+    <string name="ui_1_s_darker" formatted="false">%1$s%% गहरा</string>
+    <string name="ui_choose_another_picture" formatted="false">दूसरी तस्वीर चुनें</string>
+    <string name="ui_use_the_built_in_one" formatted="false">पहले वाली इस्तेमाल करें</string>
+    <string name="ui_built_in_best_as_a_png_with_a_clear_back" formatted="false">पहले वाली; सबसे अच्छी: पारदर्शी पृष्ठभूमि वाली PNG, कार सामने से, लगभग 820 x 480</string>
+    <string name="ui_1_s_long_press_a_button_on_the_bar_to_ch" formatted="false">%1$s; ऐप चुनने के लिए बार पर बटन देर तक दबाएँ</string>
+    <string name="ui_choose_a_song_or_look_again_after_pluggi" formatted="false">गाना चुनें, या USB लगाने के बाद फिर ढूँढें</string>
+    <string name="ui_1_s_songs_found_choose_one_or_look_again" formatted="false">%1$s गाने मिले; एक चुनें, या फिर ढूँढें</string>
+    <string name="ui_trips_fuel_and_tolls" formatted="false">सफ़र, ईंधन और टोल</string>
+    <string name="ui_today_1_s_km_score_2_s_3_s" formatted="false">आज %1$s किमी, स्कोर %2$s; %3$s</string>
+    <string name="ui_between_1_s_and_2_s" formatted="false">%1$s से %2$s तक</string>
+    <string name="ui_fuel_log_and_fill_ups" formatted="false">ईंधन लॉग और भराई</string>
+    <string name="ui_trip_history_and_driving_score" formatted="false">सफ़र का इतिहास और ड्राइविंग स्कोर</string>
 </resources>

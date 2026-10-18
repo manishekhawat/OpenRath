@@ -33,8 +33,24 @@ final class Features {
     private static final java.util.Set<String> ASK_FIRST = new java.util.HashSet<>(java.util.Arrays.asList("cab", "obd", "dashcam", "tpms", "reports"));
 
     private static final String[] SIMPLE_IDS = {"arrows", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "resume", "offlineMap", "backup", "reports"};
-    private static final String[] CUSTOM_IDS = {"road", "pages", "widgets", "saver", "perf", "bootArt", "soundProfiles", "speedVolume", "eq", "profiles"};
-    private static final String[] DEV_IDS = {"maker"};
+    private static final String[] CUSTOM_IDS = {"pages", "widgets", "saver", "perf", "bootArt", "soundProfiles", "speedVolume", "eq", "profiles"};
+    private static final String[] DEV_IDS = {"maker", "perf"};
+
+    /**
+     * Switches that became part of a bigger one: each old id follows its new switch, so code, backups
+     * and fleet consoles that use the old ids keep working.
+     */
+    static final String[][] PARTS = {
+            {"parkLink", "parking"}, {"parkPhoto", "parking"}, {"parkTimer", "parking"},
+            {"tollAhead", "tolls"},
+            {"coach", "fuelPrice"}, {"fuelPlan", "fuelPrice"}, {"fuelCheck", "fuelPrice"},
+            {"serviceFinder", "care"}, {"serviceBooking", "care"},
+            {"monsoon", "rain"}, {"aqi", "rain"},
+            {"waits", "bumps"},
+            {"weekly", "startSummary"},
+            {"chimes", "lightsReminder"},
+            {"offlineVoice", "offlineMap"},
+            {"floatMic", "voice"}, {"micOverApps", "voice"}};
 
     static int levelOf(String name) {
         int i = java.util.Arrays.asList(LEVELS).indexOf(name);
@@ -86,69 +102,46 @@ final class Features {
             new F("arrows", "Turn indicator arrows", "Dashboard", true, "Needs the indicator setup in Car signals"),
             new F("weather", "Weather", "Dashboard", true, "Open-Meteo, every 15 minutes"),
             new F("news", "News box", "Dashboard", true, "Top 5 headlines from Google News, read aloud on a tap"),
-            new F("rain", "Rain warnings", "Dashboard", true, "Rain here, or along your route, in the weather box"),
+            new F("rain", "Weather alerts", "Dashboard", true, "Rain here or on your route, waterlogging spots you've marked, and poor air"),
             new F("pages", "Extra dashboard pages", "Dashboard", false, "Swipe sideways for a second and third set of boxes"),
             new F("widgets", "Widgets from other apps", "Dashboard", true, "Put another app's widget in a box"),
             new F("saver", "Clock screensaver", "Dashboard", false, "Big clock after a few idle minutes while parked"),
             new F("ticker", "Notification ticker", "Dashboard", true, "Messages slide in along the top"),
             new F("readAloud", "Read messages aloud", "Dashboard", false, "Says who sent a message, or the whole message"),
             new F("nightDrive", "Night-drive mode", "Dashboard", true, "After sunset while driving: big red speed, dim red map, nothing else"),
-            new F("voice", "Voice commands (Hindi and English)", "Dashboard", true, "\"FM 91.1\", \"call Mom\", \"घर ले चलो\" from the map's mic"),
-            new F("floatMic", "Floating mic button", "Dashboard", true, "Drag it anywhere on the home screen; tap for a voice command"),
+            new F("voice", "Voice commands (Hindi and English)", "Dashboard", true, "\"FM 91.1\", \"call Mom\", \"घर ले चलो\" from the mic; choose where the mic sits in Home screen"),
             new F("tripShare", "Share the trip by QR code", "Driving", true, "A code family scan to see where you are and the route; nothing is sent online"),
-            new F("micOverApps", "Mic over other apps", "Dashboard", true, "The floating mic stays on top of maps and music; needs the \"Display over other apps\" permission"),
             new F("perf", "Performance box", "Dashboard", false, "Frames per second, CPU use and temperature in a corner"),
             // driving
             new F("speedAlerts", "Speed limit and camera alerts", "Driving", true, "Speaks and beeps near cameras and over the limit"),
-            new F("parking", "Remember where you parked", "Driving", true, "Saves the spot after 90 seconds standing still"),
+            new F("parking", "Parking", "Driving", true, "Saves the spot after 90 seconds standing still, with a photo, a QR code for your phone and a paid-parking reminder"),
             new F("score", "Driving score", "Driving", true, "Harsh braking, hard starts and speeding"),
             new F("accel", "0–100 km/h timer", "Driving", true, "Times every standing start"),
             new F("gpx", "Record routes (GPX export)", "Driving", true, "Kept 60 days on the unit only"),
-            new F("tolls", "Toll estimates on routes", "Driving", true, "Toll plazas on a planned route, in rupees"),
+            new F("tolls", "Tolls", "Driving", true, "Toll plazas and costs on a planned route, and a countdown with a FASTag lane reminder"),
             new F("reverse", "Reverse guide lines", "Driving", true, "Shown when reverse gear is engaged"),
-            new F("fuelPrice", "Petrol cost of trips", "Driving", true, "Today's cost from your city's petrol price"),
-            new F("coach", "Mileage coach", "Driving", true, "Which drives used extra fuel, and why"),
+            new F("fuelPrice", "Fuel and mileage", "Driving", true, "Trip cost from your city's petrol price, which drives used extra fuel, how far the tank goes, and a leak or theft check"),
             new F("restStop", "Break reminder and rest stops", "Driving", true, "After 2 hours at the wheel, dhabas and pumps ahead"),
             new F("dashcam", "Dashcam", "Driving", false, "Records a USB camera in 1-minute clips; a jolt keeps the clip"),
-            new F("parkLink", "Parking spot to your phone", "Driving", true, "A QR code that opens the spot in Google Maps"),
-            new F("monsoon", "Monsoon mode", "Driving", true, "In rain, warns before the waterlogging spots you've marked"),
-            new F("fuelPlan", "Fuel-low planner", "Driving", true, "How far the petrol will go; pumps ahead when it's low"),
-            new F("commute", "Commute insights", "Driving", true, "The quickest time to leave for your usual drives"),
-            new F("tollAhead", "Toll plaza countdown", "Driving", true, "\"Toll in 2 km, about ₹100\", with a FASTag lane reminder"),
-            new F("wrongWay", "Wrong-way warning", "Driving", true, "Warns if you seem to drive against a one-way street"),
             new F("zones", "School and hospital alerts", "Driving", true, "Slow down near schools at school times; no horn near hospitals"),
-            new F("hill", "Hill (ghat) road tips", "Driving", true, "On a long steep climb or descent: lower gear, engine braking, who gives way"),
-            new F("overtake", "Overtaking warning", "Driving", true, "On two-way roads, says when a bend just ahead hides oncoming traffic"),
-            new F("aqi", "Air quality alerts", "Driving", true, "Open-Meteo; when the air is poor, a reminder to set the AC to recirculate"),
             new F("highway", "Highway mode", "Driving", true, "Above 75 km/h for two minutes: message pop-ups wait, a slim highway strip shows"),
             new F("parkedMusic", "Battery saver for parked music", "Driving", true, "Engine off and music on: pauses it after 20 minutes (reminds once without OBD)"),
             new F("split", "Split the cost by UPI", "Driving", true, "A UPI QR code for each person's share of the petrol or tolls"),
-            new F("parkTimer", "Paid parking reminder", "Driving", true, "A QR code that puts a reminder on your phone before the parking runs out"),
-            new F("startSummary", "Start-up summary", "Dashboard", true, "Once a day: weather, air, petrol range, service due and holidays"),
-            new F("lightsReminder", "Headlight reminder", "Driving", true, "After sunset, once a drive, if the headlights look off (or can't be seen)"),
-            new F("chimes", "Door and seat-belt reminders", "Driving", true, "A voice instead of beeps; needs the door or belt setup in Car signals"),
-            new F("waits", "Wait-time memory", "Driving", true, "Learns how long you wait at signals and toll plazas, and tells you as you approach"),
-            new F("bumps", "Speed-breaker learning", "Driving", true, "A spot where you brake hard on three drives gets a warning next time"),
+            new F("startSummary", "Daily and weekly summary", "Dashboard", true, "Each morning: weather, air, petrol range and service due. On Sundays: the week's km, costs and score"),
+            new F("lightsReminder", "Car-signal reminders", "Driving", true, "Headlights after sunset, doors and seat belts, by voice (needs the setup in Car signals)"),
+            new F("bumps", "Road learning", "Driving", true, "Learns speed-breakers and how long you wait at signals and tolls, and tells you next time"),
             new F("duck", "Music dips for voice prompts", "Driving", true, "Music lowers while the car speaks a turn or a warning"),
-            new F("parkPhoto", "Parking photo", "Driving", true, "A camera photo when you park, to find the car in a big lot (needs a camera)"),
-            new F("weekly", "Weekly report", "Driving", true, "On Sundays: km, time, petrol, tolls, score, best and worst drive"),
             new F("hotspot", "Guest Wi-Fi", "Phone", true, "A QR code passengers scan to join the unit's hotspot"),
             new F("maker", "Stereo maker's services", "Radio and music", true, "Topway, FYT and MTCD/Joying units: FM in the radio box, Bluetooth calls, reverse gear and lights through the maker's own services. Off, or on other stereos: plain Android only (the radio app's controls, the system phone)"),
             new F("soundProfiles", "Sound profiles", "Radio and music", false, "City, highway and night: equalizer and volume switch by themselves"),
             new F("fog", "Fog mode", "Driving", true, "In thick fog: big speed, a slow guide and the next bend ahead"),
-            new F("accidentHelp", "Accident help", "Driving", false, "After a crash-like stop, calls your emergency contact unless you tap I'm OK"),
-            new F("holidayTraffic", "Holiday traffic warning", "Driving", true, "Before festival and long-weekend drives, warns of busy highways"),
             // car
             new F("view360", "360 view of your car", "Car", true, "Your car in 3D in its shape, colour and number plate, from any side; opens the stereo's 360 camera app when it has one"),
             new F("cam360Turn", "360 camera on turn signals", "Car", false, "Below 15 km/h the indicator opens the stereo's 360 camera app (needs the indicators set up in Car signals)"),
-            new F("care", "Service reminders", "Car", true, "Oil, tyres, service, insurance and PUC"),
-            new F("fuelCheck", "Fuel leak or theft check", "Car", true, "After a full tank: warns if the mileage dropped sharply"),
-            new F("wash", "Car wash reminder", "Car", true, "Every two weeks or as you set, only when no rain is due"),
+            new F("care", "Car service", "Car", true, "Oil, tyres, service, insurance and PUC reminders, the nearest workshops, and a call to book"),
             new F("obd", "OBD-II engine data", "Car", true, "Needs a Bluetooth ELM327 adapter"),
             new F("tpms", "Tyre pressure sensors (TPMS)", "Car", false, "Bluetooth valve-cap sensors"),
             new F("keys", "Steering-wheel buttons", "Car", true, "Your own action for each button"),
-            new F("serviceFinder", "Service centre finder", "Car", true, "Nearest workshops for your car's brand, with a call button"),
-            new F("serviceBooking", "Service booking reminder", "Car", true, "When a service is near, offers to call your service centre"),
             new F("wallet", "Car documents wallet", "Car", true, "Photos of the RC, insurance, PUC and licence, shown offline"),
             // family
             new F("childLock", "Child-lock for apps", "Family", false, "Chosen apps can't be opened while moving"),
@@ -160,8 +153,7 @@ final class Features {
             new F("eq", "Equalizer", "Sound", false, "Bass, treble and presets for the app's own sound"),
             new F("quiet", "Quiet hours", "Sound", false, "Late at night: music turned down, no alert beeps"),
             // data
-            new F("offlineMap", "Map without internet", "Driving", true, "Keeps the map of places you've seen, for when there's no Wi-Fi"),
-            new F("offlineVoice", "Voice without internet", "Driving", true, "Uses the offline speech pack when there's no Wi-Fi"),
+            new F("offlineMap", "Without internet", "Driving", true, "Keeps the map of places you've seen, and uses the offline speech pack, for when there's no Wi-Fi"),
             new F("bootArt", "Boot logo and animation maker", "Dashboard", true, "Your car's badge and name for the stereo's start-up screens"),
             new F("backup", "Daily automatic backup", "Data", true, "Settings, fuel log and trips to OpenRath/backup"),
             new F("reports", "Crash and usage reports", "Data", false, "Counts which settings you open, kept on the unit with any crash reports for you to share; off forgets them"),
@@ -186,12 +178,31 @@ final class Features {
         for (String id : DEV_IDS) get(id).level = DEV;
     }
 
+    /** The switch that decides `id`: itself, or the bigger switch it became part of. */
+    static String parent(String id) {
+        for (String[] pp : PARTS) if (pp[0].equals(id)) return pp[1];
+        return id;
+    }
+
     static F get(String id) {
+        id = parent(id);
         for (F f : ALL) if (f.id.equals(id)) return f;
         return null;
     }
 
+    /** Where the voice mic sits: "map" (only the map's), "float" (a floating button) or "apps" (floating, also over other apps). */
+    static String micPlace(Prefs p) {
+        String m = p.str("micPlace", "");
+        if (!m.isEmpty()) return m;
+        // before there was one setting: what the two old switches said
+        if ("off".equals(p.str("feat:floatMic", "on"))) return "map";
+        return "off".equals(p.str("feat:micOverApps", "on")) ? "float" : "apps";
+    }
+
     static boolean on(Prefs p, String id) {
+        if ("floatMic".equals(id)) return on(p, "voice") && !"map".equals(micPlace(p));
+        if ("micOverApps".equals(id)) return on(p, "voice") && "apps".equals(micPlace(p));
+        id = parent(id);
         String locked = Managed.lockedTo(p, id);
         if (locked != null) return "on".equals(locked);
         if ("speedAlerts".equals(id)) return p.alertsOn();   // kept in the older switch
@@ -200,6 +211,7 @@ final class Features {
     }
 
     static void set(Prefs p, String id, boolean on) {
+        id = parent(id);
         if (Managed.lockedTo(p, id) != null) return;   // a fleet's managed settings decide this one
         p.put("feat:" + id, on ? "on" : "off");
         if ("speedAlerts".equals(id)) p.setAlertsOn(on);   // the older switch, kept in step

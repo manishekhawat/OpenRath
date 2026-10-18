@@ -70,6 +70,19 @@ public final class Smoke extends Instrumentation {
         Features.set(p, "kids", true);
         check("features: switch on is kept", Features.on(new Prefs(c), "kids"));
         Features.set(p, "kids", before);
+        boolean parking = Features.on(p, "parking");
+        Features.set(p, "parkPhoto", false);   // an old id: switches the Parking switch it became part of
+        check("features: old id follows its new switch", !Features.on(p, "parking") && !Features.on(p, "parkLink"));
+        Features.set(p, "parking", parking);
+        String mic = p.str("micPlace", "");
+        boolean voice = Features.on(p, "voice");
+        Features.set(p, "voice", true);
+        p.put("micPlace", "map");
+        check("features: mic on the map only", !Features.on(p, "floatMic") && !Features.on(p, "micOverApps"));
+        p.put("micPlace", "apps");
+        check("features: mic over other apps", Features.on(p, "floatMic") && Features.on(p, "micOverApps"));
+        p.put("micPlace", mic);
+        Features.set(p, "voice", voice);
     }
 
     private void managed(Context c) {

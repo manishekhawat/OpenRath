@@ -64,32 +64,6 @@ final class Holidays {
         return c.get(Calendar.DAY_OF_WEEK);
     }
 
-    /**
-     * The holiday rush on this day, as "the Diwali long weekend" or "Holi", or null. The rush is the
-     * holiday's lead days before it and the day itself; a holiday on a Friday or Monday (or Thursday
-     * or Tuesday, when people take the day between) makes a long weekend, and the whole weekend counts.
-     */
-    static String rush(Calendar today) {
-        Calendar t = day(today.get(Calendar.YEAR), today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH));
-        List<Day> all = new ArrayList<>(of(t.get(Calendar.YEAR)));
-        all.addAll(of(t.get(Calendar.YEAR) + 1));   // New Year's rush starts in December
-        for (Day h : all) {
-            int wd = dow(h.date);
-            boolean longWeekend = wd == Calendar.FRIDAY || wd == Calendar.MONDAY || wd == Calendar.THURSDAY || wd == Calendar.TUESDAY;
-            Calendar from = (Calendar) h.date.clone(), to = (Calendar) h.date.clone();
-            from.add(Calendar.DAY_OF_MONTH, -h.lead);
-            if (longWeekend) {
-                // stretch over the weekend next to it
-                if (wd == Calendar.FRIDAY) to.add(Calendar.DAY_OF_MONTH, 2);
-                else if (wd == Calendar.THURSDAY) to.add(Calendar.DAY_OF_MONTH, 3);
-                else if (wd == Calendar.MONDAY) from.add(Calendar.DAY_OF_MONTH, -3);
-                else from.add(Calendar.DAY_OF_MONTH, -4);
-            }
-            if (!t.before(from) && !t.after(to)) return longWeekend ? "the " + h.name + " long weekend" : h.name;
-        }
-        return null;
-    }
-
     /** The next holidays from today, for Settings: "Diwali, Sun 8 Nov". */
     static List<String> upcoming(Calendar today, int n) {
         Calendar t = day(today.get(Calendar.YEAR), today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH));

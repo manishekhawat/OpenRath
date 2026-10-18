@@ -46,8 +46,6 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     static final String REST = "org.openrath.launcher.REST_STOP";
     /** Sent when the petrol is running low: the dashboard lists the pumps ahead. */
     static final String FUEL_LOW = "org.openrath.launcher.FUEL_LOW";
-    /** A crash-like stop: the dashboard shows the accident-help countdown. */
-    static final String CRASH = "org.openrath.launcher.CRASH";
     static final String HIGHWAY = "org.openrath.launcher.HIGHWAY";
     // drives for the mileage coach, and the break reminder
     static final Coach.Tracker drives = new Coach.Tracker();
@@ -69,9 +67,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     static long fixAt;
     // where the car is, and which way it's heading (-1 = not known)
     static volatile double latNow, lonNow, headingNow = -1;
-    private long fuelCheckAt, crashAt;
+    private long fuelCheckAt;
     private final Ahead ahead = new Ahead();
-    private final Hill hill = new Hill();
     private final Highway highway = new Highway();
     // learnt from your drives: speed breakers and stops
     private final Spots bumps = new Spots(0.0003, 12, 400), waits = new Spots(0.0005, 10, 300);
@@ -335,17 +332,6 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         }
         // harsh braking / hard starts: speed change over about a second
         boolean hardStart = false, hardBrake = false;
-        if (prevAt != 0 && Rescue.crash(prevKmh, kmh, now - prevAt) && now - crashAt > 120000 && Features.on(prefs, "accidentHelp")) {
-            crashAt = now;
-            if (Features.on(prefs, "dashcam")) Dashcam.protect();
-            Intent ci = new Intent(this, HomeActivity.class).setAction(CRASH).putExtra("lat", latNow).putExtra("lon", lonNow)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            try {
-                startActivity(ci);
-            } catch (Throwable t) {
-                sendBroadcast(new Intent(CRASH).setPackage(getPackageName()).putExtra("lat", latNow).putExtra("lon", lonNow));
-            }
-        }
         if (kmh > 8 && driveId == 0) driveId = now;
         if (headingNow >= 0) lastHeading = headingNow;
         if (prevAt != 0 && now - prevAt <= 2500 && now - prevAt >= 500 && Features.on(prefs, "bumps")) {
@@ -393,11 +379,10 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         lastAt = now;
         Coach.Trip done = drives.feed(now, kmh, movedKm, hardStart, hardBrake, l.getLatitude(), l.getLongitude());
         if (done != null) {
-            if (Features.on(prefs, "coach") || Features.on(prefs, "commute")) Coach.save(prefs, done);
+            if (Features.on(prefs, "coach")) Coach.save(prefs, done);
             restAt = 0;   // a real stop: the break clock starts again
             Monsoon.reset();
             ahead.reset();
-            hill.reset();
             driveId = 0;
             spotTold.clear();
             lightsTold = false;
@@ -408,18 +393,13 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         Quiet.apply(this, prefs);
         String flood = Monsoon.check(prefs, Hub.wet || !Hub.routeRain.isEmpty(), latNow, lonNow, headingNow, kmh);
         if (flood != null && ttsReady) tts.speak(flood, TextToSpeech.QUEUE_ADD, null, "flood");
-        // the road ahead: tolls, one-way streets, schools and hospitals, bends in fog
-        List<String> ahd = ahead.feed(latNow, lonNow, headingNow, kmh, Features.on(prefs, "tollAhead"), Features.on(prefs, "wrongWay"),
-                Features.on(prefs, "zones"), Fog.now(prefs), Features.on(prefs, "overtake"), Features.on(prefs, "tolls") ? prefs.num("tollRate", 100) : 0, overpass,
+        // the road ahead: tolls, schools and hospitals, bends in fog
+        List<String> ahd = ahead.feed(latNow, lonNow, headingNow, kmh, Features.on(prefs, "tollAhead"),
+                Features.on(prefs, "zones"), Fog.now(prefs), Features.on(prefs, "tolls") ? prefs.num("tollRate", 100) : 0, overpass,
                 java.util.Calendar.getInstance());
         for (String s : ahd) {
             if (s.startsWith("Careful")) beep();
             if (ttsReady) tts.speak(s, TextToSpeech.QUEUE_ADD, null, "ahead");
-        }
-        // hill (ghat) roads, from the GPS height
-        if (Features.on(prefs, "hill") && l.hasAltitude() && l.getAccuracy() < 30 && kmh > 8) {
-            String tip = hill.feed(driveKm * 1000, l.getAltitude());
-            if (tip != null && ttsReady) tts.speak(tip, TextToSpeech.QUEUE_ADD, null, "hill");
         }
         // highway mode: messages wait while cruising
         if (Features.on(prefs, "highway")) {
@@ -437,14 +417,6 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         learnt(kmh, now);
         carChecks(kmh, now);
         soundProfile();
-        // holiday traffic, once a day, when the car reaches highway speed
-        if (kmh > 60 && Features.on(prefs, "holidayTraffic") && !today().equals(prefs.str("holidayTold", ""))) {
-            prefs.put("holidayTold", today());
-            String h = Holidays.rush(java.util.Calendar.getInstance());
-            if (h != null && ttsReady)
-                tts.speak("It's " + h + ". Highways and toll plazas will be busier than usual, so allow extra time.",
-                        TextToSpeech.QUEUE_ADD, null, "holiday");
-        }
         if (now - fuelCheckAt > 30000 && kmh > 5) {
             fuelCheckAt = now;
             String low = FuelPlan.check(prefs);
@@ -818,7 +790,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     @Override
     public void onDestroy() {
         save();
-        if (Features.on(prefs, "coach") || Features.on(prefs, "commute")) Coach.save(prefs, drives.close(System.currentTimeMillis()));
+        if (Features.on(prefs, "coach")) Coach.save(prefs, drives.close(System.currentTimeMillis()));
         Dashcam.stop();
         try {
             unregisterReceiver(screen);

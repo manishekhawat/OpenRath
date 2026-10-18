@@ -894,11 +894,27 @@ final class Extras {
                 a.voiceSearch(a.mapCard());
             }
         }));
-        r.add(new SettingsView.Row(g, "Mic over other apps", !OverMic.wanted(p) ? "off (Settings > Features)"
-                : OverMic.allowed(a) ? "on; drag it anywhere over maps and music" : "needs permission; tap to allow", new Runnable() {
+        final String[] micPlaces = {"map", "float", "apps"};
+        final String[] micNames = {"on the map only", "floating on the home screen", "floating, also over other apps"};
+        String mp = Features.micPlace(p);
+        r.add(new SettingsView.Row(g, "Mic button", Hindi.t(micNames[Math.max(0, java.util.Arrays.asList(micPlaces).indexOf(mp))])
+                + ("apps".equals(mp) && !OverMic.allowed(a) ? Hindi.t("; needs permission, tap to allow") : ""), new Runnable() {
             @Override
             public void run() {
-                if (OverMic.wanted(p) && !OverMic.allowed(a)) OverMic.ask(a);
+                if (OverMic.wanted(p) && !OverMic.allowed(a)) {
+                    OverMic.ask(a);
+                    return;
+                }
+                new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Mic button"))
+                        .setSingleChoiceItems(tr(micNames), java.util.Arrays.asList(micPlaces).indexOf(Features.micPlace(p)), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface d, int w) {
+                                p.put("micPlace", micPlaces[w]);
+                                d.dismiss();
+                                if (OverMic.wanted(p) && !OverMic.allowed(a)) OverMic.ask(a);
+                                featuresChanged(a);
+                            }
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
         r.add(new SettingsView.Row(g, "What you can say", "radio, calls, music, volume, places", new Runnable() {
@@ -961,12 +977,6 @@ final class Extras {
                 p.put("fuelWarnKm", String.valueOf(next));
             }
         }));
-        r.add(new SettingsView.Row(g, "Commute insights", "the quickest time to leave, from your drives", new Runnable() {
-            @Override
-            public void run() {
-                Commute.show(a, p);
-            }
-        }));
         r.add(new SettingsView.Row(g, "Send the parking spot to your phone", Drive.parkAt == 0 ? "no spot saved yet" : "shows a QR code", new Runnable() {
             @Override
             public void run() {
@@ -1027,25 +1037,6 @@ final class Extras {
                         p.put("summaryHow", "text".equals(p.str("summaryHow", "voice")) ? "voice" : "text");
                     }
                 }));
-        r.add(new SettingsView.Row(g, "Car washed today", p.longNum("washAt", 0) == 0 ? "tap after a wash"
-                : Hindi.f("last wash %1$s days ago", (System.currentTimeMillis() - p.longNum("washAt", 0)) / 86400000L), new Runnable() {
-            @Override
-            public void run() {
-                p.putLong("washAt", System.currentTimeMillis());
-                Toast.makeText(a, Hindi.f("Noted. The next reminder is in %1$s days.", p.num("washDays", 14)), Toast.LENGTH_SHORT).show();
-            }
-        }));
-        r.add(new SettingsView.Row(g, "Wash reminder every", Hindi.f("%1$s days", p.num("washDays", 14)), new Runnable() {
-            @Override
-            public void run() {
-                number(a, "Days between car washes", String.valueOf(p.num("washDays", 14)), new Num() {
-                    @Override
-                    public void set(String v) {
-                        if (!v.isEmpty()) p.put("washDays", String.valueOf(Math.max(3, (int) Double.parseDouble(v))));
-                    }
-                });
-            }
-        }));
 
         r.add(new SettingsView.Row(g, "This week's report", "km, time, petrol, tolls, score; or say \"weekly report\"", new Runnable() {
             @Override
@@ -1109,7 +1100,7 @@ final class Extras {
             }
         }));
 
-        // ---- The road ahead, fog, accident help, holidays
+        // ---- The road ahead, fog, holidays
         g = "Driving";
         r.add(new SettingsView.Row(g, "Fog mode now", "on".equals(p.str("fogNow", "off")) ? "on (switched on by hand)"
                 : Hub.fog ? "on: the weather says fog" : "off; comes on by itself in fog, or say \"fog mode\"", new Runnable() {
@@ -1128,32 +1119,12 @@ final class Extras {
                 p.put("fogSpeed", String.valueOf(s[(i + 1) % s.length]));
             }
         }));
-        r.add(new SettingsView.Row(g, "Emergency contact", Rescue.contact(p).isEmpty() ? "not set (accident help calls 112 only if you tap it)"
-                : Rescue.contactName(p) + (Features.on(p, "accidentHelp") ? "" : Hindi.t(" (accident help is off)")), new Runnable() {
-            @Override
-            public void run() {
-                Rescue.edit(a, p, new Runnable() {
-                    @Override
-                    public void run() {
-                        if (a.settingsView != null) a.settingsView.refresh();
-                    }
-                });
-            }
-        }));
-        r.add(new SettingsView.Row(g, "Try accident help", "shows the countdown; doesn't call", new Runnable() {
-            @Override
-            public void run() {
-                a.closeSettings();
-                Rescue.show(a, p, Drive.latNow, Drive.lonNow, true);
-            }
-        }));
         r.add(new SettingsView.Row(g, "Holidays ahead", android.text.TextUtils.join(";  ", Holidays.upcoming(java.util.Calendar.getInstance(), 3)), new Runnable() {
             @Override
             public void run() {
                 new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Holidays with heavy traffic"))
                         .setMessage(android.text.TextUtils.join("\n", Holidays.upcoming(java.util.Calendar.getInstance(), 12))
-                                + Hindi.t("\n\nThe warning comes once a day when you reach highway speed, from the day before (two days for Diwali) "
-                                + "and over long weekends."))
+                                + "")
                         .setPositiveButton(Hindi.t("OK"), null).show();
             }
         }));

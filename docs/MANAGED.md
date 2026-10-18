@@ -17,7 +17,7 @@ With no management, none of this applies and every switch stays the owner's.
 
 A locked feature shows "Set by your organisation" in Settings, and tapping it changes nothing. When the console stops locking a feature, it stays as it was and the driver can change it again. OpenRath applies changes at start and as soon as the console sends them.
 
-Feature ids are the first argument of each `new F(...)` line in `java/org/openrath/launcher/Features.java`, for example `backup`, `speedAlerts`, `news`, `cab`, `cabMeter`, `dashcam` and `reports`. Unknown ids are skipped.
+Feature ids are the first argument of each `new F(...)` line in `java/org/openrath/launcher/Features.java`, for example `backup`, `speedAlerts`, `news`, `cab`, `cabMeter`, `dashcam` and `reports`. Unknown ids are skipped. Ids from before 1.35 that became part of a bigger switch (for example `parkPhoto`, `tollAhead` or `floatMic`) set that bigger switch; `Features.PARTS` lists them. Ids of features removed in 1.35 are skipped.
 
 ## Example: a cab fleet
 

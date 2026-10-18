@@ -13,23 +13,6 @@ final class Errands {
 
     // ------------------------------------------------------------------ car wash
 
-    /**
-     * Whether to suggest a wash: it has been at least `every` days since the last one and no rain
-     * is expected in the next two days (a wash just before rain is wasted).
-     */
-    static boolean washDue(long lastWash, long now, int every, List<String[]> forecast) {
-        if (lastWash <= 0) return false;   // never marked: don't nag until the owner starts it
-        long days = (now - lastWash) / 86400000L;
-        if (days < every) return false;
-        if (forecast != null) {
-            for (int i = 0; i < forecast.size() && i < 3; i++) {
-                String icon = forecast.get(i)[1];
-                if ("w_rain".equals(icon) || "w_storm".equals(icon)) return false;
-            }
-        }
-        return true;
-    }
-
     // ------------------------------------------------------------------ splitting the cost
 
     /** Each person's share in rupees, rounded up to the next rupee. */

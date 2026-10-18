@@ -214,7 +214,26 @@ final class HomeSettings {
                 }).show();
     }
 
-    static void pickPicture(final HomeActivity a, int which) {
+    static void pickPicture(final HomeActivity a, final int which) {
+        final java.io.File mine = Ui.customFile(a, HomeActivity.ALL_PICTURES[which]);
+        if (mine.exists()) {
+            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                    .setItems(new String[]{Hindi.t("Choose another picture"), Hindi.t("Use the built-in one")}, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface d, int w) {
+                            if (w == 0) choosePicture(a, which);
+                            else {
+                                mine.delete();
+                                a.restyle();
+                            }
+                        }
+                    }).setNegativeButton(Hindi.t("Cancel"), null).show();
+            return;
+        }
+        choosePicture(a, which);
+    }
+
+    private static void choosePicture(final HomeActivity a, int which) {
         Intent i = new Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE);
         try {
             a.startActivityForResult(Intent.createChooser(i, Hindi.t("Choose a picture")), 61 + which);
@@ -265,12 +284,14 @@ final class HomeSettings {
         e.setSingleLine(true);
         e.setSelectAllOnFocus(true);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(Hindi.t("Name under the car (empty to hide)"))
+                .setTitle(Hindi.t("Your name, on the home screen (empty to hide)"))
                 .setView(e)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         a.prefs.setWelcome(e.getText().toString().trim());
+                        a.prefs.put("layUser", "");   // the picture layouts' own name, from before there was one
+                        a.layoutChanged();
                         a.hub.notifyIfChanged(true);
                     }
                 })

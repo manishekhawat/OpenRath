@@ -56,7 +56,6 @@ public class HomeActivity extends Activity implements Cards.Host {
         f.addAction(Ticker.CHANGED);
         f.addAction(Drive.REST);
         f.addAction(Drive.FUEL_LOW);
-        f.addAction(Drive.CRASH);
         f.addAction(Drive.HIGHWAY);
         f.addAction(android.content.Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
         Compat.ownOnly(this, events, f);
@@ -79,8 +78,6 @@ public class HomeActivity extends Activity implements Cards.Host {
                 Managed.apply(HomeActivity.this, prefs);
                 Extras.featuresChanged(HomeActivity.this);
             }
-            else if (Drive.CRASH.equals(i.getAction()))
-                Rescue.show(HomeActivity.this, prefs, i.getDoubleExtra("lat", 0), i.getDoubleExtra("lon", 0), false);
             else if (Drive.FUEL_LOW.equals(i.getAction())) {
                 MapCard m = mapCard();
                 if (m != null) m.js("restStop('fuel')");
@@ -110,10 +107,6 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     private void handleIntent(Intent i) {
         if (i != null && Keys.ACTION.equals(i.getAction())) keyAction(i.getStringExtra("action"));
-        if (i != null && Drive.CRASH.equals(i.getAction())) {
-            i.setAction(null);   // not again when the screen is recreated
-            Rescue.show(this, prefs, i.getDoubleExtra("lat", 0), i.getDoubleExtra("lon", 0), false);
-        }
     }
 
     @Override
@@ -494,7 +487,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     void fogMode(Hub h) {
         boolean driving = Drive.drives.cur != null;
         if (!driving) fogDismissed = false;
-        boolean want = Fog.now(prefs) && driving && !fogDismissed && settingsView == null && !hub.reverse && !Rescue.showing();
+        boolean want = Fog.now(prefs) && driving && !fogDismissed && settingsView == null && !hub.reverse;
         if (want && fog == null) {
             fog = new Fog(this, prefs, new Fog.Closed() {
                 @Override
@@ -665,7 +658,8 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     @Override
     public void tripMenu() {
-        String[] items = {Hindi.t("Start today's trip again"), Hindi.t("Save the parking spot here"), Hindi.t("Fuel log")};
+        String[] items = {Hindi.t("Start today's trip again"), Hindi.t("Save the parking spot here"), Hindi.t("Fuel log and fill-ups"),
+                Hindi.t("Trip history and driving score"), Hindi.t("Add a toll payment")};
         new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Today %1$s km  ·  GPS odometer %2$s km", String.format(java.util.Locale.US, "%.1f", Drive.todayKm), String.valueOf(Math.round(Drive.odoKm))))
                 .setItems(items, new android.content.DialogInterface.OnClickListener() {
@@ -675,7 +669,14 @@ public class HomeActivity extends Activity implements Cards.Host {
                             Drive.resetToday(HomeActivity.this);
                             hub.notifyIfChanged(true);
                         } else if (w == 1) parkHere();
-                        else fuel();
+                        else if (w == 2) fuel();
+                        else if (w == 3) Care.history(HomeActivity.this, prefs);
+                        else Care.addToll(HomeActivity.this, prefs, new Runnable() {
+                                @Override
+                                public void run() {
+                                    hub.notifyIfChanged(true);
+                                }
+                            });
                     }
                 }).show();
     }
@@ -1040,7 +1041,6 @@ public class HomeActivity extends Activity implements Cards.Host {
                 HomeDialogs.askForTrackInfo(HomeActivity.this);
                 HomeDialogs.serviceBooking(HomeActivity.this);
                 HomeDialogs.askOverlay(HomeActivity.this);
-                Chores.washCheck(HomeActivity.this);
                 Chores.weekly(HomeActivity.this, false);
             }
         }, 3000);
