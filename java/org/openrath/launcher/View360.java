@@ -52,7 +52,7 @@ final class View360 {
     /** Open the stereo's 360 camera app; false when there isn't one. */
     static boolean openCam(Context c, Prefs p) {
         String pkg = camApp(c, p);
-        Intent i = pkg == null ? null : c.getPackageManager().getLaunchIntentForPackage(pkg);
+        Intent i = pkg == null ? null : Compat.launch(c.getPackageManager(), pkg);
         if (i == null) return false;
         try {
             c.startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));

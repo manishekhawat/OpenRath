@@ -29,6 +29,74 @@ public final class Tests {
         check(name + " (want " + want + ", got " + got + ")", Math.abs(want - got) <= tol);
     }
 
+    /** Radio text, szchoiceway, speed correction, projection apps, soundboard, compass and box sizes. */
+    private static void radioAndBoxes() {
+        RadioText.Found r = RadioText.parse("FM1 98.30", "Radio Mirchi");
+        eq("radio fm1", "FM 98.3", r == null ? null : r.big());
+        eq("radio station", "Radio Mirchi", r == null ? null : r.station);
+        r = RadioText.parse("Radio City - 91.1 MHz", null);
+        eq("radio mhz", "FM 91.1", r == null ? null : r.big());
+        eq("radio name before", "Radio City", r == null ? null : r.station);
+        r = RadioText.parse("AM 1040", "");
+        eq("radio am", "AM 1040", r == null ? null : r.big());
+        r = RadioText.parse("594 kHz", "AIR");
+        eq("radio khz", "AM 594", r == null ? null : r.big());
+        r = RadioText.parse("FM 93,5", "");
+        eq("radio comma", "FM 93.5", r == null ? null : r.big());
+        check("radio not a year", RadioText.parse("Summer of 2019", "Bryan Adams") == null);
+        check("radio no number", RadioText.parse("Tum Hi Ho", "Arijit Singh") == null);
+        check("radio empty", RadioText.parse(null, null) == null);
+
+        String[] sz = SzUnit.fromTitle("FM1 90.10");
+        eq("sz band", "FM1", sz == null ? null : sz[0]);
+        eq("sz freq", "90.1", sz == null ? null : sz[1]);
+        sz = SzUnit.fromTitle("AM 1040");
+        eq("sz am", "1040", sz == null ? null : sz[1]);
+        check("sz music title", SzUnit.fromTitle("Kesariya Arijit") == null);
+        check("sz empty", SzUnit.fromTitle("") == null);
+        byte[] f = SzUnit.tuneFrame("FM1", 98.3);
+        eq("sz frame length", 19, f.length);
+        eq("sz frame prefix", "0d08", String.format("%02x%02x", f[0], f[1]));
+        eq("sz frame head", "5aa50d91", String.format("%02x%02x%02x%02x", f[2], f[3] & 0xff, f[4], f[5] & 0xff));
+        eq("sz frame band", 1, (int) f[6]);
+        eq("sz frame bank", "01", new String(new byte[]{f[7], f[8]}));
+        eq("sz frame freq", "98.3", new String(f, f.length - 5, 4));
+        int sum = 0;
+        for (int i = 2; i < f.length - 1; i++) sum += f[i] & 0xff;
+        eq("sz frame checksum", sum & 0xff, f[f.length - 1] & 0xff);
+        eq("sz frame am band", 4, (int) SzUnit.tuneFrame("AM", 1040)[6]);
+        eq("sz frame fm2 bank", "02", new String(SzUnit.tuneFrame("FM2", 91.1), 7, 2));
+        eq("sz make", "szchoiceway", Stereo.from(java.util.Arrays.asList("com.szchoiceway.eventcenter")));
+
+        eq("speed fix off", 100f, Drive.corrected(100, 0));
+        eq("speed fix +5", 105f, Drive.corrected(100, 5));
+        eq("speed fix -3", 97f, Drive.corrected(100, -3));
+        eq("speed fix capped", 110f, Drive.corrected(100, 40));
+
+        check("projection zlink", Projection.looksLike("com.zjinnova.zlink", "ZLink"));
+        check("projection autokit label", Projection.looksLike("com.xyz.box", "AutoKit"));
+        check("projection carplay", Projection.looksLike("cn.manstep.phonemirrorBox", "CarPlay"));
+        check("projection not gearhead", !Projection.looksLike("com.google.android.projection.gearhead", "Android Auto"));
+        check("projection not maps", !Projection.looksLike("com.google.android.apps.maps", "Maps"));
+
+        for (int i = 0; i < Soundboard.PADS.length; i++) {
+            short[] snd = Soundboard.make(i);
+            int peak = 0;
+            for (short v : snd) peak = Math.max(peak, Math.abs(v));
+            check("soundboard " + Soundboard.PADS[i] + " length", snd.length > Soundboard.RATE / 4 && snd.length < Soundboard.RATE * 3);
+            check("soundboard " + Soundboard.PADS[i] + " audible", peak > 3000);
+            check("soundboard " + Soundboard.PADS[i] + " starts quiet", Math.abs(snd[0]) < 2000);
+        }
+        eq("compass north", "N", Cards.CompassCard.point(2));
+        eq("compass north wrap", "N", Cards.CompassCard.point(355));
+        eq("compass east", "E", Cards.CompassCard.point(90));
+        eq("compass south-west", "SW", Cards.CompassCard.point(225));
+        float[] z = Dashboard.clampSizes(0.1f, 0.9f, 0.5f, 0.95f);
+        check("sizes column kept", z[0] == 0.25f && z[3] == 0.85f);
+        check("sizes left column fits", z[1] + z[2] <= 0.9001f && z[2] >= 0.1f);
+        check("contents and names match", Prefs.CONTENTS.length == Prefs.CONTENT_NAMES.length);
+    }
+
     public static void main(String[] args) {
         levels();
         hindi();
@@ -60,6 +128,7 @@ public final class Tests {
         batch4();
         batch5();
         generic();
+        radioAndBoxes();
         bootArt();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
