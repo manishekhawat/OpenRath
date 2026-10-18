@@ -22,6 +22,8 @@ final class MediaCard extends Cards.Card {
     final ImageView prev = new ImageView(getContext()), play = new ImageView(getContext()), next = new ImageView(getContext());
     final LinearLayout buttons = new LinearLayout(getContext()), text = new LinearLayout(getContext());
     final TextView scan = Ui.text(getContext(), 12, Ui.SILVER, "sans-serif-medium", Gravity.CENTER);
+    /** The music box's button for the phone-projection app (CarPlay, Android Auto). */
+    final TextView phone = Ui.text(getContext(), 12, Ui.SILVER, "sans-serif-medium", Gravity.CENTER);
     Hub.Media media;      // the other app's player, when it shows one
     Unit unit;            // the stereo: FM through it when it can (a maker's add-on), else the radio app
     boolean unitFm;       // the buttons drive FM through the unit
@@ -79,6 +81,21 @@ final class MediaCard extends Cards.Card {
                             host.refresh();
                         }
                     });
+                }
+            });
+        }
+        if (!radio) {
+            android.graphics.drawable.GradientDrawable pill = new android.graphics.drawable.GradientDrawable();
+            pill.setCornerRadius(999);
+            pill.setStroke(Math.max(1, Ui.px(1.5f)), Ui.EDGE);
+            phone.setBackground(pill);
+            phone.setText(Hindi.t("CARPLAY / AUTO"));
+            phone.setVisibility(GONE);
+            addView(phone);
+            clickable(phone, new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Projection.open(getContext(), host.prefs());
                 }
             });
         }
@@ -205,6 +222,9 @@ final class MediaCard extends Cards.Card {
         scan.setTextSize(0, 17 * Ui.k * s);
         scan.setPadding(Ui.px(26 * s), Ui.px(9 * s), Ui.px(26 * s), Ui.px(9 * s));
         scan.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(8 * s), m, 0));
+        phone.setTextSize(0, 13 * Ui.k * s);
+        phone.setPadding(Ui.px(16 * s), Ui.px(6 * s), Ui.px(16 * s), Ui.px(6 * s));
+        phone.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(8 * s), m, 0));
     }
 
     @Override
@@ -221,6 +241,7 @@ final class MediaCard extends Cards.Card {
         // FM through the unit, unless a radio app shows its own player (then that app's controls)
         unitFm = radio && "app".equals(source) && unit.fm(p) && (unit.fmFirst(p) || h.radio == null);
         if (radio) scan.setVisibility(unitFm && unit.canScan(p) ? VISIBLE : GONE);
+        else phone.setVisibility(Features.on(p, "projection") && Projection.app(getContext(), p) != null ? VISIBLE : GONE);
         if (unitFm) {
             media = null;
             Unit.Show sh = unit.fmShow(p, fmNote, localOn);
@@ -248,7 +269,12 @@ final class MediaCard extends Cards.Card {
             audioOn = mine && Player.playing;
         } else {
             media = radio ? h.radio : h.music;
-            if (media != null && media.title != null) {
+            RadioText.Found rf = radio && media != null && Features.on(p, "radioText")
+                    ? RadioText.parse(media.title, media.subtitle) : null;
+            if (rf != null) {
+                title.setText(rf.big());
+                sub.setText(rf.station);
+            } else if (media != null && media.title != null) {
                 title.setText(media.title);
                 sub.setText(media.subtitle == null ? "" : media.subtitle);
             } else {

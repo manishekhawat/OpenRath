@@ -77,7 +77,7 @@ final class SettingsView extends FrameLayout {
     /** Help rows that are for finding faults rather than everyday use. */
     private static final java.util.Set<String> TROUBLE = new java.util.HashSet<>(java.util.Arrays.asList(
             "Diagnostics", "How the stock launcher does it", "Unit report", "Clear the crash note", "Crash reports",
-            "Headlight setup, deep search"));
+            "Headlight setup, deep search", "Reset GPS"));
 
     /** The section a feature's switch goes in. */
     private static String sectionOf(Features.F f) {
