@@ -131,7 +131,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     private Prefs prefs;
     private final Handler handler = new Handler();
     private Location last, stopAt;
-    private long lastAt, stoppedSince, savedAt;
+    private long lastAt, stoppedSince, savedAt;   // lastAt: the last fix, on the elapsedRealtime clock
     private boolean moved;
     private TextToSpeech tts;
     private boolean ttsReady;
@@ -327,6 +327,9 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     @Override
     public void onLocationChanged(Location l) {
         long now = System.currentTimeMillis();
+        // time between fixes on a clock that never jumps: stereos often set their clock from GPS or
+        // the network just after the first fix, right when a drive (and a 0–100 run) starts
+        long tick = android.os.SystemClock.elapsedRealtime();
         if (!today().equals(day)) {   // past midnight: close yesterday, start today
             save();
             day = today();
@@ -336,9 +339,9 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
             todaySpeedSec = 0;
         }
         float kmh = l.hasSpeed() ? l.getSpeed() * 3.6f : 0;
-        if ((!l.hasSpeed() || kmh == 0) && last != null && now - lastAt > 0 && now - lastAt < 5000) {
+        if ((!l.hasSpeed() || kmh == 0) && last != null && tick - lastAt > 0 && tick - lastAt < 5000) {
             float dd = last.distanceTo(l);
-            if (dd > 2) kmh = Math.max(kmh, dd / ((now - lastAt) / 1000f) * 3.6f);
+            if (dd > 2) kmh = Math.max(kmh, dd / ((tick - lastAt) / 1000f) * 3.6f);
         }
         kmh = corrected(kmh, prefs.num("speedFix", 0));
         int obd = Obd.speedNow();
@@ -352,7 +355,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         if (l.hasAltitude()) altNow = l.getAltitude();
         if (Features.on(prefs, "gpx")) Tracks.point(this, l.getLatitude(), l.getLongitude(), l.getAltitude(), kmh, now);
         if (Features.on(prefs, "accel")) {
-            float t100 = timer.feed(kmh, now);
+            float t100 = timer.feed(kmh, tick);
             if (t100 > 0) accelDone(t100, timer.result60);
         }
         speedVolume(kmh);
@@ -395,7 +398,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         double movedKm = 0;
         if (last != null && l.getAccuracy() < 40) {
             float d = last.distanceTo(l);
-            long dt = now - lastAt;
+            long dt = tick - lastAt;
             // count real movement only: not GPS drift while parked, not jumps after a gap
             if (kmh > 4 && d < 70 * Math.max(1, dt / 1000f)) {
                 movedKm = d / 1000.0;
@@ -409,7 +412,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
             }
         }
         last = l;
-        lastAt = now;
+        lastAt = tick;
         Coach.Trip done = drives.feed(now, kmh, movedKm, hardStart, hardBrake, l.getLatitude(), l.getLongitude());
         if (done != null) {
             if (Features.on(prefs, "coach")) Coach.save(prefs, done);

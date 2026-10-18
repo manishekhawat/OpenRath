@@ -394,8 +394,8 @@ final class Hub implements LocationListener {
             sessionPkgs.add(pkg);
             if (pkg.equals(radioPkg) || (radioPkg == null && looksLikeRadio(pkg))) {
                 if (r == null) r = c;
-            } else if (mu == null && (musicPkg == null || pkg.equals(musicPkg))) {
-                mu = c;   // the chosen music app, or else the first other app that's playing
+            } else if (musicPkg == null ? mu == null || (!playing(mu) && playing(c)) : pkg.equals(musicPkg) && mu == null) {
+                mu = c;   // the chosen music app, or else the app that's playing (the first one if none is)
             }
         }
         radio = info(r);
@@ -407,17 +407,62 @@ final class Hub implements LocationListener {
         return p.contains("radio") || p.endsWith(".fm") || p.contains(".fm.") || p.contains("fmradio");
     }
 
-    private static Media info(MediaController c) {
+    private static String artUri;
+    private static android.graphics.Bitmap artFromUri;
+
+    /** The picture at the app's art address, when it's on the unit (content:, file:); kept while the address stays the same. */
+    private android.graphics.Bitmap artFrom(MediaMetadata md) {
+        String u = md.getString(MediaMetadata.METADATA_KEY_ART_URI);
+        if (u == null) u = md.getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI);
+        if (u == null) u = md.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI);
+        if (u == null || !(u.startsWith("content:") || u.startsWith("file:") || u.startsWith("android.resource:"))) return null;
+        if (u.equals(artUri)) return artFromUri;
+        artUri = u;
+        artFromUri = null;
+        try {
+            android.net.Uri uri = android.net.Uri.parse(u);
+            android.graphics.BitmapFactory.Options o = new android.graphics.BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            java.io.InputStream in = ctx.getContentResolver().openInputStream(uri);
+            android.graphics.BitmapFactory.decodeStream(in, null, o);
+            if (in != null) in.close();
+            o.inSampleSize = 1;
+            while (o.outWidth / (o.inSampleSize * 2) >= 512) o.inSampleSize *= 2;
+            o.inJustDecodeBounds = false;
+            in = ctx.getContentResolver().openInputStream(uri);
+            artFromUri = android.graphics.BitmapFactory.decodeStream(in, null, o);
+            if (in != null) in.close();
+        } catch (Throwable ignored) {   // no permission to read it, or gone
+        }
+        return artFromUri;
+    }
+
+    private static boolean playing(MediaController c) {
+        PlaybackState st = c.getPlaybackState();
+        return st != null && st.getState() == PlaybackState.STATE_PLAYING;
+    }
+
+    private Media info(MediaController c) {
         if (c == null) return null;
         Media m = new Media();
         m.controller = c;
         MediaMetadata md = c.getMetadata();
         if (md != null) {
             m.title = md.getString(MediaMetadata.METADATA_KEY_TITLE);
+            if (m.title == null) m.title = md.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE);
             m.subtitle = md.getString(MediaMetadata.METADATA_KEY_ARTIST);
+            if (m.subtitle == null) m.subtitle = md.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST);
+            if (m.subtitle == null) m.subtitle = md.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE);
             if (m.subtitle == null) m.subtitle = md.getString(MediaMetadata.METADATA_KEY_ALBUM);
-            m.art = md.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);
-            if (m.art == null) m.art = md.getBitmap(MediaMetadata.METADATA_KEY_ART);
+            // the biggest picture the app gives; many give a small one, a bigger one under another key, or only an address
+            for (String k : new String[]{MediaMetadata.METADATA_KEY_ALBUM_ART, MediaMetadata.METADATA_KEY_ART, MediaMetadata.METADATA_KEY_DISPLAY_ICON}) {
+                android.graphics.Bitmap b = md.getBitmap(k);
+                if (b != null && (m.art == null || b.getWidth() * b.getHeight() > m.art.getWidth() * m.art.getHeight())) m.art = b;
+            }
+            if (m.art == null || m.art.getWidth() < 200) {
+                android.graphics.Bitmap b = artFrom(md);
+                if (b != null && (m.art == null || b.getWidth() > m.art.getWidth())) m.art = b;
+            }
         }
         PlaybackState st = c.getPlaybackState();
         m.playing = st != null && st.getState() == PlaybackState.STATE_PLAYING;
