@@ -2,6 +2,12 @@
 
 Newest first.
 
+## 1.37: Easier Settings
+
+- **The state is on the right:** each row shows where it stands, like "on", "₹100" or "+3%", on the right. Any explanation is the grey line under the name.
+- **Setup when you switch on:** turning on a feature that needs setting up (the turn indicator arrows, the 360 camera on turn signals, car-signal reminders, OBD-II, tyre sensors, the phone projection app) offers to do that setup straight away.
+- **Recently used:** the last four settings you changed are at the top of Settings.
+
 ## 1.36: CarPlay apps, radio and more
 
 - **CarPlay and Android Auto apps:** the music box gets a CARPLAY / AUTO button that opens your phone-projection app (ZLink, AutoKit and others). OpenRath finds it by itself, or you choose it in Settings, Radio and music.

@@ -97,6 +97,31 @@ public final class Tests {
         check("contents and names match", Prefs.CONTENTS.length == Prefs.CONTENT_NAMES.length);
     }
 
+    /** Settings rows: state on the right, recently used, setup offered when a feature is switched on. */
+    private static void settingsLook() {
+        String[] v = SettingsView.split("₹100");
+        check("split short", v[0].equals("₹100") && v[1].isEmpty());
+        v = SettingsView.split("not OpenRath; tap to make the unit start in it");
+        check("split state and hint", v[0].equals("not OpenRath") && v[1].equals("tap to make the unit start in it"));
+        v = SettingsView.split("send a photo if something doesn't work");
+        check("split long is a hint", v[0].isEmpty() && v[1].startsWith("send a photo"));
+        check("split empty", SettingsView.split(null)[0].isEmpty());
+        String r = SettingsView.remember("", "Home app");
+        r = SettingsView.remember(r, "Speed correction");
+        r = SettingsView.remember(r, "Home app");
+        eq("recent newest first, no repeats", "Home app\nSpeed correction", r);
+        for (String t : new String[]{"a", "b", "c", "d", "e"}) r = SettingsView.remember(r, t);
+        eq("recent keeps four", 4, r.split("\n").length);
+        check("setup arrows asked", Extras.needs("arrows", false, false, false, false, true) != null);
+        check("setup arrows ready", Extras.needs("arrows", true, false, false, false, true) == null);
+        check("setup obd asked", Extras.needs("obd", true, true, false, true, true) != null);
+        check("setup tyres asked", Extras.needs("tpms", true, true, true, false, true) != null);
+        check("setup projection asked", Extras.needs("projection", true, true, true, true, false) != null);
+        check("setup weather needs nothing", Extras.needs("weather", false, false, false, false, false) == null);
+        for (String id : new String[]{"arrows", "cam360Turn", "lightsReminder", "obd", "tpms", "projection"})
+            check("setup feature exists " + id, Features.get(id) != null);
+    }
+
     public static void main(String[] args) {
         levels();
         hindi();
@@ -129,6 +154,7 @@ public final class Tests {
         batch5();
         generic();
         radioAndBoxes();
+        settingsLook();
         bootArt();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
