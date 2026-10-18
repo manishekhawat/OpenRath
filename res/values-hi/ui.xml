@@ -480,4 +480,12 @@
     <string name="ui_the_soundboard_plays_only_when_the_car_i" formatted="false">साउंडबोर्ड सिर्फ़ कार रुकी होने पर बजता है</string>
     <string name="ui_drag_a_box_onto_another_to_swap_them_or_" formatted="false">बॉक्स को दूसरे पर खींचकर अदला-बदली करें, या बॉक्सों के बीच की पट्टी खींचकर आकार बदलें</string>
     <string name="ui_usual_sizes" formatted="false">सामान्य आकार</string>
+    <string name="ui_recently_used" formatted="false">हाल में इस्तेमाल</string>
+    <string name="ui_the_settings_you_changed_last" formatted="false">जो सेटिंग आपने आख़िर में बदलीं</string>
+    <string name="ui_set_up_now" formatted="false">अभी सेट करें</string>
+    <string name="ui_this_needs_the_turn_indicators_set_up_se" formatted="false">इसके लिए टर्न इंडिकेटर सेट होने चाहिए। अभी सेट करें?</string>
+    <string name="ui_this_needs_the_headlight_door_or_seat_be" formatted="false">इसके लिए हेडलाइट, दरवाज़ा या सीट-बेल्ट सेटअप चाहिए। अभी हेडलाइट सेट करें?</string>
+    <string name="ui_choose_your_obd_ii_bluetooth_adapter_now" formatted="false">अभी अपना OBD-II Bluetooth अडैप्टर चुनें?</string>
+    <string name="ui_find_your_tyre_sensors_now" formatted="false">अभी अपने टायर सेंसर ढूँढें?</string>
+    <string name="ui_no_carplay_or_android_auto_app_was_found" formatted="false">कोई CarPlay या Android Auto ऐप नहीं मिला। अभी चुनें?</string>
 </resources>
