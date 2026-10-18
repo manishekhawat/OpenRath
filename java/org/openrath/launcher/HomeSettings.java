@@ -84,8 +84,7 @@ final class HomeSettings {
         }
         b.append(" → car shows ").append(a.hub.lightsOn() ? "ON" : "OFF").append("\n");
         String radio = a.prefs.app("media:radio");
-        b.append("Radio app: ").append(radio == null ? "none found" : radio + (a.getPackageManager()
-                .getLaunchIntentForPackage(radio) == null ? " (not installed)" : "")).append("\n");
+        b.append("Radio app: ").append(radio == null ? "none found" : radio + (Compat.launch(a.getPackageManager(), radio) == null ? " (not installed)" : "")).append("\n");
         String music = a.prefs.app("media:music");
         b.append("Music app: ").append(music == null ? "whatever is playing" : music).append("\n");
         b.append("Navigation app: ").append(a.prefs.app("dock:navi")).append("\n");

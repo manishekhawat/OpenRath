@@ -111,7 +111,7 @@ final class Features {
             new F("nightDrive", "Night-drive mode", "Dashboard", true, "After sunset while driving: big red speed, dim red map, nothing else"),
             new F("voice", "Voice commands (Hindi and English)", "Dashboard", true, "\"FM 91.1\", \"call Mom\", \"घर ले चलो\" from the mic; choose where the mic sits in Home screen"),
             new F("tripShare", "Share the trip by QR code", "Driving", true, "A code family scan to see where you are and the route; nothing is sent online"),
-            new F("perf", "Performance box", "Dashboard", false, "Frames per second, CPU use and temperature in a corner"),
+            new F("perf", "Performance box", "Dashboard", false, "Frames per second, CPU use, temperature and free memory in a corner"),
             // driving
             new F("speedAlerts", "Speed limit and camera alerts", "Driving", true, "Speaks and beeps near cameras and over the limit"),
             new F("parking", "Parking", "Driving", true, "Saves the spot after 90 seconds standing still, with a photo, a QR code for your phone and a paid-parking reminder"),
@@ -132,7 +132,10 @@ final class Features {
             new F("bumps", "Road learning", "Driving", true, "Learns speed-breakers and how long you wait at signals and tolls, and tells you next time"),
             new F("duck", "Music dips for voice prompts", "Driving", true, "Music lowers while the car speaks a turn or a warning"),
             new F("hotspot", "Guest Wi-Fi", "Phone", true, "A QR code passengers scan to join the unit's hotspot"),
-            new F("maker", "Stereo maker's services", "Radio and music", true, "Topway, FYT and MTCD/Joying units: FM in the radio box, Bluetooth calls, reverse gear and lights through the maker's own services. Off, or on other stereos: plain Android only (the radio app's controls, the system phone)"),
+            new F("maker", "Stereo maker's services", "Radio and music", true, "Topway, FYT, MTCD/Joying and szchoiceway units: FM in the radio box, Bluetooth calls, reverse gear and lights through the maker's own services. Off, or on other stereos: plain Android only (the radio app's controls, the system phone)"),
+            new F("projection", "Phone projection app", "Radio and music", true, "A button in the music box opens your wireless CarPlay or Android Auto app (ZLink, AutoKit and others)"),
+            new F("radioText", "Big frequency from any radio app", "Radio and music", true, "Shows \"FM 98.3\" and the station name from the radio app's text"),
+            new F("soundboard", "Soundboard", "Radio and music", false, "A box of fun sounds (horn, fart, applause and more) that plays only when the car is stopped"),
             new F("soundProfiles", "Sound profiles", "Radio and music", false, "City, highway and night: equalizer and volume switch by themselves"),
             new F("fog", "Fog mode", "Driving", true, "In thick fog: big speed, a slow guide and the next bend ahead"),
             // car

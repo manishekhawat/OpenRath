@@ -46,8 +46,9 @@ public class HomeActivity extends Activity implements Cards.Host {
         setContentView(root);
         // location, storage, Bluetooth, notifications and the plain Android phone (Bluetooth hands-free
         // through the system phone), as this Android version names them
-        String[] missing = Compat.missing(this);
-        if (missing.length > 0) requestPermissions(missing, 1);
+        final String[] missing = Compat.missing(this);
+        if (missing.length > 0 && !"yes".equals(prefs.str("permsExplained", ""))) HomeDialogs.explainPermissions(this, missing);
+        else if (missing.length > 0) requestPermissions(missing, 1);
         HomeDialogs.findRadio(this);
         Drive.start(this);
         Keys.init(this);
@@ -300,6 +301,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         hub.clearListeners();
         dash.removeAllViews();
         dash.swapped = prefs.swapped();
+        dash.setSizes(prefs.str("boxSizes", null));
         dash.dockAt = prefs.str("dockAt", "left");
         dash.wide = false;
         android.util.DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -369,6 +371,11 @@ public class HomeActivity extends Activity implements Cards.Host {
                 prefs.swapSlots(from, to);
                 build();
                 dash.setEditing(true);
+            }
+
+            @Override
+            public void resized(String sizes) {
+                prefs.put("boxSizes", sizes);
             }
         };
         hub.onReverse = new Runnable() {
@@ -599,7 +606,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             Toast.makeText(this, Hindi.t(ChildLock.SORRY), Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent i = pkg == null ? null : getPackageManager().getLaunchIntentForPackage(pkg);
+        Intent i = pkg == null ? null : Compat.launch(getPackageManager(), pkg);
         if (i == null && "dock:phone".equals(key)) i = new Intent(Intent.ACTION_DIAL);
         if (i != null) {
             try {
@@ -792,7 +799,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     @Override
     public void startRadio() {
         String pkg = prefs.app("media:radio");
-        Intent i = pkg == null ? null : getPackageManager().getLaunchIntentForPackage(pkg);
+        Intent i = pkg == null ? null : Compat.launch(getPackageManager(), pkg);
         if (i == null) {
             openApp("media:radio", "Radio");
             return;
@@ -914,7 +921,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         bar.setPadding(Ui.px(18), Ui.px(8), Ui.px(8), Ui.px(8));
         bar.setBackground(Ui.panel());
         TextView t = Ui.text(this, 16, Ui.SILVER, "sans-serif", Gravity.LEFT);
-        t.setText(Hindi.t("Drag a box onto another to swap them"));
+        t.setText(Hindi.t("Drag a box onto another to swap them, or drag a bar between boxes to resize them"));
         bar.addView(t);
         TextView done = PhoneCard.pill(this, Hindi.t("Done"), 0xFF2A2D32);
         done.setTextSize(0, 16 * Ui.k);
@@ -926,6 +933,21 @@ public class HomeActivity extends Activity implements Cards.Host {
             @Override
             public void onClick(View v) {
                 stopMoving();
+            }
+        });
+        TextView reset = PhoneCard.pill(this, Hindi.t("Usual sizes"), 0xFF2A2D32);
+        reset.setTextSize(0, 16 * Ui.k);
+        reset.setPadding(Ui.px(20), 0, Ui.px(20), 0);
+        LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(-2, Ui.px(44));
+        rp.leftMargin = Ui.px(10);
+        bar.addView(reset, rp);
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prefs.put("boxSizes", "");
+                dash.setSizes(null);
+                dash.requestLayout();
+                dash.invalidate();
             }
         });
         android.widget.FrameLayout.LayoutParams lp = new android.widget.FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);

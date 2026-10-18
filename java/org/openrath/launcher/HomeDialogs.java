@@ -31,6 +31,53 @@ final class HomeDialogs {
                 }).setNegativeButton(Hindi.t("Not now"), null).show();
     }
 
+    /**
+     * First start: says why each permission is wanted before Android asks, so owners don't refuse
+     * prompts they don't understand. Shown once; later starts ask for what is still missing.
+     */
+    static void explainPermissions(final HomeActivity a, final String[] missing) {
+        StringBuilder b = new StringBuilder(Hindi.t("Android will now ask for a few permissions. Here is what each one is for:"));
+        boolean loc = false, files = false, phone = false, bt = false, notes = false;
+        for (String m : missing) {
+            if (m.contains("LOCATION")) loc = true;
+            else if (m.contains("STORAGE") || m.contains("MEDIA")) files = true;
+            else if (m.contains("BLUETOOTH")) bt = true;
+            else if (m.contains("NOTIFICATIONS")) notes = true;
+            else phone = true;
+        }
+        if (loc) b.append("\n\n• ").append(Hindi.t("Location: your speed, the map, speed-camera alerts and trip records. It stays on the unit."));
+        if (files) b.append("\n\n• ").append(Hindi.t("Music and photos: plays music from a USB stick, and your own pictures for the car and backgrounds."));
+        if (bt) b.append("\n\n• ").append(Hindi.t("Nearby devices: your phone's calls over Bluetooth, and OBD or tyre sensors if you have them."));
+        if (phone) b.append("\n\n• ").append(Hindi.t("Phone and calls: shows who is calling, and lets you answer and call back from the home screen."));
+        if (notes) b.append("\n\n• ").append(Hindi.t("Notifications: reminders such as a break after long driving."));
+        b.append("\n\n").append(Hindi.t("You can refuse any of them; only that part stops working. Nothing is sent online."));
+        final boolean[] asked = {false};
+        final Runnable ask = new Runnable() {
+            @Override
+            public void run() {
+                if (asked[0]) return;
+                asked[0] = true;
+                a.prefs.put("permsExplained", "yes");
+                a.requestPermissions(missing, 1);
+            }
+        };
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                .setTitle(Hindi.t("Before you start"))
+                .setMessage(b.toString())
+                .setPositiveButton(Hindi.t("Continue"), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        ask.run();
+                    }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface d) {
+                        ask.run();
+                    }
+                }).show();
+    }
+
     /** First start: pick the unit's own radio app, so the radio box and dock button just work. */
     static void findRadio(final HomeActivity a) {
         if (a.prefs.app("media:radio") != null) return;
@@ -39,7 +86,7 @@ final class HomeDialogs {
                 "com.qf.radio", "com.microntek.radio", "com.hct.radio", "com.android.fmradio",
                 "com.mediatek.fmradio", "com.caf.fmradio", "com.spreadtrum.fmradio", "com.sprd.fmradio"};
         for (String k : known) {
-            if (pm.getLaunchIntentForPackage(k) != null) {
+            if (Compat.launch(pm, k) != null) {
                 a.prefs.setApp("media:radio", k);
                 return;
             }

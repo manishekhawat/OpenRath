@@ -34,6 +34,91 @@ final class Compat {
         return c.registerReceiver(r, f);
     }
 
+    /**
+     * The intent that opens an app: its launcher icon, or for apps with no icon (some projection,
+     * camera and radio apps) its first main screen. Null when the app isn't installed.
+     */
+    static Intent launch(android.content.pm.PackageManager pm, String pkg) {
+        if (pm == null || pkg == null) return null;
+        Intent i = null;
+        try {
+            i = pm.getLaunchIntentForPackage(pkg);
+        } catch (Exception ignored) {
+        }
+        if (i != null) return i;
+        try {
+            Intent m = new Intent(Intent.ACTION_MAIN).setPackage(pkg);
+            List<android.content.pm.ResolveInfo> l = pm.queryIntentActivities(m, 0);
+            for (android.content.pm.ResolveInfo r : l) {
+                if (r.activityInfo == null || !r.activityInfo.exported) continue;
+                return new Intent(Intent.ACTION_MAIN)
+                        .setClassName(r.activityInfo.packageName, r.activityInfo.name);
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
+    /** android.app.role.RoleManager (Android 10+), by reflection: the SDK OpenRath builds with predates it. */
+    private static Object roles(Context c) {
+        if (Build.VERSION.SDK_INT < 29) return null;
+        try {
+            Object rm = c.getSystemService("role");
+            if (rm == null) return null;
+            Object avail = rm.getClass().getMethod("isRoleAvailable", String.class).invoke(rm, "android.app.role.HOME");
+            return Boolean.TRUE.equals(avail) ? rm : null;
+        } catch (Throwable e) {
+            return null;
+        }
+    }
+
+    private static boolean roleHeld(Object rm) {
+        try {
+            return Boolean.TRUE.equals(rm.getClass().getMethod("isRoleHeld", String.class).invoke(rm, "android.app.role.HOME"));
+        } catch (Throwable e) {
+            return false;
+        }
+    }
+
+    /** True when OpenRath is the home app, so the unit starts in it. */
+    static boolean isHome(Context c) {
+        Object rm = roles(c);
+        if (rm != null) return roleHeld(rm);
+        try {
+            Intent h = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME);
+            android.content.pm.ResolveInfo r = c.getPackageManager()
+                    .resolveActivity(h, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY);
+            return r != null && r.activityInfo != null && c.getPackageName().equals(r.activityInfo.packageName);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Asks to become the home app: Android's own dialog (Android 10+), else the home-app screen,
+     * else the default-apps screen. False when the unit has none of them.
+     */
+    static boolean askHome(android.app.Activity a) {
+        Object rm = roles(a);
+        if (rm != null && !roleHeld(rm)) {
+            try {
+                Intent i = (Intent) rm.getClass().getMethod("createRequestRoleIntent", String.class).invoke(rm, "android.app.role.HOME");
+                a.startActivityForResult(i, 7);
+                return true;
+            } catch (Throwable ignored) {
+            }
+        }
+        for (String action : new String[]{android.provider.Settings.ACTION_HOME_SETTINGS,
+                "android.settings.MANAGE_DEFAULT_APPS_SETTINGS"}) {
+            try {
+                a.startActivity(new Intent(action));
+                return true;
+            } catch (Exception ignored) {
+            }
+        }
+        return false;
+    }
+
     /** The runtime permissions to ask for at first start on this Android version. */
     static String[] startPermissions(int sdk) {
         List<String> l = new ArrayList<>();

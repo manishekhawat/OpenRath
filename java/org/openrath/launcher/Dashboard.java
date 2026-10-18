@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 /**
  * Places the dock and the five boxes. Left column: 50% / 25% / 25% of the height; right column:
- * 75% / 25%. The columns swap sides when the setting says so. On a portrait screen the boxes stack
+ * 75% / 25%; in move mode the owner drags the spaces between boxes to change these. The columns swap sides when the setting says so. On a portrait screen the boxes stack
  * instead, with the app row along the bottom. Sizes are in units of the 1024 x 600 design (Ui.scale),
  * so 1024x600, 1280x720 and 1920x720 come out the same shape.
  */
@@ -22,6 +22,89 @@ final class Dashboard extends ViewGroup {
     interface Mover {
         /** A box was dropped on another: swap what they show. */
         void swap(int from, int to);
+
+        /** The space between boxes was dragged: the new sizes, to keep (see sizes()). */
+        void resized(String sizes);
+    }
+
+    /** Box sizes: left column's share of the width, then the car, clock and right-top boxes' share of their column. */
+    float colF = 0.44f, carF = 0.50f, clockF = 0.25f, mapF = 0.75f;
+
+    /** The sizes as saved: "0.44,0.50,0.25,0.75". */
+    String sizes() {
+        return String.format(java.util.Locale.US, "%.3f,%.3f,%.3f,%.3f", colF, carF, clockF, mapF);
+    }
+
+    /** Reads saved sizes, keeping each within reach so no box gets too small; bad text gives the defaults. */
+    void setSizes(String saved) {
+        float[] f = {0.44f, 0.50f, 0.25f, 0.75f};
+        if (saved != null && !saved.isEmpty()) {
+            String[] parts = saved.split(",");
+            if (parts.length == 4) try {
+                for (int i = 0; i < 4; i++) f[i] = Float.parseFloat(parts[i]);
+            } catch (NumberFormatException e) {
+                f = new float[]{0.44f, 0.50f, 0.25f, 0.75f};
+            }
+        }
+        float[] c = clampSizes(f[0], f[1], f[2], f[3]);
+        colF = c[0];
+        carF = c[1];
+        clockF = c[2];
+        mapF = c[3];
+    }
+
+    static float[] clampSizes(float col, float car, float clock, float map) {
+        col = clamp(col, 0.25f, 0.70f);
+        car = clamp(car, 0.20f, 0.70f);
+        clock = clamp(clock, 0.10f, 0.90f - car);
+        map = clamp(map, 0.30f, 0.85f);
+        return new float[]{col, car, clock, map};
+    }
+
+    private static float clamp(float v, float lo, float hi) {
+        return Float.isNaN(v) ? lo : Math.max(lo, Math.min(hi, v));
+    }
+
+    // the last landscape layout, for finding the space between boxes under a finger
+    private boolean grid;
+    private int gx0, gy0, gcw, gch, ggap, glw, grw, gcarH, gclockH, gmapH, glx, grx;
+    private int resizing = -1;
+
+    /** Which space between boxes is under this point: 0 the columns, 1 car/clock, 2 clock/weather, 3 right column; -1 none. */
+    private int dividerAt(float x, float y) {
+        if (!grid) return -1;
+        int tol = Ui.px(22);
+        int colX = swapped ? gx0 + grw + ggap / 2 : gx0 + glw + ggap / 2;
+        if (Math.abs(x - colX) < tol && y >= gy0 && y < gy0 + gch) return 0;
+        boolean inLeft = x >= glx && x < glx + glw, inRight = x >= grx && x < grx + grw;
+        if (inLeft && Math.abs(y - (gy0 + gcarH + ggap / 2)) < tol) return 1;
+        if (inLeft && Math.abs(y - (gy0 + gcarH + ggap + gclockH + ggap / 2)) < tol) return 2;
+        if (inRight && Math.abs(y - (gy0 + gmapH + ggap / 2)) < tol) return 3;
+        return -1;
+    }
+
+    private void resizeTo(float x, float y) {
+        float col = colF, car = carF, clock = clockF, map = mapF;
+        float rows = gch - 2f * ggap;
+        if (resizing == 0) {
+            float left = swapped ? gx0 + gcw - x - ggap / 2f : x - gx0 - ggap / 2f;
+            col = left / (gcw - ggap);
+        } else if (resizing == 1) {
+            float carNew = (y - gy0 - ggap / 2f) / rows;
+            clock = clockF + carF - carNew;   // the weather box keeps its size
+            car = carNew;
+        } else if (resizing == 2) {
+            clock = (y - gy0 - gcarH - ggap - ggap / 2f) / rows;
+        } else if (resizing == 3) {
+            map = (y - gy0 - ggap / 2f) / (gch - ggap);
+        }
+        float[] c = clampSizes(col, car, clock, map);
+        colF = c[0];
+        carF = c[1];
+        clockF = c[2];
+        mapF = c[3];
+        requestLayout();
+        invalidate();
     }
 
     Mover mover;
@@ -32,6 +115,7 @@ final class Dashboard extends ViewGroup {
     /** In edit mode every touch drags a box; boxes shrink a little to show they can move. */
     void setEditing(boolean on) {
         editing = on;
+        invalidate();
         for (View v : slots) {
             if (v == null) continue;
             v.animate().scaleX(on ? 0.94f : 1f).scaleY(on ? 0.94f : 1f).alpha(on ? 0.85f : 1f).setDuration(150).start();
@@ -84,6 +168,7 @@ final class Dashboard extends ViewGroup {
     @Override
     protected void dispatchDraw(android.graphics.Canvas c) {
         super.dispatchDraw(c);
+        if (editing && grid) handles(c);
         if (pages < 2) return;
         float r = Ui.px(3.5f), gap = Ui.px(14);
         float cx = getWidth() / 2f - (pages - 1) * gap / 2f, y = getHeight() - Ui.px(7);
@@ -100,6 +185,11 @@ final class Dashboard extends ViewGroup {
         float x = e.getX(), y = e.getY();
         switch (e.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+                resizing = dividerAt(x, y);
+                if (resizing >= 0) {
+                    dragging = -1;
+                    return true;
+                }
                 dragging = slotAt(x, y);
                 downX = x;
                 downY = y;
@@ -110,6 +200,10 @@ final class Dashboard extends ViewGroup {
                 }
                 return true;
             case MotionEvent.ACTION_MOVE:
+                if (resizing >= 0) {
+                    resizeTo(x, y);
+                    return true;
+                }
                 if (dragging >= 0) {
                     slots[dragging].setTranslationX(x - downX);
                     slots[dragging].setTranslationY(y - downY);
@@ -121,6 +215,11 @@ final class Dashboard extends ViewGroup {
                 return true;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                if (resizing >= 0) {
+                    resizing = -1;
+                    if (mover != null) mover.resized(sizes());
+                    return true;
+                }
                 if (dragging >= 0) {
                     View v = slots[dragging];
                     int target = e.getActionMasked() == MotionEvent.ACTION_UP ? slotAt(x, y) : -1;
@@ -135,6 +234,19 @@ final class Dashboard extends ViewGroup {
                 return true;
         }
         return true;
+    }
+
+    /** In move mode: a short bar on each space between boxes that can be dragged to resize them. */
+    private void handles(android.graphics.Canvas c) {
+        dot.setColor(resizing >= 0 ? Ui.SILVER : Ui.mix(Ui.SILVER, Ui.BACKGROUND, 0.35f));
+        float t = Ui.px(3), len = Ui.px(28);
+        float colX = swapped ? gx0 + grw + ggap / 2f : gx0 + glw + ggap / 2f, midY = gy0 + gch / 2f;
+        c.drawRoundRect(colX - t, midY - len, colX + t, midY + len, t, t, dot);
+        float lx = glx + glw / 2f, rx = grx + grw / 2f;
+        float[] ys = {gy0 + gcarH + ggap / 2f, gy0 + gcarH + ggap + gclockH + ggap / 2f};
+        for (float y : ys) c.drawRoundRect(lx - len, y - t, lx + len, y + t, t, t, dot);
+        float my = gy0 + gmapH + ggap / 2f;
+        c.drawRoundRect(rx - len, my - t, rx + len, my + t, t, t, dot);
     }
 
     /** Which box's place is under this point (by layout, ignoring a box being dragged). */
@@ -190,6 +302,7 @@ final class Dashboard extends ViewGroup {
     int[][] rects(int w, int h) {
         // the on-screen keyboard (searching settings) shrinks the window: keep the text size then
         if (h > getResources().getDisplayMetrics().heightPixels * 0.75f) Ui.k = Ui.scale(w, h, Ui.user);
+        grid = false;
         if (Ui.portrait(w, h)) return stacked(w, h);
         int dockW = Ui.px(96), dockH = Ui.px(80), gap = Ui.px(14), m = Ui.px(18);
         int[] dock;
@@ -226,13 +339,26 @@ final class Dashboard extends ViewGroup {
             };
         }
         int cw = x1 - x0, ch = y1 - y0;
-        int lw = Math.round((cw - gap) * 0.44f), rw = cw - lw - gap;
+        int lw = Math.round((cw - gap) * colF), rw = cw - lw - gap;
         int lx = swapped ? x0 + rw + gap : x0;
         int rx = swapped ? x0 : x0 + lw + gap;
-        int carH = Math.round((ch - 2 * gap) * 0.50f);
-        int clockH = Math.round((ch - 2 * gap) * 0.25f);
+        int carH = Math.round((ch - 2 * gap) * carF);
+        int clockH = Math.round((ch - 2 * gap) * clockF);
         int weatherH = ch - carH - clockH - 2 * gap;
-        int mapH = Math.round((ch - gap) * 0.75f);
+        int mapH = Math.round((ch - gap) * mapF);
+        grid = true;
+        gx0 = x0;
+        gy0 = y0;
+        gcw = cw;
+        gch = ch;
+        ggap = gap;
+        glw = lw;
+        grw = rw;
+        glx = lx;
+        grx = rx;
+        gcarH = carH;
+        gclockH = clockH;
+        gmapH = mapH;
         return new int[][]{
                 dock,
                 {lx, y0, lw, carH},

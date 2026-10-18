@@ -10,7 +10,7 @@ import android.content.pm.PackageManager;
  */
 final class Stereo {
 
-    static final String TOPWAY = "topway", FYT = "fyt", MTC = "mtc", ANDROID = "android";
+    static final String TOPWAY = "topway", FYT = "fyt", MTC = "mtc", SZ = "szchoiceway", ANDROID = "android";
 
     private static String kind;
 
@@ -28,6 +28,7 @@ final class Stereo {
         if (TOPWAY.equals(k)) return "Topway";
         if (FYT.equals(k)) return "FYT";
         if (MTC.equals(k)) return "MTCD / MTCE (Joying and others)";
+        if (SZ.equals(k)) return "szchoiceway";
         return "Android (no maker-specific extras)";
     }
 
@@ -36,6 +37,7 @@ final class Stereo {
         if (has(pm, Xt.PKG) || has(pm, "com.tw.radio") || cls("android.tw.john.TWUtil")) return TOPWAY;
         if (has(pm, "com.syu.ms") || has(pm, "com.syu.canbus") || has(pm, "com.syu.radio")) return FYT;
         if (has(pm, "android.microntek.service") || has(pm, "com.microntek.radio") || cls("android.microntek.CarManager")) return MTC;
+        if (has(pm, "com.szchoiceway.radio") || has(pm, "com.szchoiceway.eventcenter") || hasJson(c)) return SZ;
         return ANDROID;
     }
 
@@ -44,7 +46,16 @@ final class Stereo {
         if (pkgs.contains("com.tw.service.xt") || pkgs.contains("com.tw.radio")) return TOPWAY;
         if (pkgs.contains("com.syu.ms") || pkgs.contains("com.syu.canbus") || pkgs.contains("com.syu.radio")) return FYT;
         if (pkgs.contains("android.microntek.service") || pkgs.contains("com.microntek.radio")) return MTC;
+        if (pkgs.contains("com.szchoiceway.radio") || pkgs.contains("com.szchoiceway.eventcenter")) return SZ;
         return ANDROID;
+    }
+
+    private static boolean hasJson(Context c) {
+        try {
+            return android.provider.Settings.Global.getString(c.getContentResolver(), SzUnit.JSON) != null;
+        } catch (Throwable t) {
+            return false;
+        }
     }
 
     private static boolean has(PackageManager pm, String pkg) {
