@@ -164,7 +164,7 @@ final class LayoutView extends View implements Hub.Listener {
             if (pkg == null) pickFavourite(i);
             else if (ChildLock.blocked(prefs, pkg)) Toast.makeText(a, Hindi.t(ChildLock.SORRY), Toast.LENGTH_SHORT).show();
             else {
-                Intent in = a.getPackageManager().getLaunchIntentForPackage(pkg);
+                Intent in = Compat.launch(a.getPackageManager(), pkg);
                 if (in == null) pickFavourite(i);
                 else a.startActivity(in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }

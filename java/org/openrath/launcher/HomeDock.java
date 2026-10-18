@@ -53,7 +53,7 @@ final class HomeDock {
                             Toast.makeText(a, Hindi.t(ChildLock.SORRY), Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        Intent in = a.getPackageManager().getLaunchIntentForPackage(pkg);
+                        Intent in = Compat.launch(a.getPackageManager(), pkg);
                         if (in != null) a.startActivity(in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     }
                 }

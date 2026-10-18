@@ -593,6 +593,24 @@ final class SettingsRows {
             }
         }));
         r.add(new SettingsView.Row(g, "Music app", appName(pm, a.prefs.app("media:music")), HomeSettings.pick(a, "media:music", "Music")));
+        if (Features.on(a.prefs, "projection")) {
+            String proj = Projection.app(a, a.prefs);
+            r.add(new SettingsView.Row(g, "Phone projection app", proj == null ? "none found (pick one)"
+                    : a.prefs.app("projection") == null ? Hindi.f("%1$s (found)", a.appLabel(proj)) : a.appLabel(proj), new Runnable() {
+                @Override
+                public void run() {
+                    AppPicker.show(a, Hindi.t("Your CarPlay or Android Auto app"), new AppPicker.Picked() {
+                        @Override
+                        public void picked(String pkg) {
+                            a.prefs.setApp("projection", pkg);
+                            Projection.forget();
+                            a.refresh();
+                            if (a.settingsView != null) a.settingsView.refresh();
+                        }
+                    });
+                }
+            }));
+        }
         r.add(new SettingsView.Row(g, "Track and station info", a.hub.mediaAccess ? "allowed" : "not allowed", new Runnable() {
             @Override
             public void run() {
@@ -667,6 +685,29 @@ final class SettingsRows {
                 int i = 0;
                 while (i < steps.length && steps[i] != a.prefs.warnSpeed()) i++;
                 a.prefs.setWarnSpeed(steps[(i + 1) % steps.length]);
+            }
+        }));
+        final int fix = a.prefs.num("speedFix", 0);
+        r.add(new SettingsView.Row(g, "Speed correction", fix == 0 ? "off" : Hindi.f("GPS speed %1$s%%", (fix > 0 ? "+" : "") + fix), new Runnable() {
+            @Override
+            public void run() {
+                final int[] steps = {-5, -3, -2, 0, 2, 3, 4, 5, 6, 8, 10};
+                String[] names = new String[steps.length];
+                int cur = 3;
+                for (int i = 0; i < steps.length; i++) {
+                    names[i] = steps[i] == 0 ? Hindi.t("off") : (steps[i] > 0 ? "+" : "") + steps[i] + "%";
+                    if (steps[i] == fix) cur = i;
+                }
+                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                        .setTitle(Hindi.t("Add to the GPS speed, so it matches your car's speedometer"))
+                        .setSingleChoiceItems(names, cur, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface d, int w) {
+                                a.prefs.put("speedFix", String.valueOf(steps[w]));
+                                d.dismiss();
+                                if (a.settingsView != null) a.settingsView.refresh();
+                            }
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
         Fuel.Stats fs = Fuel.stats(a.prefs);
@@ -818,6 +859,21 @@ final class SettingsRows {
 
         // ---- Help
         g = "Help";
+        r.add(new SettingsView.Row(g, "Reset GPS", "if it takes long to find where you are", new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(a, Drive.resetGps(a) ? Hindi.t("GPS data cleared; it can take a few minutes outdoors to find you again")
+                        : Hindi.t("This unit's GPS doesn't allow a reset"), Toast.LENGTH_LONG).show();
+            }
+        }));
+        final boolean home = Compat.isHome(a);
+        r.add(new SettingsView.Row(g, "Home app", home ? "OpenRath; the unit starts in it" : "not OpenRath; tap to make the unit start in it", new Runnable() {
+            @Override
+            public void run() {
+                if (home) Toast.makeText(a, Hindi.t("OpenRath is already the home app"), Toast.LENGTH_SHORT).show();
+                else if (!Compat.askHome(a)) Toast.makeText(a, Hindi.t("This unit has no screen to choose the home app; press Home and choose OpenRath, Always"), Toast.LENGTH_LONG).show();
+            }
+        }));
         r.add(new SettingsView.Row(g, "Diagnostics", "send a photo if something doesn't work", new Runnable() {
             @Override
             public void run() {

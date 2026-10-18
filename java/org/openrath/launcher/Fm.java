@@ -128,7 +128,7 @@ final class Fm {
         boolean front = HomeActivity.visible;
         String err;
         if (cmd.startsWith("launch:")) {
-            Intent i = app == null ? null : app.getPackageManager().getLaunchIntentForPackage(cmd.substring(7));
+            Intent i = app == null ? null : Compat.launch(app.getPackageManager(), cmd.substring(7));
             if (i == null) return "the radio app isn't installed";
             try {
                 app.startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION));

@@ -65,6 +65,8 @@ final class Cards {
         else if (Prefs.PERF.equals(content)) card = new PerfCard(c);
         else if (Prefs.NEWS.equals(content)) card = new NewsCard(c);
         else if (Prefs.CAB.equals(content)) card = new CabCard(c);
+        else if (Prefs.COMPASS.equals(content)) card = new CompassCard(c);
+        else if (Prefs.SOUNDS.equals(content)) card = new SoundCard(c);
         else if (content.startsWith("widget")) card = new WidgetCard(c, content, host);
         else card = new MediaCard(c, Prefs.RADIO.equals(content));
         card.host = host;
@@ -608,8 +610,115 @@ final class Cards {
             figs[2].value.setTextColor(m.temp >= 80 ? 0xFFFF5A4E : m.temp >= 70 ? 0xFFF5C542 : Ui.SILVER);
             figs[3].value.setText(m.fps == 0 ? "--" : String.valueOf(m.worst));
             figs[3].value.setTextColor(m.worst > 50 ? 0xFFF5C542 : Ui.SILVER);
-            foot.setText(m.sysPct >= 0 ? Hindi.f("Whole unit %1$s%% CPU, this app %2$s%%", m.sysPct, m.appPct)
-                    : Hindi.t("CPU is this app's share; Android hides the whole unit's figure"));
+            String mem = memory(getContext());
+            foot.setText((m.sysPct >= 0 ? Hindi.f("Whole unit %1$s%% CPU, this app %2$s%%", m.sysPct, m.appPct)
+                    : Hindi.t("CPU is this app's share; Android hides the whole unit's figure")) + (mem.isEmpty() ? "" : "  ·  " + mem));
+        }
+
+        /** "memory 1.2 of 2.0 GB free", or "" when Android won't say. */
+        static String memory(Context c) {
+            try {
+                android.app.ActivityManager am = (android.app.ActivityManager) c.getSystemService(Context.ACTIVITY_SERVICE);
+                android.app.ActivityManager.MemoryInfo mi = new android.app.ActivityManager.MemoryInfo();
+                am.getMemoryInfo(mi);
+                if (mi.totalMem <= 0) return "";
+                String free = String.format(Locale.US, "%.1f", mi.availMem / 1073741824.0);
+                String all = String.format(Locale.US, "%.1f", mi.totalMem / 1073741824.0);
+                return (mi.lowMemory ? Hindi.t("memory low") + ", " : "") + Hindi.f("memory %1$s of %2$s GB free", free, all);
+            } catch (Exception e) {
+                return "";
+            }
+        }
+    }
+
+    /** Where the car points and how high it is, from GPS: heading while moving (the last one when stopped), altitude. */
+    static final class CompassCard extends FiguresCard {
+        CompassCard(Context c) {
+            super(c, "COMPASS", "HEADING", "DEGREES", "ALTITUDE M");
+        }
+
+        @Override
+        void tapped() {
+            host.editSlot(slot);
+        }
+
+        @Override
+        public void changed(Hub h) {
+            double hd = Drive.headingNow >= 0 ? Drive.headingNow : Drive.headingKept;
+            figs[0].value.setText(hd < 0 ? "--" : Hindi.t(point(hd)));
+            figs[1].value.setText(hd < 0 ? "--" : Math.round(hd) % 360 + "°");
+            double alt = Drive.altNow;
+            figs[2].value.setText(Double.isNaN(alt) ? "--" : String.valueOf(Math.round(alt)));
+            foot.setText(hd < 0 ? Hindi.t("The heading shows once the car moves")
+                    : Drive.headingNow < 0 ? Hindi.t("Last heading while moving; GPS altitude is within about 10 m")
+                    : Hindi.t("GPS altitude is within about 10 m"));
+        }
+
+        /** N, NE, E … for a heading in degrees. */
+        static String point(double deg) {
+            String[] p = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
+            return p[(int) Math.round(((deg % 360) + 360) % 360 / 45) % 8];
+        }
+    }
+
+    /** Six sound pads (Soundboard); they play only when the car is stopped. */
+    static final class SoundCard extends Card {
+        final TextView head = Ui.label(getContext(), Hindi.t("SOUNDBOARD"));
+        final TextView note = Ui.text(getContext(), 12, Ui.SILVER_DIM, "sans-serif", Gravity.CENTER);
+        final LinearLayout grid = new LinearLayout(getContext());
+        final TextView[] pads = new TextView[Soundboard.PADS.length];
+
+        SoundCard(Context c) {
+            super(c);
+            grid.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout row = null;
+            for (int i = 0; i < pads.length; i++) {
+                if (i % 3 == 0) {
+                    row = new LinearLayout(c);
+                    grid.addView(row, new LinearLayout.LayoutParams(-1, 0, 1));
+                }
+                final int pad = i;
+                pads[i] = PhoneCard.pill(c, Hindi.t(Soundboard.PADS[i]), 0);
+                row.addView(pads[i], new LinearLayout.LayoutParams(0, -1, 1));
+                clickable(pads[i], new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!Features.on(host.prefs(), "soundboard")) {
+                            android.widget.Toast.makeText(getContext(), Hindi.t("Turn on Soundboard in Settings, Radio and music"), android.widget.Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        Soundboard.play(getContext(), pad);
+                    }
+                });
+            }
+            note.setSingleLine(true);
+            addView(head);
+            addView(grid);
+            addView(note);
+        }
+
+        @Override
+        void fit(int w, int h) {
+            float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
+            int m = Ui.px(16 * s), g = Ui.px(5 * s);
+            head.setTextSize(0, 11 * Ui.k * s);
+            head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(10 * s), 0, 0));
+            for (TextView p : pads) {
+                p.setTextSize(0, 13 * Ui.k * s);
+                p.setSingleLine(true);
+                p.setEllipsize(android.text.TextUtils.TruncateAt.END);
+                ((LinearLayout.LayoutParams) p.getLayoutParams()).setMargins(g, g, g, g);
+            }
+            grid.setLayoutParams(at(-1, -1, Gravity.TOP, m - g, Ui.px(30 * s), m - g, Ui.px(24 * s)));
+            note.setTextSize(0, 10 * Ui.k * s);
+            note.setLayoutParams(at(-1, -2, Gravity.BOTTOM, m, 0, m, Ui.px(6 * s)));
+        }
+
+        @Override
+        public void changed(Hub h) {
+            boolean moving = Drive.kmhNow > Soundboard.PARKED_KMH;
+            for (TextView p : pads) p.setAlpha(moving ? 0.4f : 1f);
+            note.setText(moving ? Hindi.t("Plays when the car is stopped") : "");
         }
     }
 

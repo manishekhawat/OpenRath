@@ -35,6 +35,7 @@ class Unit {
         if (Stereo.TOPWAY.equals(k)) return new TopwayUnit(c, h);
         if (Stereo.FYT.equals(k)) return new FytUnit(c, h);
         if (Stereo.MTC.equals(k)) return new MtcUnit(c, h);
+        if (Stereo.SZ.equals(k)) return new SzUnit(c, h);
         return new Unit(c);
     }
 

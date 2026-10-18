@@ -253,7 +253,7 @@
     <string name="ui_a_code_family_scan_to_see_where_you_are" formatted="false">A code family scan to see where you are and the route; nothing is sent online</string>
     <string name="ui_the_floating_mic_stays_on_top_of_maps_an" formatted="false">The floating mic stays on top of maps and music; needs the \"Display over other apps\" permission</string>
     <string name="ui_performance_box" formatted="false">Performance box</string>
-    <string name="ui_frames_per_second_cpu_use_and_temperatur" formatted="false">Frames per second, CPU use and temperature in a corner</string>
+    <string name="ui_frames_per_second_cpu_use_and_temperatur" formatted="false">Frames per second, CPU use, temperature and free memory in a corner</string>
     <string name="ui_speaks_and_beeps_near_cameras_and_over_t" formatted="false">Speaks and beeps near cameras and over the limit</string>
     <string name="ui_remember_where_you_parked" formatted="false">Remember where you parked</string>
     <string name="ui_saves_the_spot_after_90_seconds_standing" formatted="false">Saves the spot after 90 seconds standing still</string>
@@ -425,6 +425,62 @@
     <string name="ui_between_1_s_and_2_s" formatted="false">between %1$s and %2$s</string>
     <string name="ui_fuel_log_and_fill_ups" formatted="false">Fuel log and fill-ups</string>
     <string name="ui_trip_history_and_driving_score" formatted="false">Trip history and driving score</string>
+    <string name="ui_more_apps_without_an_icon" formatted="false">More apps (without an icon)…</string>
+    <string name="ui_no_phone_projection_app_found_choose_one" formatted="false">No phone projection app found; choose one in Settings, Radio and music</string>
+    <string name="ui_that_app_couldn_t_be_opened" formatted="false">That app couldn\'t be opened</string>
+    <string name="ui_phone_projection_app" formatted="false">Phone projection app</string>
+    <string name="ui_a_button_in_the_music_box_opens_your_wir" formatted="false">A button in the music box opens your wireless CarPlay or Android Auto app (ZLink, AutoKit and others)</string>
+    <string name="ui_big_frequency_from_any_radio_app" formatted="false">Big frequency from any radio app</string>
+    <string name="ui_shows_fm_98_3_and_the_station_name_from_" formatted="false">Shows \"FM 98.3\" and the station name from the radio app\'s text</string>
+    <string name="ui_1_s_found" formatted="false">%1$s (found)</string>
+    <string name="ui_your_carplay_or_android_auto_app" formatted="false">Your CarPlay or Android Auto app</string>
+    <string name="ui_carplay_auto" formatted="false">CARPLAY / AUTO</string>
+    <string name="ui_home_app" formatted="false">Home app</string>
+    <string name="ui_openrath_the_unit_starts_in_it" formatted="false">OpenRath; the unit starts in it</string>
+    <string name="ui_not_openrath_tap_to_make_the_unit_start_" formatted="false">not OpenRath; tap to make the unit start in it</string>
+    <string name="ui_openrath_is_already_the_home_app" formatted="false">OpenRath is already the home app</string>
+    <string name="ui_this_unit_has_no_screen_to_choose_the_ho" formatted="false">This unit has no screen to choose the home app; press Home and choose OpenRath, Always</string>
+    <string name="ui_android_will_now_ask_for_a_few_permissio" formatted="false">Android will now ask for a few permissions. Here is what each one is for:</string>
+    <string name="ui_location_your_speed_the_map_speed_camera" formatted="false">Location: your speed, the map, speed-camera alerts and trip records. It stays on the unit.</string>
+    <string name="ui_music_and_photos_plays_music_from_a_usb_" formatted="false">Music and photos: plays music from a USB stick, and your own pictures for the car and backgrounds.</string>
+    <string name="ui_nearby_devices_your_phone_s_calls_over_b" formatted="false">Nearby devices: your phone\'s calls over Bluetooth, and OBD or tyre sensors if you have them.</string>
+    <string name="ui_phone_and_calls_shows_who_is_calling_and" formatted="false">Phone and calls: shows who is calling, and lets you answer and call back from the home screen.</string>
+    <string name="ui_notifications_reminders_such_as_a_break_" formatted="false">Notifications: reminders such as a break after long driving.</string>
+    <string name="ui_you_can_refuse_any_of_them_only_that_par" formatted="false">You can refuse any of them; only that part stops working. Nothing is sent online.</string>
+    <string name="ui_before_you_start" formatted="false">Before you start</string>
+    <string name="ui_continue" formatted="false">Continue</string>
+    <string name="ui_speed_correction" formatted="false">Speed correction</string>
+    <string name="ui_gps_speed_1_s" formatted="false">GPS speed %1$s%%</string>
+    <string name="ui_add_to_the_gps_speed_so_it_matches_your_" formatted="false">Add to the GPS speed, so it matches your car\'s speedometer</string>
+    <string name="ui_reset_gps" formatted="false">Reset GPS</string>
+    <string name="ui_if_it_takes_long_to_find_where_you_are" formatted="false">if it takes long to find where you are</string>
+    <string name="ui_gps_data_cleared_it_can_take_a_few_minut" formatted="false">GPS data cleared; it can take a few minutes outdoors to find you again</string>
+    <string name="ui_this_unit_s_gps_doesn_t_allow_a_reset" formatted="false">This unit\'s GPS doesn\'t allow a reset</string>
+    <string name="ui_soundboard" formatted="false">Soundboard</string>
+    <string name="ui_a_box_of_fun_sounds_horn_fart_applause_a" formatted="false">A box of fun sounds (horn, fart, applause and more) that plays only when the car is stopped</string>
+    <string name="ui_compass_and_altitude" formatted="false">Compass and altitude</string>
+    <string name="ui_soundboard_horn_and_fun_sounds" formatted="false">Soundboard (horn and fun sounds)</string>
+    <string name="ui_compass" formatted="false">COMPASS</string>
+    <string name="ui_heading" formatted="false">HEADING</string>
+    <string name="ui_degrees" formatted="false">DEGREES</string>
+    <string name="ui_altitude_m" formatted="false">ALTITUDE M</string>
+    <string name="ui_the_heading_shows_once_the_car_moves" formatted="false">The heading shows once the car moves</string>
+    <string name="ui_last_heading_while_moving_gps_altitude_i" formatted="false">Last heading while moving; GPS altitude is within about 10 m</string>
+    <string name="ui_gps_altitude_is_within_about_10_m" formatted="false">GPS altitude is within about 10 m</string>
+    <string name="ui_memory_low" formatted="false">memory low</string>
+    <string name="ui_memory_1_s_of_2_s_gb_free" formatted="false">memory %1$s of %2$s GB free</string>
+    <string name="ui_soundboard_2" formatted="false">SOUNDBOARD</string>
+    <string name="ui_horn" formatted="false">Horn</string>
+    <string name="ui_fart" formatted="false">Fart</string>
+    <string name="ui_applause" formatted="false">Applause</string>
+    <string name="ui_ba_dum_tss" formatted="false">Ba-dum-tss</string>
+    <string name="ui_bell" formatted="false">Bell</string>
+    <string name="ui_wrong_answer" formatted="false">Wrong answer</string>
+    <string name="ui_turn_on_soundboard_in_settings_radio_and" formatted="false">Turn on Soundboard in Settings, Radio and music</string>
+    <string name="ui_plays_when_the_car_is_stopped" formatted="false">Plays when the car is stopped</string>
+    <string name="ui_the_soundboard_plays_only_when_the_car_i" formatted="false">The soundboard plays only when the car is stopped</string>
+    <string name="ui_drag_a_box_onto_another_to_swap_them_or_" formatted="false">Drag a box onto another to swap them, or drag a bar between boxes to resize them</string>
+    <string name="ui_usual_sizes" formatted="false">Usual sizes</string>
     <string-array name="ui_strings">
         <item>@string/ui_back_to_the_dashboard</item>
         <item>@string/ui_search_settings</item>
@@ -849,5 +905,61 @@
         <item>@string/ui_between_1_s_and_2_s</item>
         <item>@string/ui_fuel_log_and_fill_ups</item>
         <item>@string/ui_trip_history_and_driving_score</item>
+        <item>@string/ui_more_apps_without_an_icon</item>
+        <item>@string/ui_no_phone_projection_app_found_choose_one</item>
+        <item>@string/ui_that_app_couldn_t_be_opened</item>
+        <item>@string/ui_phone_projection_app</item>
+        <item>@string/ui_a_button_in_the_music_box_opens_your_wir</item>
+        <item>@string/ui_big_frequency_from_any_radio_app</item>
+        <item>@string/ui_shows_fm_98_3_and_the_station_name_from_</item>
+        <item>@string/ui_1_s_found</item>
+        <item>@string/ui_your_carplay_or_android_auto_app</item>
+        <item>@string/ui_carplay_auto</item>
+        <item>@string/ui_home_app</item>
+        <item>@string/ui_openrath_the_unit_starts_in_it</item>
+        <item>@string/ui_not_openrath_tap_to_make_the_unit_start_</item>
+        <item>@string/ui_openrath_is_already_the_home_app</item>
+        <item>@string/ui_this_unit_has_no_screen_to_choose_the_ho</item>
+        <item>@string/ui_android_will_now_ask_for_a_few_permissio</item>
+        <item>@string/ui_location_your_speed_the_map_speed_camera</item>
+        <item>@string/ui_music_and_photos_plays_music_from_a_usb_</item>
+        <item>@string/ui_nearby_devices_your_phone_s_calls_over_b</item>
+        <item>@string/ui_phone_and_calls_shows_who_is_calling_and</item>
+        <item>@string/ui_notifications_reminders_such_as_a_break_</item>
+        <item>@string/ui_you_can_refuse_any_of_them_only_that_par</item>
+        <item>@string/ui_before_you_start</item>
+        <item>@string/ui_continue</item>
+        <item>@string/ui_speed_correction</item>
+        <item>@string/ui_gps_speed_1_s</item>
+        <item>@string/ui_add_to_the_gps_speed_so_it_matches_your_</item>
+        <item>@string/ui_reset_gps</item>
+        <item>@string/ui_if_it_takes_long_to_find_where_you_are</item>
+        <item>@string/ui_gps_data_cleared_it_can_take_a_few_minut</item>
+        <item>@string/ui_this_unit_s_gps_doesn_t_allow_a_reset</item>
+        <item>@string/ui_soundboard</item>
+        <item>@string/ui_a_box_of_fun_sounds_horn_fart_applause_a</item>
+        <item>@string/ui_compass_and_altitude</item>
+        <item>@string/ui_soundboard_horn_and_fun_sounds</item>
+        <item>@string/ui_compass</item>
+        <item>@string/ui_heading</item>
+        <item>@string/ui_degrees</item>
+        <item>@string/ui_altitude_m</item>
+        <item>@string/ui_the_heading_shows_once_the_car_moves</item>
+        <item>@string/ui_last_heading_while_moving_gps_altitude_i</item>
+        <item>@string/ui_gps_altitude_is_within_about_10_m</item>
+        <item>@string/ui_memory_low</item>
+        <item>@string/ui_memory_1_s_of_2_s_gb_free</item>
+        <item>@string/ui_soundboard_2</item>
+        <item>@string/ui_horn</item>
+        <item>@string/ui_fart</item>
+        <item>@string/ui_applause</item>
+        <item>@string/ui_ba_dum_tss</item>
+        <item>@string/ui_bell</item>
+        <item>@string/ui_wrong_answer</item>
+        <item>@string/ui_turn_on_soundboard_in_settings_radio_and</item>
+        <item>@string/ui_plays_when_the_car_is_stopped</item>
+        <item>@string/ui_the_soundboard_plays_only_when_the_car_i</item>
+        <item>@string/ui_drag_a_box_onto_another_to_swap_them_or_</item>
+        <item>@string/ui_usual_sizes</item>
     </string-array>
 </resources>
