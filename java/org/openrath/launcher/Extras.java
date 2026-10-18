@@ -627,6 +627,7 @@ final class Extras {
                     Features.set(p, f.id, !Features.on(p, f.id));
                     if ("reports".equals(f.id) && !Features.on(p, f.id)) Reports.clear();
                     featuresChanged(a);
+                    if (Features.on(p, f.id)) offerSetup(a, f.id);
                 }
             }).toggle(on, f.id));
         }
@@ -1432,6 +1433,64 @@ final class Extras {
                 }
             }));
         }
+    }
+
+    /**
+     * What a feature still needs before it can work, as the question to ask, or null when it's ready
+     * (or needs nothing). Pure, for the tests: the setup state comes in as flags.
+     */
+    static String needs(String id, boolean indicators, boolean lightsOrDoors, boolean obdChosen, boolean tyresChosen,
+                        boolean projectionFound) {
+        if (("arrows".equals(id) || "cam360Turn".equals(id)) && !indicators)
+            return "This needs the turn indicators set up. Set them up now?";
+        if ("lightsReminder".equals(id) && !lightsOrDoors) return "This needs the headlight, door or seat-belt setup. Set up the headlights now?";
+        if ("obd".equals(id) && !obdChosen) return "Choose your OBD-II Bluetooth adapter now?";
+        if ("tpms".equals(id) && !tyresChosen) return "Find your tyre sensors now?";
+        if ("projection".equals(id) && !projectionFound) return "No CarPlay or Android Auto app was found. Choose it now?";
+        return null;
+    }
+
+    /** Just switched on: if the feature needs setting up, offer to do it now instead of only saying so. */
+    static void offerSetup(final HomeActivity a, final String id) {
+        Prefs p = a.prefs;
+        boolean ind = p.signal("left") != null || p.signal("right") != null;
+        boolean lights = p.lightSignal() != null || p.signal("door") != null || p.signal("belt") != null;
+        boolean tyres = false;
+        for (int i = 0; i < 4; i++) tyres |= !p.str("tpms" + i, "").isEmpty();
+        boolean proj = !"projection".equals(id) || Projection.app(a, p) != null;
+        String q = needs(id, ind, lights, !p.str("obdMac", "").isEmpty(), tyres, proj);
+        if (q == null) return;
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Features.get(id).name)).setMessage(Hindi.t(q))
+                .setPositiveButton(Hindi.t("Set up now"), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        if ("arrows".equals(id) || "cam360Turn".equals(id)) {
+                            Lights.deep = false;
+                            Lights.indicatorSetup(a, a.prefs, new Lights.Done() {
+                                @Override
+                                public void done() {
+                                    a.hub.stop();
+                                    a.hub.start();
+                                    a.hub.notifyIfChanged(true);
+                                }
+                            });
+                        } else if ("lightsReminder".equals(id)) {
+                            Lights.deep = false;
+                            a.setupLights();
+                        } else if ("obd".equals(id)) a.obdMenu();
+                        else if ("tpms".equals(id)) a.tyresMenu();
+                        else if ("projection".equals(id)) {
+                            AppPicker.show(a, Hindi.t("Your CarPlay or Android Auto app"), new AppPicker.Picked() {
+                                @Override
+                                public void picked(String pkg) {
+                                    a.prefs.setApp("projection", pkg);
+                                    Projection.forget();
+                                    a.refresh();
+                                }
+                            });
+                        }
+                    }
+                }).setNegativeButton(Hindi.t("Later"), null).show();
     }
 
     static void featuresChanged(HomeActivity a) {

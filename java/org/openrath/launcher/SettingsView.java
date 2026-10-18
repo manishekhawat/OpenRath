@@ -240,7 +240,52 @@ final class SettingsView extends FrameLayout {
         return out;
     }
 
+    static final String RECENT = "Recently used";
+    private static final Section RECENT_SECTION = new Section(RECENT, "The settings you changed last", new String[0], new String[0]);
+
+    /** Remembers a setting the owner just used, newest first, at most four. */
+    static String remember(String list, String title) {
+        List<String> l = new ArrayList<>();
+        l.add(title);
+        if (list != null) for (String t : list.split("\n")) if (!t.isEmpty() && !t.equals(title) && l.size() < 4) l.add(t);
+        StringBuilder b = new StringBuilder();
+        for (String t : l) b.append(b.length() == 0 ? "" : "\n").append(t);
+        return b.toString();
+    }
+
+    /** The rows the owner used last, found again by title among today's rows (a row that's gone is skipped). */
+    private List<Object> recent(java.util.Map<String, List<Object>> all) {
+        List<Object> out = new ArrayList<>();
+        String list = new Prefs(getContext()).str("recentRows", "");
+        for (String t : list.split("\n")) {
+            if (t.isEmpty()) continue;
+            find:
+            for (List<Object> items : all.values()) {
+                for (Object o : items) {
+                    if (o instanceof Row && ((Row) o).title.equals(t)) {
+                        out.add(o);
+                        break find;
+                    }
+                }
+            }
+        }
+        return out;
+    }
+
+    /**
+     * A row's value as {state, hint}: a short state ("on", "₹100", "not set up") goes on the right; anything
+     * after "; " or a long sentence goes in the grey line under the title.
+     */
+    static String[] split(String v) {
+        if (v == null || v.isEmpty()) return new String[]{"", ""};
+        int semi = v.indexOf("; ");
+        String state = semi > 0 ? v.substring(0, semi) : v, hint = semi > 0 ? v.substring(semi + 2) : "";
+        if (state.length() > 24) return new String[]{"", v};
+        return new String[]{state, hint};
+    }
+
     private static Section section(String name) {
+        if (RECENT.equals(name)) return RECENT_SECTION;
         for (Section s : SECTIONS) if (s.name.equals(name)) return s;
         return SECTIONS[0];
     }
@@ -249,6 +294,13 @@ final class SettingsView extends FrameLayout {
     void refresh() {
         List<Row> rows = source.rows();
         java.util.Map<String, List<Object>> all = arrange(rows);
+        List<Object> used = recent(all);
+        if (!used.isEmpty()) {
+            java.util.Map<String, List<Object>> withRecent = new java.util.LinkedHashMap<>();
+            withRecent.put(RECENT, used);
+            withRecent.putAll(all);
+            all = withRecent;
+        }
         if (group == null || !all.containsKey(group)) group = all.isEmpty() ? "" : all.keySet().iterator().next();
         String q = search.getText().toString().trim().toLowerCase(java.util.Locale.US);
 
@@ -288,6 +340,7 @@ final class SettingsView extends FrameLayout {
             heading.setText(Hindi.t("Search"));
             int found = 0;
             for (java.util.Map.Entry<String, List<Object>> e : all.entrySet()) {
+                if (RECENT.equals(e.getKey())) continue;
                 boolean head = false;
                 for (Object o : e.getValue()) {
                     if (!(o instanceof Row)) continue;
@@ -352,17 +405,24 @@ final class SettingsView extends FrameLayout {
         title.setSingleLine(false);
         title.setText(Hindi.t(r.title));
         text.addView(title);
-        if (r.value != null && !r.value.isEmpty()) {
-            TextView value = Ui.text(getContext(), 14, r.on == null ? Ui.mix(Ui.ACCENT, Ui.SILVER, 0.5f) : Ui.SILVER_DIM,
-                    "sans-serif", Gravity.LEFT);
-            value.setSingleLine(false);
-            value.setText(Hindi.t(r.value));
-            value.setPadding(0, Ui.px(5), 0, 0);
-            text.addView(value);
+        // a switch's line is its explanation; any other row's value splits into its state and a hint
+        String[] sv = r.on != null ? new String[]{"", r.value == null ? "" : Hindi.t(r.value)} : split(Hindi.t(r.value));
+        if (!sv[1].isEmpty()) {
+            TextView hint = Ui.text(getContext(), 14, Ui.SILVER_DIM, "sans-serif", Gravity.LEFT);
+            hint.setSingleLine(false);
+            hint.setText(sv[1]);
+            hint.setPadding(0, Ui.px(5), 0, 0);
+            text.addView(hint);
         }
         row.addView(text, new LinearLayout.LayoutParams(0, -2, 1f));
         LinearLayout.LayoutParams ep = new LinearLayout.LayoutParams(-2, -2);
         ep.leftMargin = Ui.px(16);
+        if (!sv[0].isEmpty()) {
+            TextView state = Ui.text(getContext(), 15, Ui.mix(Ui.ACCENT, Ui.SILVER, 0.5f), "sans-serif-medium", Gravity.RIGHT);
+            state.setSingleLine(true);
+            state.setText(sv[0]);
+            row.addView(state, ep);
+        }
         if (r.on != null) {
             row.addView(new Switch(getContext(), r.on), new LinearLayout.LayoutParams(Ui.px(58), Ui.px(32)));
         } else {
@@ -374,6 +434,8 @@ final class SettingsView extends FrameLayout {
             @Override
             public void onClick(View v) {
                 Reports.count(r.title);
+                Prefs p = new Prefs(getContext());
+                p.put("recentRows", remember(p.str("recentRows", ""), r.title));
                 r.action.run();
                 refresh();
             }
