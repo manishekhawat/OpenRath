@@ -110,7 +110,13 @@ final class Features {
             new F("readAloud", "Read messages aloud", "Dashboard", false, "Says who sent a message, or the whole message"),
             new F("nightDrive", "Night-drive mode", "Dashboard", true, "After sunset while driving: big red speed, dim red map, nothing else"),
             new F("voice", "Voice commands (Hindi and English)", "Dashboard", true, "\"FM 91.1\", \"call Mom\", \"घर ले चलो\" from the mic; choose where the mic sits in Home screen"),
+            new F("smoothSpeed", "Smooth speed number", "Driving", true, "The speed eases between GPS readings and shows 0 when standing still, without flicker"),
+            new F("places", "Saved places for any navigation app", "Driving", true, "Long-press Navigation in the dock: Home, Office, the parked car and your own places; typing is blocked while moving"),
             new F("tripShare", "Share the trip by QR code", "Driving", true, "A code family scan to see where you are and the route; nothing is sent online"),
+            new F("appDrawer", "Better all-apps screen", "Dashboard", true, "Search, pinned and recent apps, A to Z jump, and a long press for App info or Uninstall"),
+            new F("dockStatus", "Status icons in the dock", "Dashboard", true, "Wi-Fi, mobile signal, Bluetooth, GPS and battery, for stereos that hide Android's status bar"),
+            new F("hourlyWeather", "Hourly weather", "Dashboard", true, "The next 24 hours' temperature and rain in a tall weather box, kept for offline use"),
+            new F("calendar", "Calendar box", "Dashboard", true, "Today's and the next few days' events from the unit's calendar"),
             new F("perf", "Performance box", "Dashboard", false, "Frames per second, CPU use, temperature and free memory in a corner"),
             // driving
             new F("speedAlerts", "Speed limit and camera alerts", "Driving", true, "Speaks and beeps near cameras and over the limit"),
@@ -136,6 +142,7 @@ final class Features {
             new F("projection", "Phone projection app", "Radio and music", true, "A button in the music box opens your wireless CarPlay or Android Auto app (ZLink, AutoKit and others)"),
             new F("radioText", "Big frequency from any radio app", "Radio and music", true, "Shows \"FM 98.3\" and the station name from the radio app's text"),
             new F("soundboard", "Soundboard", "Radio and music", false, "A box of fun sounds (horn, fart, applause and more) that plays only when the car is stopped"),
+            new F("video", "Video window", "Radio and music", false, "Plays a video from the unit or a USB stick in a box; the picture shows only when the car is stopped"),
             new F("soundProfiles", "Sound profiles", "Radio and music", false, "City, highway and night: equalizer and volume switch by themselves"),
             new F("fog", "Fog mode", "Driving", true, "In thick fog: big speed, a slow guide and the next bend ahead"),
             // car
@@ -159,6 +166,7 @@ final class Features {
             new F("offlineMap", "Without internet", "Driving", true, "Keeps the map of places you've seen, and uses the offline speech pack, for when there's no Wi-Fi"),
             new F("bootArt", "Boot logo and animation maker", "Dashboard", true, "Your car's badge and name for the stereo's start-up screens"),
             new F("backup", "Daily automatic backup", "Data", true, "Settings, fuel log and trips to OpenRath/backup"),
+            new F("updates", "App updates from GitHub", "Data", false, "Checks once a day for a new OpenRath, checks the download's SHA-256 and offers it only when parked"),
             new F("reports", "Crash and usage reports", "Data", false, "Counts which settings you open, kept on the unit with any crash reports for you to share; off forgets them"),
             // cab drivers: one switch for all, then one each
             new F("cab", "Cab driver tools", "Cab", false, "Earnings, fare meter, SOS and more; adds the Cab box and the Cab menu"),

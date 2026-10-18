@@ -303,7 +303,7 @@ final class Hub implements LocationListener {
     };
 
     void notifyIfChanged(boolean force) {
-        String s = Cab.stamp(prefs) + "|" + lightsOn() + "|" + speed() + "|" + temp + weather + place + weatherIcon + rainSoon + routeRain + "|"
+        String s = Cab.stamp(prefs) + "|" + lightsOn() + "|" + speed() + "|" + temp + weather + place + weatherIcon + rainSoon + routeRain + hours.length + (hours.length > 0 ? hours[0] : 0) + "|"
                 + describe(music) + "|" + describe(radio) + "|" + audioActive + online + leftOn + rightOn + "|"
                 + unit.stamp() + Player.mode + Player.playing + Player.busy + Player.status + Player.station + Player.song + "|" + (fix == null ? "" : fix.getLatitude() + "," + fix.getLongitude())
                 + "|" + Math.round(Drive.todayKm * 10) + Drive.todaySec / 60 + Math.round(Drive.driveKm * 10) + Drive.limit + Drive.cameraM / 50 + Drive.over + Drive.parkAt + prefs.fuelLog().length()
@@ -345,10 +345,17 @@ final class Hub implements LocationListener {
     String speed() {
         long now = System.currentTimeMillis();
         boolean fresh = fix != null && now - fixAt < FIX_TIMEOUT_MS && fix.hasSpeed();
+        float raw;
         // the trip service works the speed out even when the GPS doesn't report one
-        if (now - Drive.fixAt < FIX_TIMEOUT_MS && (!fresh || Drive.fixAt > fixAt)) return String.valueOf(Math.round(Drive.kmhNow));
-        if (!fresh) return "--";
-        return String.valueOf(Math.round(fix.getSpeed() * 3.6f));
+        if (now - Drive.fixAt < FIX_TIMEOUT_MS && (!fresh || Drive.fixAt > fixAt)) raw = Drive.kmhNow;
+        else if (!fresh) {
+            shownKmh = 0;
+            return "--";
+        } else raw = fix.getSpeed() * 3.6f;
+        long t = android.os.SystemClock.elapsedRealtime();
+        shownKmh = Features.on(prefs, "smoothSpeed") ? Fixes.smooth(shownKmh, raw, t - shownAt) : raw;
+        shownAt = t;
+        return String.valueOf(Math.round(shownKmh));
     }
 
     /** Seconds since the last GPS fix, or -1. */
@@ -358,8 +365,19 @@ final class Hub implements LocationListener {
 
     @Override
     public void onLocationChanged(Location l) {
+        if (!Fixes.usable(l, fixNanos)) return;   // a replayed old fix or no real position
+        fixNanos = l.getElapsedRealtimeNanos();
         fix = l;
         fixAt = System.currentTimeMillis();
+    }
+
+    private long fixNanos;
+    private float shownKmh;
+    private long shownAt;
+
+    /** A live GPS fix from the last 30 seconds (not the network's rough position or an old one), or null. */
+    Location liveFix() {
+        return fix != null && fixAt > 0 && System.currentTimeMillis() - fixAt < 30000 ? fix : null;
     }
 
     @Override public void onStatusChanged(String p, int s, Bundle b) {}
@@ -487,6 +505,8 @@ final class Hub implements LocationListener {
     static final class Wx {
         String temp, desc, icon, rain = "", hum = "", wind = "", pressure = "";
         List<String[]> days = new ArrayList<>();
+        /** The next 24 hours' temperatures and rain (mm), from the hour that is now; empty if unknown. */
+        float[] hours = new float[0], hoursRain = new float[0];
     }
 
     /**
@@ -507,6 +527,15 @@ final class Hub implements LocationListener {
                 w.days.add(new String[]{dt.optString(k), weatherIcon(dc.optInt(k), true),
                         Math.round(dmax.optDouble(k)) + "°", Math.round(dmin.optDouble(k)) + "°"});
             }
+        }
+        JSONObject hr = all.optJSONObject("hourly");
+        org.json.JSONArray hts = hr == null ? null : hr.optJSONArray("time");
+        if (hts != null) {
+            String[] times = new String[hts.length()];
+            for (int k = 0; k < times.length; k++) times[k] = hts.optString(k);
+            int from = Weather.slot(times, Weather.hourKey(nowMs, offset));
+            w.hours = Weather.next(numbers(hr.optJSONArray("temperature_2m")), from, 24);
+            w.hoursRain = Weather.next(numbers(hr.optJSONArray("precipitation")), from, 24);
         }
         JSONObject cur;
         if (!saved) {
@@ -555,7 +584,19 @@ final class Hub implements LocationListener {
         return w;
     }
 
+    private static double[] numbers(org.json.JSONArray a) {
+        if (a == null) return new double[0];
+        double[] out = new double[a.length()];
+        for (int k = 0; k < out.length; k++) out[k] = a.optDouble(k);
+        return out;
+    }
+
+    /** The next 24 hours (Wx.hours), for the weather box's curve. */
+    float[] hours = new float[0], hoursRain = new float[0];
+
     private void showWeather(Wx w) {
+        hours = w.hours;
+        hoursRain = w.hoursRain;
         temp = w.temp;
         weather = w.desc;
         rainSoon = w.rain;

@@ -72,6 +72,8 @@ jobs:
           git archive --format=zip --prefix=openrath/ -o "openrath-$TAG-source.zip" HEAD
           sha256sum "openrath-$TAG.apk" "openrath-$TAG-source.zip" > SHA256SUMS
           cat SHA256SUMS
+          python3 tools/update_json.py "openrath-$TAG.apk" "$GITHUB_REPOSITORY" > update.json
+          cat update.json
       - name: Notes
         if: env.SIGNED == 'yes'
         run: |
@@ -100,5 +102,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$TAG" "openrath-$TAG.apk" "openrath-$TAG-source.zip" SHA256SUMS \
+          gh release create "$TAG" "openrath-$TAG.apk" "openrath-$TAG-source.zip" SHA256SUMS update.json \
             --title "OpenRath $VER" --notes-file notes.md --verify-tag

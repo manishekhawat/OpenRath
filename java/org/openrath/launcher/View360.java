@@ -103,7 +103,7 @@ final class View360 {
                 cam.yaw += (goYaw - cam.yaw) * .18;
                 cam.pitch += (goPitch - cam.pitch) * .18;
                 if (Math.abs(goYaw - cam.yaw) < .002 && Math.abs(goPitch - cam.pitch) < .002) goYaw = goPitch = Double.NaN;
-            } else if (now - touchedAt > 4000) {
+            } else if (now - touchedAt > 4000 && Motion.frame() > 0) {
                 cam.yaw += .006;   // turns slowly by itself when left alone
             }
             painter.draw(c, cam, faces, dims, Car3D.colour(prefs), Car3D.plate(prefs), Features.on(prefs, "cab"), lightsOn);

@@ -115,6 +115,50 @@ final class Crash {
         if (sp != null) sp.edit().clear().apply();
     }
 
+    /** Android's reason the app was last ended (ApplicationExitInfo.REASON_*), in plain words. */
+    static String reason(int r) {
+        switch (r) {
+            case 1: return "it closed itself";
+            case 2: return "it was stopped by a signal";
+            case 3: return "the unit ran low on memory";
+            case 4: return "it crashed";
+            case 5: return "it crashed in native code";
+            case 6: return "it stopped responding";
+            case 7: return "it failed to start";
+            case 8: return "a permission was changed";
+            case 9: return "it used too much of the unit";
+            case 10: return "someone closed it";
+            case 11: return "someone force-stopped it";
+            case 12: return "an app it depends on stopped";
+            case 14: return "the unit froze it";
+            case 15: case 16: return "it was updated or changed";
+            default: return "an unknown reason";
+        }
+    }
+
+    /**
+     * Why Android last ended the app and when, or null (needs Android 11 or newer). Makes "OpenRath
+     * keeps restarting" reports diagnosable: memory, a crash, or the stereo killing it.
+     */
+    static String lastExit(Context c) {
+        if (android.os.Build.VERSION.SDK_INT < 30) return null;
+        try {
+            android.app.ActivityManager am = (android.app.ActivityManager) c.getSystemService(Context.ACTIVITY_SERVICE);
+            // by reflection: the build's android.jar predates ApplicationExitInfo
+            List<?> l = (List<?>) am.getClass().getMethod("getHistoricalProcessExitReasons", String.class, int.class, int.class)
+                    .invoke(am, c.getPackageName(), 0, 1);
+            if (l == null || l.isEmpty()) return null;
+            Object e = l.get(0);
+            long at = (Long) e.getClass().getMethod("getTimestamp").invoke(e);
+            int r = (Integer) e.getClass().getMethod("getReason").invoke(e);
+            String d = (String) e.getClass().getMethod("getDescription").invoke(e);
+            String when = android.text.format.DateFormat.format("d MMM, HH:mm", at).toString();
+            return reason(r) + ", " + when + (d == null || d.isEmpty() ? "" : " (" + d + ")");
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
     private Crash() {
     }
 }

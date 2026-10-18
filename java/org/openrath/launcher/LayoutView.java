@@ -345,7 +345,7 @@ final class LayoutView extends View implements Hub.Listener {
         drawLive(c);
         c.restore();
 
-        if ((road || drift) && moving) postInvalidateDelayed(33);
+        if ((road || drift) && moving && Motion.frame() > 0) postInvalidateDelayed(Motion.frame());
         else postInvalidateDelayed(1000 - System.currentTimeMillis() % 1000 + 10);   // the clocks' second hands
     }
 

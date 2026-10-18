@@ -2,6 +2,20 @@
 
 Newest first.
 
+## 1.38: Apps, places and safer driving
+
+- **Better all-apps screen:** a search box, a row of pinned and recently opened apps, an A to Z column to jump with, and a long press for Pin to the top, App info or Uninstall.
+- **Status icons in the dock:** Wi-Fi, mobile signal, Bluetooth, GPS and battery, for stereos that hide Android's status bar. Bright means working, dim means on but not connected.
+- **Saved places for any navigation app:** long-press Navigation in the dock for Home, Office, the parked car and your own places, handed to your navigation app. Type an address, or save where you are, only while stopped.
+- **App updates from GitHub** (off until you turn it on, in Backup and about): checks once a day, checks the download's SHA-256, and offers to install only when parked.
+- **Calendar box:** today's and the next few days' events from the unit's calendar.
+- **Video window** (off until you turn it on): plays a video from the unit or a USB stick in a box. The picture shows only when GPS says the car is stopped; the sound keeps going.
+- **Hourly weather:** a tall weather box shows the next 24 hours' temperature and where rain is expected, kept for offline use.
+- **Smoother speed:** the number eases between GPS readings, shows 0 when standing still instead of flickering 0 to 3, and "--" when there is no GPS.
+- **Less movement** in Home screen: Standard, Reduced or Off for animations and the moving road, for slow stereos and drivers who find motion distracting.
+- **Why the app last closed** in Diagnostics (Android 11 and newer): a crash, low memory, or the stereo stopping it.
+- **Fixes:** a crashing map no longer closes OpenRath (it rebuilds, and rests for a few minutes if it keeps crashing). Old GPS fixes that Android replays are ignored, so trips no longer jump. The parking spot only uses a recent GPS fix.
+
 ## 1.37: Easier Settings
 
 - **The state is on the right:** each row shows where it stands, like "on", "₹100" or "+3%", on the right. Any explanation is the grey line under the name.
