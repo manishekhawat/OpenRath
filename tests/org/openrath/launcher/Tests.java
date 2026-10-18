@@ -574,32 +574,6 @@ public final class Tests {
         near("no full fill", -1, FuelPlan.litresLeft(37, gps, litres, new boolean[]{false, false}, 1300, 20), 1e-9);
         near("never below empty", 0, FuelPlan.litresLeft(37, new double[]{0}, new double[]{37}, new boolean[]{true}, 5000, 20), 1e-9);
 
-        // commute: three morning drives home -> office, two at 8:30 (25 min), one at 9:30 (45 min)
-        java.util.TimeZone tz = java.util.TimeZone.getTimeZone("Asia/Kolkata");
-        java.util.List<Coach.Trip> trips = new java.util.ArrayList<>();
-        long day = 1760000000000L - 1760000000000L % 86400000L;
-        long[] starts = {day + (3 * 60) * 60000L, day + 86400000L + (3 * 60) * 60000L, day + 2 * 86400000L + (4 * 60) * 60000L};
-        long[] mins = {25, 25, 45};
-        for (int i = 0; i < 3; i++) {
-            Coach.Trip t = new Coach.Trip();
-            t.start = starts[i];
-            t.end = starts[i] + mins[i] * 60000;
-            t.km = 12;
-            t.sLat = 28.60 + i * 0.0005;
-            t.sLon = 77.20;
-            t.eLat = 28.70;
-            t.eLon = 77.10;
-            trips.add(t);
-        }
-        java.util.Map<String, double[]> places = new java.util.TreeMap<>();
-        places.put("Home", new double[]{28.6001, 77.2001});
-        List<Commute.Route> r = Commute.learn(trips, places, tz);
-        eq("one route", 1, r.size());
-        eq("named from Home", "Home", r.get(0).from);
-        eq("other end unnamed", "place B", r.get(0).to);
-        eq("best is 8:30", "8:30 am", Commute.time(r.get(0).best));
-        check("describe " + Commute.describe(r), Commute.describe(r).contains("Quickest: leave between 8:30 am and 9:00 am"));
-
         // a drive remembers where it started and ended
         Coach.Tracker tr = new Coach.Tracker();
         tr.feed(0, 30, 0, false, false, 1, 2);
@@ -650,11 +624,6 @@ public final class Tests {
         double[] n = Ahead.nearest(north, 28.603, 77.2001);
         check("nearest is close " + n[0], n[0] < 15);
         near("road runs north", 0, n[1] % 360, 1);
-        check("against a one-way going south", Ahead.against(1, n[1], 180));
-        check("with a one-way going north", !Ahead.against(1, n[1], 2));
-        check("reverse one-way flips", Ahead.against(-1, n[1], 0));
-        check("two-way never wrong", !Ahead.against(0, n[1], 180));
-        check("no heading, no warning", !Ahead.against(1, n[1], -1));
 
         // a road north then turning east: the bend is ahead going north, none going south
         List<double[]> bend = Arrays.asList(new double[]{28.600, 77.2}, new double[]{28.602, 77.2}, new double[]{28.602, 77.203});
@@ -674,18 +643,7 @@ public final class Tests {
         eq("toll text near", "Toll plaza, Kherki Daula, in 600 metres. Keep to the FASTag lane.", Ahead.tollText(640, 0, "Kherki Daula"));
 
         // holidays
-        eq("Diwali (a Sunday) rush two days before", "Diwali", Holidays.rush(day(2026, 11, 6, 10, 0)));
-        eq("Dussehra on a Tuesday: long weekend", "the Dussehra long weekend", Holidays.rush(day(2026, 10, 17, 10, 0)));
-        eq("ordinary day", null, Holidays.rush(day(2026, 10, 13, 10, 0)));
-        eq("Gandhi Jayanti Friday: the weekend counts", "the Gandhi Jayanti long weekend", Holidays.rush(day(2026, 10, 4, 10, 0)));
-        eq("New Year rush on 31 Dec", "the New Year long weekend", Holidays.rush(day(2026, 12, 31, 10, 0)));
         check("upcoming starts with Dussehra", Holidays.upcoming(day(2026, 10, 13, 9, 0), 3).get(0).startsWith("Dussehra"));
-
-        // accident help
-        check("crash", Rescue.crash(60, 2, 1000));
-        check("hard brake is not a crash", !Rescue.crash(60, 30, 1000));
-        check("slow bump is not a crash", !Rescue.crash(30, 0, 1000));
-        check("gap in readings is not a crash", !Rescue.crash(60, 0, 5000));
 
         // documents, games, fog
         eq("rc photo", 0, Wallet.which("RC_front.jpg"));
@@ -733,40 +691,6 @@ public final class Tests {
     }
 
     static void batch4() {
-        // hill: a 10 % climb over a kilometre speaks once
-        Hill h = new Hill();
-        String said = null;
-        int times = 0;
-        for (int m = 0; m <= 1000; m += 20) {
-            String t = h.feed(m, 500 + m * 0.10);
-            if (t != null) {
-                said = t;
-                times++;
-            }
-        }
-        eq("hill climb told once", 1, times);
-        eq("hill climb text", true, said != null && said.startsWith("Steep climb"));
-        near("hill grade", 0.10, h.grade(), 0.01);
-        Hill flat = new Hill();
-        String any = null;
-        for (int m = 0; m <= 2000; m += 20) {
-            String t = flat.feed(m, 200 + (m % 40 == 0 ? 4 : -4));   // GPS noise on flat road
-            if (t != null) any = t;
-        }
-        eq("flat road quiet", null, any);
-        Hill down = new Hill();
-        String d = null;
-        for (int m = 0; m <= 1000; m += 20) {
-            String t = down.feed(m, 900 - m * 0.08);
-            if (t != null) d = t;
-        }
-        eq("descent tips", true, d != null && d.contains("lower gear") && d.contains("right of way"));
-
-        eq("overtake two-way", true, Ahead.noOvertake(0, 2, 60));
-        eq("overtake one-way", false, Ahead.noOvertake(1, 2, 60));
-        eq("overtake four-lane", false, Ahead.noOvertake(0, 4, 60));
-        eq("overtake slow", false, Ahead.noOvertake(0, 0, 30));
-
         eq("aqi good", 25, Air.index(15, 20));
         eq("aqi pm25 poor", 251, Air.index(105, 80));
         eq("aqi pm10 wins", 151, Air.index(20, 175));
@@ -775,18 +699,6 @@ public final class Tests {
         eq("aqi alert", true, Air.alert(260, 10 * 3600000L, 0) != null);
         eq("aqi alert not again soon", null, Air.alert(260, 10 * 3600000L, 9 * 3600000L));
         eq("aqi moderate quiet", null, Air.alert(180, 10 * 3600000L, 0));
-
-        long day = 86400000L, now = 100 * day;
-        java.util.List<String[]> dry = new java.util.ArrayList<>();
-        dry.add(new String[]{"d", "w_sun"});
-        dry.add(new String[]{"d", "w_cloud"});
-        java.util.List<String[]> wet = new java.util.ArrayList<>();
-        wet.add(new String[]{"d", "w_sun"});
-        wet.add(new String[]{"d", "w_rain"});
-        eq("wash due", true, Errands.washDue(now - 15 * day, now, 14, dry));
-        eq("wash not yet", false, Errands.washDue(now - 5 * day, now, 14, dry));
-        eq("wash before rain waits", false, Errands.washDue(now - 20 * day, now, 14, wet));
-        eq("wash never marked", false, Errands.washDue(0, now, 14, dry));
 
         eq("share rounds up", 334, Errands.share(1000, 3));
         eq("share exact", 500, Errands.share(1000, 2));

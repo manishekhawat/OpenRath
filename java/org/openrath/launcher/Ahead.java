@@ -74,13 +74,6 @@ final class Ahead {
         return Math.abs(((a - b) % 360 + 540) % 360 - 180);
     }
 
-    /** Whether a heading goes against a one-way road whose drawn direction is roadBearing. */
-    static boolean against(int oneway, double roadBearing, double heading) {
-        if (oneway == 0 || heading < 0) return false;
-        double flow = oneway > 0 ? roadBearing : (roadBearing + 180) % 360;
-        return turn(flow, heading) > 145;
-    }
-
     /**
      * The next bend on this road in the direction of travel, within maxM metres:
      * {metres to it, +1 right or -1 left, how sharp in degrees}, or null when it runs straight.
@@ -162,13 +155,13 @@ final class Ahead {
     }
 
     /**
-     * One GPS fix. Returns sentences to speak (possibly none). wantToll, wantWrong, wantZones and
-     * fog say which warnings are switched on; the map data is fetched in the background when needed.
+     * One GPS fix. Returns sentences to speak (possibly none). wantToll, wantZones and fog
+     * say which warnings are switched on; the map data is fetched in the background when needed.
      */
-    List<String> feed(final double lat, final double lon, double heading, float kmh, boolean wantToll, boolean wantWrong,
-                      boolean wantZones, boolean fog, boolean wantOvertake, int tollRate, final Fetch net, Calendar now) {
+    List<String> feed(final double lat, final double lon, double heading, float kmh, boolean wantToll,
+                      boolean wantZones, boolean fog, int tollRate, final Fetch net, Calendar now) {
         List<String> say = new ArrayList<>();
-        if (!(wantToll || wantWrong || wantZones || fog || wantOvertake)) {
+        if (!(wantToll || wantZones || fog)) {
             bendM = -1;
             return say;
         }
@@ -198,14 +191,6 @@ final class Ahead {
                     onBearing = n[1];
                 }
             }
-            if (wantWrong && on != null && kmh > 12 && against(on.oneway, onBearing, heading)) {
-                againstFixes++;
-                if (againstFixes >= 3 && t - wrongAt > 60000) {
-                    wrongAt = t;
-                    say.add("Careful, this looks like a one-way street" + (on.name.isEmpty() ? "" : ", " + on.name)
-                            + ", and you may be going against the traffic.");
-                }
-            } else againstFixes = 0;
             if (fog && on != null) {
                 double[] b = nextBend(on.pts, lat, lon, heading, 400);
                 bendM = b == null ? -1 : b[0];
@@ -213,20 +198,8 @@ final class Ahead {
                 if (b != null && b[0] < 250 && b[0] > 40 && kmh > 10 && told.add("bend" + Math.round(lat * 2000) + "," + Math.round(lon * 2000)))
                     say.add((b[2] > 60 ? "Sharp bend " : "Bend ") + (b[1] > 0 ? "to the right" : "to the left") + " ahead.");
             } else bendM = -1;
-            // overtaking: on a two-way road of one lane each way, a bend close ahead hides what's coming
-            if (wantOvertake && on != null && noOvertake(on.oneway, on.lanes, kmh)) {
-                double[] b = nextBend(on.pts, lat, lon, heading, 300);
-                if (b != null && b[0] < 250 && b[0] > 50 && b[2] >= 30
-                        && told.add("pass" + Math.round(lat * 2000) + "," + Math.round(lon * 2000)))
-                    say.add("Bend ahead. Don't overtake here.");
-            }
         }
         return say;
-    }
-
-    /** A road where a hidden bend makes overtaking risky: two-way, at most one lane each way, at speed. */
-    static boolean noOvertake(int oneway, int lanes, float kmh) {
-        return oneway == 0 && lanes <= 2 && kmh >= 45;
     }
 
     /** A new drive: places can be announced again. */
