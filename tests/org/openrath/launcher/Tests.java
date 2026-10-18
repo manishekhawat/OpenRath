@@ -122,6 +122,112 @@ public final class Tests {
             check("setup feature exists " + id, Features.get(id) != null);
     }
 
+    private static void femtoIdeas() {
+        // replayed and impossible fixes
+        check("fix ok", Fixes.usable(28.6, 77.2, 2000, 1000));
+        check("fix replayed", !Fixes.usable(28.6, 77.2, 900, 1000));
+        check("fix first", Fixes.usable(28.6, 77.2, 5, 0));
+        check("fix null island", !Fixes.usable(0, 0, 2000, 1000));
+        check("fix out of range", !Fixes.usable(95, 77.2, 2000, 1000));
+        check("fix NaN", !Fixes.usable(Double.NaN, 77.2, 2000, 1000));
+        // speed smoothing
+        eq("smooth standstill", 0f, Fixes.smooth(30, 1.5f, 1000));
+        eq("smooth first reading", 40f, Fixes.smooth(0, 40, 1000));
+        float sm = Fixes.smooth(40, 60, 350);
+        check("smooth eases", sm > 40 && sm < 60);
+        eq("smooth after a gap", 60f, Fixes.smooth(40, 60, 9000));
+        // the map resting after two renderer deaths
+        long[] d = {0, 0};
+        check("map not resting", !MapCard.resting(100000, d[0], d[1]));
+        check("map resting", MapCard.resting(100000, 90000, 60000));
+        check("map rests a while only", !MapCard.resting(100000 + 6 * 60000, 90000, 60000));
+        // all-apps screen
+        check("apps search label", AppsActivity.matches("Google Maps", "com.google.android.apps.maps", "maps"));
+        check("apps search words", AppsActivity.matches("Google Maps", "com.google.android.apps.maps", "goo map"));
+        check("apps search miss", !AppsActivity.matches("Google Maps", "com.google.android.apps.maps", "radio"));
+        check("apps search empty", AppsActivity.matches("X", "y", "  "));
+        eq("apps letter", "M", AppsActivity.letter("maps"));
+        eq("apps letter digit", "#", AppsActivity.letter("360 Camera"));
+        eq("apps letter empty", "#", AppsActivity.letter(""));
+        java.util.List<String> r = AppsActivity.split("a,b,c");
+        eq("apps recent push", "c,a,b", AppsActivity.join(AppsActivity.push(r, "c", 6)));
+        eq("apps recent cap", "d,a", AppsActivity.join(AppsActivity.push(r, "d", 2)));
+        eq("apps unpin", "a,c", AppsActivity.join(AppsActivity.remove(r, "b")));
+        eq("apps split empty", 0, AppsActivity.split("").size());
+        // status icons
+        eq("gps fix", StatusIcons.ON, StatusIcons.gps(3, true));
+        eq("gps searching", StatusIcons.SEARCHING, StatusIcons.gps(60, true));
+        eq("gps off", StatusIcons.OFF, StatusIcons.gps(-1, false));
+        eq("battery none", -1, StatusIcons.percent(false, 50, 100));
+        eq("battery half", 50, StatusIcons.percent(true, 25, 50));
+        eq("wifi strong", 4, StatusIcons.wifiBars(-50));
+        eq("wifi weak", 1, StatusIcons.wifiBars(-90));
+        // saved places
+        check("place point", Places.point("28.61,77.20") != null);
+        check("place point bad", Places.point("abc") == null && Places.point("0,0") == null && Places.point("") == null);
+        String pl = Places.add("", "Gym", 28.5, 77.1);
+        pl = Places.add(pl, "Temple", 28.6, 77.2);
+        pl = Places.add(pl, "gym", 28.7, 77.3);
+        eq("places newest first, no repeats", 2, Places.own(pl).size());
+        eq("places newest name", "gym", Places.own(pl).get(0)[0]);
+        eq("places drop", 1, Places.own(Places.drop(pl, "Temple")).size());
+        check("places name cleaned", !Places.add("", "a;b|c", 1, 1).contains(";"));
+        String many = "";
+        for (int i = 0; i < 20; i++) many = Places.add(many, "P" + i, 10, 10);
+        eq("places capped", Places.MAX, Places.own(many).size());
+        // updates
+        check("update due first", Updates.due(0, 1000));
+        check("update not due", !Updates.due(1000, 1000 + 3600000));
+        check("update due next day", Updates.due(1000, 1000 + Updates.DAY));
+        check("update https only", Updates.safe("https://github.com/x") && !Updates.safe("http://github.com/x"));
+        eq("update hex", "00ff10", Updates.hex(new byte[]{0, (byte) 255, 16}));
+        String h = "ab" + new String(new char[62]).replace('\0', '0');
+        check("update sha matches", Updates.matches(h, " AB" + h.substring(2) + " "));
+        check("update sha differs", !Updates.matches(h, h.replace('a', 'c')) && !Updates.matches("ab", "ab"));
+        // less movement
+        eq("motion standard", 250L, Motion.ms("standard", 250));
+        eq("motion reduced", 125L, Motion.ms("reduced", 250));
+        eq("motion off", 0L, Motion.ms("off", 250));
+        eq("motion off still", -1L, Motion.frame("off"));
+        eq("motion unknown", "standard", Motion.pick("wild"));
+        // why the app last closed
+        eq("exit low memory", "the unit ran low on memory", Crash.reason(3));
+        eq("exit crash", "it crashed", Crash.reason(4));
+        eq("exit unknown", "an unknown reason", Crash.reason(99));
+        // calendar
+        java.util.TimeZone ist = java.util.TimeZone.getTimeZone("Asia/Kolkata");
+        java.util.Calendar c = java.util.Calendar.getInstance(ist);
+        c.set(2026, 9, 18, 10, 0, 0);   // Sunday 18 Oct 2026, 10:00
+        long now = c.getTimeInMillis();
+        String[] w = Agenda.when(now + 3600000L * 4, now + 3600000L * 5, false, now, ist);
+        eq("calendar today", "Today 14:00", w[0] + " " + w[1]);
+        w = Agenda.when(now + 3600000L * 24, now + 3600000L * 25, false, now, ist);
+        eq("calendar tomorrow", "Tomorrow 10:00", w[0] + " " + w[1]);
+        w = Agenda.when(now + 3600000L * 72, now + 3600000L * 73, false, now, ist);
+        eq("calendar weekday", "Wed", w[0]);
+        w = Agenda.when(now - 600000, now + 600000, false, now, ist);
+        eq("calendar going on", "now", w[1]);
+        w = Agenda.when(now + 3600000L * 24, now + 3600000L * 48, true, now, ist);
+        eq("calendar all day", "", w[1]);
+        // video
+        check("video file", Videos.isVideo("Trip.MP4") && !Videos.isVideo("song.mp3"));
+        check("video parked", Videos.parked(0.5f, 2000));
+        check("video moving", !Videos.parked(20, 2000));
+        check("video no gps", !Videos.parked(0, -1) && !Videos.parked(0, 60000));
+        // hourly weather
+        double[] t = {20, 21, 22, Double.NaN, 24};
+        eq("hours from now", 2, Weather.next(t, 1, 24).length);
+        eq("hours outside", 0, Weather.next(t, -1, 24).length);
+        eq("hours capped", 2, Weather.next(new double[]{1, 2, 3, 4}, 0, 2).length);
+        eq("rain first", 2, Weather.firstRain(new float[]{0, 0.1f, 0.5f}));
+        eq("rain none", -1, Weather.firstRain(new float[]{0, 0.1f}));
+        // every new feature has a switch
+        for (String id : new String[]{"appDrawer", "dockStatus", "places", "smoothSpeed", "updates", "calendar", "video", "hourlyWeather"})
+            check("femto feature exists " + id, Features.get(id) != null);
+        check("calendar box listed", java.util.Arrays.asList(Prefs.CONTENTS).contains(Prefs.CALENDAR));
+        eq("box names match", Prefs.CONTENTS.length, Prefs.CONTENT_NAMES.length);
+    }
+
     public static void main(String[] args) {
         levels();
         hindi();
@@ -155,6 +261,7 @@ public final class Tests {
         generic();
         radioAndBoxes();
         settingsLook();
+        femtoIdeas();
         bootArt();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);

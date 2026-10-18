@@ -22,6 +22,7 @@ The tag must be `v` followed by `VERSION_NAME`, or the job stops. The job then:
 - signs it with the release key,
 - makes a source zip of the tagged commit,
 - writes `SHA256SUMS` for both files,
+- writes `update.json` (the version, the APK's link and its SHA-256), which "App updates from GitHub" reads,
 - deletes the key from the build machine,
 - and publishes a GitHub Release with the APK, the source zip and `SHA256SUMS`.
 
@@ -36,9 +37,10 @@ OPENRATH_PUBLIC=1 python3 build.py out
 mv out/openrath.apk openrath-vX.Y.apk
 git archive --format=zip --prefix=openrath/ -o openrath-vX.Y-source.zip vX.Y
 sha256sum openrath-vX.Y.apk openrath-vX.Y-source.zip > SHA256SUMS
+python3 tools/update_json.py openrath-vX.Y.apk > update.json
 ```
 
-Then on GitHub, open Releases > Draft a new release, pick the tag, paste the CHANGELOG section and the certificate's SHA-256 (`keytool -printcert -jarfile openrath-vX.Y.apk`), and attach the three files.
+Then on GitHub, open Releases > Draft a new release, pick the tag, paste the CHANGELOG section and the certificate's SHA-256 (`keytool -printcert -jarfile openrath-vX.Y.apk`), and attach the four files. Units with "App updates from GitHub" switched on read `update.json` from the latest release, so attach it to every release. They can only read it while the repository is public.
 
 ## The release key
 

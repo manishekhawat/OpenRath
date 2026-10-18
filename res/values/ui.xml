@@ -489,6 +489,74 @@
     <string name="ui_choose_your_obd_ii_bluetooth_adapter_now" formatted="false">Choose your OBD-II Bluetooth adapter now?</string>
     <string name="ui_find_your_tyre_sensors_now" formatted="false">Find your tyre sensors now?</string>
     <string name="ui_no_carplay_or_android_auto_app_was_found" formatted="false">No CarPlay or Android Auto app was found. Choose it now?</string>
+    <string name="ui_smooth_speed_number" formatted="false">Smooth speed number</string>
+    <string name="ui_the_speed_eases_between_gps_readings_and" formatted="false">The speed eases between GPS readings and shows 0 when standing still, without flicker</string>
+    <string name="ui_saved_places_for_any_navigation_app" formatted="false">Saved places for any navigation app</string>
+    <string name="ui_long_press_navigation_in_the_dock_home_o" formatted="false">Long-press Navigation in the dock: Home, Office, the parked car and your own places; typing is blocked while moving</string>
+    <string name="ui_better_all_apps_screen" formatted="false">Better all-apps screen</string>
+    <string name="ui_search_pinned_and_recent_apps_a_to_z_jum" formatted="false">Search, pinned and recent apps, A to Z jump, and a long press for App info or Uninstall</string>
+    <string name="ui_status_icons_in_the_dock" formatted="false">Status icons in the dock</string>
+    <string name="ui_wi_fi_mobile_signal_bluetooth_gps_and_ba" formatted="false">Wi-Fi, mobile signal, Bluetooth, GPS and battery, for stereos that hide Android\'s status bar</string>
+    <string name="ui_hourly_weather" formatted="false">Hourly weather</string>
+    <string name="ui_the_next_24_hours_temperature_and_rain_i" formatted="false">The next 24 hours\' temperature and rain in a tall weather box, kept for offline use</string>
+    <string name="ui_calendar_box" formatted="false">Calendar box</string>
+    <string name="ui_today_s_and_the_next_few_days_events_fro" formatted="false">Today\'s and the next few days\' events from the unit\'s calendar</string>
+    <string name="ui_video_window" formatted="false">Video window</string>
+    <string name="ui_plays_a_video_from_the_unit_or_a_usb_sti" formatted="false">Plays a video from the unit or a USB stick in a box; the picture shows only when the car is stopped</string>
+    <string name="ui_app_updates_from_github" formatted="false">App updates from GitHub</string>
+    <string name="ui_checks_once_a_day_for_a_new_openrath_che" formatted="false">Checks once a day for a new OpenRath, checks the download\'s SHA-256 and offers it only when parked</string>
+    <string name="ui_search_apps" formatted="false">Search apps</string>
+    <string name="ui_pin_to_the_top" formatted="false">Pin to the top</string>
+    <string name="ui_unpin" formatted="false">Unpin</string>
+    <string name="ui_app_info" formatted="false">App info</string>
+    <string name="ui_uninstall" formatted="false">Uninstall</string>
+    <string name="ui_this_unit_doesn_t_allow_that" formatted="false">This unit doesn\'t allow that</string>
+    <string name="ui_the_map_stopped_working_twice_so_it_s_re" formatted="false">The map stopped working twice, so it\'s resting. It comes back in a few minutes.</string>
+    <string name="ui_wi_fi" formatted="false">Wi-Fi</string>
+    <string name="ui_connected" formatted="false">connected</string>
+    <string name="ui_not_connected" formatted="false">not connected</string>
+    <string name="ui_saved_places" formatted="false">Saved places</string>
+    <string name="ui_type_an_address" formatted="false">Type an address…</string>
+    <string name="ui_save_where_i_am_now" formatted="false">Save where I am now…</string>
+    <string name="ui_change_the_navigation_app" formatted="false">Change the navigation app</string>
+    <string name="ui_forgot_1_s" formatted="false">Forgot %1$s</string>
+    <string name="ui_no_navigation_app_on_this_unit_takes_pla" formatted="false">No navigation app on this unit takes places</string>
+    <string name="ui_typing_is_blocked_while_the_car_is_movin" formatted="false">Typing is blocked while the car is moving</string>
+    <string name="ui_waiting_for_gps" formatted="false">Waiting for GPS</string>
+    <string name="ui_name_like_gym" formatted="false">Name, like Gym</string>
+    <string name="ui_address_or_place" formatted="false">Address or place</string>
+    <string name="ui_go" formatted="false">Go</string>
+    <string name="ui_openrath_is_up_to_date" formatted="false">OpenRath is up to date</string>
+    <string name="ui_couldn_t_check_for_updates_1_s" formatted="false">Couldn\'t check for updates: %1$s</string>
+    <string name="ui_openrath_1_s_is_ready" formatted="false">OpenRath %1$s is ready</string>
+    <string name="ui_it_was_downloaded_and_checked_install_it" formatted="false">It was downloaded and checked. Install it now? Your settings stay.</string>
+    <string name="ui_install" formatted="false">Install</string>
+    <string name="ui_couldn_t_install_the_update_1_s" formatted="false">Couldn\'t install the update: %1$s</string>
+    <string name="ui_check_for_updates_now" formatted="false">Check for updates now</string>
+    <string name="ui_version_1_s" formatted="false">version %1$s</string>
+    <string name="ui_less_movement" formatted="false">Less movement</string>
+    <string name="ui_animations" formatted="false">Animations</string>
+    <string name="ui_standard" formatted="false">Standard</string>
+    <string name="ui_reduced" formatted="false">Reduced</string>
+    <string name="ui_now" formatted="false">Now</string>
+    <string name="ui_now_2" formatted="false">now</string>
+    <string name="ui_tomorrow" formatted="false">Tomorrow</string>
+    <string name="ui_no_title" formatted="false">(no title)</string>
+    <string name="ui_calendar" formatted="false">CALENDAR</string>
+    <string name="ui_calendar_2" formatted="false">Calendar</string>
+    <string name="ui_turn_on_calendar_in_settings_home_screen" formatted="false">Turn on Calendar in Settings, Home screen</string>
+    <string name="ui_no_calendar_app_on_this_unit" formatted="false">No calendar app on this unit</string>
+    <string name="ui_calendar_is_off_in_settings_home_screen" formatted="false">Calendar is off in Settings, Home screen</string>
+    <string name="ui_tap_to_allow_openrath_to_read_your_calen" formatted="false">Tap to allow OpenRath to read your calendar</string>
+    <string name="ui_nothing_in_the_next_few_days" formatted="false">Nothing in the next few days</string>
+    <string name="ui_video_picture_only_when_parked" formatted="false">Video (picture only when parked)</string>
+    <string name="ui_this_video_can_t_be_played_on_this_unit" formatted="false">This video can\'t be played on this unit</string>
+    <string name="ui_turn_on_video_window_in_settings_radio_a" formatted="false">Turn on Video window in Settings, Radio and music</string>
+    <string name="ui_looking_for_videos" formatted="false">Looking for videos…</string>
+    <string name="ui_no_videos_found_on_the_unit_or_usb_stick" formatted="false">No videos found on the unit or USB stick</string>
+    <string name="ui_play_a_video" formatted="false">Play a video</string>
+    <string name="ui_tap_to_play_a_video_the_picture_shows_on" formatted="false">Tap to play a video. The picture shows only when the car is stopped.</string>
+    <string name="ui_the_picture_shows_when_the_car_is_stoppe" formatted="false">The picture shows when the car is stopped</string>
     <string-array name="ui_strings">
         <item>@string/ui_back_to_the_dashboard</item>
         <item>@string/ui_search_settings</item>
@@ -977,5 +1045,73 @@
         <item>@string/ui_choose_your_obd_ii_bluetooth_adapter_now</item>
         <item>@string/ui_find_your_tyre_sensors_now</item>
         <item>@string/ui_no_carplay_or_android_auto_app_was_found</item>
+        <item>@string/ui_smooth_speed_number</item>
+        <item>@string/ui_the_speed_eases_between_gps_readings_and</item>
+        <item>@string/ui_saved_places_for_any_navigation_app</item>
+        <item>@string/ui_long_press_navigation_in_the_dock_home_o</item>
+        <item>@string/ui_better_all_apps_screen</item>
+        <item>@string/ui_search_pinned_and_recent_apps_a_to_z_jum</item>
+        <item>@string/ui_status_icons_in_the_dock</item>
+        <item>@string/ui_wi_fi_mobile_signal_bluetooth_gps_and_ba</item>
+        <item>@string/ui_hourly_weather</item>
+        <item>@string/ui_the_next_24_hours_temperature_and_rain_i</item>
+        <item>@string/ui_calendar_box</item>
+        <item>@string/ui_today_s_and_the_next_few_days_events_fro</item>
+        <item>@string/ui_video_window</item>
+        <item>@string/ui_plays_a_video_from_the_unit_or_a_usb_sti</item>
+        <item>@string/ui_app_updates_from_github</item>
+        <item>@string/ui_checks_once_a_day_for_a_new_openrath_che</item>
+        <item>@string/ui_search_apps</item>
+        <item>@string/ui_pin_to_the_top</item>
+        <item>@string/ui_unpin</item>
+        <item>@string/ui_app_info</item>
+        <item>@string/ui_uninstall</item>
+        <item>@string/ui_this_unit_doesn_t_allow_that</item>
+        <item>@string/ui_the_map_stopped_working_twice_so_it_s_re</item>
+        <item>@string/ui_wi_fi</item>
+        <item>@string/ui_connected</item>
+        <item>@string/ui_not_connected</item>
+        <item>@string/ui_saved_places</item>
+        <item>@string/ui_type_an_address</item>
+        <item>@string/ui_save_where_i_am_now</item>
+        <item>@string/ui_change_the_navigation_app</item>
+        <item>@string/ui_forgot_1_s</item>
+        <item>@string/ui_no_navigation_app_on_this_unit_takes_pla</item>
+        <item>@string/ui_typing_is_blocked_while_the_car_is_movin</item>
+        <item>@string/ui_waiting_for_gps</item>
+        <item>@string/ui_name_like_gym</item>
+        <item>@string/ui_address_or_place</item>
+        <item>@string/ui_go</item>
+        <item>@string/ui_openrath_is_up_to_date</item>
+        <item>@string/ui_couldn_t_check_for_updates_1_s</item>
+        <item>@string/ui_openrath_1_s_is_ready</item>
+        <item>@string/ui_it_was_downloaded_and_checked_install_it</item>
+        <item>@string/ui_install</item>
+        <item>@string/ui_couldn_t_install_the_update_1_s</item>
+        <item>@string/ui_check_for_updates_now</item>
+        <item>@string/ui_version_1_s</item>
+        <item>@string/ui_less_movement</item>
+        <item>@string/ui_animations</item>
+        <item>@string/ui_standard</item>
+        <item>@string/ui_reduced</item>
+        <item>@string/ui_now</item>
+        <item>@string/ui_now_2</item>
+        <item>@string/ui_tomorrow</item>
+        <item>@string/ui_no_title</item>
+        <item>@string/ui_calendar</item>
+        <item>@string/ui_calendar_2</item>
+        <item>@string/ui_turn_on_calendar_in_settings_home_screen</item>
+        <item>@string/ui_no_calendar_app_on_this_unit</item>
+        <item>@string/ui_calendar_is_off_in_settings_home_screen</item>
+        <item>@string/ui_tap_to_allow_openrath_to_read_your_calen</item>
+        <item>@string/ui_nothing_in_the_next_few_days</item>
+        <item>@string/ui_video_picture_only_when_parked</item>
+        <item>@string/ui_this_video_can_t_be_played_on_this_unit</item>
+        <item>@string/ui_turn_on_video_window_in_settings_radio_a</item>
+        <item>@string/ui_looking_for_videos</item>
+        <item>@string/ui_no_videos_found_on_the_unit_or_usb_stick</item>
+        <item>@string/ui_play_a_video</item>
+        <item>@string/ui_tap_to_play_a_video_the_picture_shows_on</item>
+        <item>@string/ui_the_picture_shows_when_the_car_is_stoppe</item>
     </string-array>
 </resources>

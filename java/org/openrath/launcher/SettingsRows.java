@@ -260,6 +260,21 @@ final class SettingsRows {
                         }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
+        r.add(new SettingsView.Row(g, "Less movement", Hindi.t(Motion.NAMES[java.util.Arrays.asList(Motion.LEVELS).indexOf(Motion.pick(a.prefs.str("motion", "standard")))]), new Runnable() {
+            @Override
+            public void run() {
+                String[] names = new String[Motion.NAMES.length];
+                for (int i = 0; i < names.length; i++) names[i] = Hindi.t(Motion.NAMES[i]);
+                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Animations"))
+                        .setItems(names, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface d, int w) {
+                                a.prefs.put("motion", Motion.LEVELS[w]);
+                                a.build();
+                            }
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
+            }
+        }));
         final String[] turns = {"auto", "landscape", "portrait"};
         r.add(new SettingsView.Row(g, "Screen way up", Ui.portrait(a.dash.getWidth(), a.dash.getHeight()) ? Hindi.f("%1$s, boxes stacked", Hindi.t(a.prefs.str("turn", "auto"))) : a.prefs.str("turn", "auto"), new Runnable() {
             @Override
@@ -866,6 +881,14 @@ final class SettingsRows {
                         : Hindi.t("This unit's GPS doesn't allow a reset"), Toast.LENGTH_LONG).show();
             }
         }));
+        if (Features.on(a.prefs, "updates")) {
+            r.add(new SettingsView.Row(g, "Check for updates now", Hindi.f("version %1$s", a.versionName()), new Runnable() {
+                @Override
+                public void run() {
+                    Updates.check(a, true);
+                }
+            }));
+        }
         final boolean home = Compat.isHome(a);
         r.add(new SettingsView.Row(g, "Home app", home ? "OpenRath; the unit starts in it" : "not OpenRath; tap to make the unit start in it", new Runnable() {
             @Override

@@ -67,6 +67,8 @@ final class Cards {
         else if (Prefs.CAB.equals(content)) card = new CabCard(c);
         else if (Prefs.COMPASS.equals(content)) card = new CompassCard(c);
         else if (Prefs.SOUNDS.equals(content)) card = new SoundCard(c);
+        else if (Prefs.CALENDAR.equals(content)) card = new CalendarCard(c);
+        else if (Prefs.VIDEO.equals(content)) card = new VideoCard(c);
         else if (content.startsWith("widget")) card = new WidgetCard(c, content, host);
         else card = new MediaCard(c, Prefs.RADIO.equals(content));
         card.host = host;
@@ -77,19 +79,30 @@ final class Cards {
 
     /** The map box, or a note when the unit has no working WebView (some stereos ship without one). */
     static Card map(Context c) {
+        if (MapCard.resting()) {
+            final Card note = new NoMapCard(c, "The map stopped working twice, so it's resting. It comes back in a few minutes.");
+            final Context ctx = c;
+            note.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (ctx instanceof HomeActivity && note.isAttachedToWindow()) ((HomeActivity) ctx).build();
+                }
+            }, 5 * 60000 + 1000);
+            return note;
+        }
         try {
             return new MapCard(c);
         } catch (Throwable e) {
-            return new NoMapCard(c);
+            return new NoMapCard(c, "The map needs Android System WebView. Install or turn it on in Android's settings.");
         }
     }
 
     static final class NoMapCard extends Card {
         final TextView note = new TextView(getContext());
 
-        NoMapCard(Context c) {
+        NoMapCard(Context c, String why) {
             super(c);
-            note.setText(Hindi.t("The map needs Android System WebView. Install or turn it on in Android's settings."));
+            note.setText(Hindi.t(why));
             note.setTextColor(Ui.SILVER_DIM);
             note.setGravity(Gravity.CENTER);
             addView(note, new LayoutParams(-1, -1));
@@ -209,10 +222,13 @@ final class Cards {
         final TextView place = Ui.text(getContext(), 13, Ui.SILVER_DIM, "sans-serif", Gravity.RIGHT);
         final TextView rain = Ui.text(getContext(), 13, 0xFF7FB8FF, "sans-serif-medium", Gravity.RIGHT);
         final LinearLayout left = new LinearLayout(getContext()), right = new LinearLayout(getContext());
+        final Hours hours = new Hours(getContext());
         String lastIcon;
+        int w, h;
 
         WeatherCard(Context c) {
             super(c);
+            addView(hours);
             left.setGravity(Gravity.CENTER_VERTICAL);
             left.addView(icon);
             left.addView(temp);
@@ -240,8 +256,15 @@ final class Cards {
             place.setMaxWidth(w / 2 - m);
             rain.setTextSize(0, 12 * Ui.k * s);
             rain.setMaxWidth(w / 2 - m);
-            left.setLayoutParams(at(-2, -2, Gravity.CENTER_VERTICAL | Gravity.LEFT, m, 0, 0, 0));
-            right.setLayoutParams(at(-2, -2, Gravity.CENTER_VERTICAL | Gravity.RIGHT, 0, 0, m, 0));
+            // a tall box has room for the next 24 hours under the reading
+            boolean curve = hours.wanted && h > 170 * Ui.k * Math.min(1, w / (300f * Ui.k));
+            int below = curve ? Math.round(h * 0.38f) : 0;
+            hours.setVisibility(curve ? VISIBLE : GONE);
+            hours.setLayoutParams(at(-1, below, Gravity.BOTTOM, m, 0, m, Ui.px(10 * s)));
+            left.setLayoutParams(at(-2, -2, Gravity.CENTER_VERTICAL | Gravity.LEFT, m, 0, 0, below));
+            right.setLayoutParams(at(-2, -2, Gravity.CENTER_VERTICAL | Gravity.RIGHT, 0, 0, m, below));
+            this.w = w;
+            this.h = h;
         }
 
         @Override
@@ -261,6 +284,76 @@ final class Cards {
             if (!h.weatherIcon.equals(lastIcon)) {
                 icon.setImageBitmap(Ui.img(getContext(), h.weatherIcon));
                 lastIcon = h.weatherIcon;
+            }
+            boolean want = Features.on(host.prefs(), "hourlyWeather") && h.hours.length >= 6;
+            hours.set(h.hours, h.hoursRain);
+            if (want != hours.wanted) {
+                hours.wanted = want;
+                if (this.w > 0) fit(this.w, this.h);
+            }
+        }
+    }
+
+    /** The next 24 hours: a temperature curve with the hours marked, and a blue bar where rain is expected. */
+    static final class Hours extends View {
+        final android.graphics.Paint ink = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+        final android.graphics.Path path = new android.graphics.Path();
+        float[] temps = new float[0], rain = new float[0];
+        boolean wanted;
+
+        Hours(Context c) {
+            super(c);
+            setVisibility(GONE);
+        }
+
+        void set(float[] t, float[] r) {
+            if (java.util.Arrays.equals(t, temps) && java.util.Arrays.equals(r, rain)) return;
+            temps = t;
+            rain = r;
+            invalidate();
+        }
+
+        @Override
+        protected void onDraw(android.graphics.Canvas c) {
+            int n = temps.length;
+            if (n < 2) return;
+            float lo = temps[0], hi = temps[0];
+            for (float t : temps) {
+                lo = Math.min(lo, t);
+                hi = Math.max(hi, t);
+            }
+            float text = Math.max(9, getHeight() * 0.2f);
+            float top = text * 1.3f, bottom = getHeight() - text * 1.4f, w = getWidth();
+            float span = Math.max(4, hi - lo);
+            ink.setTextSize(text);
+            // rain bars along the bottom
+            ink.setStyle(android.graphics.Paint.Style.FILL);
+            ink.setColor(0x887FB8FF);
+            for (int i = 0; i < rain.length && i < n; i++) {
+                if (rain[i] < 0.3f) continue;
+                float x = w * i / (n - 1);
+                c.drawRect(x - w / n / 2, bottom - Math.min(1, rain[i] / 4f) * (bottom - top) * 0.5f, x + w / n / 2, bottom, ink);
+            }
+            path.reset();
+            for (int i = 0; i < n; i++) {
+                float x = w * i / (n - 1), y = bottom - (temps[i] - lo) / span * (bottom - top);
+                if (i == 0) path.moveTo(x, y);
+                else path.lineTo(x, y);
+            }
+            ink.setStyle(android.graphics.Paint.Style.STROKE);
+            ink.setStrokeWidth(Math.max(1.5f, text * 0.15f));
+            ink.setColor(Ui.SILVER);
+            c.drawPath(path, ink);
+            // the high and low, and every sixth hour along the bottom
+            ink.setStyle(android.graphics.Paint.Style.FILL);
+            ink.setColor(Ui.SILVER_DIM);
+            ink.setTextAlign(android.graphics.Paint.Align.LEFT);
+            c.drawText(Math.round(hi) + "° / " + Math.round(lo) + "°", 0, text, ink);
+            int nowHour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
+            for (int i = 0; i < n; i += 6) {
+                float x = w * i / (n - 1);
+                ink.setTextAlign(i == 0 ? android.graphics.Paint.Align.LEFT : android.graphics.Paint.Align.CENTER);
+                c.drawText(i == 0 ? Hindi.t("Now") : String.format(Locale.US, "%02d", (nowHour + i) % 24), x, getHeight() - text * 0.2f, ink);
             }
         }
     }
@@ -719,6 +812,225 @@ final class Cards {
             boolean moving = Drive.kmhNow > Soundboard.PARKED_KMH;
             for (TextView p : pads) p.setAlpha(moving ? 0.4f : 1f);
             note.setText(moving ? Hindi.t("Plays when the car is stopped") : "");
+        }
+    }
+
+    /** Today's and the next few days' events from the unit's calendars. A tap opens the calendar app. */
+    static final class CalendarCard extends Card {
+        final TextView head = Ui.label(getContext(), Hindi.t("CALENDAR"));
+        final TextView note = Ui.text(getContext(), 12, Ui.SILVER_DIM, "sans-serif", Gravity.CENTER);
+        final LinearLayout col = new LinearLayout(getContext());
+        final TextView[] lines = new TextView[Agenda.MAX];
+        long readAt;
+        boolean reading;
+        int fitLines = Agenda.MAX;
+
+        CalendarCard(Context c) {
+            super(c);
+            col.setOrientation(LinearLayout.VERTICAL);
+            for (int i = 0; i < lines.length; i++) {
+                lines[i] = Ui.text(c, 14, Ui.SILVER, "sans-serif", Gravity.LEFT);
+                lines[i].setSingleLine(true);
+                lines[i].setEllipsize(android.text.TextUtils.TruncateAt.END);
+                col.addView(lines[i]);
+            }
+            addView(head);
+            addView(col);
+            addView(note);
+            clickable(this, new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!Features.on(host.prefs(), "calendar")) {
+                        android.widget.Toast.makeText(getContext(), Hindi.t("Turn on Calendar in Settings, Home screen"), android.widget.Toast.LENGTH_LONG).show();
+                    } else if (!Agenda.allowed(getContext()) && getContext() instanceof android.app.Activity) {
+                        ((android.app.Activity) getContext()).requestPermissions(new String[]{android.Manifest.permission.READ_CALENDAR}, 7);
+                        readAt = 0;
+                    } else {
+                        try {
+                            getContext().startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW,
+                                    android.net.Uri.parse("content://com.android.calendar/time/" + System.currentTimeMillis()))
+                                    .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
+                        } catch (Exception e) {
+                            android.widget.Toast.makeText(getContext(), Hindi.t("No calendar app on this unit"), android.widget.Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+        }
+
+        @Override
+        void fit(int w, int h) {
+            float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
+            int m = Ui.px(16 * s);
+            head.setTextSize(0, 11 * Ui.k * s);
+            head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(10 * s), 0, 0));
+            float line = 14 * Ui.k * Math.max(0.8f, Math.min(1.4f, s));
+            for (TextView t : lines) t.setTextSize(0, line);
+            fitLines = Math.max(1, Math.min(Agenda.MAX, (int) ((h - Ui.px(48 * s)) / (line * 1.35f))));
+            col.setLayoutParams(at(-1, -2, Gravity.TOP, m, Ui.px(30 * s), m, 0));
+            note.setTextSize(0, 11 * Ui.k * s);
+            note.setLayoutParams(at(-1, -2, Gravity.BOTTOM, m, 0, m, Ui.px(8 * s)));
+        }
+
+        @Override
+        public void changed(Hub h) {
+            final android.content.Context c = getContext();
+            if (!Features.on(host.prefs(), "calendar")) {
+                show(null, Hindi.t("Calendar is off in Settings, Home screen"));
+                return;
+            }
+            if (!Agenda.allowed(c)) {
+                show(null, Hindi.t("Tap to allow OpenRath to read your calendar"));
+                return;
+            }
+            long now = System.currentTimeMillis();
+            if (reading || now - readAt < 5 * 60000) return;
+            reading = true;
+            readAt = now;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final java.util.List<Agenda.Event> ev = Agenda.read(c, System.currentTimeMillis());
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            reading = false;
+                            show(ev, ev.isEmpty() ? Hindi.t("Nothing in the next few days") : "");
+                        }
+                    });
+                }
+            }).start();
+        }
+
+        private void show(java.util.List<Agenda.Event> ev, String foot) {
+            long now = System.currentTimeMillis();
+            for (int i = 0; i < lines.length; i++) {
+                boolean has = ev != null && i < ev.size() && i < fitLines;
+                lines[i].setVisibility(has ? VISIBLE : GONE);
+                if (!has) continue;
+                Agenda.Event e = ev.get(i);
+                String[] w = Agenda.when(e.start, e.end, e.allDay, now, java.util.TimeZone.getDefault());
+                lines[i].setText(Hindi.t(w[0]) + (w[1].isEmpty() ? "" : " " + Hindi.t(w[1])) + "   " + e.title);
+            }
+            note.setText(foot);
+        }
+    }
+
+    /**
+     * A video from the unit or a USB stick. The picture shows only while GPS says the car is
+     * stopped; while moving it is covered and the sound keeps going.
+     */
+    static final class VideoCard extends Card {
+        final android.widget.VideoView video = new android.widget.VideoView(getContext());
+        final TextView cover = Ui.text(getContext(), 14, Ui.SILVER_DIM, "sans-serif", Gravity.CENTER);
+        String path;
+
+        VideoCard(Context c) {
+            super(c);
+            addView(video, new LayoutParams(-1, -1, Gravity.CENTER));
+            cover.setBackgroundColor(0xFF000000);
+            addView(cover, new LayoutParams(-1, -1));
+            video.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(android.media.MediaPlayer mp) {
+                    path = null;
+                    cover();
+                }
+            });
+            video.setOnErrorListener(new android.media.MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(android.media.MediaPlayer mp, int what, int extra) {
+                    path = null;
+                    cover.setText(Hindi.t("This video can't be played on this unit"));
+                    return true;
+                }
+            });
+            clickable(cover, new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tapped();
+                }
+            });
+            video.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, android.view.MotionEvent e) {
+                    if (e.getAction() == android.view.MotionEvent.ACTION_UP) tapped();
+                    return true;
+                }
+            });
+            cover();
+        }
+
+        private void tapped() {
+            if (!Features.on(host.prefs(), "video")) {
+                android.widget.Toast.makeText(getContext(), Hindi.t("Turn on Video window in Settings, Radio and music"), android.widget.Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (path != null) {
+                if (video.isPlaying()) video.pause();
+                else video.start();
+                return;
+            }
+            cover.setText(Hindi.t("Looking for videos…"));
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final java.util.List<String> found = Videos.find(getContext());
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            cover();
+                            choose(found);
+                        }
+                    });
+                }
+            }).start();
+        }
+
+        private void choose(final java.util.List<String> found) {
+            if (found.isEmpty()) {
+                android.widget.Toast.makeText(getContext(), Hindi.t("No videos found on the unit or USB stick"), android.widget.Toast.LENGTH_LONG).show();
+                return;
+            }
+            String[] names = new String[found.size()];
+            for (int i = 0; i < names.length; i++) names[i] = new java.io.File(found.get(i)).getName();
+            new android.app.AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
+                    .setTitle(Hindi.t("Play a video"))
+                    .setItems(names, new android.content.DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(android.content.DialogInterface d, int w) {
+                            path = found.get(w);
+                            video.setVideoPath(path);
+                            video.start();
+                            cover();
+                        }
+                    }).show();
+        }
+
+        private void cover() {
+            boolean parked = Videos.parked(Drive.kmhNow, Drive.fixAt == 0 ? -1 : System.currentTimeMillis() - Drive.fixAt);
+            boolean show = path != null && parked;
+            cover.setVisibility(show ? GONE : VISIBLE);
+            cover.setText(path == null ? Hindi.t("Tap to play a video. The picture shows only when the car is stopped.")
+                    : Hindi.t("The picture shows when the car is stopped"));
+        }
+
+        @Override
+        void fit(int w, int h) {
+            float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
+            cover.setTextSize(0, 13 * Ui.k * s);
+            cover.setPadding(Ui.px(16 * s), 0, Ui.px(16 * s), 0);
+        }
+
+        @Override
+        public void changed(Hub h) {
+            cover();
+        }
+
+        @Override
+        protected void onDetachedFromWindow() {
+            video.stopPlayback();
+            super.onDetachedFromWindow();
         }
     }
 

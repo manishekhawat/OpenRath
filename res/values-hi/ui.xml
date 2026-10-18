@@ -488,4 +488,72 @@
     <string name="ui_choose_your_obd_ii_bluetooth_adapter_now" formatted="false">अभी अपना OBD-II Bluetooth अडैप्टर चुनें?</string>
     <string name="ui_find_your_tyre_sensors_now" formatted="false">अभी अपने टायर सेंसर ढूँढें?</string>
     <string name="ui_no_carplay_or_android_auto_app_was_found" formatted="false">कोई CarPlay या Android Auto ऐप नहीं मिला। अभी चुनें?</string>
+    <string name="ui_smooth_speed_number" formatted="false">स्पीड का नंबर सहज</string>
+    <string name="ui_the_speed_eases_between_gps_readings_and" formatted="false">GPS रीडिंग के बीच स्पीड धीरे-धीरे बदलती है और रुकने पर 0 दिखाती है, बिना झिलमिलाहट</string>
+    <string name="ui_saved_places_for_any_navigation_app" formatted="false">किसी भी नेविगेशन ऐप के लिए सेव की गई जगहें</string>
+    <string name="ui_long_press_navigation_in_the_dock_home_o" formatted="false">डॉक में नेविगेशन को दबाकर रखें: घर, ऑफ़िस, पार्क की गई कार और आपकी अपनी जगहें; चलते समय टाइप करना बंद रहता है</string>
+    <string name="ui_better_all_apps_screen" formatted="false">बेहतर सभी-ऐप्स स्क्रीन</string>
+    <string name="ui_search_pinned_and_recent_apps_a_to_z_jum" formatted="false">खोज, पिन किए और हाल के ऐप्स, A से Z पर जाएँ, और ऐप जानकारी या अनइंस्टॉल के लिए दबाकर रखें</string>
+    <string name="ui_status_icons_in_the_dock" formatted="false">डॉक में स्टेटस आइकन</string>
+    <string name="ui_wi_fi_mobile_signal_bluetooth_gps_and_ba" formatted="false">Wi-Fi, मोबाइल सिग्नल, Bluetooth, GPS और बैटरी, उन स्टीरियो के लिए जो Android की स्टेटस बार छिपाते हैं</string>
+    <string name="ui_hourly_weather" formatted="false">घंटेवार मौसम</string>
+    <string name="ui_the_next_24_hours_temperature_and_rain_i" formatted="false">ऊँचे मौसम बॉक्स में अगले 24 घंटे का तापमान और बारिश, ऑफ़लाइन के लिए रखा जाता है</string>
+    <string name="ui_calendar_box" formatted="false">कैलेंडर बॉक्स</string>
+    <string name="ui_today_s_and_the_next_few_days_events_fro" formatted="false">यूनिट के कैलेंडर से आज और अगले कुछ दिनों के कार्यक्रम</string>
+    <string name="ui_video_window" formatted="false">वीडियो विंडो</string>
+    <string name="ui_plays_a_video_from_the_unit_or_a_usb_sti" formatted="false">यूनिट या USB स्टिक से वीडियो एक बॉक्स में चलाता है; तस्वीर सिर्फ़ कार रुकने पर दिखती है</string>
+    <string name="ui_app_updates_from_github" formatted="false">GitHub से ऐप अपडेट</string>
+    <string name="ui_checks_once_a_day_for_a_new_openrath_che" formatted="false">दिन में एक बार नया OpenRath देखता है, डाउनलोड का SHA-256 जाँचता है और सिर्फ़ पार्क होने पर पेश करता है</string>
+    <string name="ui_search_apps" formatted="false">ऐप्स खोजें</string>
+    <string name="ui_pin_to_the_top" formatted="false">ऊपर पिन करें</string>
+    <string name="ui_unpin" formatted="false">पिन हटाएँ</string>
+    <string name="ui_app_info" formatted="false">ऐप की जानकारी</string>
+    <string name="ui_uninstall" formatted="false">अनइंस्टॉल करें</string>
+    <string name="ui_this_unit_doesn_t_allow_that" formatted="false">यह यूनिट इसकी अनुमति नहीं देती</string>
+    <string name="ui_the_map_stopped_working_twice_so_it_s_re" formatted="false">मैप दो बार रुक गया, इसलिए आराम कर रहा है। कुछ मिनट में वापस आएगा।</string>
+    <string name="ui_wi_fi" formatted="false">Wi-Fi</string>
+    <string name="ui_connected" formatted="false">जुड़ा है</string>
+    <string name="ui_not_connected" formatted="false">नहीं जुड़ा</string>
+    <string name="ui_saved_places" formatted="false">सेव की गई जगहें</string>
+    <string name="ui_type_an_address" formatted="false">पता टाइप करें…</string>
+    <string name="ui_save_where_i_am_now" formatted="false">अभी जहाँ हूँ वह सेव करें…</string>
+    <string name="ui_change_the_navigation_app" formatted="false">नेविगेशन ऐप बदलें</string>
+    <string name="ui_forgot_1_s" formatted="false">%1$s भुला दिया</string>
+    <string name="ui_no_navigation_app_on_this_unit_takes_pla" formatted="false">इस यूनिट पर कोई नेविगेशन ऐप जगहें नहीं लेता</string>
+    <string name="ui_typing_is_blocked_while_the_car_is_movin" formatted="false">कार चलते समय टाइप करना बंद है</string>
+    <string name="ui_waiting_for_gps" formatted="false">GPS का इंतज़ार</string>
+    <string name="ui_name_like_gym" formatted="false">नाम, जैसे जिम</string>
+    <string name="ui_address_or_place" formatted="false">पता या जगह</string>
+    <string name="ui_go" formatted="false">चलें</string>
+    <string name="ui_openrath_is_up_to_date" formatted="false">OpenRath नया ही है</string>
+    <string name="ui_couldn_t_check_for_updates_1_s" formatted="false">अपडेट नहीं देख सके: %1$s</string>
+    <string name="ui_openrath_1_s_is_ready" formatted="false">OpenRath %1$s तैयार है</string>
+    <string name="ui_it_was_downloaded_and_checked_install_it" formatted="false">यह डाउनलोड होकर जाँच लिया गया है। अभी इंस्टॉल करें? आपकी सेटिंग्स बनी रहेंगी।</string>
+    <string name="ui_install" formatted="false">इंस्टॉल करें</string>
+    <string name="ui_couldn_t_install_the_update_1_s" formatted="false">अपडेट इंस्टॉल नहीं हो सका: %1$s</string>
+    <string name="ui_check_for_updates_now" formatted="false">अभी अपडेट देखें</string>
+    <string name="ui_version_1_s" formatted="false">वर्ज़न %1$s</string>
+    <string name="ui_less_movement" formatted="false">कम हलचल</string>
+    <string name="ui_animations" formatted="false">एनिमेशन</string>
+    <string name="ui_standard" formatted="false">सामान्य</string>
+    <string name="ui_reduced" formatted="false">कम</string>
+    <string name="ui_now" formatted="false">अभी</string>
+    <string name="ui_now_2" formatted="false">अभी</string>
+    <string name="ui_tomorrow" formatted="false">कल</string>
+    <string name="ui_no_title" formatted="false">(बिना शीर्षक)</string>
+    <string name="ui_calendar" formatted="false">कैलेंडर</string>
+    <string name="ui_calendar_2" formatted="false">कैलेंडर</string>
+    <string name="ui_turn_on_calendar_in_settings_home_screen" formatted="false">सेटिंग्स, होम स्क्रीन में कैलेंडर चालू करें</string>
+    <string name="ui_no_calendar_app_on_this_unit" formatted="false">इस यूनिट पर कोई कैलेंडर ऐप नहीं</string>
+    <string name="ui_calendar_is_off_in_settings_home_screen" formatted="false">सेटिंग्स, होम स्क्रीन में कैलेंडर बंद है</string>
+    <string name="ui_tap_to_allow_openrath_to_read_your_calen" formatted="false">OpenRath को कैलेंडर पढ़ने देने के लिए टैप करें</string>
+    <string name="ui_nothing_in_the_next_few_days" formatted="false">अगले कुछ दिनों में कुछ नहीं</string>
+    <string name="ui_video_picture_only_when_parked" formatted="false">वीडियो (तस्वीर सिर्फ़ पार्क होने पर)</string>
+    <string name="ui_this_video_can_t_be_played_on_this_unit" formatted="false">यह वीडियो इस यूनिट पर नहीं चल सकता</string>
+    <string name="ui_turn_on_video_window_in_settings_radio_a" formatted="false">सेटिंग्स, रेडियो और संगीत में वीडियो विंडो चालू करें</string>
+    <string name="ui_looking_for_videos" formatted="false">वीडियो ढूँढ रहे हैं…</string>
+    <string name="ui_no_videos_found_on_the_unit_or_usb_stick" formatted="false">यूनिट या USB स्टिक पर कोई वीडियो नहीं मिला</string>
+    <string name="ui_play_a_video" formatted="false">वीडियो चलाएँ</string>
+    <string name="ui_tap_to_play_a_video_the_picture_shows_on" formatted="false">वीडियो चलाने के लिए टैप करें। तस्वीर सिर्फ़ कार रुकने पर दिखती है।</string>
+    <string name="ui_the_picture_shows_when_the_car_is_stoppe" formatted="false">कार रुकने पर तस्वीर दिखती है</string>
 </resources>

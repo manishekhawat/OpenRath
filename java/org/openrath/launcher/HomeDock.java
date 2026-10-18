@@ -26,6 +26,7 @@ final class HomeDock {
         clock.setTypeface(android.graphics.Typeface.create("sans-serif", 0));
         bar.addView(clock, new LinearLayout.LayoutParams(0, -1, 1f));
         clock.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+        if (Features.on(a.prefs, "dockStatus")) bar.addView(new StatusIcons(a, true), new LinearLayout.LayoutParams(Ui.px(170), -1));
         final java.util.List<String> apps = wideApps(a);
         for (int i = 0; i < 6; i++) {
             final int slot = i;
@@ -153,6 +154,10 @@ final class HomeDock {
                         HomeDialogs.settings(a, -1);
                         return true;
                     }
+                    if ("navi".equals(name) && Features.on(a.prefs, "places")) {
+                        Places.show(a);
+                        return true;
+                    }
                     final String key = dockKey(name);
                     AppPicker.show(a, Hindi.f("App for %1$s", Hindi.t(label)), new AppPicker.Picked() {
                         @Override
@@ -164,6 +169,10 @@ final class HomeDock {
                 }
             });
             d.addView(v);
+        }
+        if (Features.on(a.prefs, "dockStatus")) {
+            d.addView(new StatusIcons(a, across), across ? new LinearLayout.LayoutParams(0, Ui.px(62), 1.5f)
+                    : new LinearLayout.LayoutParams(Ui.px(62), 0, 1.5f));
         }
         ImageView gear = new ImageView(a);
         gear.setImageBitmap(Ui.img(a, "dock_settings"));

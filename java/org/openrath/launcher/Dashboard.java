@@ -118,7 +118,7 @@ final class Dashboard extends ViewGroup {
         invalidate();
         for (View v : slots) {
             if (v == null) continue;
-            v.animate().scaleX(on ? 0.94f : 1f).scaleY(on ? 0.94f : 1f).alpha(on ? 0.85f : 1f).setDuration(150).start();
+            v.animate().scaleX(on ? 0.94f : 1f).scaleY(on ? 0.94f : 1f).alpha(on ? 0.85f : 1f).setDuration(Motion.ms(150)).start();
         }
     }
 
@@ -195,7 +195,7 @@ final class Dashboard extends ViewGroup {
                 downY = y;
                 if (dragging >= 0) {
                     slots[dragging].bringToFront();
-                    slots[dragging].animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(100).start();
+                    slots[dragging].animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(Motion.ms(100)).start();
                     slots[dragging].setElevation(20);
                 }
                 return true;

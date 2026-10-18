@@ -69,6 +69,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     static volatile double latNow, lonNow, headingNow = -1;
     /** Height above sea level from GPS in metres, NaN until a fix has one; the last heading while moving. */
     static volatile double altNow = Double.NaN, headingKept = -1;
+    private long lastNanos;
     private long fuelCheckAt;
     private final Ahead ahead = new Ahead();
     private final Highway highway = new Highway();
@@ -326,6 +327,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
 
     @Override
     public void onLocationChanged(Location l) {
+        if (!Fixes.usable(l, lastNanos)) return;   // a replayed old fix or no real position
+        lastNanos = l.getElapsedRealtimeNanos();
         long now = System.currentTimeMillis();
         // time between fixes on a clock that never jumps: stereos often set their clock from GPS or
         // the network just after the first fix, right when a drive (and a 0–100 run) starts
