@@ -481,6 +481,14 @@
     <string name="ui_the_soundboard_plays_only_when_the_car_i" formatted="false">The soundboard plays only when the car is stopped</string>
     <string name="ui_drag_a_box_onto_another_to_swap_them_or_" formatted="false">Drag a box onto another to swap them, or drag a bar between boxes to resize them</string>
     <string name="ui_usual_sizes" formatted="false">Usual sizes</string>
+    <string name="ui_recently_used" formatted="false">Recently used</string>
+    <string name="ui_the_settings_you_changed_last" formatted="false">The settings you changed last</string>
+    <string name="ui_set_up_now" formatted="false">Set up now</string>
+    <string name="ui_this_needs_the_turn_indicators_set_up_se" formatted="false">This needs the turn indicators set up. Set them up now?</string>
+    <string name="ui_this_needs_the_headlight_door_or_seat_be" formatted="false">This needs the headlight, door or seat-belt setup. Set up the headlights now?</string>
+    <string name="ui_choose_your_obd_ii_bluetooth_adapter_now" formatted="false">Choose your OBD-II Bluetooth adapter now?</string>
+    <string name="ui_find_your_tyre_sensors_now" formatted="false">Find your tyre sensors now?</string>
+    <string name="ui_no_carplay_or_android_auto_app_was_found" formatted="false">No CarPlay or Android Auto app was found. Choose it now?</string>
     <string-array name="ui_strings">
         <item>@string/ui_back_to_the_dashboard</item>
         <item>@string/ui_search_settings</item>
@@ -961,5 +969,13 @@
         <item>@string/ui_the_soundboard_plays_only_when_the_car_i</item>
         <item>@string/ui_drag_a_box_onto_another_to_swap_them_or_</item>
         <item>@string/ui_usual_sizes</item>
+        <item>@string/ui_recently_used</item>
+        <item>@string/ui_the_settings_you_changed_last</item>
+        <item>@string/ui_set_up_now</item>
+        <item>@string/ui_this_needs_the_turn_indicators_set_up_se</item>
+        <item>@string/ui_this_needs_the_headlight_door_or_seat_be</item>
+        <item>@string/ui_choose_your_obd_ii_bluetooth_adapter_now</item>
+        <item>@string/ui_find_your_tyre_sensors_now</item>
+        <item>@string/ui_no_carplay_or_android_auto_app_was_found</item>
     </string-array>
 </resources>

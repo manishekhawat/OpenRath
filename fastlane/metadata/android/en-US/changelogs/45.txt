@@ -1,0 +1,1 @@
+Easier Settings: each row shows its state on the right, switching on a feature that needs setup offers to do it straight away, and your recently used settings are at the top.
