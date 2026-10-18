@@ -37,6 +37,7 @@ final class Managed {
         for (String[] pair : new String[][]{{"featuresOn", "on"}, {"featuresOff", "off"}}) {
             for (String id : ids(b.getString(pair[0], ""))) {
                 if (Features.get(id) == null) continue;
+                id = Features.parent(id);   // an old id locks the switch it became part of
                 p.put("m:feat:" + id, "");
                 Features.set(p, id, "on".equals(pair[1]));
                 p.put("m:feat:" + id, pair[1]);

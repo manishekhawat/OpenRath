@@ -386,6 +386,45 @@
     <string name="ui_toll_in_2_km_about_100_with_a_fastag_lan" formatted="false">\"Toll in 2 km, about ₹100\", with a FASTag lane reminder</string>
     <string name="ui_fm_91_1_call_mom_from_the_map_s_mic" formatted="false">\"FM 91.1\", \"call Mom\", \"घर ले चलो\" from the map\'s mic</string>
     <string name="ui_crash_and_usage_reports" formatted="false">Crash and usage reports</string>
+    <string name="ui_saves_the_spot_after_90_seconds_standing_2" formatted="false">Saves the spot after 90 seconds standing still, with a photo, a QR code for your phone and a paid-parking reminder</string>
+    <string name="ui_tolls" formatted="false">Tolls</string>
+    <string name="ui_toll_plazas_and_costs_on_a_planned_route" formatted="false">Toll plazas and costs on a planned route, and a countdown with a FASTag lane reminder</string>
+    <string name="ui_fuel_and_mileage" formatted="false">Fuel and mileage</string>
+    <string name="ui_trip_cost_from_your_city_s_petrol_price_" formatted="false">Trip cost from your city\'s petrol price, which drives used extra fuel, how far the tank goes, and a leak or theft check</string>
+    <string name="ui_car_service" formatted="false">Car service</string>
+    <string name="ui_oil_tyres_service_insurance_and_puc_remi" formatted="false">Oil, tyres, service, insurance and PUC reminders, the nearest workshops, and a call to book</string>
+    <string name="ui_weather_alerts" formatted="false">Weather alerts</string>
+    <string name="ui_rain_here_or_on_your_route_waterlogging_" formatted="false">Rain here or on your route, waterlogging spots you\'ve marked, and poor air</string>
+    <string name="ui_road_learning" formatted="false">Road learning</string>
+    <string name="ui_learns_speed_breakers_and_how_long_you_w" formatted="false">Learns speed-breakers and how long you wait at signals and tolls, and tells you next time</string>
+    <string name="ui_daily_and_weekly_summary" formatted="false">Daily and weekly summary</string>
+    <string name="ui_each_morning_weather_air_petrol_range_an" formatted="false">Each morning: weather, air, petrol range and service due. On Sundays: the week\'s km, costs and score</string>
+    <string name="ui_car_signal_reminders" formatted="false">Car-signal reminders</string>
+    <string name="ui_headlights_after_sunset_doors_and_seat_b" formatted="false">Headlights after sunset, doors and seat belts, by voice (needs the setup in Car signals)</string>
+    <string name="ui_without_internet" formatted="false">Without internet</string>
+    <string name="ui_keeps_the_map_of_places_you_ve_seen_and_" formatted="false">Keeps the map of places you\'ve seen, and uses the offline speech pack, for when there\'s no Wi-Fi</string>
+    <string name="ui_fm_91_1_call_mom_from_the_mic_choose_whe" formatted="false">\"FM 91.1\", \"call Mom\", \"घर ले चलो\" from the mic; choose where the mic sits in Home screen</string>
+    <string name="ui_mic_button" formatted="false">Mic button</string>
+    <string name="ui_on_the_map_only" formatted="false">on the map only</string>
+    <string name="ui_floating_on_the_home_screen" formatted="false">floating on the home screen</string>
+    <string name="ui_floating_also_over_other_apps" formatted="false">floating, also over other apps</string>
+    <string name="ui_needs_permission_tap_to_allow" formatted="false">; needs permission, tap to allow</string>
+    <string name="ui_change_the_order" formatted="false">Change the order</string>
+    <string name="ui_your_name" formatted="false">Your name</string>
+    <string name="ui_your_name_on_the_home_screen_empty_to_hi" formatted="false">Your name, on the home screen (empty to hide)</string>
+    <string name="ui_1_s_2_s_darker" formatted="false">%1$s, %2$s%% darker</string>
+    <string name="ui_1_s_darker" formatted="false">%1$s%% darker</string>
+    <string name="ui_choose_another_picture" formatted="false">Choose another picture</string>
+    <string name="ui_use_the_built_in_one" formatted="false">Use the built-in one</string>
+    <string name="ui_built_in_best_as_a_png_with_a_clear_back" formatted="false">built-in; best as a PNG with a clear background, the car facing you, about 820 x 480</string>
+    <string name="ui_1_s_long_press_a_button_on_the_bar_to_ch" formatted="false">%1$s; long-press a button on the bar to choose its app</string>
+    <string name="ui_choose_a_song_or_look_again_after_pluggi" formatted="false">choose a song, or look again after plugging in a USB stick</string>
+    <string name="ui_1_s_songs_found_choose_one_or_look_again" formatted="false">%1$s songs found; choose one, or look again</string>
+    <string name="ui_trips_fuel_and_tolls" formatted="false">Trips, fuel and tolls</string>
+    <string name="ui_today_1_s_km_score_2_s_3_s" formatted="false">today %1$s km, score %2$s; %3$s</string>
+    <string name="ui_between_1_s_and_2_s" formatted="false">between %1$s and %2$s</string>
+    <string name="ui_fuel_log_and_fill_ups" formatted="false">Fuel log and fill-ups</string>
+    <string name="ui_trip_history_and_driving_score" formatted="false">Trip history and driving score</string>
     <string-array name="ui_strings">
         <item>@string/ui_back_to_the_dashboard</item>
         <item>@string/ui_search_settings</item>
@@ -771,5 +810,44 @@
         <item>@string/ui_toll_in_2_km_about_100_with_a_fastag_lan</item>
         <item>@string/ui_fm_91_1_call_mom_from_the_map_s_mic</item>
         <item>@string/ui_crash_and_usage_reports</item>
+        <item>@string/ui_saves_the_spot_after_90_seconds_standing_2</item>
+        <item>@string/ui_tolls</item>
+        <item>@string/ui_toll_plazas_and_costs_on_a_planned_route</item>
+        <item>@string/ui_fuel_and_mileage</item>
+        <item>@string/ui_trip_cost_from_your_city_s_petrol_price_</item>
+        <item>@string/ui_car_service</item>
+        <item>@string/ui_oil_tyres_service_insurance_and_puc_remi</item>
+        <item>@string/ui_weather_alerts</item>
+        <item>@string/ui_rain_here_or_on_your_route_waterlogging_</item>
+        <item>@string/ui_road_learning</item>
+        <item>@string/ui_learns_speed_breakers_and_how_long_you_w</item>
+        <item>@string/ui_daily_and_weekly_summary</item>
+        <item>@string/ui_each_morning_weather_air_petrol_range_an</item>
+        <item>@string/ui_car_signal_reminders</item>
+        <item>@string/ui_headlights_after_sunset_doors_and_seat_b</item>
+        <item>@string/ui_without_internet</item>
+        <item>@string/ui_keeps_the_map_of_places_you_ve_seen_and_</item>
+        <item>@string/ui_fm_91_1_call_mom_from_the_mic_choose_whe</item>
+        <item>@string/ui_mic_button</item>
+        <item>@string/ui_on_the_map_only</item>
+        <item>@string/ui_floating_on_the_home_screen</item>
+        <item>@string/ui_floating_also_over_other_apps</item>
+        <item>@string/ui_needs_permission_tap_to_allow</item>
+        <item>@string/ui_change_the_order</item>
+        <item>@string/ui_your_name</item>
+        <item>@string/ui_your_name_on_the_home_screen_empty_to_hi</item>
+        <item>@string/ui_1_s_2_s_darker</item>
+        <item>@string/ui_1_s_darker</item>
+        <item>@string/ui_choose_another_picture</item>
+        <item>@string/ui_use_the_built_in_one</item>
+        <item>@string/ui_built_in_best_as_a_png_with_a_clear_back</item>
+        <item>@string/ui_1_s_long_press_a_button_on_the_bar_to_ch</item>
+        <item>@string/ui_choose_a_song_or_look_again_after_pluggi</item>
+        <item>@string/ui_1_s_songs_found_choose_one_or_look_again</item>
+        <item>@string/ui_trips_fuel_and_tolls</item>
+        <item>@string/ui_today_1_s_km_score_2_s_3_s</item>
+        <item>@string/ui_between_1_s_and_2_s</item>
+        <item>@string/ui_fuel_log_and_fill_ups</item>
+        <item>@string/ui_trip_history_and_driving_score</item>
     </string-array>
 </resources>

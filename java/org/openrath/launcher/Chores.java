@@ -119,33 +119,6 @@ final class Chores {
                 }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
-    // ------------------------------------------------------------------ car wash
-
-    static void washCheck(HomeActivity a) {
-        Prefs p = a.prefs;
-        if (!Features.on(p, "wash") || Drive.kmhNow > 3) return;
-        String today = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(new java.util.Date());
-        if (today.equals(p.str("washAsked", ""))) return;
-        long last = p.longNum("washAt", 0);
-        if (last == 0) {
-            p.putLong("washAt", System.currentTimeMillis());   // start counting from the first day
-            return;
-        }
-        if (!Errands.washDue(last, System.currentTimeMillis(), p.num("washDays", 14), a.hub.forecast)) return;
-        p.put("washAsked", today);
-        final Prefs fp = p;
-        long days = (System.currentTimeMillis() - last) / 86400000L;
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Time for a wash?"))
-                .setMessage(Hindi.f("It's been %1$s days since the last car wash, and no rain is expected for the next two days.", days))
-                .setPositiveButton(Hindi.t("Washed today"), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        fp.putLong("washAt", System.currentTimeMillis());
-                    }
-                })
-                .setNegativeButton(Hindi.t("Later"), null).show();
-    }
-
     // ------------------------------------------------------------------ weekly report
 
     /** Sundays (or the first start after a missed one): the last seven days in one card. */

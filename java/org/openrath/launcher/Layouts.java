@@ -237,7 +237,7 @@ final class Layouts {
 
     /** Layout-wide switches: moving road lines, gentle background movement, picture switching. */
     static boolean roadOn(Prefs p) {
-        return !"off".equals(p.str("layRoad", "on"));
+        return Features.on(p, "road");   // the same switch as the dashboard's moving road
     }
 
     /** A phone-mirroring button added to each layout's dock. */
