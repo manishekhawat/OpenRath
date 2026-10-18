@@ -56,7 +56,6 @@ public class HomeActivity extends Activity implements Cards.Host {
         f.addAction(Ticker.CHANGED);
         f.addAction(Drive.REST);
         f.addAction(Drive.FUEL_LOW);
-        f.addAction(Drive.CRASH);
         f.addAction(Drive.HIGHWAY);
         f.addAction(android.content.Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
         Compat.ownOnly(this, events, f);
@@ -79,8 +78,6 @@ public class HomeActivity extends Activity implements Cards.Host {
                 Managed.apply(HomeActivity.this, prefs);
                 Extras.featuresChanged(HomeActivity.this);
             }
-            else if (Drive.CRASH.equals(i.getAction()))
-                Rescue.show(HomeActivity.this, prefs, i.getDoubleExtra("lat", 0), i.getDoubleExtra("lon", 0), false);
             else if (Drive.FUEL_LOW.equals(i.getAction())) {
                 MapCard m = mapCard();
                 if (m != null) m.js("restStop('fuel')");
@@ -110,10 +107,6 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     private void handleIntent(Intent i) {
         if (i != null && Keys.ACTION.equals(i.getAction())) keyAction(i.getStringExtra("action"));
-        if (i != null && Drive.CRASH.equals(i.getAction())) {
-            i.setAction(null);   // not again when the screen is recreated
-            Rescue.show(this, prefs, i.getDoubleExtra("lat", 0), i.getDoubleExtra("lon", 0), false);
-        }
     }
 
     @Override
@@ -494,7 +487,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     void fogMode(Hub h) {
         boolean driving = Drive.drives.cur != null;
         if (!driving) fogDismissed = false;
-        boolean want = Fog.now(prefs) && driving && !fogDismissed && settingsView == null && !hub.reverse && !Rescue.showing();
+        boolean want = Fog.now(prefs) && driving && !fogDismissed && settingsView == null && !hub.reverse;
         if (want && fog == null) {
             fog = new Fog(this, prefs, new Fog.Closed() {
                 @Override
@@ -1048,7 +1041,6 @@ public class HomeActivity extends Activity implements Cards.Host {
                 HomeDialogs.askForTrackInfo(HomeActivity.this);
                 HomeDialogs.serviceBooking(HomeActivity.this);
                 HomeDialogs.askOverlay(HomeActivity.this);
-                Chores.washCheck(HomeActivity.this);
                 Chores.weekly(HomeActivity.this, false);
             }
         }, 3000);

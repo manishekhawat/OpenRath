@@ -39,7 +39,7 @@ final class Coach {
         double km;
         long movingSec, idleSec, fastSec;
         int starts, brakes;
-        // where it started and ended (0 when not known), for the commute insights
+        // where it started and ended (0 when not known)
         double sLat, sLon, eLat, eLon;
 
         JSONArray json() {

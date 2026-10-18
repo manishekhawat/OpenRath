@@ -804,7 +804,7 @@ final class Cab {
             double[] s = spots.get(i);
             String far = Drive.latNow == 0 ? "" : Hindi.f("%1$s km away  ·  ",
                     String.format(Locale.US, "%.1f", Geo.dist(Drive.latNow, Drive.lonNow, s[0], s[1]) / 1000));
-            rows[i] = far + Hindi.f("%1$s rides around %2$s:00   (%3$s)", Math.round(s[2]), hour, Rescue.where(s[0], s[1]));
+            rows[i] = far + Hindi.f("%1$s rides around %2$s:00   (%3$s)", Math.round(s[2]), hour, String.format(java.util.Locale.US, "%.5f, %.5f", s[0], s[1]));
         }
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Where you got rides at this hour (tap to drive there)"))
