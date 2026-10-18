@@ -665,7 +665,8 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     @Override
     public void tripMenu() {
-        String[] items = {Hindi.t("Start today's trip again"), Hindi.t("Save the parking spot here"), Hindi.t("Fuel log")};
+        String[] items = {Hindi.t("Start today's trip again"), Hindi.t("Save the parking spot here"), Hindi.t("Fuel log and fill-ups"),
+                Hindi.t("Trip history and driving score"), Hindi.t("Add a toll payment")};
         new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Today %1$s km  ·  GPS odometer %2$s km", String.format(java.util.Locale.US, "%.1f", Drive.todayKm), String.valueOf(Math.round(Drive.odoKm))))
                 .setItems(items, new android.content.DialogInterface.OnClickListener() {
@@ -675,7 +676,14 @@ public class HomeActivity extends Activity implements Cards.Host {
                             Drive.resetToday(HomeActivity.this);
                             hub.notifyIfChanged(true);
                         } else if (w == 1) parkHere();
-                        else fuel();
+                        else if (w == 2) fuel();
+                        else if (w == 3) Care.history(HomeActivity.this, prefs);
+                        else Care.addToll(HomeActivity.this, prefs, new Runnable() {
+                                @Override
+                                public void run() {
+                                    hub.notifyIfChanged(true);
+                                }
+                            });
                     }
                 }).show();
     }

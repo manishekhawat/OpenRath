@@ -653,7 +653,8 @@ final class LayoutView extends View implements Hub.Listener {
     }
 
     private String driver() {
-        String n = prefs.str("layUser", "").trim();
+        String n = prefs.str("layUser", "").trim();   // set before there was one name setting
+        if (n.isEmpty()) n = prefs.welcome().trim();
         if (n.isEmpty()) n = Profiles.current(prefs);
         return n;
     }

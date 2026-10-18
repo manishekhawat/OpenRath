@@ -32,7 +32,6 @@ final class CabSettings {
                 if (a.settingsView != null) a.settingsView.refresh();
             }
         };
-        r.add(new SettingsView.Row(g, "Cab box", "long-press any box on the dashboard and pick Cab driver", null));
         if (Features.on(p, "cabTarget")) {
             r.add(new SettingsView.Row(g, "Daily target", Hindi.f("%1$s net", Cab.rs(p.num("cabTargetRs", 2000))), new Runnable() {
                 @Override

@@ -1,0 +1,1 @@
+Fewer, clearer settings: about 35 fewer rows, with no feature removed. Related switches are one switch (parking, tolls, fuel, car service, weather alerts, reminders, without internet), duplicates are gone, and the trip menu has trip history, driving score and toll payments.
