@@ -894,11 +894,27 @@ final class Extras {
                 a.voiceSearch(a.mapCard());
             }
         }));
-        r.add(new SettingsView.Row(g, "Mic over other apps", !OverMic.wanted(p) ? "off (Settings > Features)"
-                : OverMic.allowed(a) ? "on; drag it anywhere over maps and music" : "needs permission; tap to allow", new Runnable() {
+        final String[] micPlaces = {"map", "float", "apps"};
+        final String[] micNames = {"on the map only", "floating on the home screen", "floating, also over other apps"};
+        String mp = Features.micPlace(p);
+        r.add(new SettingsView.Row(g, "Mic button", Hindi.t(micNames[Math.max(0, java.util.Arrays.asList(micPlaces).indexOf(mp))])
+                + ("apps".equals(mp) && !OverMic.allowed(a) ? Hindi.t("; needs permission, tap to allow") : ""), new Runnable() {
             @Override
             public void run() {
-                if (OverMic.wanted(p) && !OverMic.allowed(a)) OverMic.ask(a);
+                if (OverMic.wanted(p) && !OverMic.allowed(a)) {
+                    OverMic.ask(a);
+                    return;
+                }
+                new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Mic button"))
+                        .setSingleChoiceItems(tr(micNames), java.util.Arrays.asList(micPlaces).indexOf(Features.micPlace(p)), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface d, int w) {
+                                p.put("micPlace", micPlaces[w]);
+                                d.dismiss();
+                                if (OverMic.wanted(p) && !OverMic.allowed(a)) OverMic.ask(a);
+                                featuresChanged(a);
+                            }
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
         r.add(new SettingsView.Row(g, "What you can say", "radio, calls, music, volume, places", new Runnable() {

@@ -148,10 +148,15 @@ public final class Tests {
             else d++;
         }
         eq("levels: simple count", 15, s);
-        eq("levels: custom count", 10, c);
-        eq("levels: dev count", 1, d);
+        eq("levels: custom count", 8, c);
+        eq("levels: dev count", 2, d);
         check("levels: full has the most", f > s && f > c);
         eq("levels: unknown name is custom", Features.CUSTOM, Features.levelOf("max"));
+        for (String[] pp : Features.PARTS) {
+            check("merged: " + pp[0] + " has no switch of its own", Features.get(pp[0]) == Features.get(pp[1]));
+            check("merged: " + pp[1] + " has a switch", Features.get(pp[1]) != null && pp[1].equals(Features.get(pp[1]).id));
+        }
+        eq("merged: plain id is itself", "weather", Features.parent("weather"));
         eq("levels: simple by name", Features.SIMPLE, Features.levelOf("simple"));
         Features.F weather = Features.get("weather"), score = Features.get("score"), eqF = Features.get("eq"),
                 widgets = Features.get("widgets"), maker = Features.get("maker"), cab = Features.get("cab"), obd = Features.get("obd");
