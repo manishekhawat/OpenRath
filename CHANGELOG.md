@@ -2,6 +2,22 @@
 
 Newest first.
 
+## 1.36: Ideas from OpenLauncher
+
+- **CarPlay and Android Auto apps:** the music box gets a CARPLAY / AUTO button that opens your phone-projection app (ZLink, AutoKit and others). OpenRath finds it by itself, or you choose it in Settings, Radio and music.
+- **Apps with no icon** can now be chosen anywhere an app is picked: "More apps (without an icon)" at the end of the list. Many projection, camera and radio apps have no icon.
+- **Home app row** in Help: shows whether the unit starts in OpenRath, and asks Android to make it the home app.
+- **Permissions explained:** on first start, a short screen says what each permission is for before Android asks.
+- **Big frequency from any radio app:** the radio box shows "FM 98.3" and the station name, picked out of the radio app's own text.
+- **Reset GPS** in Troubleshooting, for units that take minutes to find where they are.
+- **Speed correction** in Driving: add a few percent to the GPS speed so it matches your car's speedometer.
+- **szchoiceway stereos:** FM in the radio box, seek and tuning through the stereo's own services. Not yet tried on a real szchoiceway unit.
+- **Soundboard box** (off until you turn it on): horn, fart, applause and other sounds, made by the app itself. It plays only when the car is stopped.
+- **Compass and altitude box:** heading, degrees and GPS altitude.
+- **Free memory** in the performance box.
+- **Resize the boxes:** in Move boxes, drag the bar between two boxes to make one bigger. "Usual sizes" puts them back.
+- Picture-in-picture windows of other apps aren't possible: Android only lets apps signed by the stereo's maker do that.
+
 ## 1.35: Fewer, clearer settings
 
 - **About 45 fewer rows in Settings,** and every feature that stays still has its own on/off switch.

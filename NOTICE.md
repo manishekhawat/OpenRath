@@ -16,6 +16,7 @@ These are bundled in the source or in the APK. Each keeps its own licence, and t
 | leaflet-rotate, map turning for Leaflet | `assets/map/leaflet-rotate.js` | Iván Sánchez Ortega (author), Raruto, Fabien Nicollet and Zsolt Ero (github.com/Raruto/leaflet-rotate) | GPL-3.0 (`LICENSES/leaflet-rotate-GPL-3.0.txt`, `assets/map/LEAFLET-ROTATE-LICENSE`) |
 | QR code generator for JavaScript, for the QR codes on the map page | `assets/map/qrcode.js` | Kazuhiko Arase | MIT (`LICENSES/qrcode-generator-MIT.txt`) |
 | QR Code generator library (Java), moved to the package `org.openrath.qr` | `java/org/openrath/qr/` | Project Nayuki | MIT (at the top of each file) |
+| Ideas and stereo interface details (no code copied): the radio-text pattern, the szchoiceway MCU commands, and the projection, home-app, GPS-reset, speed-correction, soundboard and compass ideas | `RadioText.java`, `SzUnit.java`, `Projection.java`, `Soundboard.java` | David (dw2lam), OpenLauncher (github.com/dw2lam/openlauncher) | MIT (as its README states) |
 | Inter and Inter Display fonts, used to draw the artwork and copied into the APK for the welcome line | Taken from the `fonts-inter` package at build time | The Inter Project Authors | SIL Open Font License 1.1 (`LICENSES/Inter-OFL-1.1.txt`, and `assets/fonts/INTER-LICENSE` in the APK) |
 
 "QR Code" is a registered trademark of DENSO WAVE INCORPORATED.

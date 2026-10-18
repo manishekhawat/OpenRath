@@ -67,6 +67,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     static long fixAt;
     // where the car is, and which way it's heading (-1 = not known)
     static volatile double latNow, lonNow, headingNow = -1;
+    /** Height above sea level from GPS in metres, NaN until a fix has one; the last heading while moving. */
+    static volatile double altNow = Double.NaN, headingKept = -1;
     private long fuelCheckAt;
     private final Ahead ahead = new Ahead();
     private final Highway highway = new Highway();
@@ -194,6 +196,34 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     }
 
     /** Raise the volume a step at a time with speed, and back down when slower. */
+    /**
+     * Clears the GPS chip's saved satellite data and fetches it fresh (A-GPS), for units that take
+     * minutes to find GPS or lose it after a long time parked. False when the unit refuses.
+     */
+    static boolean resetGps(android.content.Context c) {
+        try {
+            android.location.LocationManager lm = (android.location.LocationManager) c.getSystemService(android.content.Context.LOCATION_SERVICE);
+            if (lm == null) return false;
+            String gps = android.location.LocationManager.GPS_PROVIDER;
+            boolean ok = lm.sendExtraCommand(gps, "delete_aiding_data", null);
+            android.os.Bundle b = new android.os.Bundle();
+            ok |= lm.sendExtraCommand(gps, "force_xtra_injection", b);
+            ok |= lm.sendExtraCommand(gps, "force_time_injection", b);
+            return ok;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * GPS speed with the owner's correction, in percent (-10 to +10), so it matches the car's own
+     * speedometer, which usually reads a few percent high. Not applied to OBD speed.
+     */
+    static float corrected(float kmh, int percent) {
+        int p = Math.max(-10, Math.min(10, percent));
+        return kmh * (100 + p) / 100f;
+    }
+
     private void speedVolume(float kmh) {
         long now = System.currentTimeMillis();
         try {
@@ -310,6 +340,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
             float dd = last.distanceTo(l);
             if (dd > 2) kmh = Math.max(kmh, dd / ((now - lastAt) / 1000f) * 3.6f);
         }
+        kmh = corrected(kmh, prefs.num("speedFix", 0));
         int obd = Obd.speedNow();
         if (obd >= 0) kmh = obd;   // the car's own speedometer reading beats GPS
         kmhNow = kmh;
@@ -317,6 +348,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         latNow = l.getLatitude();
         lonNow = l.getLongitude();
         headingNow = l.hasBearing() && kmh > 5 ? l.getBearing() : -1;
+        if (headingNow >= 0) headingKept = headingNow;
+        if (l.hasAltitude()) altNow = l.getAltitude();
         if (Features.on(prefs, "gpx")) Tracks.point(this, l.getLatitude(), l.getLongitude(), l.getAltitude(), kmh, now);
         if (Features.on(prefs, "accel")) {
             float t100 = timer.feed(kmh, now);

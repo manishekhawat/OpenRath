@@ -252,7 +252,7 @@
     <string name="ui_a_code_family_scan_to_see_where_you_are" formatted="false">परिवार कोड स्कैन करके आपकी जगह और रास्ता देखे; कुछ भी ऑनलाइन नहीं भेजा जाता</string>
     <string name="ui_the_floating_mic_stays_on_top_of_maps_an" formatted="false">तैरता माइक मैप और संगीत के ऊपर रहता है; \"दूसरे ऐप के ऊपर दिखाएँ\" अनुमति ज़रूरी</string>
     <string name="ui_performance_box" formatted="false">परफ़ॉर्मेंस बॉक्स</string>
-    <string name="ui_frames_per_second_cpu_use_and_temperatur" formatted="false">कोने में फ़्रेम प्रति सेकंड, CPU और तापमान</string>
+    <string name="ui_frames_per_second_cpu_use_and_temperatur" formatted="false">कोने में फ़्रेम प्रति सेकंड, CPU, तापमान और खाली मेमोरी</string>
     <string name="ui_speaks_and_beeps_near_cameras_and_over_t" formatted="false">कैमरे के पास और लिमिट से ऊपर बोलता और बीप करता है</string>
     <string name="ui_remember_where_you_parked" formatted="false">गाड़ी कहाँ खड़ी की, याद रखें</string>
     <string name="ui_saves_the_spot_after_90_seconds_standing" formatted="false">90 सेकंड रुकने पर जगह सेव करता है</string>
@@ -424,4 +424,60 @@
     <string name="ui_between_1_s_and_2_s" formatted="false">%1$s से %2$s तक</string>
     <string name="ui_fuel_log_and_fill_ups" formatted="false">ईंधन लॉग और भराई</string>
     <string name="ui_trip_history_and_driving_score" formatted="false">सफ़र का इतिहास और ड्राइविंग स्कोर</string>
+    <string name="ui_more_apps_without_an_icon" formatted="false">और ऐप्स (बिना आइकन वाले)…</string>
+    <string name="ui_no_phone_projection_app_found_choose_one" formatted="false">फ़ोन प्रोजेक्शन ऐप नहीं मिला; Settings में Radio and music में चुनें</string>
+    <string name="ui_that_app_couldn_t_be_opened" formatted="false">वह ऐप खुल नहीं सका</string>
+    <string name="ui_phone_projection_app" formatted="false">फ़ोन प्रोजेक्शन ऐप</string>
+    <string name="ui_a_button_in_the_music_box_opens_your_wir" formatted="false">म्यूज़िक बॉक्स का एक बटन आपका वायरलेस CarPlay या Android Auto ऐप खोलता है (ZLink, AutoKit और अन्य)</string>
+    <string name="ui_big_frequency_from_any_radio_app" formatted="false">किसी भी रेडियो ऐप से बड़ी फ़्रीक्वेंसी</string>
+    <string name="ui_shows_fm_98_3_and_the_station_name_from_" formatted="false">रेडियो ऐप के टेक्स्ट से \"FM 98.3\" और स्टेशन का नाम दिखाता है</string>
+    <string name="ui_1_s_found" formatted="false">%1$s (मिला)</string>
+    <string name="ui_your_carplay_or_android_auto_app" formatted="false">आपका CarPlay या Android Auto ऐप</string>
+    <string name="ui_carplay_auto" formatted="false">CARPLAY / AUTO</string>
+    <string name="ui_home_app" formatted="false">होम ऐप</string>
+    <string name="ui_openrath_the_unit_starts_in_it" formatted="false">OpenRath; यूनिट इसी में शुरू होता है</string>
+    <string name="ui_not_openrath_tap_to_make_the_unit_start_" formatted="false">OpenRath नहीं; यूनिट इसी में शुरू हो, इसके लिए टैप करें</string>
+    <string name="ui_openrath_is_already_the_home_app" formatted="false">OpenRath पहले से होम ऐप है</string>
+    <string name="ui_this_unit_has_no_screen_to_choose_the_ho" formatted="false">इस यूनिट में होम ऐप चुनने की स्क्रीन नहीं है; Home दबाएँ और OpenRath, Always चुनें</string>
+    <string name="ui_android_will_now_ask_for_a_few_permissio" formatted="false">Android अब कुछ अनुमतियाँ माँगेगा। हर एक किसलिए है:</string>
+    <string name="ui_location_your_speed_the_map_speed_camera" formatted="false">लोकेशन: आपकी स्पीड, नक्शा, स्पीड-कैमरा अलर्ट और सफ़र का रिकॉर्ड। यह यूनिट पर ही रहता है।</string>
+    <string name="ui_music_and_photos_plays_music_from_a_usb_" formatted="false">संगीत और फ़ोटो: USB से संगीत चलाना, और कार व बैकग्राउंड के लिए आपकी अपनी तस्वीरें।</string>
+    <string name="ui_nearby_devices_your_phone_s_calls_over_b" formatted="false">आस-पास के डिवाइस: Bluetooth से फ़ोन कॉल, और OBD या टायर सेंसर अगर आपके पास हैं।</string>
+    <string name="ui_phone_and_calls_shows_who_is_calling_and" formatted="false">फ़ोन और कॉल: कौन कॉल कर रहा है दिखाता है, और होम स्क्रीन से उठाने और वापस कॉल करने देता है।</string>
+    <string name="ui_notifications_reminders_such_as_a_break_" formatted="false">सूचनाएँ: रिमाइंडर, जैसे लंबी ड्राइव के बाद आराम।</string>
+    <string name="ui_you_can_refuse_any_of_them_only_that_par" formatted="false">आप कोई भी मना कर सकते हैं; सिर्फ़ वही हिस्सा काम नहीं करेगा। कुछ भी ऑनलाइन नहीं भेजा जाता।</string>
+    <string name="ui_before_you_start" formatted="false">शुरू करने से पहले</string>
+    <string name="ui_continue" formatted="false">आगे बढ़ें</string>
+    <string name="ui_speed_correction" formatted="false">स्पीड सुधार</string>
+    <string name="ui_gps_speed_1_s" formatted="false">GPS स्पीड %1$s%%</string>
+    <string name="ui_add_to_the_gps_speed_so_it_matches_your_" formatted="false">GPS स्पीड में जोड़ें, ताकि यह आपकी कार के स्पीडोमीटर से मिले</string>
+    <string name="ui_reset_gps" formatted="false">GPS रीसेट करें</string>
+    <string name="ui_if_it_takes_long_to_find_where_you_are" formatted="false">अगर जगह ढूँढने में देर लगती है</string>
+    <string name="ui_gps_data_cleared_it_can_take_a_few_minut" formatted="false">GPS डेटा साफ़ हुआ; खुले में आपको फिर ढूँढने में कुछ मिनट लग सकते हैं</string>
+    <string name="ui_this_unit_s_gps_doesn_t_allow_a_reset" formatted="false">इस यूनिट का GPS रीसेट नहीं होने देता</string>
+    <string name="ui_soundboard" formatted="false">साउंडबोर्ड</string>
+    <string name="ui_a_box_of_fun_sounds_horn_fart_applause_a" formatted="false">मज़ेदार आवाज़ों का बॉक्स (हॉर्न, पाद, तालियाँ और भी), जो सिर्फ़ कार रुकी होने पर बजता है</string>
+    <string name="ui_compass_and_altitude" formatted="false">कम्पास और ऊँचाई</string>
+    <string name="ui_soundboard_horn_and_fun_sounds" formatted="false">साउंडबोर्ड (हॉर्न और मज़ेदार आवाज़ें)</string>
+    <string name="ui_compass" formatted="false">कम्पास</string>
+    <string name="ui_heading" formatted="false">दिशा</string>
+    <string name="ui_degrees" formatted="false">डिग्री</string>
+    <string name="ui_altitude_m" formatted="false">ऊँचाई मी</string>
+    <string name="ui_the_heading_shows_once_the_car_moves" formatted="false">कार चलने पर दिशा दिखेगी</string>
+    <string name="ui_last_heading_while_moving_gps_altitude_i" formatted="false">चलते समय की आख़िरी दिशा; GPS ऊँचाई लगभग 10 मी तक सही</string>
+    <string name="ui_gps_altitude_is_within_about_10_m" formatted="false">GPS ऊँचाई लगभग 10 मी तक सही</string>
+    <string name="ui_memory_low" formatted="false">मेमोरी कम</string>
+    <string name="ui_memory_1_s_of_2_s_gb_free" formatted="false">मेमोरी %2$s GB में से %1$s खाली</string>
+    <string name="ui_soundboard_2" formatted="false">साउंडबोर्ड</string>
+    <string name="ui_horn" formatted="false">हॉर्न</string>
+    <string name="ui_fart" formatted="false">पाद</string>
+    <string name="ui_applause" formatted="false">तालियाँ</string>
+    <string name="ui_ba_dum_tss" formatted="false">बा-डुम-त्स</string>
+    <string name="ui_bell" formatted="false">घंटी</string>
+    <string name="ui_wrong_answer" formatted="false">ग़लत जवाब</string>
+    <string name="ui_turn_on_soundboard_in_settings_radio_and" formatted="false">Settings में Radio and music में साउंडबोर्ड चालू करें</string>
+    <string name="ui_plays_when_the_car_is_stopped" formatted="false">कार रुकने पर बजता है</string>
+    <string name="ui_the_soundboard_plays_only_when_the_car_i" formatted="false">साउंडबोर्ड सिर्फ़ कार रुकी होने पर बजता है</string>
+    <string name="ui_drag_a_box_onto_another_to_swap_them_or_" formatted="false">बॉक्स को दूसरे पर खींचकर अदला-बदली करें, या बॉक्सों के बीच की पट्टी खींचकर आकार बदलें</string>
+    <string name="ui_usual_sizes" formatted="false">सामान्य आकार</string>
 </resources>

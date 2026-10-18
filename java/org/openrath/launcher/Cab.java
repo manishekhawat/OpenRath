@@ -636,7 +636,7 @@ final class Cab {
         PackageManager pm = c.getPackageManager();
         List<String> seen = new ArrayList<>();
         for (String[] r : RIDE_APPS) {
-            if (pm.getLaunchIntentForPackage(r[1]) != null) {
+            if (Compat.launch(pm, r[1]) != null) {
                 out.add(r);
                 seen.add(r[1]);
             }
@@ -682,7 +682,7 @@ final class Cab {
     }
 
     static void openApp(HomeActivity a, String pkg) {
-        Intent i = a.getPackageManager().getLaunchIntentForPackage(pkg);
+        Intent i = Compat.launch(a.getPackageManager(), pkg);
         if (i == null) return;
         a.prefs.put("cabLastRideApp", pkg);
         a.startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
