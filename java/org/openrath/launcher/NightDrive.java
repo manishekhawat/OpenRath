@@ -9,10 +9,6 @@ import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 /**
  * Night-drive mode: after sunset, while moving, everything but the map goes black, the map gets a
  * dim red tint (kinder to night vision), and the speed is shown very large in deep red. Touches
@@ -26,6 +22,11 @@ final class NightDrive extends View {
 
     private final Rect hole = new Rect();
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    // kept between frames rather than made for each one
+    private final RectF area = new RectF();
+    private final int[] mapAt = new int[2], selfAt = new int[2];
+    private static final Typeface LIGHT = Typeface.create("sans-serif-light", Typeface.NORMAL),
+            MEDIUM = Typeface.create("sans-serif-medium", Typeface.NORMAL);
     private String speed = "--";
     private final Closed closed;
     static final int RED = 0xFFC62828, RED_DIM = 0xFF7A1C1C;
@@ -39,7 +40,7 @@ final class NightDrive extends View {
     void setMap(View map) {
         hole.setEmpty();
         if (map != null && map.isShown()) {
-            int[] a = new int[2], b = new int[2];
+            int[] a = mapAt, b = selfAt;
             map.getLocationInWindow(a);
             getLocationInWindow(b);
             hole.set(a[0] - b[0], a[1] - b[1], a[0] - b[0] + map.getWidth(), a[1] - b[1] + map.getHeight());
@@ -67,7 +68,7 @@ final class NightDrive extends View {
             cv.drawRect(hole, paint);
         }
         // the speed goes in the biggest black area: beside the map, or the whole screen
-        RectF area = new RectF(0, 0, w, h);
+        area.set(0, 0, w, h);
         if (!hole.isEmpty()) {
             float left = hole.left, right = w - hole.right, top = hole.top, bottom = h - hole.bottom;
             float best = Math.max(Math.max(left * h, right * h), Math.max(top * w, bottom * w));
@@ -76,21 +77,21 @@ final class NightDrive extends View {
             else if (best == top * w) area.set(0, 0, w, hole.top);
             else area.set(0, hole.bottom, w, h);
         }
-        paint.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+        paint.setTypeface(LIGHT);
         paint.setTextAlign(Paint.Align.CENTER);
         float size = Math.min(area.height() * 0.42f, area.width() * 0.5f);
         paint.setTextSize(size);
         paint.setColor(RED);
         float cx = area.centerX(), cy = area.centerY();
         cv.drawText(speed, cx, cy + size * 0.3f, paint);
-        paint.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+        paint.setTypeface(MEDIUM);
         paint.setTextSize(size * 0.16f);
         paint.setColor(RED_DIM);
         paint.setLetterSpacing(0.2f);
         cv.drawText(Units.speedLabel().toUpperCase(java.util.Locale.ROOT), cx, cy + size * 0.62f, paint);
         paint.setTextSize(size * 0.2f);
         paint.setLetterSpacing(0);
-        cv.drawText(new SimpleDateFormat("h:mm", Locale.US).format(new Date()), cx, area.top + size * 0.35f, paint);
+        cv.drawText(Times.now("h:mm"), cx, area.top + size * 0.35f, paint);
         paint.setTextSize(Math.max(12, size * 0.09f));
         cv.drawText(Hindi.t("Tap here to leave night-drive mode"), cx, area.bottom - size * 0.12f, paint);
     }

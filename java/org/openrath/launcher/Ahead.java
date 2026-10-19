@@ -140,8 +140,8 @@ final class Ahead {
     final List<Spot> spots = new ArrayList<>();
     final List<Road> roads = new ArrayList<>();
     private final Set<String> told = new HashSet<>();
-    private double qLat, qLon;
-    private long qAt;
+    private volatile double qLat, qLon;
+    private volatile long qAt;
     private volatile boolean busy;
     private int againstFixes;
     private long wrongAt;
@@ -167,7 +167,9 @@ final class Ahead {
         }
         long t = System.currentTimeMillis();
         boolean far = qAt == 0 || Geo.dist(qLat, qLon, lat, lon) > 350;
-        if (!busy && kmh > 3 && (far || t - qAt > 180000) && t - qAt > 10000) fetch(lat, lon, wantToll || wantZones, net);
+        // the gate spaces out questions to Overpass, shared with the speed alerts, and waits longer after errors
+        if (!busy && kmh > 3 && (far || t - qAt > 180000) && t - qAt > 10000 && OverpassGate.SHARED.take(t))
+            fetch(lat, lon, wantToll || wantZones, net);
 
         synchronized (this) {
             for (Spot s : spots) {
@@ -213,7 +215,7 @@ final class Ahead {
         qAt = System.currentTimeMillis();
         qLat = lat;
         qLon = lon;
-        new Thread(new Runnable() {
+        Bg.run(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -260,12 +262,15 @@ final class Ahead {
                         roads.clear();
                         roads.addAll(rd);
                     }
-                } catch (Throwable ignored) {
-                    qAt = System.currentTimeMillis() - 170000;   // try again in ten seconds
+                    OverpassGate.SHARED.worked();
+                } catch (Throwable e) {
+                    // try again in ten seconds, or later when the gate says so (it waits longer after each failure)
+                    OverpassGate.SHARED.failed(System.currentTimeMillis(), OverpassGate.code(e));
+                    qAt = System.currentTimeMillis() - 170000;
                 } finally {
                     busy = false;
                 }
             }
-        }).start();
+        });
     }
 }

@@ -290,6 +290,8 @@ final class Floaters {
     static final class Perf extends View {
         private final Paint bg = new Paint(Paint.ANTI_ALIAS_FLAG), ink = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final Meter m = Meter.INSTANCE;
+        private final RectF box = new RectF();
+        private boolean measuring;
 
         Perf(Context c) {
             super(c);
@@ -301,13 +303,29 @@ final class Floaters {
         @Override
         protected void onAttachedToWindow() {
             super.onAttachedToWindow();
-            m.start();
+            measure(getWindowVisibility() == VISIBLE);
         }
 
         @Override
         protected void onDetachedFromWindow() {
-            m.stop();
+            measure(false);
             super.onDetachedFromWindow();
+        }
+
+        // counting frames every frame only while the box can be seen
+        @Override
+        protected void onWindowVisibilityChanged(int v) {
+            super.onWindowVisibilityChanged(v);
+            measure(v == VISIBLE && isAttachedToWindow());
+        }
+
+        private void measure(boolean on) {
+            if (on == measuring) return;
+            measuring = on;
+            if (on) {
+                m.start();
+                invalidate();
+            } else m.stop();
         }
 
         @Override
@@ -319,9 +337,10 @@ final class Floaters {
             float w = 0;
             for (String l : lines) w = Math.max(w, ink.measureText(l));
             float lh = 18 * k;
-            c.drawRoundRect(new RectF(0, 0, w + 2 * pad, lines.length * lh + 2 * pad - 4 * k), 6 * k, 6 * k, bg);
+            box.set(0, 0, w + 2 * pad, lines.length * lh + 2 * pad - 4 * k);
+            c.drawRoundRect(box, 6 * k, 6 * k, bg);
             for (int i = 0; i < lines.length; i++) c.drawText(lines[i], pad, pad + (i + 1) * lh - 5 * k, ink);
-            postInvalidateDelayed(1000);
+            if (measuring) postInvalidateDelayed(1000);
         }
     }
 

@@ -66,11 +66,19 @@ final class StatusIcons extends View {
     private final Runnable tick = new Runnable() {
         @Override
         public void run() {
+            // behind another app, or the screen off: no checks until the dashboard shows again
+            if (getWindowVisibility() != VISIBLE) return;
+            long before = shownState();
             read();
-            invalidate();
+            if (shownState() != before) invalidate();
             postDelayed(this, 5000);
         }
     };
+
+    /** What the icons show, to redraw only when it changes. */
+    private long shownState() {
+        return new Stamp().add(wifi).add(mobile).add(bt).add(gps).add(battery).add(net).add(wifiOn).add(charging).value();
+    }
 
     StatusIcons(HomeActivity a, boolean across) {
         super(a);
@@ -90,6 +98,13 @@ final class StatusIcons extends View {
     protected void onDetachedFromWindow() {
         removeCallbacks(tick);
         super.onDetachedFromWindow();
+    }
+
+    @Override
+    protected void onWindowVisibilityChanged(int v) {
+        super.onWindowVisibilityChanged(v);
+        removeCallbacks(tick);
+        if (v == VISIBLE && isAttachedToWindow()) post(tick);
     }
 
     private void read() {

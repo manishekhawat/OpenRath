@@ -65,17 +65,40 @@ final class LayoutView extends View implements Hub.Listener {
 
     /** Somewhere on screen that does something when tapped. */
     private static final class Hit {
-        final RectF r;
-        final String action;
-
-        Hit(float x, float y, float w, float h, String action) {
-            r = new RectF(x, y, x + w, y + h);
-            this.action = action;
-        }
+        final RectF r = new RectF();
+        String action;
     }
 
+    /** This frame's tap targets: the first `hitCount` of a list kept from frame to frame, so none is made anew. */
     private final List<Hit> hits = new ArrayList<>();
+    private int hitCount;
+
+    private void hit(float x, float y, float w, float h, String action) {
+        if (hitCount == hits.size()) hits.add(new Hit());
+        Hit t = hits.get(hitCount++);
+        t.r.set(x, y, x + w, y + h);
+        t.action = action;
+    }
+
     private final GestureDetector gestures;
+
+    // kept between frames rather than made for each one (up to 30 a second while driving)
+    private final Matrix matrix = new Matrix();
+    private final Path path = new Path(), clip = new Path(), glyphPath = new Path();
+    private final RectF rect = new RectF(), glyphRect = new RectF();
+    private final Paint.FontMetrics metrics = new Paint.FontMetrics();
+    private static final String[] FAV_ACTIONS = new String[LayoutView.FAVOURITES];
+    private static final Map<String, String> DOCK_ACTIONS = new HashMap<>();
+
+    static {
+        for (int i = 0; i < FAV_ACTIONS.length; i++) FAV_ACTIONS[i] = "fav:" + i;
+    }
+
+    private static String dockAction(String item) {
+        String s = DOCK_ACTIONS.get(item);
+        if (s == null) DOCK_ACTIONS.put(item, s = "dock:" + item);
+        return s;
+    }
 
     LayoutView(HomeActivity activity, Layouts.Layout l) {
         super(activity);
@@ -117,7 +140,7 @@ final class LayoutView extends View implements Hub.Listener {
 
     private Hit hit(MotionEvent e) {
         float x = (e.getX() - ox) / k, y = (e.getY() - oy) / k;
-        for (int i = hits.size() - 1; i >= 0; i--) {
+        for (int i = hitCount - 1; i >= 0; i--) {
             RectF r = hits.get(i).r;
             if (x >= r.left - 6 && x <= r.right + 6 && y >= r.top - 6 && y <= r.bottom + 6) return hits.get(i);
         }
@@ -263,7 +286,27 @@ final class LayoutView extends View implements Hub.Listener {
     void rebuild() {
         still = null;
         bg = null;
+        settingsAt = 0;
         invalidate();
+    }
+
+    // ------------------------------------------------------------------ settings, read once a second
+
+    private long settingsAt;
+    private boolean roadOn, animOn;
+    private java.util.Set<String> hiddenNow = new java.util.HashSet<>();
+    private final Map<Layouts.Part, List<String>> statsNow = new HashMap<>(), dockNow = new HashMap<>();
+
+    /** The layout's switches, read from the settings on rebuild() and at most once a second, not every frame. */
+    private void settings() {
+        long now = SystemClock.uptimeMillis();
+        if (settingsAt != 0 && now - settingsAt < 1000) return;
+        settingsAt = now;
+        roadOn = Layouts.roadOn(prefs);
+        animOn = Layouts.animOn(prefs);
+        hiddenNow = Layouts.hidden(prefs, lay.id);
+        statsNow.clear();
+        dockNow.clear();
     }
 
     @Override
@@ -289,6 +332,7 @@ final class LayoutView extends View implements Hub.Listener {
     protected void onDraw(Canvas c) {
         int w = getWidth(), h = getHeight();
         if (w == 0 || h == 0) return;
+        settings();
         k = Math.min(h / H, w / W);   // fit the design, centred, on any shape of screen
         ox = (w - W * k) / 2;
         oy = (h - H * k) / 2;
@@ -305,8 +349,8 @@ final class LayoutView extends View implements Hub.Listener {
             }
         }
         boolean moving = moving();
-        boolean road = lay.roadHorizon > 0 && Layouts.roadOn(prefs);
-        boolean drift = Layouts.animOn(prefs) && moving;
+        boolean road = lay.roadHorizon > 0 && roadOn;
+        boolean drift = animOn && moving;
         long now = SystemClock.uptimeMillis();
         double dt = lastFrame == 0 ? 0 : Math.min(0.2, (now - lastFrame) / 1000.0);
         lastFrame = now;
@@ -315,7 +359,7 @@ final class LayoutView extends View implements Hub.Listener {
         if (bg != null) {
             float s = Math.max(w / (float) bg.getWidth(), h / (float) bg.getHeight());
             float dx = 0, dy = 0;
-            if (Layouts.animOn(prefs)) {
+            if (animOn) {
                 s *= 1.05f;
                 double t = System.currentTimeMillis() / 1000.0;
                 if (drift) {
@@ -323,10 +367,9 @@ final class LayoutView extends View implements Hub.Listener {
                     dy = (float) (Math.cos(t / 13) * h * 0.012);
                 }
             }
-            Matrix m = new Matrix();
-            m.setScale(s, s);
-            m.postTranslate((w - bg.getWidth() * s) / 2 + dx, (h - bg.getHeight() * s) / 2 + dy);
-            c.drawBitmap(bg, m, pic);
+            matrix.setScale(s, s);
+            matrix.postTranslate((w - bg.getWidth() * s) / 2 + dx, (h - bg.getHeight() * s) / 2 + dy);
+            c.drawBitmap(bg, matrix, pic);
         } else c.drawColor(lay.light ? 0xFFDDE3EA : 0xFF14181E);
 
         c.save();
@@ -341,7 +384,7 @@ final class LayoutView extends View implements Hub.Listener {
         c.save();
         c.translate(ox, oy);
         c.scale(k, k);
-        hits.clear();
+        hitCount = 0;
         drawLive(c);
         c.restore();
 
@@ -352,7 +395,7 @@ final class LayoutView extends View implements Hub.Listener {
     // ------------------------------------------------------------------ the still layer
 
     private boolean on(Layouts.Part p) {
-        return Layouts.shown(prefs, lay.id, p.opt);
+        return p.opt == null || p.opt.isEmpty() || !hiddenNow.contains(p.opt);
     }
 
     private void drawStill(Canvas c) {
@@ -401,8 +444,9 @@ final class LayoutView extends View implements Hub.Listener {
             } else if ("weather".equals(kind) && "bubble".equals(p.style)) {
                 // a soft sun glow inside the bubble's top right
                 c.save();
-                Path clip = new Path();
-                clip.addOval(new RectF(p.x, p.y, p.x + p.w, p.y + p.h), Path.Direction.CW);
+                clip.reset();
+                rect.set(p.x, p.y, p.x + p.w, p.y + p.h);
+                clip.addOval(rect, Path.Direction.CW);
                 c.clipPath(clip);
                 fill.setShader(null);
                 fill.setColor(0x96FFD66E);
@@ -415,8 +459,9 @@ final class LayoutView extends View implements Hub.Listener {
     /** A part's background: a circle or rounded card, with an optional top-to-bottom gradient and a soft shadow. */
     private void shape(Canvas c, Layouts.Part p, boolean has, boolean shadow) {
         if (!has) return;
-        RectF r = new RectF(p.x, p.y, p.x + p.w, p.y + p.h);
-        fill.setShader(new LinearGradient(0, p.y, 0, p.y + p.h, p.fill, p.fill2, Shader.TileMode.CLAMP));
+        RectF r = rect;
+        r.set(p.x, p.y, p.x + p.w, p.y + p.h);
+        fill.setShader(new LinearGradient(0, p.y, 0, p.y + p.h, p.fill, p.fill2, Shader.TileMode.CLAMP));   // the still layer: drawn once
         fill.setAlpha(Math.round(255 * p.alpha));
         if (shadow) fill.setShadowLayer(10, 0, 6, 0x40000000);
         if ("circle".equals(p.shape)) c.drawOval(r, fill);
@@ -428,14 +473,15 @@ final class LayoutView extends View implements Hub.Listener {
 
     private void image(Canvas c, Bitmap b, float x, float y, float w, float h, boolean circle, float radius) {
         c.save();
+        RectF r = rect;
+        r.set(x, y, x + w, y + h);
         if (circle || radius > 0) {
-            Path clip = new Path();
-            RectF r = new RectF(x, y, x + w, y + h);
+            clip.reset();
             if (circle) clip.addOval(r, Path.Direction.CW);
             else clip.addRoundRect(r, radius, radius, Path.Direction.CW);
             c.clipPath(clip);
         }
-        c.drawBitmap(b, null, new RectF(x, y, x + w, y + h), pic);
+        c.drawBitmap(b, null, r, pic);
         c.restore();
     }
 
@@ -448,15 +494,19 @@ final class LayoutView extends View implements Hub.Listener {
         if (b != null) {
             float s = p.h * 0.5f, bw = s * b.getWidth() / (float) b.getHeight();
             pic.setColorFilter(new android.graphics.PorterDuffColorFilter(p.ink, android.graphics.PorterDuff.Mode.SRC_IN));
-            c.drawBitmap(b, null, new RectF(p.x + (p.w - bw) / 2, p.y + (p.h - s) / 2, p.x + (p.w + bw) / 2, p.y + (p.h + s) / 2), pic);
+            rect.set(p.x + (p.w - bw) / 2, p.y + (p.h - s) / 2, p.x + (p.w + bw) / 2, p.y + (p.h + s) / 2);
+            c.drawBitmap(b, null, rect, pic);
             pic.setColorFilter(null);
         }
     }
 
     /** The dock's buttons, with the mirroring button when it is switched on. */
     private List<String> dockItems(Layouts.Part p) {
-        List<String> out = new ArrayList<>(p.items);
+        List<String> out = dockNow.get(p);
+        if (out != null) return out;
+        out = new ArrayList<>(p.items);
         if (Layouts.mirrorOn(prefs) && !out.contains("mirror")) out.add(out.contains("apps") ? out.indexOf("apps") : out.size(), "mirror");
+        dockNow.put(p, out);
         return out;
     }
 
@@ -490,7 +540,6 @@ final class LayoutView extends View implements Hub.Listener {
         fill.setShader(null);
         fill.setColor(lay.roadDash);
         fill.setAlpha(230);
-        Path path = new Path();
         for (int i = 0; i < 40; i++) {
             double depth = i * 1.6 + 0.6 - roadPhase;
             if (depth < 0.35) continue;
@@ -588,8 +637,9 @@ final class LayoutView extends View implements Hub.Listener {
         return android.text.format.DateFormat.is24HourFormat(a);
     }
 
+    /** The time now in a pattern; each pattern's text is worked out at most once a second. */
     private static String fmt(String f) {
-        return new SimpleDateFormat(f, Locale.US).format(new Date());
+        return Times.now(f);
     }
 
     /** Today's name, and "11 Oct", in the owner's language (the numbers as they are). */
@@ -682,14 +732,14 @@ final class LayoutView extends View implements Hub.Listener {
                 int n = items.size() + (p.clock ? 1 : 0);
                 for (int i = 0; i < items.size(); i++) {
                     float cx = p.x + p.w * (i + 0.5f) / n, cw = p.w / n;
-                    hits.add(new Hit(cx - cw / 2, p.y, cw, p.h, "dock:" + items.get(i)));
+                    hit(cx - cw / 2, p.y, cw, p.h, dockAction(items.get(i)));
                 }
                 if (p.clock) text(c, time(), p.x + p.w - 10, p.y + p.h / 2, 26, p.ink, MED, "rm");
-            } else if ("apps".equals(kind)) hits.add(new Hit(p.x, p.y, p.w, p.h, "dock:apps"));
-            else if ("gear".equals(kind)) hits.add(new Hit(p.x - 8, p.y - 8, p.w + 16, p.h + 16, "settings"));
+            } else if ("apps".equals(kind)) hit(p.x, p.y, p.w, p.h, "dock:apps");
+            else if ("gear".equals(kind)) hit(p.x - 8, p.y - 8, p.w + 16, p.h + 16, "settings");
             else if ("places".equals(kind)) {
-                hits.add(new Hit(p.x - 6, p.y, 60, p.h, "place:Home"));
-                hits.add(new Hit(p.x + p.w - 60, p.y, 60, p.h, "place:Office"));
+                hit(p.x - 6, p.y, 60, p.h, "place:Home");
+                hit(p.x + p.w - 60, p.y, 60, p.h, "place:Office");
             }
         }
     }
@@ -754,19 +804,36 @@ final class LayoutView extends View implements Hub.Listener {
                 text(c, String.valueOf(n), cx + (float) Math.sin(an) * r * .7f, cy - (float) Math.cos(an) * r * .7f, r * .16f, ink, MED, "mm");
             }
         }
-        Calendar now = Calendar.getInstance();
+        Calendar now = calendar();
         float hr = now.get(Calendar.HOUR) + now.get(Calendar.MINUTE) / 60f, mn = now.get(Calendar.MINUTE) + now.get(Calendar.SECOND) / 60f;
         float sec = now.get(Calendar.SECOND);
-        float[][] hands = {{hr / 12, 0.5f, 4.5f, ink}, {mn / 60, 0.75f, 3, ink}, {sec / 60, 0.85f, 1.4f, accent != 0 ? accent : sub}};
-        for (float[] hd : hands) {
-            double an = hd[0] * 2 * Math.PI;
-            line.setColor((int) hd[3]);
-            line.setStrokeWidth(hd[2] * r / 100);
-            c.drawLine(cx, cy, cx + (float) Math.sin(an) * r * hd[1], cy - (float) Math.cos(an) * r * hd[1], line);
-        }
+        hand(c, cx, cy, r, hr / 12, 0.5f, 4.5f, ink);
+        hand(c, cx, cy, r, mn / 60, 0.75f, 3, ink);
+        hand(c, cx, cy, r, sec / 60, 0.85f, 1.4f, accent != 0 ? accent : sub);
         fill.setShader(null);
         fill.setColor(ink);
         c.drawCircle(cx, cy, r * .05f, fill);
+    }
+
+    private void hand(Canvas c, float cx, float cy, float r, float turn, float length, float width, int colour) {
+        double an = turn * 2 * Math.PI;
+        line.setColor(colour);
+        line.setStrokeWidth(width * r / 100);
+        c.drawLine(cx, cy, cx + (float) Math.sin(an) * r * length, cy - (float) Math.cos(an) * r * length, line);
+    }
+
+    private Calendar cal;
+    private long calAt;
+
+    /** A calendar set to now, made again each minute (so it follows a change of time zone). */
+    private Calendar calendar() {
+        long now = System.currentTimeMillis();
+        if (cal == null || Math.abs(now - calAt) > 60000) {
+            cal = Calendar.getInstance();
+            calAt = now;
+        }
+        cal.setTimeInMillis(now);
+        return cal;
     }
 
     // ---- weather
@@ -777,7 +844,8 @@ final class LayoutView extends View implements Hub.Listener {
 
     private void icon(Canvas c, String name, float x, float y, float size) {
         Bitmap b = wicon(name);
-        if (b != null) c.drawBitmap(b, null, new RectF(x, y, x + size, y + size), pic);
+        rect.set(x, y, x + size, y + size);
+        if (b != null) c.drawBitmap(b, null, rect, pic);
     }
 
     private static String lastWord(String s) {
@@ -827,6 +895,24 @@ final class LayoutView extends View implements Hub.Listener {
     }
 
     private static final String[] DAYS = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+    /** "2026-10-12" to "Mon", worked out once for each date. */
+    private final Map<String, String> dayNames = new HashMap<>();
+
+    private String dayName(String date) {
+        String day = dayNames.get(date);
+        if (day != null) return day;
+        day = date;
+        try {
+            Date dt = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(date);
+            Calendar cl = Calendar.getInstance();
+            cl.setTime(dt);
+            day = Hindi.t(DAYS[cl.get(Calendar.DAY_OF_WEEK) - 1]);
+        } catch (Exception ignored) {
+        }
+        if (dayNames.size() > 30) dayNames.clear();
+        dayNames.put(date, day);
+        return day;
+    }
 
     private void forecast(Canvas c, Layouts.Part p) {
         List<String[]> f = a.hub.forecast;
@@ -840,22 +926,15 @@ final class LayoutView extends View implements Hub.Listener {
             float cx = p.x + p.w * (i + 0.5f) / n;
             icon(c, d[1], cx - 20, p.y + 8, 40);
             text(c, d[2], cx, p.y + 66, 16, p.ink, MED, "mm");
-            String day = d[0];
-            try {
-                Date dt = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(d[0]);
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dt);
-                day = Hindi.t(DAYS[cal.get(Calendar.DAY_OF_WEEK) - 1]);
-            } catch (Exception ignored) {
-            }
-            text(c, day, cx, p.y + 92, 13, p.sub, REG, "mm");
+            text(c, dayName(d[0]), cx, p.y + 92, 13, p.sub, REG, "mm");
         }
     }
 
     // ---- speed
 
     private void ring(Canvas c, float cx, float cy, float r, float width, float frac, int ink, int track) {
-        RectF box = new RectF(cx - r, cy - r, cx + r, cy + r);
+        RectF box = rect;
+        box.set(cx - r, cy - r, cx + r, cy + r);
         line.setStrokeCap(Paint.Cap.BUTT);
         line.setStrokeWidth(width);
         line.setColor(track);
@@ -870,7 +949,7 @@ final class LayoutView extends View implements Hub.Listener {
         String v = a.hub.speedShown();
         float frac = speedNum() / 180f;
         String st = p.style;
-        hits.add(new Hit(x, y, w, h, "dock:navi"));
+        hit(x, y, w, h, "dock:navi");
         if ("ring".equals(st)) {
             ring(c, cx, cy, w * 0.4f, w * 0.035f, frac, 0xFFFFFFFF, 0x55FFFFFF);
             text(c, v, cx, cy - 6, h * 0.27f, p.ink, MED, "mm");
@@ -902,7 +981,8 @@ final class LayoutView extends View implements Hub.Listener {
                     text(c, String.valueOf(i), cx + (float) Math.cos(an) * r * .66f, cy - (float) Math.sin(an) * r * .66f,
                             r * .085f, i < 140 ? p.sub : p.accent, MED, "mm");
             }
-            RectF box = new RectF(cx - r * .93f, cy - r * .93f, cx + r * .93f, cy + r * .93f);
+            RectF box = rect;
+            box.set(cx - r * .93f, cy - r * .93f, cx + r * .93f, cy + r * .93f);
             line.setColor(p.accent);
             line.setStrokeWidth(5);
             if (frac > 0) c.drawArc(box, 135, 270 * Math.min(1, frac), false, line);
@@ -922,20 +1002,21 @@ final class LayoutView extends View implements Hub.Listener {
             line.setStrokeWidth(2);
             for (int sg : new int[]{-1, 1}) c.drawLine(cx + sg * 14, y + 140, cx + sg * 70, y + h - 20, line);
             Bitmap car = Layouts.asset(a, "car_rear_white");
-            if (car != null) c.drawBitmap(car, null, new RectF(cx - 55, y + h - 110, cx + 55, y + h - 31), pic);
+            rect.set(cx - 55, y + h - 110, cx + 55, y + h - 31);
+            if (car != null) c.drawBitmap(car, null, rect, pic);
         }
     }
 
     // ---- music
 
+    private static final String[] CONTROL_GLYPHS = {"prev", "play", "next"}, CONTROL_ACTIONS = {"media:prev", "media:toggle", "media:next"};
+
     /** prev, play/pause, next spread over w, each a tap target. */
     private void controls(Canvas c, float x, float y, float w, float size, int ink, boolean playing) {
-        String[] g = {"prev", playing ? "pause" : "play", "next"};
-        String[] act = {"prev", "toggle", "next"};
         for (int i = 0; i < 3; i++) {
             float cx = x + w * (0.12f + 0.38f * i);
-            glyph(c, g[i], cx - size / 2, y, size, ink);
-            hits.add(new Hit(cx - size, y - size / 2, size * 2, size * 2, "media:" + act[i]));
+            glyph(c, i == 1 ? (playing ? "pause" : "play") : CONTROL_GLYPHS[i], cx - size / 2, y, size, ink);
+            hit(cx - size, y - size / 2, size * 2, size * 2, CONTROL_ACTIONS[i]);
         }
     }
 
@@ -950,6 +1031,9 @@ final class LayoutView extends View implements Hub.Listener {
         cover(c, cx - r * 0.62f, cy - r * 0.62f, r * 1.24f, r * 1.24f, art, true, 0);
     }
 
+    private LinearGradient warm;
+    private float warmY, warmH;
+
     /** The album cover, or a warm gradient with a soft sun when the app gives none. */
     private void cover(Canvas c, float x, float y, float w, float h, Bitmap art, boolean circle, float radius) {
         if (art != null) {
@@ -957,12 +1041,18 @@ final class LayoutView extends View implements Hub.Listener {
             return;
         }
         c.save();
-        Path clip = new Path();
-        RectF r = new RectF(x, y, x + w, y + h);
+        clip.reset();
+        RectF r = rect;
+        r.set(x, y, x + w, y + h);
         if (circle) clip.addOval(r, Path.Direction.CW);
         else clip.addRoundRect(r, radius, radius, Path.Direction.CW);
         c.clipPath(clip);
-        fill.setShader(new LinearGradient(0, y, 0, y + h, 0xFF283C78, 0xFFDC6E50, Shader.TileMode.CLAMP));
+        if (warm == null || warmY != y || warmH != h) {
+            warm = new LinearGradient(0, y, 0, y + h, 0xFF283C78, 0xFFDC6E50, Shader.TileMode.CLAMP);
+            warmY = y;
+            warmH = h;
+        }
+        fill.setShader(warm);
         c.drawRect(r, fill);
         fill.setShader(null);
         fill.setColor(0xFFFABE78);
@@ -992,7 +1082,7 @@ final class LayoutView extends View implements Hub.Listener {
         Now n = now();
         String t = n.title, ar = n.sub;
         int ink = p.ink, sub = p.sub;
-        hits.add(new Hit(x, y, w, h, "media:open"));
+        hit(x, y, w, h, "media:open");
         String st = p.style;
         if ("pill".equals(st)) {
             disc(c, x + h / 2, cy, h * 0.38f, n.art);
@@ -1032,9 +1122,9 @@ final class LayoutView extends View implements Hub.Listener {
             glyph(c, "prev", x + r * 0.1f, cy - 14, 28, ink);
             glyph(c, "next", x + w - r * 0.1f - 28, cy - 14, 28, ink);
             glyph(c, n.playing ? "pause" : "play", cx - 16, cy - 16, 32, 0xFFFFFFFF);
-            hits.add(new Hit(x + r * 0.1f - 10, cy - 30, 48, 60, "media:prev"));
-            hits.add(new Hit(x + w - r * 0.1f - 38, cy - 30, 48, 60, "media:next"));
-            hits.add(new Hit(cx - 36, cy - 36, 72, 72, "media:toggle"));
+            hit(x + r * 0.1f - 10, cy - 30, 48, 60, "media:prev");
+            hit(x + w - r * 0.1f - 38, cy - 30, 48, 60, "media:next");
+            hit(cx - 36, cy - 36, 72, 72, "media:toggle");
         } else if ("record".equals(st)) {
             float r = Math.min(w, h) * 0.36f;
             disc(c, cx, y + 10 + r, r, n.art);
@@ -1103,13 +1193,23 @@ final class LayoutView extends View implements Hub.Listener {
         }
         if (f == null) return new String[]{Hindi.t("Position"), "--"};
         double la = f.getLatitude(), lo = f.getLongitude();
-        return new String[]{String.format(Locale.US, "%.4f° %s", Math.abs(lo), lo >= 0 ? "E" : "W"),
-                String.format(Locale.US, "%.4f° %s", Math.abs(la), la >= 0 ? "N" : "S")};
+        if (la != posLat || lo != posLon || posText == null) {
+            posLat = la;
+            posLon = lo;
+            posText = new String[]{String.format(Locale.US, "%.4f° %s", Math.abs(lo), lo >= 0 ? "E" : "W"),
+                    String.format(Locale.US, "%.4f° %s", Math.abs(la), la >= 0 ? "N" : "S")};
+        }
+        return posText;
     }
+
+    /** The position as text, made again only when the position changes. */
+    private double posLat, posLon;
+    private String[] posText;
 
     private void stats(Canvas c, Layouts.Part p) {
         float x = p.x, y = p.y, h = p.h;
-        List<String> items = Layouts.statItems(prefs, lay.id, p);
+        List<String> items = statsNow.get(p);
+        if (items == null) statsNow.put(p, items = Layouts.statItems(prefs, lay.id, p));
         if (items.isEmpty()) return;
         if ("frame".equals(p.style)) {
             cover(c, x + 16, y + 16, h - 32, h - 32, now().art, false, 2);
@@ -1130,10 +1230,12 @@ final class LayoutView extends View implements Hub.Listener {
             line.setColor(p.ink);
             line.setStrokeWidth(3);
             if ("temp".equals(it)) {
-                c.drawArc(new RectF(x + 4, yy + 10, x + 44, yy + 50), 150, 240, false, line);
+                rect.set(x + 4, yy + 10, x + 44, yy + 50);
+                c.drawArc(rect, 150, 240, false, line);
                 c.drawLine(x + 24, yy + 30, x + 34, yy + 18, line);
             } else if ("altitude".equals(it)) {
-                Path m = new Path();
+                Path m = path;
+                m.reset();
                 m.moveTo(x + 4, yy + 44);
                 m.lineTo(x + 18, yy + 18);
                 m.lineTo(x + 28, yy + 32);
@@ -1145,7 +1247,8 @@ final class LayoutView extends View implements Hub.Listener {
                 c.drawCircle(x + 24, yy + 30, 9, line);
             } else {
                 c.drawCircle(x + 24, yy + 30, 20, line);
-                Path m = new Path();
+                Path m = path;
+                m.reset();
                 m.moveTo(x + 33, yy + 21);
                 m.lineTo(x + 27, yy + 33);
                 m.lineTo(x + 15, yy + 39);
@@ -1172,7 +1275,8 @@ final class LayoutView extends View implements Hub.Listener {
         double hd = heading();
         c.save();
         if (hd >= 0) c.rotate((float) hd, cx, cy - 20);
-        Path arrow = new Path();
+        Path arrow = path;
+        arrow.reset();
         arrow.moveTo(cx, cy - 70);
         arrow.lineTo(cx + 46, cy + 30);
         arrow.lineTo(cx, cy + 10);
@@ -1200,7 +1304,7 @@ final class LayoutView extends View implements Hub.Listener {
     private void userPart(Canvas c, Layouts.Part p) {
         float x = p.x, y = p.y, w = p.w, h = p.h;
         String name = driver();
-        hits.add(new Hit(x, y, w, h, "user"));
+        hit(x, y, w, h, "user");
         if ("line".equals(p.style)) {
             avatar(c, x + 16, y + 20, 16);
             text(c, name.isEmpty() ? Hindi.t("Let's go!") : Hindi.f("Let's go, %1$s!", name), x + 44, y + h / 2, 16, p.sub, REG, "lm");
@@ -1217,6 +1321,10 @@ final class LayoutView extends View implements Hub.Listener {
     private static final int[][] TILE = {{0xFFF06A4A, 0xFFF7B048}, {0xFF4AA8F0, 0xFF7A5CF0}, {0xFF38C07A, 0xFF2A9AD0},
             {0xFFF0C040, 0xFFF07A30}, {0xFF9A6AF0, 0xFFF06AB0}, {0xFF2E3440, 0xFF4C566A}};
 
+    /** The tiles' gradients, made again only when a tile moves or changes size. */
+    private final LinearGradient[] tiles = new LinearGradient[FAVOURITES];
+    private final float[] tileY = new float[FAVOURITES], tileS = new float[FAVOURITES];
+
     private void favourites(Canvas c, Layouts.Part p) {
         float x = p.x, y = p.y, w = p.w, h = p.h;
         float s = Math.min(w / 3, h / 2) * 0.62f;
@@ -1225,10 +1333,16 @@ final class LayoutView extends View implements Hub.Listener {
             float tx = cx - s / 2, ty = cy - s / 2 - 6;
             String pkg = favourite(i);
             Object[] info = pkg == null ? null : app(pkg);
-            hits.add(new Hit(cx - w / 6, cy - h / 4, w / 3, h / 2, "fav:" + i));
-            RectF r = new RectF(tx, ty, tx + s, ty + s);
+            hit(cx - w / 6, cy - h / 4, w / 3, h / 2, FAV_ACTIONS[i]);
+            RectF r = rect;
+            r.set(tx, ty, tx + s, ty + s);
             if (info != null && info[0] != null) {
-                fill.setShader(new LinearGradient(0, ty, 0, ty + s, TILE[i][0], TILE[i][1], Shader.TileMode.CLAMP));
+                if (tiles[i] == null || tileY[i] != ty || tileS[i] != s) {
+                    tiles[i] = new LinearGradient(0, ty, 0, ty + s, TILE[i][0], TILE[i][1], Shader.TileMode.CLAMP);
+                    tileY[i] = ty;
+                    tileS[i] = s;
+                }
+                fill.setShader(tiles[i]);
                 c.drawRoundRect(r, s * 0.24f, s * 0.24f, fill);
                 fill.setShader(null);
                 Drawable d = (Drawable) info[0];
@@ -1259,7 +1373,8 @@ final class LayoutView extends View implements Hub.Listener {
         fill.setColor(ink);
         line.setColor(ink);
         line.setStrokeWidth(2);
-        Path p = new Path();
+        Path p = glyphPath;
+        p.reset();
         if ("navi".equals(name)) {
             poly(p, 12, 3, 20, 21, 12, 16.5f, 4, 21);
             c.drawPath(p, fill);
@@ -1287,7 +1402,8 @@ final class LayoutView extends View implements Hub.Listener {
             c.drawPath(p, line);
         } else if ("phone".equals(name)) {
             line.setStrokeWidth(4);
-            c.drawArc(new RectF(2, -6, 30, 22), 95, 80, false, line);
+            glyphRect.set(2, -6, 30, 22);
+            c.drawArc(glyphRect, 95, 80, false, line);
             c.drawOval(3.5f, 2.5f, 9.5f, 8.5f, fill);
             c.drawOval(15.5f, 14.5f, 21.5f, 20.5f, fill);
         } else if ("apps".equals(name)) {
@@ -1308,7 +1424,8 @@ final class LayoutView extends View implements Hub.Listener {
             c.drawPath(p, fill);
         } else if ("user".equals(name)) {
             c.drawCircle(12, 7, 4, line);
-            c.drawArc(new RectF(4, 13, 20, 29), 180, 180, false, line);
+            glyphRect.set(4, 13, 20, 29);
+            c.drawArc(glyphRect, 180, 180, false, line);
         } else if ("dash".equals(name)) {
             c.drawRoundRect(3, 11, 21, 18, 2, 2, line);
             p.moveTo(6, 11);
@@ -1381,7 +1498,8 @@ final class LayoutView extends View implements Hub.Listener {
         setText(size, ink, tf);
         char hz = anchor.charAt(0), vt = anchor.charAt(1);
         text.setTextAlign(hz == 'm' ? Paint.Align.CENTER : hz == 'r' ? Paint.Align.RIGHT : Paint.Align.LEFT);
-        Paint.FontMetrics fm = text.getFontMetrics();
+        Paint.FontMetrics fm = metrics;
+        text.getFontMetrics(fm);
         float base = y;
         if (vt == 'm') base = y - (fm.ascent + fm.descent) / 2;
         else if (vt == 't' || vt == 'a') base = y - fm.ascent;

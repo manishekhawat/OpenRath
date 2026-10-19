@@ -159,40 +159,51 @@ final class Theme {
         return want.isEmpty() || "Built-in Dzire chrome".equals(want) ? DEFAULT : want;
     }
 
-    /** Load the chosen theme and apply its colours; call before building the dashboard. */
+    /** What is loaded: the theme's id and its folder's state (see stamp); null to read it again. */
+    private static String loadedFor;
+    /** What the decoded pictures were made for: the theme, the car and the colours they are tinted in. */
+    private static String imagesFor;
+    private static String readError = "";
+
+    /** Read the theme and its pictures again at the next load (a new look was chosen, or a picture changed). */
+    static void reload() {
+        loadedFor = null;
+        imagesFor = null;
+    }
+
+    /** The theme's id and, for a folder theme, how many files it has, their total size and the newest change. */
+    static String stamp(String want) {
+        if (want.startsWith("@")) return want;
+        File d = new File(root(), want);
+        long newest = d.lastModified(), size = 0;
+        File[] l = d.listFiles();
+        if (l != null) {
+            for (File f : l) {
+                newest = Math.max(newest, f.lastModified());
+                size += f.length();
+            }
+        }
+        return want + "|" + (l == null ? -1 : l.length) + "|" + size + "|" + newest;
+    }
+
+    /**
+     * Load the chosen theme and apply its colours; call before building the dashboard. The theme's
+     * files and pictures are read again only when another theme is chosen or its folder changed
+     * (or after reload()), not on every rebuild of the dashboard.
+     */
     static void load(Context c, Prefs p) {
         app = c.getApplicationContext();
         paintAccent = Ui.ACCENT;
         paintEdge = Ui.EDGE;
         String want = chosen(p);
-        pack = null;
-        dir = null;
-        json = new JSONObject();
-        font = null;
-        background = null;
-        error = "";
-        Ui.clearImages();
-        try {
-            if (want.startsWith("@")) {
-                json = new JSONObject(read(c.getAssets().open("themes/" + want.substring(1) + "/theme.json")));
-                pack = new Pack(want, json, null);
-            } else {
-                File d = new File(root(), want);
-                json = new JSONObject(read(new File(d, "theme.json")));
-                dir = d;
-                pack = new Pack(want, json, d);
-            }
-        } catch (Throwable e) {
-            error = Hindi.f("Couldn't read %1$s/theme.json: %2$s", want, e.getMessage());
-            try {
-                json = new JSONObject(read(c.getAssets().open("themes/" + DEFAULT.substring(1) + "/theme.json")));
-            } catch (Throwable ignored) {
-            }
-            pack = new Pack(DEFAULT, json, null);
+        String now = stamp(want);
+        if (pack == null || !now.equals(loadedFor)) {
+            read(c, want);
+            loadedFor = now;
         }
         name = pack.name;
         look = Look.of(json, Ui.ACCENT, Ui.EDGE);
-        if (error.isEmpty()) error = look.problem;
+        error = readError.isEmpty() ? look.problem : readError;
         Ui.SILVER = look.text;
         Ui.SILVER_DIM = look.textDim;
         Ui.ACCENT = look.accent;
@@ -206,6 +217,40 @@ final class Theme {
         Ui.ICONS = look.icons;
         Ui.ROAD_FILL = look.roadFill;
         Ui.ROAD_LINE = look.roadLine;
+        // the pictures depend on the theme, the car's brand and body, and the colours they are tinted in
+        String pics = loadedFor + "|" + Ui.brand + "|" + Ui.body + "|" + Ui.ICONS + "|" + Ui.CHROME + "|" + Ui.SILVER;
+        if (!pics.equals(imagesFor)) {
+            Ui.clearImages();
+            imagesFor = pics;
+        }
+    }
+
+    /** Read a theme's theme.json, font and wallpaper. */
+    private static void read(Context c, String want) {
+        pack = null;
+        dir = null;
+        json = new JSONObject();
+        font = null;
+        background = null;
+        readError = "";
+        try {
+            if (want.startsWith("@")) {
+                json = new JSONObject(read(c.getAssets().open("themes/" + want.substring(1) + "/theme.json")));
+                pack = new Pack(want, json, null);
+            } else {
+                File d = new File(root(), want);
+                json = new JSONObject(read(new File(d, "theme.json")));
+                dir = d;
+                pack = new Pack(want, json, d);
+            }
+        } catch (Throwable e) {
+            readError = Hindi.f("Couldn't read %1$s/theme.json: %2$s", want, e.getMessage());
+            try {
+                json = new JSONObject(read(c.getAssets().open("themes/" + DEFAULT.substring(1) + "/theme.json")));
+            } catch (Throwable ignored) {
+            }
+            pack = new Pack(DEFAULT, json, null);
+        }
         if (dir != null) {
             File f = new File(dir, Storage.bareName(json.optString("font", "font.otf"), "font.otf"));
             if (!f.exists()) f = new File(dir, "font.ttf");
@@ -217,14 +262,8 @@ final class Theme {
             }
             File bg = new File(dir, "background.jpg");
             if (!bg.exists()) bg = new File(dir, "background.png");
-            if (bg.exists()) {
-                try {
-                    BitmapFactory.Options o = new BitmapFactory.Options();
-                    o.inSampleSize = bg.length() > 3_000_000 ? 2 : 1;
-                    background = BitmapFactory.decodeFile(bg.getPath(), o);
-                } catch (Throwable ignored) {
-                }
-            }
+            // read at about the screen's size (a photo straight from a phone can be 50 MB in memory)
+            if (bg.exists()) background = Pics.file(c, bg);
         }
     }
 

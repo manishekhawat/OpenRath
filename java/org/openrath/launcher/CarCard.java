@@ -226,6 +226,9 @@ final class CarCard extends Cards.Card {
         private final android.graphics.Paint line = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
         private final android.graphics.Path path = new android.graphics.Path();
         private static final float FAR = 40f, DASH = 0.45f, GAP = 0.4f;   // in road units: short, so several show below the car
+        private android.graphics.LinearGradient asphalt;
+        private float asphaltTop, asphaltGround;
+        private int asphaltFill, asphaltBg;
 
         Road(Context c) {
             super(c);
@@ -264,9 +267,17 @@ final class CarCard extends Cards.Card {
             path.lineTo(cx + halfWidth, ground);
             path.lineTo(cx - halfWidth, ground);
             path.close();
-            fill.setShader(new android.graphics.LinearGradient(0, topY, 0, ground,
-                    new int[]{Ui.ROAD_FILL & 0x00FFFFFF, Ui.mix(Ui.ROAD_FILL, Ui.BACKGROUND, 0.8f), Ui.ROAD_FILL}, new float[]{0f, 0.35f, 1f},
-                    android.graphics.Shader.TileMode.CLAMP));
+            // the same gradient every frame: made again only when the size or the theme changes
+            if (asphalt == null || asphaltTop != topY || asphaltGround != ground || asphaltFill != Ui.ROAD_FILL || asphaltBg != Ui.BACKGROUND) {
+                asphaltTop = topY;
+                asphaltGround = ground;
+                asphaltFill = Ui.ROAD_FILL;
+                asphaltBg = Ui.BACKGROUND;
+                asphalt = new android.graphics.LinearGradient(0, topY, 0, ground,
+                        new int[]{Ui.ROAD_FILL & 0x00FFFFFF, Ui.mix(Ui.ROAD_FILL, Ui.BACKGROUND, 0.8f), Ui.ROAD_FILL}, new float[]{0f, 0.35f, 1f},
+                        android.graphics.Shader.TileMode.CLAMP);
+            }
+            fill.setShader(asphalt);
             c.drawPath(path, fill);
             // solid edge lines
             line.setStyle(android.graphics.Paint.Style.FILL);

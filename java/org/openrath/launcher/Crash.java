@@ -133,16 +133,36 @@ final class Crash {
 
     private static String version = "";
 
-    /** Start a risky step; false if it crashed before and is skipped. */
+    /** Steps that already got through once since the app started; the last one begun; the one written down. */
+    private static final java.util.Set<String> passed = new java.util.HashSet<>();
+    private static String begun, written;
+
+    /**
+     * Start a risky step; false if it crashed before and is skipped. A step that already got through
+     * since the app started isn't written down again (and waited for) on every return to the
+     * dashboard; the first time in each run it is.
+     */
     static boolean begin(String step) {
         if (sp == null) return true;
         if (sp.getBoolean("skip:" + step, false)) return false;
+        synchronized (passed) {
+            begun = step;
+            if (passed.contains(step) && written == null) return true;
+            written = step;
+        }
         sp.edit().putString("running", step).commit();
         return true;
     }
 
     static void end() {
-        if (sp != null) sp.edit().remove("running").commit();
+        boolean wasWritten;
+        synchronized (passed) {
+            if (begun != null) passed.add(begun);
+            begun = null;
+            wasWritten = written != null;
+            written = null;
+        }
+        if (sp != null && wasWritten) sp.edit().remove("running").commit();
     }
 
     static String last() {
