@@ -1201,6 +1201,7 @@ final class Cards {
                     try {
                         ((android.appwidget.AppWidgetHostView) hosted).updateAppWidgetSize(null, wd, hd, wd, hd);
                     } catch (Throwable ignored) {
+                        // runs on every layout: the widget keeps its old size
                     }
                 }
             }

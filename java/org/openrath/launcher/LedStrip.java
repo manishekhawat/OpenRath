@@ -201,6 +201,7 @@ final class LedStrip {
         try {
             if (gatt != null) gatt.close();
         } catch (Throwable ignored) {
+            // already closed
         }
         gatt = null;
     }
@@ -236,6 +237,7 @@ final class LedStrip {
                 try {
                     ad.getBluetoothLeScanner().stopScan(cb);
                 } catch (Throwable ignored) {
+                    // Bluetooth turned off meanwhile
                 }
                 if (found.isEmpty()) {
                     Toast.makeText(a, Hindi.t("No light strip found nearby"), Toast.LENGTH_LONG).show();

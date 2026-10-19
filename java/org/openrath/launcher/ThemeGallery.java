@@ -96,7 +96,8 @@ final class ThemeGallery extends LinearLayout {
             InputStream in = c.getAssets().open("img/" + name + ".png");
             b = BitmapFactory.decodeStream(in, null, o);
             in.close();
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("theme picture", e);
         }
         RAW.put(name, b);
         return b;
@@ -123,7 +124,8 @@ final class ThemeGallery extends LinearLayout {
                         BitmapFactory.Options o = new BitmapFactory.Options();
                         o.inSampleSize = 2;
                         own = BitmapFactory.decodeFile(f.getPath(), o);
-                    } catch (Throwable ignored) {
+                    } catch (Throwable e) {
+                        Diag.note("theme preview", e);
                     }
                 }
             }
@@ -275,7 +277,8 @@ final class ThemeGallery extends LinearLayout {
                 BitmapFactory.Options o = new BitmapFactory.Options();
                 o.inSampleSize = 4;
                 wallCache = BitmapFactory.decodeFile(f.getPath(), o);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                Diag.note("theme wallpaper", e);
             }
             return wallCache;
         }

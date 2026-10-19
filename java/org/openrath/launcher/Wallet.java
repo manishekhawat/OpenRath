@@ -154,7 +154,8 @@ final class Wallet {
                 try {
                     save(a, i, new java.io.FileInputStream(f));
                     got.add(Hindi.t(NAMES[i]));
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    Diag.note("wallet import", e);
                 }
             }
         }

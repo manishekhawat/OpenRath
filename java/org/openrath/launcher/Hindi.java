@@ -43,7 +43,8 @@ final class Hindi {
             try {
                 int id = c.getResources().getIdentifier(name, "array", c.getPackageName());
                 if (id != 0) words.putAll(pair(en.getStringArray(id), hi.getStringArray(id)));
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Diag.note("Hindi words", e);
             }
         }
     }

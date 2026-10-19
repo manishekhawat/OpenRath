@@ -218,6 +218,7 @@ final class Hub implements LocationListener {
             try {
                 ctx.unregisterReceiver(playerReceiver);
             } catch (Exception ignored) {
+                // was not registered
             }
             playerReceiver = null;
         }
@@ -225,12 +226,14 @@ final class Hub implements LocationListener {
             try {
                 ctx.getApplicationContext().unregisterReceiver(lightsReceiver);
             } catch (Exception ignored) {
+                // was not registered
             }
             lightsReceiver = null;
         }
         try {
             ((LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE)).removeUpdates(this);
         } catch (SecurityException ignored) {
+            // no location permission
         }
     }
 
@@ -247,6 +250,7 @@ final class Hub implements LocationListener {
             for (int profile : new int[]{2, 1, 11, 16})
                 if (a.getProfileConnectionState(profile) == android.bluetooth.BluetoothProfile.STATE_CONNECTED) return true;
         } catch (Throwable ignored) {
+            // no Bluetooth permission or adapter: say not connected
         }
         return false;
     }
@@ -476,14 +480,16 @@ final class Hub implements LocationListener {
         if (sessionsChanged != null) {
             try {
                 ((MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE)).removeOnActiveSessionsChangedListener(sessionsChanged);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                Diag.note("media sessions unwatch", e);
             }
             sessionsChanged = null;
         }
         for (MediaController c : watched) {
             try {
                 c.unregisterCallback(mediaChanged);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                Diag.note("media session unwatch", e);
             }
         }
         watched.clear();
@@ -497,7 +503,8 @@ final class Hub implements LocationListener {
         for (MediaController c : watched) {
             try {
                 c.unregisterCallback(mediaChanged);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                Diag.note("media session unwatch", e);
             }
         }
         watched.clear();
@@ -505,7 +512,8 @@ final class Hub implements LocationListener {
             try {
                 c.registerCallback(mediaChanged, handler);
                 watched.add(c);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                Diag.note("media session watch", e);
             }
         }
     }
@@ -521,6 +529,7 @@ final class Hub implements LocationListener {
             try {
                 audioActive = ((android.media.AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE)).isMusicActive();
             } catch (Exception ignored) {
+                // polled often: keep the last answer
             }
         }
         if (!mediaDirty && now - mediaAt < MEDIA_MS && mediaAt <= now) return;
@@ -794,7 +803,8 @@ final class Hub implements LocationListener {
             showWeather(w);
             weatherSaved = prefs.longNum("wxSavedAt", now);
             if (place.isEmpty()) place = prefs.str("city", "");
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("saved weather", e);
         }
     }
 
@@ -819,7 +829,8 @@ final class Hub implements LocationListener {
                         try {
                             JSONObject aq = new JSONObject(get(Air.url(lat, lon))).getJSONObject("current");
                             air = Air.index(aq.optDouble("pm2_5", Double.NaN), aq.optDouble("pm10", Double.NaN));
-                        } catch (Exception ignored) {
+                        } catch (Exception e) {
+                            Diag.note("air quality fetch", e);
                         }
                     }
                     final int aqiNow = air;
@@ -880,6 +891,7 @@ final class Hub implements LocationListener {
                 return p != null ? p : a.get(0).getSubAdminArea();
             }
         } catch (Exception ignored) {
+            // many units have no geocoder: ask the web below
         }
         // many head units have no geocoder; ask a free reverse-geocoding service instead
         try {
@@ -890,7 +902,8 @@ final class Hub implements LocationListener {
             String p = j.optString("city", "");
             if (p.isEmpty()) p = j.optString("locality", "");
             if (!p.isEmpty()) return p;
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("place lookup", e);
         }
         return null;
     }

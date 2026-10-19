@@ -45,7 +45,7 @@ final class Peek {
      */
     static void save(final Activity a) {
         final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.t("Copying the stock launcher…"), true);
-        new Thread(new Runnable() {
+        Bg.run(new Runnable() {
             @Override
             public void run() {
                 final StringBuilder out = new StringBuilder();
@@ -60,6 +60,7 @@ final class Peek {
                         if (!r.activityInfo.packageName.equals(a.getPackageName())) pkgs.add(r.activityInfo.packageName);
                     }
                 } catch (Throwable ignored) {
+                    // not readable on this unit
                 }
                 List<String> saved = new ArrayList<>();
                 for (String pkg : pkgs) {
@@ -85,6 +86,7 @@ final class Peek {
                                 BootArt.copy(f[0], new File(d, name));
                                 ok = true;
                             } catch (Throwable ignored) {
+                                // not readable on this unit: try the next
                             }
                         }
                         if (ok) saved.add(name + " (" + f[0].length() / 1024 + " KB)");
@@ -104,6 +106,7 @@ final class Peek {
                         try {
                             wait.dismiss();
                         } catch (Throwable ignored) {
+                            // already gone
                         }
                         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                 .setTitle(Hindi.t("Stock launcher copied")).setMessage(out.toString())
@@ -111,7 +114,7 @@ final class Peek {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     private static final String SKIPPED = "Skipped: reading the stock apps stopped OpenRath before.\nUse Help > Clear the crash note to try again.";
@@ -122,7 +125,7 @@ final class Peek {
             return;
         }
         final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.t("Reading the stock launcher and radio…"), true);
-        new Thread(new Runnable() {
+        Bg.run(new Runnable() {
             @Override
             public void run() {
                 final StringBuilder out = new StringBuilder();
@@ -138,12 +141,13 @@ final class Peek {
                         try {
                             wait.dismiss();
                         } catch (Throwable ignored) {
+                            // already gone
                         }
                         show(a, out.toString());
                     }
                 });
             }
-        }).start();
+        });
     }
 
     private static void collect(Activity a, StringBuilder out) {
@@ -156,6 +160,7 @@ final class Peek {
                 if (!r.activityInfo.packageName.equals(a.getPackageName())) pkgs.add(r.activityInfo.packageName);
             }
         } catch (Throwable ignored) {
+            // not readable on this unit
         }
         for (String pkg : pkgs) {
             ApplicationInfo ai;
@@ -179,6 +184,7 @@ final class Peek {
                 }
                 z.close();
             } catch (Throwable ignored) {
+                // not readable on this unit: try the next
             }
             // preinstalled: the dex sits in oat/<arch>/<name>.vdex or .odex
             File dir = new File(ai.sourceDir).getParentFile();
@@ -193,6 +199,7 @@ final class Peek {
                         scan(read(new FileInputStream(f)), found);
                         sources++;
                     } catch (Throwable ignored) {
+                        // not readable on this unit: try the next
                     }
                 }
             }
@@ -225,6 +232,7 @@ final class Peek {
             if (pi.providers != null) for (android.content.pm.ProviderInfo x : pi.providers)
                 b.append("provider ").append(x.authority).append(x.exported ? "" : " (private)").append("   ");
         } catch (Throwable ignored) {
+            // not on this unit
         }
         return b.toString();
     }
@@ -264,6 +272,7 @@ final class Peek {
             w.close();
             saved = Hindi.f("Saved to %1$s", f.getPath()) + "\n\n";
         } catch (Throwable ignored) {
+            // can't save here: the text is still shown
         }
         TextView t = new TextView(a);
         t.setText(saved + Hindi.t(text));   // the report itself stays in English; only the note above is translated

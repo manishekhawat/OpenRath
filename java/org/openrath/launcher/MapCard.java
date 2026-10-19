@@ -80,6 +80,7 @@ final class MapCard extends Cards.Card {
                     removeView(v);
                     v.destroy();
                 } catch (Throwable ignored) {
+                    // the renderer is already gone
                 }
                 ready = false;
                 final Context ctx = getContext();
@@ -445,7 +446,8 @@ final class MapCard extends Cards.Card {
         paused = true;
         try {
             web.onPause();
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("map pause", e);
         }
     }
 
@@ -454,7 +456,8 @@ final class MapCard extends Cards.Card {
         paused = false;
         try {
             web.onResume();
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("map resume", e);
         }
     }
 
@@ -471,7 +474,8 @@ final class MapCard extends Cards.Card {
             removeView(web);
             web.removeAllViews();
             web.destroy();
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("map close", e);
         }
     }
 }

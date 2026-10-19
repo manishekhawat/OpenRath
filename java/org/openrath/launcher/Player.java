@@ -246,6 +246,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
             try {
                 mp.release();
             } catch (Exception ignored) {
+                // already released
             }
             mp = null;
         }
@@ -301,7 +302,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
         changed();
         final String m = mode;
         final Context c = getApplicationContext();
-        new Thread(new Runnable() {
+        Bg.run(new Runnable() {
             @Override
             public void run() {
                 final List<Track> l = WEB.equals(m) ? fetchStations(c) : scanSongs(c);
@@ -323,7 +324,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
                     }
                 });
             }
-        }).start();
+        });
     }
 
     /** Reload the lists, for the long-press menu (new USB stick, or to refresh stations). */
@@ -359,7 +360,8 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
                         + "&reverse=true&limit=80");
                 sp.edit().putString("stations", json).apply();
                 break;
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Diag.note("station list fetch", e);
             }
         }
         if (json == null) json = sp.getString("stations", null);   // the last list we saw
@@ -380,7 +382,8 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
                 if (tags.length() > 40) tags = tags.substring(0, 40);
                 out.add(new Track(name, tags.replace(",", ", "), url));
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("station list read", e);
         }
         return out;
     }
@@ -414,7 +417,8 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
                 out.add(new Track(cur.getString(0), artist, path));
                 paths.add(path);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("music scan", e);
         } finally {
             if (cur != null) cur.close();
         }

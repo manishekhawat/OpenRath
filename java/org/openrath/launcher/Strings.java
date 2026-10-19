@@ -62,6 +62,7 @@ final class Strings {
                     out.add(new String(b, o, n * 2, "UTF-16LE"));
                 }
             } catch (Exception ignored) {
+                // a malformed string pool: keep what was read
             }
         }
         return out;

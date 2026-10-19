@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -37,8 +38,18 @@ final class Setup extends FrameLayout {
     static final int WELCOME = 0, ACCESS = 1, CAR = 2, LOOK = 3, LEVEL = 4, APPS = 5, FINISH = 6;
     static final String[] STEPS = {"Welcome", "Permissions", "Your car", "Look", "How much", "Apps", "Phone and home"};
 
-    /** On screen now, or null. */
-    static Setup showing;
+    /** On screen now; held weakly so it never keeps an old dashboard alive. */
+    private static WeakReference<Setup> showing = new WeakReference<>(null);
+
+    /** The setup on screen now, or null. */
+    static Setup showing() {
+        return showing.get();
+    }
+
+    /** The dashboard is going: forget its setup screen. */
+    static void forget() {
+        showing = new WeakReference<>(null);
+    }
 
     /** Whether to show it: switched on, not finished, and either under way or a fresh install. */
     static boolean needed(boolean on, boolean done, boolean started, boolean carReady, boolean levelPicked) {
@@ -77,10 +88,10 @@ final class Setup extends FrameLayout {
     };
 
     static void show(HomeActivity a) {
-        if (showing != null) return;
+        if (showing.get() != null) return;
         Setup s = new Setup(a);
         a.root.addView(s, new LayoutParams(-1, -1));
-        showing = s;
+        showing = new WeakReference<>(s);
         s.render();
     }
 
@@ -325,6 +336,7 @@ final class Setup extends FrameLayout {
                 int l = Math.round(Float.parseFloat(tank.getText().toString().trim()));
                 if (l > 0) p.put("tankL", String.valueOf(Math.max(5, Math.min(120, l))));
             } catch (NumberFormatException ignored) {
+                // not a number: nothing to save
             }
         }
         if (name != null && name.getParent() != null) p.setWelcome(name.getText().toString().trim());
@@ -357,7 +369,7 @@ final class Setup extends FrameLayout {
         p.put("askedVoice", "yes");
         p.put("askedAllFiles", "yes");
         a.getSharedPreferences("once", Context.MODE_PRIVATE).edit().putBoolean("askedTrackInfo", true).apply();
-        showing = null;
+        forget();
         ViewGroup parent = (ViewGroup) getParent();
         if (parent != null) parent.removeView(this);
         a.build();
@@ -701,6 +713,7 @@ final class Setup extends FrameLayout {
                     lp.rightMargin = Ui.px(14);
                     ((LinearLayout) r).addView(icon, 0, lp);
                 } catch (Exception ignored) {
+                    // app gone: no icon
                 }
             }
             c.addView(r);
@@ -760,6 +773,7 @@ final class Setup extends FrameLayout {
                 if (k != null && k.getMajorDeviceClass() == android.bluetooth.BluetoothClass.Device.Major.PHONE) return d.getName();
             }
         } catch (Throwable ignored) {
+            // no Bluetooth permission or adapter
         }
         return null;
     }

@@ -37,7 +37,8 @@ final class Videos {
                 String p = cur.getString(0);
                 if (p != null && new File(p).canRead()) out.add(p);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("video scan", e);
         } finally {
             if (cur != null) cur.close();
         }

@@ -98,7 +98,7 @@ final class Reports {
         if (!on()) return;
         final String url = prefs.str("reportUrl", "");
         if (!sendable(url) || System.currentTimeMillis() - sp.getLong("sent", 0) < 24 * 3600_000L) return;
-        new Thread(new Runnable() {
+        Bg.run(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -113,10 +113,11 @@ final class Reports {
                     o.close();
                     if (c.getResponseCode() / 100 == 2) sp.edit().putLong("sent", System.currentTimeMillis()).apply();
                     c.disconnect();
-                } catch (Throwable ignored) {
+                } catch (Throwable e) {
+                    Diag.note("report send", e);
                 }
             }
-        }, "reports").start();
+        });
     }
 
     /** Turning reports off forgets everything counted. */
