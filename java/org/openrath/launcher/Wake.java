@@ -36,6 +36,9 @@ final class Wake {
                 lastElapsed = e;
                 lastUptime = u;
                 if (s > SLEPT_MS && Features.on(a.prefs, "wake")) woke(a);
+                ThemeAuto.check(a);
+                LedStrip.check(a);
+                Achievements.check(a);
                 a.dash.postDelayed(this, CHECK_MS);
             }
         };

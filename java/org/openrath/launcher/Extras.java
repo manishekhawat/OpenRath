@@ -405,6 +405,54 @@ final class Extras {
     }
 
     static void chooseAdapter(final HomeActivity a) {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("What kind of OBD-II adapter?"))
+                .setItems(new String[]{Hindi.t("Bluetooth"), Hindi.t("Wi-Fi")}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        if (w == 0) chooseBluetooth(a);
+                        else chooseWifi(a);
+                    }
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
+    }
+
+    /** A Wi-Fi adapter: the unit joins its Wi-Fi first (often named "WiFi_OBDII"), then its address here. */
+    static void chooseWifi(final HomeActivity a) {
+        final android.widget.EditText e = new android.widget.EditText(a);
+        e.setSingleLine(true);
+        String now = a.prefs.str("obdMac", "");
+        e.setText(now.startsWith("wifi:") ? now.substring(5) : Obd.WIFI_DEFAULT);
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Wi-Fi adapter address"))
+                .setMessage(Hindi.t("First join the adapter's Wi-Fi in the unit's Wi-Fi settings. Most adapters are at 192.168.0.10, port 35000."))
+                .setView(e)
+                .setPositiveButton(Hindi.t("Connect"), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        String v = "wifi:" + e.getText().toString().trim();
+                        if (Obd.wifiTarget(v) == null) {
+                            Toast.makeText(a, Hindi.t("That address doesn't look right, for example 192.168.0.10:35000"), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        a.prefs.put("obdName", Hindi.t("Wi-Fi adapter"));
+                        a.prefs.put("obdMac", v);
+                        Obd.stop();
+                        Features.set(a.prefs, "obd", true);
+                        Drive.start(a);
+                        Toast.makeText(a, Hindi.t("Connecting to the Wi-Fi adapter; keep the ignition on"), Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNeutralButton(Hindi.t("Wi-Fi settings"), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        try {
+                            a.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        } catch (Throwable ignored) {
+                        }
+                    }
+                })
+                .setNegativeButton(Hindi.t("Cancel"), null).show();
+    }
+
+    static void chooseBluetooth(final HomeActivity a) {
         final List<String> devs = Obd.paired();
         if (devs.isEmpty()) {
             new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("No paired Bluetooth devices"))
@@ -456,7 +504,10 @@ final class Extras {
                 }
                 StringBuilder sb = new StringBuilder();
                 synchronized (Obd.codes) {
-                    for (String c : Obd.codes) sb.append(c).append("  ").append(Obd.meaning(c)).append('\n');
+                    for (String c : Obd.codes) {
+                        if (Features.on(a.prefs, "faultWords")) sb.append(FaultCodes.explain(c)).append("\n\n");
+                        else sb.append(c).append("  ").append(Obd.meaning(c)).append('\n');
+                    }
                 }
                 new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Obd.codesAt < asked ? "No answer from the engine computer"
                         : sb.length() == 0 ? "No fault codes" : "Fault codes"))
@@ -689,6 +740,12 @@ final class Extras {
                 int[] steps = {100, 105, 110, 115};
                 int i = java.util.Arrays.binarySearch(steps, p.num("obdHot", 105));
                 p.put("obdHot", String.valueOf(steps[(Math.max(0, i) + 1) % steps.length]));
+            }
+        }));
+        if (Features.on(p, "ledStrip")) r.add(new SettingsView.Row(g, "LED light strip", p.str("ledMac", "").isEmpty() ? "not chosen" : p.str("ledName", ""), new Runnable() {
+            @Override
+            public void run() {
+                LedStrip.choose(a);
             }
         }));
         r.add(new SettingsView.Row(g, "Tyre sensors", Tpms.status, new Runnable() {

@@ -228,6 +228,72 @@ public final class Tests {
         eq("box names match", Prefs.CONTENTS.length, Prefs.CONTENT_NAMES.length);
     }
 
+    private static void nebulaIdeas() {
+        // Wi-Fi adapters
+        String[] w = Obd.wifiTarget("wifi:192.168.0.10:35000");
+        check("wifi host", w != null && "192.168.0.10".equals(w[0]) && "35000".equals(w[1]));
+        String[] wd = Obd.wifiTarget("wifi:192.168.0.10");
+        check("wifi default port", wd != null && "35000".equals(wd[1]));
+        check("bluetooth isn't wifi", Obd.wifiTarget("00:11:22:33:44:55") == null);
+        // fuel and intake
+        eq("fuel half", 50, Obd.fuel("41 2F 80"));
+        eq("fuel none", -1, Obd.fuel("NO DATA"));
+        eq("intake", 30, Obd.intake("410F46"));
+        eq("intake none", -999, Obd.intake("NO DATA"));
+        // fault codes in plain words
+        eq("misfire meaning", "Misfire, cylinder 1", FaultCodes.look("p0301")[0]);
+        eq("overheat urgent", FaultCodes.STOP, FaultCodes.look("P0217")[2]);
+        eq("unknown family", "Ignition or misfire", FaultCodes.look("P0399")[0]);
+        eq("network family", "Network: the car's computers can't talk to each other", FaultCodes.family("U0999"));
+        eq("maker family", "Maker's own engine or gearbox code", FaultCodes.family("P1234"));
+        eq("worst", FaultCodes.STOP, FaultCodes.worst(java.util.Arrays.asList("P0420", "P0217")));
+        eq("worst none", -1, FaultCodes.worst(new java.util.ArrayList<String>()));
+        check("explain", FaultCodes.explain("P0301").contains("Check: "));
+        // ask the car
+        eq("ask fuel", "fuel", CarAnswer.topic("how much fuel is left"));
+        eq("ask hindi fuel", "fuel", CarAnswer.topic("कितना पेट्रोल है"));
+        eq("ask faults", "faults", CarAnswer.topic("any fault codes"));
+        eq("ask engine", "engine", CarAnswer.topic("how's the engine"));
+        eq("ask battery", "battery", CarAnswer.topic("how is the battery"));
+        eq("ask trip", "trip", CarAnswer.topic("how far today"));
+        check("not a car question", CarAnswer.topic("play FM 91.1") == null);
+        CarAnswer.Car car = new CarAnswer.Car();
+        eq("not connected", "The engine adapter isn't connected, so I can't see the engine.", CarAnswer.answer("fuel", car));
+        car.connected = true;
+        car.fuel = 12;
+        eq("fuel low", "Fuel is low, 12 percent. Time to fill up.", CarAnswer.answer("fuel", car));
+        car.volts = 12.6f;
+        car.rpm = 800;
+        check("alternator", CarAnswer.answer("battery", car).contains("alternator"));
+        car.coolant = 110;
+        check("hot", CarAnswer.answer("engine", car).startsWith("The engine is hot"));
+        eq("faults unread", "I haven't read the fault codes yet. Open the engine box and tap Read fault codes.", CarAnswer.answer("faults", car));
+        // theme by itself
+        eq("phone wins", "@phone", ThemeAuto.pick("@night", "Riya's phone", "@phone", true, "riya's phone"));
+        eq("night", "@night", ThemeAuto.pick("@night", "Riya's phone", "@phone", true, ""));
+        check("day keeps mine", ThemeAuto.pick("@night", "", "", false, "") == null);
+        // LED strip
+        byte[] red = LedStrip.rgb(0xFF0000);
+        check("led colour", red.length == 9 && red[0] == 0x7E && red[3] == 0x03 && (red[4] & 0xFF) == 0xFF && red[5] == 0 && (red[8] & 0xFF) == 0xEF);
+        check("led on", (LedStrip.power(true)[3] & 0xFF) == 0xF0);
+        eq("led brightness", 100, (int) LedStrip.brightness(150)[3]);
+        eq("led warn", LedStrip.RED, LedStrip.colour(0x3366CC, false, true));
+        eq("led night", 0x112244, LedStrip.colour(0x3366CC, true, false));
+        check("led name", LedStrip.looksLike("ELK-BLEDOM") && !LedStrip.looksLike("OBDII"));
+        // badges
+        java.util.List<double[]> days = new java.util.ArrayList<>();
+        for (int i = 0; i < 7; i++) days.add(new double[]{40, 3600, 0, 0, 0, 95});
+        java.util.List<String> got = Achievements.earned(days);
+        check("smooth week", got.contains("smooth3") && got.contains("smooth7") && got.contains("limit7"));
+        check("no 1000 km yet", !got.contains("km1000"));
+        days.add(3, new double[]{1, 60, 0, 0, 0, 40});
+        check("short day doesn't break a streak", Achievements.earned(days).contains("smooth7"));
+        days.add(3, new double[]{30, 1800, 5, 2, 120, 60});
+        check("bad day breaks it", !Achievements.earned(days).contains("smooth7"));
+        eq("fresh", java.util.Arrays.asList("smooth7"), Achievements.fresh("smooth3", java.util.Arrays.asList("smooth3", "smooth7")));
+        for (String id : new String[]{"faultWords", "askCar", "autoTheme", "ledStrip", "achievements"}) check("feature " + id, Features.get(id) != null);
+    }
+
     private static void miniAaIdeas() {
         // deep sleep: the boot clock moves on, the awake clock doesn't
         eq("slept", 300000L, Wake.slept(1000, 1000, 1000 + 315000, 1000 + 15000));
@@ -310,6 +376,7 @@ public final class Tests {
         settingsLook();
         femtoIdeas();
         miniAaIdeas();
+        nebulaIdeas();
         bootArt();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
@@ -444,7 +511,7 @@ public final class Tests {
         check("dtc CAN multi frame has 4 or fewer codes " + multi, multi.size() <= 4 && multi.contains("P0133"));
         eq("dtc letters", Arrays.asList("C0123", "B0456", "U0789"), Obd.dtcs("43 41 23 84 56 C7 89", false));
         eq("dtc none", 0, Obd.dtcs("43 00 00 00 00 00 00", false).size());
-        eq("meaning known", "Engine running lean", Obd.meaning("P0171"));
+        eq("meaning known", "Engine running lean (too much air)", Obd.meaning("P0171"));
     }
 
     static void tpms() {

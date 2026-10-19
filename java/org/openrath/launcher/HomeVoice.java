@@ -150,6 +150,27 @@ final class HomeVoice {
             Chores.parkingTimer(a);
         } else if ("news".equals(k)) {
             readNews(a);
+        } else if ("ask".equals(k)) {
+            if (!Features.on(a.prefs, "askCar")) {
+                Toast.makeText(a, Hindi.t("Turn on Ask the car in Settings, Car"), Toast.LENGTH_LONG).show();
+                return;
+            }
+            CarAnswer.Car c = new CarAnswer.Car();
+            c.connected = Obd.connected && System.currentTimeMillis() - Obd.readAt < 10000;
+            c.fuel = Obd.fuel;
+            c.coolant = Obd.coolant > -40 ? Obd.coolant : -999;
+            c.rpm = Obd.rpm;
+            c.volts = Obd.volts;
+            c.hot = a.prefs.num("obdHot", 105);
+            synchronized (Obd.codes) {
+                c.faults = Obd.codesAt > 0 ? Obd.codes.size() : -1;
+                c.worst = FaultCodes.worst(Obd.codes);
+            }
+            c.todayKm = Drive.todayKm;
+            c.todaySec = Drive.todaySec;
+            String say = CarAnswer.answer(cmd.arg, c);
+            Toast.makeText(a, say, Toast.LENGTH_LONG).show();
+            a.speak(say);
         } else if ("cab".equals(k)) {
             Cab.menu(a);
         } else if ("sos".equals(k)) {
