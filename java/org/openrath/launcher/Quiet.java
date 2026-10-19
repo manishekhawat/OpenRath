@@ -41,7 +41,8 @@ final class Quiet {
                 int max = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
                 int cap = Math.max(1, Math.round(max * p.num("quietVol", 40) / 100f));
                 if (am.getStreamVolume(AudioManager.STREAM_MUSIC) > cap) am.setStreamVolume(AudioManager.STREAM_MUSIC, cap, 0);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                Diag.note("quiet hours volume", e);
             }
         }
         wasQuiet = q;

@@ -63,7 +63,7 @@ final class Probe {
             }
             Crash.end();
         }
-        new Thread(new Runnable() {
+        Bg.run(new Runnable() {
             @Override
             public void run() {
                 PackageManager pm = a.getPackageManager();
@@ -100,6 +100,7 @@ final class Probe {
                 try {
                     Thread.sleep(6000);   // time for MCU messages to arrive
                 } catch (InterruptedException ignored) {
+                    // woken early: carry on
                 }
                 a.runOnUiThread(new Runnable() {
                     @Override
@@ -116,7 +117,7 @@ final class Probe {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     private static void describe(PackageManager pm, String pkg, StringBuilder out) throws Exception {
@@ -199,6 +200,7 @@ final class Probe {
                             f.setAccessible(true);
                             b.append(" ").append(f.getName()).append("=").append(f.get(null));
                         } catch (Throwable ignored) {
+                            // not readable on this unit
                         }
                         if (b.length() > 900) break;
                     }
@@ -232,6 +234,7 @@ final class Probe {
             w.close();
             saved = "Saved to " + f.getPath() + "\n\n";
         } catch (Throwable ignored) {
+            // can't save here: the text is still shown
         }
         TextView t = new TextView(a);
         t.setText(saved + text);

@@ -122,7 +122,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         Intent i = new Intent(c, Drive.class);
         try {
             c.startForegroundService(i);
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("trip service start", e);
         }
     }
 
@@ -161,7 +162,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         loadToday();
         try {
             tone = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 80);
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("alert tone", e);
         }
         tts = new TextToSpeech(this, this);
         screen = new Resume.Screen();
@@ -244,6 +246,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
             volAt = now;
             if (target != cur) am.setStreamVolume(AudioManager.STREAM_MUSIC, target, 0);
         } catch (Throwable ignored) {
+            // every GPS fix: too often to note; the next fix tries again
         }
     }
 
@@ -374,7 +377,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
                             java.util.Collections.sort(keys);
                             for (int i = 0; i < keys.size() - 430; i++) hist.remove(keys.get(i));
                         }
-                    } catch (Exception ignored) {
+                    } catch (Exception ex) {
+                        Diag.note("drive history", ex);
                     }
                     e.putString("hist", hist.toString());
                 }
@@ -993,6 +997,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         try {
             best = Float.parseFloat(prefs.str("accelBest", "0"));
         } catch (Exception ignored) {
+            // not a number: keep 0
         }
         boolean record = best <= 0 || t100 < best;
         if (record) prefs.put("accelBest", s100);
@@ -1017,12 +1022,14 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         try {
             unregisterReceiver(screen);
         } catch (Throwable ignored) {
+            // was not registered
         }
         Obd.stop();
         Tpms.stop();
         try {
             ((LocationManager) getSystemService(LOCATION_SERVICE)).removeUpdates(this);
         } catch (Throwable ignored) {
+            // no location permission
         }
         if (tts != null) tts.shutdown();
         if (tone != null) tone.release();

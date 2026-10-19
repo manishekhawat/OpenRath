@@ -57,7 +57,8 @@ final class Projection {
                     break;
                 }
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("projection app search", e);
         }
         return found;
     }

@@ -47,6 +47,7 @@ final class ThemeAuto {
                 try {
                     n = d == null || d.getName() == null ? "" : d.getName();
                 } catch (SecurityException ignored) {
+                    // no Bluetooth permission: no name
                 }
                 if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(i.getAction())) phone = n;
                 else if (n.equals(phone)) phone = "";
@@ -56,7 +57,8 @@ final class ThemeAuto {
         f.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         try {
             c.getApplicationContext().registerReceiver(listener, f);
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("theme Bluetooth watch", e);
         }
     }
 

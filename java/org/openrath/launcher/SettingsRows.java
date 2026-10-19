@@ -601,6 +601,7 @@ final class SettingsRows {
                                     float f = Float.parseFloat(e.getText().toString().trim());
                                     if (f >= 87.5f && f <= 108f) a.prefs.setFmFreq(Fm.freqOf(f));
                                 } catch (Exception ignored) {
+                                    // not a number: nothing to save
                                 }
                             }
                         }).setNegativeButton(Hindi.t("Cancel"), null).show();
@@ -702,6 +703,7 @@ final class SettingsRows {
                         Toast.makeText(a, Hindi.t("Download English (India) and Hindi, on Wi-Fi"), Toast.LENGTH_LONG).show();
                         return;
                     } catch (Exception ignored) {
+                        // not on this unit: try the next screen
                     }
                 }
             }

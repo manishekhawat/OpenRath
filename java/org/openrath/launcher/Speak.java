@@ -77,6 +77,7 @@ final class Speak {
                         try {
                             tts.shutdown();
                         } catch (Throwable ignored) {
+                            // the voice already failed
                         }
                         waiting.clear();
                         return;
@@ -182,7 +183,8 @@ final class Speak {
                     new android.content.Intent("android.intent.action.TTS_SERVICE"), 0)) {
                 out.add(r.serviceInfo.packageName);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("voice list", e);
         }
         return out;
     }
@@ -208,7 +210,8 @@ final class Speak {
         } catch (Exception e) {
             try {
                 c.startActivity(new android.content.Intent(android.provider.Settings.ACTION_SETTINGS).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
-            } catch (Exception ignored) {
+            } catch (Exception ex) {
+                Diag.note("voice settings", ex);
             }
         }
         if (failed) {   // try again on the next sentence

@@ -52,7 +52,8 @@ final class Intro extends View {
         ink.setStrokeCap(Paint.Cap.ROUND);
         try {
             ink.setTypeface(Typeface.createFromAsset(c.getAssets(), "fonts/InterDisplay-Light.otf"));
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("intro font", e);
         }
         setContentDescription("OpenRath");
         setElevation(Ui.px(30));   // above the setup screens

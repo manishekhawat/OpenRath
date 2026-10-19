@@ -110,6 +110,7 @@ final class Fuel {
             double own = Double.parseDouble(p.str("fuelPrice", "0"));
             if (own > 0) return own;
         } catch (Exception ignored) {
+            // not a number: use the fill-ups
         }
         JSONArray a = log(p);
         String city = p.str("city", "");

@@ -144,6 +144,7 @@ final class Spots {
                 }
                 all.put(key(la, lo, d), s);
             } catch (NumberFormatException ignored) {
+                // a bad line: skip it
             }
         }
     }

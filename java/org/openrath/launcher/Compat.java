@@ -99,6 +99,7 @@ final class Compat {
         try {
             i = pm.getLaunchIntentForPackage(pkg);
         } catch (Exception ignored) {
+            // package gone: try the search below
         }
         if (i != null) return i;
         try {
@@ -110,6 +111,7 @@ final class Compat {
                         .setClassName(r.activityInfo.packageName, r.activityInfo.name);
             }
         } catch (Exception ignored) {
+            // nothing found on this unit
         }
         return null;
     }
@@ -161,6 +163,7 @@ final class Compat {
                 a.startActivityForResult(i, 7);
                 return true;
             } catch (Throwable ignored) {
+                // no role manager on this unit: try the settings screens below
             }
         }
         for (String action : new String[]{android.provider.Settings.ACTION_HOME_SETTINGS,
@@ -169,6 +172,7 @@ final class Compat {
                 a.startActivity(new Intent(action));
                 return true;
             } catch (Exception ignored) {
+                // not on this unit: try the next screen
             }
         }
         return false;
@@ -224,6 +228,7 @@ final class Compat {
             try {
                 c.startActivity(new Intent("android.settings.MANAGE_ALL_FILES_ACCESS_PERMISSION").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             } catch (Exception ignored) {
+                // no such settings screen on this unit
             }
         }
     }

@@ -43,6 +43,7 @@ final class Valet {
             int cap = Math.max(1, Math.round(max * volumeCap(p) / 100f));
             if (am.getStreamVolume(AudioManager.STREAM_MUSIC) > cap) am.setStreamVolume(AudioManager.STREAM_MUSIC, cap, 0);
         } catch (Throwable ignored) {
+            // every GPS fix: too often to note; the next fix tries again
         }
     }
 

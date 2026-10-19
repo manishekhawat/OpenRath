@@ -143,7 +143,7 @@ final class News {
         tried = now;
         busy = true;
         final String topic = p.str("newsTopic", "top");
-        new Thread(new Runnable() {
+        Bg.run(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -163,7 +163,7 @@ final class News {
                     busy = false;
                 }
             }
-        }).start();
+        });
     }
 
     /** "Updated 12 min ago", for the box. */

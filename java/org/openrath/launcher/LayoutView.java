@@ -908,6 +908,7 @@ final class LayoutView extends View implements Hub.Listener {
             cl.setTime(dt);
             day = Hindi.t(DAYS[cl.get(Calendar.DAY_OF_WEEK) - 1]);
         } catch (Exception ignored) {
+            // not a date: show it as it is
         }
         if (dayNames.size() > 30) dayNames.clear();
         dayNames.put(date, day);

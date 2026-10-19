@@ -104,6 +104,7 @@ final class Lights {
             if ("global".equals(src)) return Settings.Global.getString(r, name);
             if ("secure".equals(src)) return Settings.Secure.getString(r, name);
         } catch (Exception ignored) {
+            // not readable on this unit
         }
         return null;
     }
@@ -142,6 +143,7 @@ final class Lights {
                 try {
                     record(i);
                 } catch (Throwable ignored) {
+                    // another app's class we can't read: skip it
                 }
             }
         };
@@ -168,6 +170,7 @@ final class Lights {
                     try {
                         live.put("bcast:" + a + "|" + k, String.valueOf(b.get(k)));
                     } catch (Throwable ignored) {
+                        // another app's class we can't read: skip this key
                     }
                 }
             }
@@ -238,10 +241,12 @@ final class Lights {
                     }
                 }
             } catch (Throwable ignored) {
+                // not readable on this unit
             } finally {
                 try {
                     if (z != null) z.close();
                 } catch (Exception ignored) {
+                    // closing anyway
                 }
             }
             // odex'd system apps keep their code next to the apk; the manifest still helps
@@ -288,6 +293,7 @@ final class Lights {
             }
             r.close();
         } catch (Exception ignored) {
+            // not readable on this unit
         }
         for (String dir : new String[]{"/sys/class/backlight", "/sys/class/leds"}) {
             File[] l = new File(dir).listFiles();
@@ -307,6 +313,7 @@ final class Lights {
             try {
                 for (Map.Entry<String, String> e : x.lightGetters().entrySet()) m.put("xtget:" + e.getKey(), e.getValue());
             } catch (Throwable ignored) {
+                // not on this unit
             }
         }
         m.put("uimode:night", night(c));
@@ -426,7 +433,7 @@ final class Lights {
     static void learn(final Activity a, final Prefs prefs, String what, final Done done) {
         kind = what;
         final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.f("Looking for the %1$s signal…", Hindi.t(noun())), true);
-        new Thread(new Runnable() {
+        Bg.run(new Runnable() {
             @Override
             public void run() {
                 final Set<String> actions = deep ? scanActions(a) : new LinkedHashSet<String>();
@@ -439,7 +446,7 @@ final class Lights {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     private static BroadcastReceiver setupReceiver;
@@ -480,6 +487,7 @@ final class Lights {
             try {
                 c.getApplicationContext().unregisterReceiver(setupReceiver);
             } catch (Exception ignored) {
+                // was not registered
             }
             setupReceiver = null;
         }
@@ -526,7 +534,7 @@ final class Lights {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.t("Reading the unit…"), true);
-                        new Thread(new Runnable() {
+                        Bg.run(new Runnable() {
                             @Override
                             public void run() {
                                 try {
@@ -543,7 +551,7 @@ final class Lights {
                                     }
                                 });
                             }
-                        }).start();
+                        });
                     }
                 })
                 .show();
@@ -638,6 +646,7 @@ final class Lights {
             try {
                 Thread.sleep(120);
             } catch (InterruptedException ignored) {
+                // woken early: carry on
             }
         } while (System.currentTimeMillis() < end);
         return out;
@@ -684,7 +693,7 @@ final class Lights {
 
     static void indicatorSetup(final Activity a, final Prefs prefs, final Done done) {
         final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.t("Looking for the indicator signal…"), true);
-        new Thread(new Runnable() {
+        Bg.run(new Runnable() {
             @Override
             public void run() {
                 final Set<String> actions = deep ? scanActions(a) : new LinkedHashSet<String>();
@@ -697,7 +706,7 @@ final class Lights {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     private static void indicatorStep(final Activity a, final Prefs prefs, final Done done,
@@ -720,7 +729,7 @@ final class Lights {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         final ProgressDialog wait = ProgressDialog.show(a, null, Hindi.t("Watching for 4 seconds…"), true);
-                        new Thread(new Runnable() {
+                        Bg.run(new Runnable() {
                             @Override
                             public void run() {
                                 try {
@@ -737,7 +746,7 @@ final class Lights {
                                     }
                                 });
                             }
-                        }).start();
+                        });
                     }
                 })
                 .show();

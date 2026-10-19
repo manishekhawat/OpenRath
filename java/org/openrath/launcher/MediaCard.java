@@ -306,7 +306,8 @@ final class MediaCard extends Cards.Card {
                 int[] px = new int[24 * 24];
                 small.getPixels(px, 0, 24, 0, 0, 24, 24);
                 col = ArtColour.pick(px);
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                Diag.note("album art colour", e);
             }
         }
         if (col == 0) {
@@ -349,6 +350,7 @@ final class MediaCard extends Cards.Card {
                 if (m != null && m.controller != null && m.controller.getMetadata() != null)
                     d = m.controller.getMetadata().getLong(android.media.MediaMetadata.METADATA_KEY_DURATION);
             } catch (Throwable ignored) {
+                // session gone: no length to show
             }
             media = d > 0 ? m : null;
             duration = d;
@@ -381,7 +383,8 @@ final class MediaCard extends Cards.Card {
             } else if (act == android.view.MotionEvent.ACTION_UP) {
                 try {
                     media.controller.getTransportControls().seekTo((long) (f * duration));
-                } catch (Throwable ignored) {
+                } catch (Throwable ex) {
+                    Diag.note("seek", ex);
                 }
                 dragTo = -1;
                 invalidate();

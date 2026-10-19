@@ -36,6 +36,7 @@ final class Pics {
                 android.app.ActivityManager am = (android.app.ActivityManager) c.getSystemService(Context.ACTIVITY_SERVICE);
                 if (am != null) mb = am.getMemoryClass();
             } catch (Throwable ignored) {
+                // keep the 64 MB guess
             }
             cache = new android.util.LruCache<String, Bitmap>(cacheBytes(mb)) {
                 @Override

@@ -151,7 +151,8 @@ final class CabSos {
                         android.telephony.SmsManager sm = android.telephony.SmsManager.getDefault();
                         for (String n : to) sm.sendMultipartTextMessage(n, null, sm.divideMessage(msg), null, null);
                         sent = true;
-                    } catch (Exception ignored) {
+                    } catch (Exception e) {
+                        Diag.note("SOS text", e);
                     }
                 }
                 if (sent) {

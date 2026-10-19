@@ -141,6 +141,7 @@ final class StatusIcons extends View {
                     try {
                         if (ba.getProfileConnectionState(p) == android.bluetooth.BluetoothProfile.STATE_CONNECTED) linked = true;
                     } catch (Exception ignored) {
+                        // no Bluetooth permission: show not linked
                     }
                 }
                 bt = linked ? ON : SEARCHING;
@@ -154,6 +155,7 @@ final class StatusIcons extends View {
             android.location.LocationManager lm = (android.location.LocationManager) c.getSystemService(Context.LOCATION_SERVICE);
             enabled = lm != null && lm.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
         } catch (Exception ignored) {
+            // refreshed often: unknown counts as off
         }
         gps = gps(a.hub == null ? -1 : a.hub.fixAge(), enabled);
         // battery, if the unit has one

@@ -71,6 +71,7 @@ final class AppPicker {
         try {
             if (r.activityInfo.applicationInfo != null) return r.activityInfo.applicationInfo.loadLabel(pm).toString();
         } catch (Exception ignored) {
+            // no app label: use the screen's name below
         }
         return r.loadLabel(pm).toString();
     }

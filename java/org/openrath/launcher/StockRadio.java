@@ -56,6 +56,7 @@ final class StockRadio {
         try (BufferedReader r = new BufferedReader(new FileReader(f))) {
             for (String s; (s = r.readLine()) != null && l.size() < 200; ) if (!s.trim().isEmpty()) l.add(s.trim());
         } catch (Exception ignored) {
+            // not on this unit
         }
         return l;
     }

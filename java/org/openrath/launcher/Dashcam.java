@@ -98,6 +98,7 @@ final class Dashcam {
                     try {
                         camera.release();
                     } catch (Throwable ignored) {
+                        // already released
                     }
                     camera = null;
                 }
@@ -177,6 +178,7 @@ final class Dashcam {
                 try {
                     camera.release();
                 } catch (Throwable ignored) {
+                    // already released
                 }
                 camera = null;
             }
@@ -195,6 +197,7 @@ final class Dashcam {
             try {
                 if (CamcorderProfile.hasProfile(id, q)) return CamcorderProfile.get(id, q);
             } catch (Throwable ignored) {
+                // no such quality on this camera: try the next
             }
         }
         return null;
@@ -211,11 +214,13 @@ final class Dashcam {
         try {
             rec.release();
         } catch (Throwable ignored) {
+            // already released
         }
         rec = null;
         try {
             if (camera != null) camera.reconnect();
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("dashcam reconnect", e);
         }
         if (current != null && current.length() == 0) current.delete();
         if (keepCurrent && current != null && current.exists()) keep(current);

@@ -106,6 +106,7 @@ final class Floaters {
                 fx = Float.parseFloat(prefs.str("micX", "0.94"));
                 fy = Float.parseFloat(prefs.str("micY", "0.80"));
             } catch (Exception ignored) {
+                // not a number: keep the default
             }
             float[] at = place(fx, fy, w, h, getWidth() > 0 ? getWidth() : Ui.px(64));
             setX(at[0]);
@@ -185,6 +186,7 @@ final class Floaters {
                 int c = (int) (t > 1000 ? t / 1000 : t);
                 if (c > 0 && c < 150 && c > best) best = c;
             } catch (Exception ignored) {
+                // not a number: skip it
             }
         }
         return best;
