@@ -99,6 +99,7 @@ final class Setup extends FrameLayout {
         if (Features.levelPicked(p)) level = Features.level(p);
         setBackgroundColor(Ui.BACKGROUND);
         setClickable(true);   // nothing reaches the dashboard underneath
+        setElevation(Ui.px(20));   // above the floating mic, which has its own elevation
         p.put("setupStep", String.valueOf(step));
     }
 
@@ -675,7 +676,8 @@ final class Setup extends FrameLayout {
                 {"dock:navi", "Navigation", "Opens from the dock and from saved places"}, {"dock:phone", "Phone", "Calls and contacts"}};
         PackageManager pm = a.getPackageManager();
         for (final String[] ap : apps) {
-            final String pkg = p.app(ap[0]);
+            String saved = p.app(ap[0]);
+            final String pkg = saved != null && Compat.launch(pm, saved) != null ? saved : null;   // a default that isn't installed counts as not chosen
             String label = pkg == null ? Hindi.t("Not chosen") : a.appLabel(pkg);
             View r = row(Hindi.t(ap[1]) + "  ·  " + label, Hindi.t(ap[2]), Hindi.t(pkg == null ? "Choose" : "Change"), pkg != null, new Runnable() {
                 @Override

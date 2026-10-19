@@ -53,9 +53,7 @@ public final class Shots extends Instrumentation {
         Intent i = new Intent(Intent.ACTION_MAIN).setClassName(c, HomeActivity.class.getName())
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         final HomeActivity h = (HomeActivity) startActivitySync(i);
-        SystemClock.sleep(1000);
-        shot("01_opening_logo");
-        SystemClock.sleep(2500);
+        SystemClock.sleep(3500);   // the opening logo (a moving picture; see docs/opening-logo.gif)
         if (Setup.showing == null) {
             out.append("no setup screen\n");
         } else {
