@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import java.io.File;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -85,9 +84,10 @@ final class Reports {
     static boolean sendable(String url) {
         if (url == null) return false;
         try {
-            URL u = new URL(url.trim());
-            return "https".equalsIgnoreCase(u.getProtocol()) && u.getHost() != null && !u.getHost().isEmpty()
-                    && u.getUserInfo() == null;
+            // URI, not URL: URL takes "https:// bad" with a host of " bad" on some Java versions
+            java.net.URI u = new java.net.URI(url.trim());
+            return "https".equalsIgnoreCase(u.getScheme()) && u.getHost() != null && !u.getHost().isEmpty()
+                    && u.getRawUserInfo() == null;
         } catch (Exception e) {
             return false;
         }
