@@ -43,10 +43,14 @@ final class MediaCard extends Cards.Card {
     String fmNote = "";   // why FM couldn't start from the box, if it couldn't
     String source;        // what the buttons drive now: "web", "files" or "app"
     boolean audioOn;
+    /** Drag to seek, for music apps that report where the track is. */
+    final Progress progress = new Progress(getContext());
+    android.graphics.Bitmap tintedFor;
 
     MediaCard(Context c, boolean isRadio) {
         super(c);
         radio = isRadio;
+        addView(progress);
         title.setEllipsize(android.text.TextUtils.TruncateAt.END);
         sub.setEllipsize(android.text.TextUtils.TruncateAt.END);
         text.setOrientation(LinearLayout.VERTICAL);
@@ -225,6 +229,8 @@ final class MediaCard extends Cards.Card {
         phone.setTextSize(0, 13 * Ui.k * s);
         phone.setPadding(Ui.px(16 * s), Ui.px(6 * s), Ui.px(16 * s), Ui.px(6 * s));
         phone.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(8 * s), m, 0));
+        progress.setLayoutParams(at(-1, Ui.px(30 * s), Gravity.BOTTOM, m, 0, m, Ui.px(4 * s)));
+        progress.text = 10 * Ui.k * s;
     }
 
     @Override
@@ -284,6 +290,126 @@ final class MediaCard extends Cards.Card {
             audioOn = media != null ? media.playing : localOn && kind().equals(owner);
         }
         showPlay();
+        tint(p);
+        progress.follow(!radio && Features.on(p, "seek") && "app".equals(source) ? media : null);
+    }
+
+    /** The box's colour from the album cover, or the theme's panel. */
+    private void tint(Prefs p) {
+        android.graphics.Bitmap art = media != null && Features.on(p, "artColour") ? media.art : null;
+        if (art == tintedFor) return;
+        tintedFor = art;
+        int col = 0;
+        if (art != null) {
+            try {
+                android.graphics.Bitmap small = android.graphics.Bitmap.createScaledBitmap(art, 24, 24, true);
+                int[] px = new int[24 * 24];
+                small.getPixels(px, 0, 24, 0, 0, 24, 24);
+                col = ArtColour.pick(px);
+            } catch (Throwable ignored) {
+            }
+        }
+        if (col == 0) {
+            setBackground(Ui.panel());
+            progress.ink = Ui.SILVER;
+        } else {
+            android.graphics.drawable.GradientDrawable g = new android.graphics.drawable.GradientDrawable(
+                    android.graphics.drawable.GradientDrawable.Orientation.LEFT_RIGHT, new int[]{Ui.mix(col, Ui.PANEL, 0.35f), Ui.PANEL});
+            g.setCornerRadius(Ui.RADIUS * Ui.k);
+            g.setStroke(Math.max(1, Ui.px(1.2f)), Ui.EDGE);
+            setBackground(g);
+            progress.ink = Ui.mix(col, 0xFFFFFFFF, 0.45f);
+        }
+        progress.invalidate();
+    }
+
+    /** A thin bar with the time played and the length; drag along it to move in the track. */
+    static final class Progress extends View {
+        final android.graphics.Paint paint = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+        Hub.Media media;
+        long duration;
+        float text = 12, dragTo = -1;
+        int ink = Ui.SILVER;
+        final Runnable tick = new Runnable() {
+            @Override
+            public void run() {
+                invalidate();
+                if (media != null && media.playing) postDelayed(this, 1000);
+            }
+        };
+
+        Progress(Context c) {
+            super(c);
+            setVisibility(GONE);
+        }
+
+        void follow(Hub.Media m) {
+            long d = 0;
+            try {
+                if (m != null && m.controller != null && m.controller.getMetadata() != null)
+                    d = m.controller.getMetadata().getLong(android.media.MediaMetadata.METADATA_KEY_DURATION);
+            } catch (Throwable ignored) {
+            }
+            media = d > 0 ? m : null;
+            duration = d;
+            setVisibility(media == null ? GONE : VISIBLE);
+            removeCallbacks(tick);
+            if (media != null) post(tick);
+        }
+
+        long now() {
+            try {
+                android.media.session.PlaybackState st = media.controller.getPlaybackState();
+                if (st == null) return 0;
+                return ArtColour.position(st.getPosition(), st.getLastPositionUpdateTime(),
+                        st.getState() == android.media.session.PlaybackState.STATE_PLAYING ? st.getPlaybackSpeed() : 0,
+                        android.os.SystemClock.elapsedRealtime(), duration);
+            } catch (Throwable e) {
+                return 0;
+            }
+        }
+
+        @Override
+        public boolean onTouchEvent(android.view.MotionEvent e) {
+            if (media == null || getWidth() == 0) return false;
+            float f = Math.max(0, Math.min(1, e.getX() / getWidth()));
+            int act = e.getActionMasked();
+            if (act == android.view.MotionEvent.ACTION_DOWN || act == android.view.MotionEvent.ACTION_MOVE) {
+                getParent().requestDisallowInterceptTouchEvent(true);
+                dragTo = f;
+                invalidate();
+            } else if (act == android.view.MotionEvent.ACTION_UP) {
+                try {
+                    media.controller.getTransportControls().seekTo((long) (f * duration));
+                } catch (Throwable ignored) {
+                }
+                dragTo = -1;
+                invalidate();
+            } else if (act == android.view.MotionEvent.ACTION_CANCEL) {
+                dragTo = -1;
+                invalidate();
+            }
+            return true;
+        }
+
+        @Override
+        protected void onDraw(android.graphics.Canvas c) {
+            if (media == null) return;
+            long at = dragTo >= 0 ? (long) (dragTo * duration) : now();
+            float f = duration > 0 ? at / (float) duration : 0;
+            float y = getHeight() * 0.3f, w = getWidth(), th = Math.max(2, getHeight() * 0.08f);
+            paint.setColor(Ui.mix(Ui.SILVER_DIM, Ui.PANEL, 0.6f));
+            c.drawRect(0, y - th / 2, w, y + th / 2, paint);
+            paint.setColor(ink);
+            c.drawRect(0, y - th / 2, w * f, y + th / 2, paint);
+            c.drawCircle(w * f, y, th * (dragTo >= 0 ? 3 : 1.8f), paint);
+            paint.setTextSize(text);
+            paint.setColor(Ui.SILVER_DIM);
+            paint.setTextAlign(android.graphics.Paint.Align.LEFT);
+            c.drawText(ArtColour.clock(at), 0, getHeight() - 2, paint);
+            paint.setTextAlign(android.graphics.Paint.Align.RIGHT);
+            c.drawText(ArtColour.clock(duration), w, getHeight() - 2, paint);
+        }
     }
 
     void showPlay() {

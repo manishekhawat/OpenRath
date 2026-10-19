@@ -2,6 +2,17 @@
 
 Newest first.
 
+## 1.39: Sleep, units and the music box
+
+- **Recover after deep sleep:** many stereos sleep with the ignition instead of switching off, often with OpenRath still on screen. On waking, the GPS, the link to music apps and the map now start again, and the music carries on.
+- **Speed filter** in Driving: show 0 below 2 to 8 km/h, for GPS that drifts when parked.
+- **mph and °F** in Home screen, Units. Distances stay in km.
+- **Music box colours** from the album cover.
+- **Drag to seek** in the music box: a bar with the time played and the song's length, for music apps that allow it.
+- **4G and 5G** on the dock's signal icon.
+- **Drive summary when stopped:** after 5 seconds at a standstill, the car box shows this drive's distance, time, average and top speed.
+- **Tap sound and buzz** (off until you turn it on): a short tick and a buzz on each box and dock button.
+
 ## 1.38: Apps, places and safer driving
 
 - **Better all-apps screen:** a search box, a row of pinned and recently opened apps, an A to Z column to jump with, and a long press for Pin to the top, App info or Uninstall.

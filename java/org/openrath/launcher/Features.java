@@ -117,6 +117,10 @@ final class Features {
             new F("dockStatus", "Status icons in the dock", "Dashboard", true, "Wi-Fi, mobile signal, Bluetooth, GPS and battery, for stereos that hide Android's status bar"),
             new F("hourlyWeather", "Hourly weather", "Dashboard", true, "The next 24 hours' temperature and rain in a tall weather box, kept for offline use"),
             new F("calendar", "Calendar box", "Dashboard", true, "Today's and the next few days' events from the unit's calendar"),
+            new F("artColour", "Music box colours from the album cover", "Dashboard", true, "The music box takes its colour from the song's cover"),
+            new F("seek", "Drag to seek in the music box", "Dashboard", true, "A bar with the time played; drag along it to move in the song (music apps that allow it)"),
+            new F("stopSummary", "Drive summary when stopped", "Dashboard", true, "Stopped for 5 seconds: distance, time, average and top speed of this drive in the car box"),
+            new F("tapFeedback", "Tap sound and buzz", "Dashboard", false, "A short tick and a buzz on each box and dock button"),
             new F("perf", "Performance box", "Dashboard", false, "Frames per second, CPU use, temperature and free memory in a corner"),
             // driving
             new F("speedAlerts", "Speed limit and camera alerts", "Driving", true, "Speaks and beeps near cameras and over the limit"),
@@ -158,6 +162,7 @@ final class Features {
             new F("profiles", "Driver profiles", "Family", false, "Each driver's own boxes, theme, volume and alerts"),
             new F("kids", "Trip games for children", "Family", true, "Spot the colour, number plates, and how far to go"),
             // sound
+            new F("wake", "Recover after deep sleep", "Sound", true, "When the stereo wakes from sleep with the ignition, the GPS, music link and map start again"),
             new F("resume", "Resume after switch-on", "Sound", true, "Plays what was on, at the same volume"),
             new F("speedVolume", "Volume rises with speed", "Sound", false, "Louder on the highway, back down in town"),
             new F("eq", "Equalizer", "Sound", false, "Bass, treble and presets for the app's own sound"),

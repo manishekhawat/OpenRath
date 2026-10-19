@@ -867,24 +867,24 @@ final class LayoutView extends View implements Hub.Listener {
 
     private void speedPart(Canvas c, Layouts.Part p) {
         float x = p.x, y = p.y, w = p.w, h = p.h, cx = x + w / 2, cy = y + h / 2;
-        String v = speed();
+        String v = a.hub.speedShown();
         float frac = speedNum() / 180f;
         String st = p.style;
         hits.add(new Hit(x, y, w, h, "dock:navi"));
         if ("ring".equals(st)) {
             ring(c, cx, cy, w * 0.4f, w * 0.035f, frac, 0xFFFFFFFF, 0x55FFFFFF);
             text(c, v, cx, cy - 6, h * 0.27f, p.ink, MED, "mm");
-            text(c, "km/h", cx, cy + h * 0.17f, h * 0.085f, p.sub, REG, "mm");
+            text(c, Units.speedLabel(), cx, cy + h * 0.17f, h * 0.085f, p.sub, REG, "mm");
         } else if ("number".equals(st)) {
             text(c, v, cx, y + h * 0.72f, h * 0.8f, p.ink, MED, "ms");
-            text(c, "km/h", cx, y + h * 0.95f, h * 0.13f, p.sub, REG, "ms");
+            text(c, Units.speedLabel(), cx, y + h * 0.95f, h * 0.13f, p.sub, REG, "ms");
         } else if ("badge".equals(st)) {
             text(c, v + " km/h", cx, cy, h * 0.38f, p.ink, MED, "mm");
         } else if ("gauge-small".equals(st)) {
             float r = h * 0.36f;
             ring(c, x + 18 + r, cy, r, 4, frac, p.accent, 0x22000000);
             text(c, v, x + 18 + r, cy - 2, r * 0.62f, p.ink, MED, "mm");
-            text(c, "km/h", x + 18 + r, cy + r * 0.5f, 10, p.sub, REG, "mm");
+            text(c, Units.speedLabel(), x + 18 + r, cy + r * 0.5f, 10, p.sub, REG, "mm");
             text(c, direction(), x + w - 16, cy - 10, 15, p.ink, MED, "rm");
             text(c, altitude(), x + w - 16, cy + 16, 13, p.sub, REG, "rm");
         } else if ("dial".equals(st)) {
@@ -911,13 +911,13 @@ final class LayoutView extends View implements Hub.Listener {
             line.setStrokeWidth(2);
             c.drawCircle(cx, cy, r * .42f, line);
             text(c, v, cx, cy - 2, r * 0.3f, p.ink, MED, "mm");
-            text(c, "km/h", cx, cy + r * 0.24f, r * 0.09f, p.sub, REG, "mm");
+            text(c, Units.speedLabel(), cx, cy + r * 0.24f, r * 0.09f, p.sub, REG, "mm");
         } else if ("row".equals(st)) {
             text(c, v, x, cy + 14, 52, p.ink, MED, "ls");
-            text(c, "km/h", x + width(v, 52, MED) + 12, cy + 14, 15, p.sub, REG, "ls");
+            text(c, Units.speedLabel(), x + width(v, 52, MED) + 12, cy + 14, 15, p.sub, REG, "ls");
         } else if ("card".equals(st)) {
             text(c, v, cx, y + 64, 64, p.ink, MED, "mm");
-            text(c, "km/h", cx, y + 104, 15, p.sub, REG, "mm");
+            text(c, Units.speedLabel(), cx, y + 104, 15, p.sub, REG, "mm");
             line.setColor(0xFF9AC8F0);
             line.setStrokeWidth(2);
             for (int sg : new int[]{-1, 1}) c.drawLine(cx + sg * 14, y + 140, cx + sg * 70, y + h - 20, line);

@@ -557,6 +557,21 @@
     <string name="ui_play_a_video" formatted="false">Play a video</string>
     <string name="ui_tap_to_play_a_video_the_picture_shows_on" formatted="false">Tap to play a video. The picture shows only when the car is stopped.</string>
     <string name="ui_the_picture_shows_when_the_car_is_stoppe" formatted="false">The picture shows when the car is stopped</string>
+    <string name="ui_music_box_colours_from_the_album_cover" formatted="false">Music box colours from the album cover</string>
+    <string name="ui_the_music_box_takes_its_colour_from_the_" formatted="false">The music box takes its colour from the song\'s cover</string>
+    <string name="ui_drag_to_seek_in_the_music_box" formatted="false">Drag to seek in the music box</string>
+    <string name="ui_a_bar_with_the_time_played_drag_along_it" formatted="false">A bar with the time played; drag along it to move in the song (music apps that allow it)</string>
+    <string name="ui_drive_summary_when_stopped" formatted="false">Drive summary when stopped</string>
+    <string name="ui_stopped_for_5_seconds_distance_time_aver" formatted="false">Stopped for 5 seconds: distance, time, average and top speed of this drive in the car box</string>
+    <string name="ui_tap_sound_and_buzz" formatted="false">Tap sound and buzz</string>
+    <string name="ui_a_short_tick_and_a_buzz_on_each_box_and_" formatted="false">A short tick and a buzz on each box and dock button</string>
+    <string name="ui_recover_after_deep_sleep" formatted="false">Recover after deep sleep</string>
+    <string name="ui_when_the_stereo_wakes_from_sleep_with_th" formatted="false">When the stereo wakes from sleep with the ignition, the GPS, music link and map start again</string>
+    <string name="ui_speed_filter" formatted="false">Speed filter</string>
+    <string name="ui_0_below_1_s_km_h" formatted="false">0 below %1$s km/h</string>
+    <string name="ui_show_0_below_this_speed_for_gps_that_dri" formatted="false">Show 0 below this speed, for GPS that drifts when parked</string>
+    <string name="ui_units" formatted="false">Units</string>
+    <string name="ui_units_for_speed_and_temperature" formatted="false">Units for speed and temperature</string>
     <string-array name="ui_strings">
         <item>@string/ui_back_to_the_dashboard</item>
         <item>@string/ui_search_settings</item>
@@ -1113,5 +1128,20 @@
         <item>@string/ui_play_a_video</item>
         <item>@string/ui_tap_to_play_a_video_the_picture_shows_on</item>
         <item>@string/ui_the_picture_shows_when_the_car_is_stoppe</item>
+        <item>@string/ui_music_box_colours_from_the_album_cover</item>
+        <item>@string/ui_the_music_box_takes_its_colour_from_the_</item>
+        <item>@string/ui_drag_to_seek_in_the_music_box</item>
+        <item>@string/ui_a_bar_with_the_time_played_drag_along_it</item>
+        <item>@string/ui_drive_summary_when_stopped</item>
+        <item>@string/ui_stopped_for_5_seconds_distance_time_aver</item>
+        <item>@string/ui_tap_sound_and_buzz</item>
+        <item>@string/ui_a_short_tick_and_a_buzz_on_each_box_and_</item>
+        <item>@string/ui_recover_after_deep_sleep</item>
+        <item>@string/ui_when_the_stereo_wakes_from_sleep_with_th</item>
+        <item>@string/ui_speed_filter</item>
+        <item>@string/ui_0_below_1_s_km_h</item>
+        <item>@string/ui_show_0_below_this_speed_for_gps_that_dri</item>
+        <item>@string/ui_units</item>
+        <item>@string/ui_units_for_speed_and_temperature</item>
     </string-array>
 </resources>

@@ -353,9 +353,15 @@ final class Hub implements LocationListener {
             return "--";
         } else raw = fix.getSpeed() * 3.6f;
         long t = android.os.SystemClock.elapsedRealtime();
-        shownKmh = Features.on(prefs, "smoothSpeed") ? Fixes.smooth(shownKmh, raw, t - shownAt) : raw;
+        shownKmh = Features.on(prefs, "smoothSpeed") ? Fixes.smooth(shownKmh, raw, t - shownAt) : raw < Fixes.stillKmh ? 0 : raw;
         shownAt = t;
         return String.valueOf(Math.round(shownKmh));
+    }
+
+    /** The speed in the owner's unit (km/h or mph), or "--". */
+    String speedShown() {
+        String s = speed();
+        return !Units.mph || s.equals("--") ? s : String.valueOf(Units.speed(Integer.parseInt(s), true));
     }
 
     /** Seconds since the last GPS fix, or -1. */
@@ -525,7 +531,7 @@ final class Hub implements LocationListener {
             for (int k = 0; dt != null && k < dt.length(); k++) {
                 if (dt.optString(k).compareTo(today) < 0) continue;   // a saved copy: days gone by are dropped
                 w.days.add(new String[]{dt.optString(k), weatherIcon(dc.optInt(k), true),
-                        Math.round(dmax.optDouble(k)) + "°", Math.round(dmin.optDouble(k)) + "°"});
+                        Units.temp(dmax.optDouble(k)), Units.temp(dmin.optDouble(k))});
             }
         }
         JSONObject hr = all.optJSONObject("hourly");
@@ -574,7 +580,7 @@ final class Hub implements LocationListener {
         }
         int code = cur.getInt("weather_code");
         boolean day = cur.optInt("is_day", 1) == 1;
-        w.temp = Math.round(cur.getDouble("temperature_2m")) + "°";
+        w.temp = Units.temp(cur.getDouble("temperature_2m"));
         w.desc = describeWeather(code);
         w.icon = weatherIcon(code, day);
         if (cur.has("relative_humidity_2m")) w.hum = Math.round(cur.optDouble("relative_humidity_2m")) + "%";
@@ -614,6 +620,11 @@ final class Hub implements LocationListener {
     private long savedShownAt;
 
     /** No internet (or no GPS yet): show the hour that is now from the last forecast kept. */
+    /** Fetch the weather again on the next tick (the temperature unit changed). */
+    void refreshWeather() {
+        weatherAt = 0;
+    }
+
     private void showSavedWeather() {
         long now = System.currentTimeMillis();
         if (weatherSaved == 0 && weatherLive > 0 && now - weatherLive < WEATHER_MS * 2) return;   // live is still fresh
