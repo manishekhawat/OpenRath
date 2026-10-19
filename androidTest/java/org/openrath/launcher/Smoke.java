@@ -31,22 +31,19 @@ public final class Smoke extends Instrumentation {
     @Override
     public void onStart() {
         super.onStart();
-        Context c = getTargetContext();
-        try {
-            if (fleet != null) {
-                fleet(c);
-            } else {
-                features(c);
-                managed(c);
-                hindi(c);
-                reports(c);
-                compat(c);
-                home(c);
-                backup(c);
-                resources(c);
-            }
-        } catch (Throwable e) {
-            check("no exception: " + e, false);
+        final Context c = getTargetContext();
+        // each section on its own, so an exception in one is reported and the rest still run
+        if (fleet != null) {
+            section("fleet", () -> fleet(c));
+        } else {
+            section("features", () -> features(c));
+            section("managed", () -> managed(c));
+            section("hindi", () -> hindi(c));
+            section("reports", () -> reports(c));
+            section("compat", () -> compat(c));
+            section("home", () -> home(c));
+            section("backup", () -> backup(c));
+            section("resources", () -> resources(c));
         }
         String summary = run + " checks, " + failed + " failed";
         out.append(summary).append('\n');
@@ -54,6 +51,18 @@ public final class Smoke extends Instrumentation {
         b.putString(Instrumentation.REPORT_KEY_STREAMRESULT, out.toString());
         b.putInt("failed", failed);
         finish(failed == 0 ? Activity.RESULT_OK : Activity.RESULT_CANCELED, b);
+    }
+
+    private interface Section {
+        void run() throws Exception;
+    }
+
+    private void section(String name, Section s) {
+        try {
+            s.run();
+        } catch (Throwable e) {
+            check(name + ": no exception: " + e, false);
+        }
     }
 
     private void check(String name, boolean ok) {
