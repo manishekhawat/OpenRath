@@ -208,6 +208,32 @@ final class SettingsRows {
                 }).show();
     }
 
+    /** The boxes on this page with what each shows; picking one asks what it should show. */
+    private static void boxes(final HomeActivity a) {
+        String[] names = new String[Prefs.SLOTS];
+        for (int i = 0; i < Prefs.SLOTS; i++) {
+            names[i] = Hindi.t(HomeDialogs.slotName(a, i)) + ":  " + Hindi.t(contentName(a.prefs.slot(i)));
+        }
+        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("What the boxes show"))
+                .setItems(names, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, final int slot) {
+                        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                                .setTitle(Hindi.f("%1$s shows", Hindi.t(HomeDialogs.slotName(a, slot))))
+                                .setSingleChoiceItems(tr(Prefs.CONTENT_NAMES), java.util.Arrays.asList(Prefs.CONTENTS).indexOf(a.prefs.slot(slot)),
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface d2, int which) {
+                                                a.prefs.setSlot(slot, Prefs.CONTENTS[which]);
+                                                a.build();
+                                                d2.dismiss();
+                                            }
+                                        })
+                                .setNegativeButton(Hindi.t("Cancel"), null).show();
+                    }
+                }).setNegativeButton(Hindi.t("Close"), null).show();
+    }
+
     /** Everything on the settings screen, by group. */
     static java.util.List<SettingsView.Row> settingsRows(final HomeActivity a) {
         final java.util.List<SettingsView.Row> r = new java.util.ArrayList<>();
@@ -218,26 +244,13 @@ final class SettingsRows {
 
         // ---- Dashboard
         String g = "Dashboard";
-        for (int i = 0; i < Prefs.SLOTS; i++) {
-            final int slot = i;
-            r.add(new SettingsView.Row(g, HomeDialogs.slotName(a, i), Hindi.t(contentName(a.prefs.slot(i))), new Runnable() {
-                @Override
-                public void run() {
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
-                            .setTitle(Hindi.f("%1$s shows", Hindi.t(HomeDialogs.slotName(a, slot))))
-                            .setSingleChoiceItems(tr(Prefs.CONTENT_NAMES), java.util.Arrays.asList(Prefs.CONTENTS).indexOf(a.prefs.slot(slot)),
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface d, int which) {
-                                            a.prefs.setSlot(slot, Prefs.CONTENTS[which]);
-                                            a.build();
-                                            d.dismiss();
-                                        }
-                                    })
-                            .setNegativeButton(Hindi.t("Cancel"), null).show();
-                }
-            }));
-        }
+        // one row for all the boxes, not one each: a long-press on a box does the same
+        r.add(new SettingsView.Row(g, "What the boxes show", "or long-press a box", new Runnable() {
+            @Override
+            public void run() {
+                boxes(a);
+            }
+        }));
         r.add(new SettingsView.Row(g, "Move boxes", "drag and drop on the dashboard", new Runnable() {
             @Override
             public void run() {

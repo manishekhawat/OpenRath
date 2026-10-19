@@ -904,4 +904,6 @@
     <string name="ui_it_is_not_newer_than_this_version" formatted="false">यह इस संस्करण से नया नहीं है</string>
     <string name="ui_it_is_signed_with_a_different_key" formatted="false">इस पर किसी दूसरी कुंजी से हस्ताक्षर है</string>
     <string name="ui_too_many_wrong_pins_try_again_in_1_s_s" formatted="false">बहुत बार ग़लत पिन। %1$s सेकंड बाद फिर कोशिश करें</string>
+    <string name="ui_what_the_boxes_show" formatted="false">बॉक्स में क्या दिखे</string>
+    <string name="ui_or_long_press_a_box" formatted="false">या किसी बॉक्स को देर तक दबाएँ</string>
 </resources>
