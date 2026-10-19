@@ -87,7 +87,7 @@ final class NightDrive extends View {
         paint.setTextSize(size * 0.16f);
         paint.setColor(RED_DIM);
         paint.setLetterSpacing(0.2f);
-        cv.drawText("KM/H", cx, cy + size * 0.62f, paint);
+        cv.drawText(Units.speedLabel().toUpperCase(java.util.Locale.ROOT), cx, cy + size * 0.62f, paint);
         paint.setTextSize(size * 0.2f);
         paint.setLetterSpacing(0);
         cv.drawText(new SimpleDateFormat("h:mm", Locale.US).format(new Date()), cx, area.top + size * 0.35f, paint);

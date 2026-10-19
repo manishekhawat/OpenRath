@@ -228,6 +228,53 @@ public final class Tests {
         eq("box names match", Prefs.CONTENTS.length, Prefs.CONTENT_NAMES.length);
     }
 
+    private static void miniAaIdeas() {
+        // deep sleep: the boot clock moves on, the awake clock doesn't
+        eq("slept", 300000L, Wake.slept(1000, 1000, 1000 + 315000, 1000 + 15000));
+        eq("awake", 0L, Wake.slept(1000, 1000, 16000, 16000));
+        eq("first reading", 0L, Wake.slept(0, 0, 50000, 1000));
+        // speed filter
+        float keep = Fixes.stillKmh;
+        Fixes.stillKmh = 5;
+        eq("filter drift", 0f, Fixes.smooth(0, 4, 1000));
+        eq("filter moving", 6f, Fixes.smooth(0, 6, 1000));
+        Fixes.stillKmh = keep;
+        // units
+        eq("mph", 62, Units.speed(100, true));
+        eq("kmh", 100, Units.speed(100, false));
+        eq("fahrenheit", 86.0, Units.temp(30, true));
+        eq("celsius", 30.0, Units.temp(30, false));
+        // album colours
+        int[] red = new int[100];
+        java.util.Arrays.fill(red, 0xFFE02020);
+        int c = ArtColour.pick(red);
+        check("art colour red", c != 0 && ((c >> 16) & 0xFF) > ((c >> 8) & 0xFF) * 3);
+        check("art colour dark enough", Math.max((c >> 16) & 0xFF, Math.max((c >> 8) & 0xFF, c & 0xFF)) <= 150);
+        int[] grey = new int[100];
+        java.util.Arrays.fill(grey, 0xFF808080);
+        eq("art colour grey", 0, ArtColour.pick(grey));
+        eq("art colour none", 0, ArtColour.pick(new int[0]));
+        int[] mix = new int[100];
+        java.util.Arrays.fill(mix, 0xFF909090);
+        for (int i = 0; i < 30; i++) mix[i] = 0xFF2050E0;
+        check("art colour vivid wins", (ArtColour.pick(mix) & 0xFF) > ((ArtColour.pick(mix) >> 16) & 0xFF));
+        // seeking
+        eq("position moves on", 15000L, ArtColour.position(10000, 1000, 1f, 6000, 200000));
+        eq("position paused", 10000L, ArtColour.position(10000, 1000, 0f, 6000, 200000));
+        eq("position capped", 200000L, ArtColour.position(199000, 0, 1f, 5000, 200000));
+        eq("clock", "3:07", ArtColour.clock(187000));
+        eq("clock hours", "1:02:03", ArtColour.clock(3723000));
+        // network type
+        eq("net 4G", "4G", StatusIcons.label(13));
+        eq("net 5G", "5G", StatusIcons.label(20));
+        eq("net unknown", "", StatusIcons.label(0));
+        // drive summary when stopped
+        eq("summary", "12.0 km · 30 min · avg 24 · top 68 km/h", CarCard.summary(12, 1800, 68, false));
+        eq("summary mph", "12.0 km · 1 h 05 min · avg 7 · top 62 mph", CarCard.summary(12, 3900, 100, true));
+        for (String id : new String[]{"wake", "artColour", "seek", "stopSummary", "tapFeedback"})
+            check("mini aa feature exists " + id, Features.get(id) != null);
+    }
+
     public static void main(String[] args) {
         levels();
         hindi();
@@ -262,6 +309,7 @@ public final class Tests {
         radioAndBoxes();
         settingsLook();
         femtoIdeas();
+        miniAaIdeas();
         bootArt();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);

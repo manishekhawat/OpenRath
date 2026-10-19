@@ -160,8 +160,14 @@ final class Cards {
             return p;
         }
 
-        void clickable(View v, OnClickListener l) {
-            v.setOnClickListener(l);
+        void clickable(View v, final OnClickListener l) {
+            v.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View x) {
+                    Tap.feedback(x, host == null ? null : host.prefs());
+                    l.onClick(x);
+                }
+            });
             v.setOnLongClickListener(edit);
         }
     }
@@ -298,7 +304,7 @@ final class Cards {
     static final class Hours extends View {
         final android.graphics.Paint ink = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
         final android.graphics.Path path = new android.graphics.Path();
-        float[] temps = new float[0], rain = new float[0];
+        float[] temps = new float[0], rain = new float[0], raw;
         boolean wanted;
 
         Hours(Context c) {
@@ -307,8 +313,10 @@ final class Cards {
         }
 
         void set(float[] t, float[] r) {
-            if (java.util.Arrays.equals(t, temps) && java.util.Arrays.equals(r, rain)) return;
-            temps = t;
+            if (t == raw && java.util.Arrays.equals(r, rain)) return;
+            raw = t;
+            temps = new float[t.length];
+            for (int i = 0; i < t.length; i++) temps[i] = (float) Units.temp(t[i], Units.fahrenheit);
             rain = r;
             invalidate();
         }

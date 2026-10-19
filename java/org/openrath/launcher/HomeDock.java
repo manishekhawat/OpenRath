@@ -143,6 +143,7 @@ final class HomeDock {
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View x) {
+                    Tap.feedback(x, a.prefs);
                     if ("apps".equals(name)) a.startActivity(new Intent(a, AppsActivity.class));
                     else a.openApp(dockKey(name), label);
                 }

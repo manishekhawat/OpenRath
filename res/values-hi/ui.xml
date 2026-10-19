@@ -556,4 +556,19 @@
     <string name="ui_play_a_video" formatted="false">वीडियो चलाएँ</string>
     <string name="ui_tap_to_play_a_video_the_picture_shows_on" formatted="false">वीडियो चलाने के लिए टैप करें। तस्वीर सिर्फ़ कार रुकने पर दिखती है।</string>
     <string name="ui_the_picture_shows_when_the_car_is_stoppe" formatted="false">कार रुकने पर तस्वीर दिखती है</string>
+    <string name="ui_music_box_colours_from_the_album_cover" formatted="false">एल्बम कवर से म्यूज़िक बॉक्स के रंग</string>
+    <string name="ui_the_music_box_takes_its_colour_from_the_" formatted="false">म्यूज़िक बॉक्स गाने के कवर से अपना रंग लेता है</string>
+    <string name="ui_drag_to_seek_in_the_music_box" formatted="false">म्यूज़िक बॉक्स में खींचकर आगे-पीछे करें</string>
+    <string name="ui_a_bar_with_the_time_played_drag_along_it" formatted="false">बजे हुए समय की पट्टी; गाने में आगे-पीछे जाने के लिए इसे खींचें (जो म्यूज़िक ऐप इसकी अनुमति दें)</string>
+    <string name="ui_drive_summary_when_stopped" formatted="false">रुकने पर ड्राइव का सार</string>
+    <string name="ui_stopped_for_5_seconds_distance_time_aver" formatted="false">5 सेकंड रुकने पर: कार बॉक्स में इस ड्राइव की दूरी, समय, औसत और सबसे तेज़ स्पीड</string>
+    <string name="ui_tap_sound_and_buzz" formatted="false">टैप की आवाज़ और कंपन</string>
+    <string name="ui_a_short_tick_and_a_buzz_on_each_box_and_" formatted="false">हर बॉक्स और डॉक बटन पर छोटी टिक और कंपन</string>
+    <string name="ui_recover_after_deep_sleep" formatted="false">गहरी नींद के बाद फिर से चालू</string>
+    <string name="ui_when_the_stereo_wakes_from_sleep_with_th" formatted="false">जब इग्निशन के साथ स्टीरियो नींद से जागता है, तो GPS, म्यूज़िक लिंक और मैप फिर से शुरू होते हैं</string>
+    <string name="ui_speed_filter" formatted="false">स्पीड फ़िल्टर</string>
+    <string name="ui_0_below_1_s_km_h" formatted="false">%1$s km/h से नीचे 0</string>
+    <string name="ui_show_0_below_this_speed_for_gps_that_dri" formatted="false">इस स्पीड से नीचे 0 दिखाएँ, उस GPS के लिए जो पार्क होने पर खिसकता है</string>
+    <string name="ui_units" formatted="false">इकाइयाँ</string>
+    <string name="ui_units_for_speed_and_temperature" formatted="false">स्पीड और तापमान की इकाइयाँ</string>
 </resources>

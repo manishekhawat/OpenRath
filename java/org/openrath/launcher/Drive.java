@@ -54,6 +54,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     // trip computer
     static double todayKm, driveKm, odoKm;
     static long todaySec, driveSec;
+    /** Top speed since the unit switched on, km/h. */
+    static float driveTop;
     // parking
     static double parkLat, parkLon;
     static long parkAt;
@@ -407,6 +409,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
                 movedKm = d / 1000.0;
                 todayKm += d / 1000.0;
                 driveKm += d / 1000.0;
+                driveTop = Math.max(driveTop, kmh);
                 odoKm += d / 1000.0;
                 if (dt < 5000) {
                     todaySec += dt / 1000;
