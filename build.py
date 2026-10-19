@@ -83,7 +83,7 @@ def white(polys, size):
     im.putalpha(Image.fromarray(a))
     return im
 X = 2.4   # images are drawn for a 600 px tall screen times X, then scaled down on the unit
-VERSION_CODE, VERSION_NAME = 47, '1.39'
+VERSION_CODE, VERSION_NAME = 48, '1.40'
 # Oldest Android the APK installs on (26 = Android 8.0). It targets Android 14.
 MIN_SDK = 26
 

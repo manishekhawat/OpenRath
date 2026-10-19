@@ -571,4 +571,243 @@
     <string name="ui_show_0_below_this_speed_for_gps_that_dri" formatted="false">इस स्पीड से नीचे 0 दिखाएँ, उस GPS के लिए जो पार्क होने पर खिसकता है</string>
     <string name="ui_units" formatted="false">इकाइयाँ</string>
     <string name="ui_units_for_speed_and_temperature" formatted="false">स्पीड और तापमान की इकाइयाँ</string>
+    <string name="ui_fuel_1_s" formatted="false">ईंधन %1$s%%</string>
+    <string name="ui_intake_1_s_c" formatted="false">इनटेक %1$s°C</string>
+    <string name="ui_what_kind_of_obd_ii_adapter" formatted="false">किस तरह का OBD-II अडैप्टर?</string>
+    <string name="ui_wi_fi_adapter_address" formatted="false">Wi-Fi अडैप्टर का पता</string>
+    <string name="ui_first_join_the_adapter_s_wi_fi_in_the_un" formatted="false">पहले यूनिट की Wi-Fi सेटिंग्स में अडैप्टर के Wi-Fi से जुड़ें। ज़्यादातर अडैप्टर 192.168.0.10, पोर्ट 35000 पर होते हैं।</string>
+    <string name="ui_connect" formatted="false">जोड़ें</string>
+    <string name="ui_that_address_doesn_t_look_right_for_exam" formatted="false">यह पता सही नहीं लगता, उदाहरण के लिए 192.168.0.10:35000</string>
+    <string name="ui_wi_fi_adapter" formatted="false">Wi-Fi अडैप्टर</string>
+    <string name="ui_connecting_to_the_wi_fi_adapter_keep_the" formatted="false">Wi-Fi अडैप्टर से जुड़ रहा है; इग्निशन चालू रखें</string>
+    <string name="ui_wi_fi_settings" formatted="false">Wi-Fi सेटिंग्स</string>
+    <string name="ui_led_light_strip" formatted="false">LED लाइट स्ट्रिप</string>
+    <string name="ui_theme_changes_by_itself" formatted="false">थीम अपने आप बदले</string>
+    <string name="ui_a_theme_for_the_night_and_one_for_when_a" formatted="false">रात के लिए एक थीम, और चुने गए फ़ोन के जुड़ने पर एक थीम</string>
+    <string name="ui_badges_for_good_driving" formatted="false">अच्छी ड्राइविंग के बैज</string>
+    <string name="ui_smooth_driving_streaks_weeks_within_the_" formatted="false">आराम से ड्राइविंग के लगातार दिन, सीमा के अंदर हफ़्ते और दूरी के पड़ाव</string>
+    <string name="ui_needs_a_bluetooth_or_wi_fi_elm327_adapte" formatted="false">Bluetooth या Wi-Fi ELM327 अडैप्टर चाहिए</string>
+    <string name="ui_fault_codes_in_plain_words" formatted="false">फ़ॉल्ट कोड आसान शब्दों में</string>
+    <string name="ui_each_fault_code_with_what_it_means_what_" formatted="false">हर फ़ॉल्ट कोड का मतलब, क्या जाँचें और कितना ज़रूरी है, यूनिट पर रखी तालिका से</string>
+    <string name="ui_ask_the_car_by_voice" formatted="false">बोलकर कार से पूछें</string>
+    <string name="ui_how_s_the_engine_how_much_fuel_any_fault" formatted="false">\"इंजन कैसा है?\", \"कितना पेट्रोल है?\", \"कोई खराबी?\" का जवाब इंजन के डेटा से</string>
+    <string name="ui_a_bluetooth_elk_bledom_strip_takes_the_t" formatted="false">Bluetooth ELK-BLEDOM स्ट्रिप थीम का रंग लेती है, रात में धीमी होती है और चेतावनी पर लाल हो जाती है</string>
+    <string name="ui_turn_on_ask_the_car_in_settings_car" formatted="false">सेटिंग्स, कार में \"बोलकर कार से पूछें\" चालू करें</string>
+    <string name="ui_badges" formatted="false">बैज</string>
+    <string name="ui_1_s_of_2_s_earned" formatted="false">%2$s में से %1$s मिले</string>
+    <string name="ui_engine_running_lean_too_much_air" formatted="false">इंजन लीन चल रहा है (हवा ज़्यादा)</string>
+    <string name="ui_safe_to_drive_get_it_checked_at_the_next" formatted="false">चलाना सुरक्षित है; अगली सर्विस पर जाँच करवाएँ</string>
+    <string name="ui_get_it_checked_this_week" formatted="false">इस हफ़्ते जाँच करवाएँ</string>
+    <string name="ui_stop_when_it_is_safe_driving_on_can_dama" formatted="false">सुरक्षित होते ही रुकें: चलाते रहने से इंजन खराब हो सकता है</string>
+    <string name="ui_camshaft_timing_actuator_circuit" formatted="false">कैमशाफ़्ट टाइमिंग ऐक्चुएटर सर्किट</string>
+    <string name="ui_oil_level_and_the_cam_timing_solenoid" formatted="false">ऑयल लेवल और कैम टाइमिंग सोलेनॉइड</string>
+    <string name="ui_camshaft_timing_too_far_ahead" formatted="false">कैमशाफ़्ट टाइमिंग बहुत आगे</string>
+    <string name="ui_oil_level_and_grade_the_cam_timing_solen" formatted="false">ऑयल लेवल और ग्रेड; कैम टाइमिंग सोलेनॉइड</string>
+    <string name="ui_crankshaft_and_camshaft_out_of_step" formatted="false">क्रैंकशाफ़्ट और कैमशाफ़्ट का तालमेल बिगड़ा</string>
+    <string name="ui_timing_chain_or_belt" formatted="false">टाइमिंग चेन या बेल्ट</string>
+    <string name="ui_fuel_pressure_too_low_diesel_rail" formatted="false">ईंधन दबाव बहुत कम (डीज़ल रेल)</string>
+    <string name="ui_fuel_filter_and_pump" formatted="false">फ़्यूल फ़िल्टर और पंप</string>
+    <string name="ui_fuel_pressure_too_high_diesel_rail" formatted="false">ईंधन दबाव बहुत ज़्यादा (डीज़ल रेल)</string>
+    <string name="ui_fuel_pressure_regulator" formatted="false">फ़्यूल प्रेशर रेगुलेटर</string>
+    <string name="ui_air_flow_sensor_circuit" formatted="false">एयर फ़्लो सेंसर सर्किट</string>
+    <string name="ui_air_flow_sensor_plug_and_wiring" formatted="false">एयर फ़्लो सेंसर का प्लग और वायरिंग</string>
+    <string name="ui_air_filter_air_flow_sensor_leaks_after_i" formatted="false">एयर फ़िल्टर, एयर फ़्लो सेंसर, उसके बाद लीक</string>
+    <string name="ui_air_flow_sensor_reading_low" formatted="false">एयर फ़्लो सेंसर की रीडिंग कम</string>
+    <string name="ui_air_flow_sensor_plug_clean_or_replace_th" formatted="false">एयर फ़्लो सेंसर का प्लग; सेंसर साफ़ करें या बदलें</string>
+    <string name="ui_manifold_pressure_sensor_reading_out_of_" formatted="false">मैनिफ़ोल्ड प्रेशर सेंसर की रीडिंग सीमा से बाहर</string>
+    <string name="ui_map_sensor_and_its_vacuum_pipe" formatted="false">MAP सेंसर और उसका वैक्यूम पाइप</string>
+    <string name="ui_intake_air_temperature_sensor_circuit" formatted="false">इनटेक हवा तापमान सेंसर सर्किट</string>
+    <string name="ui_sensor_plug_and_wiring" formatted="false">सेंसर का प्लग और वायरिंग</string>
+    <string name="ui_coolant_temperature_sensor_circuit" formatted="false">कूलेंट तापमान सेंसर सर्किट</string>
+    <string name="ui_coolant_temperature_sensor_reading_low" formatted="false">कूलेंट तापमान सेंसर की रीडिंग कम</string>
+    <string name="ui_sensor_and_wiring" formatted="false">सेंसर और वायरिंग</string>
+    <string name="ui_coolant_temperature_sensor_reading_high" formatted="false">कूलेंट तापमान सेंसर की रीडिंग ज़्यादा</string>
+    <string name="ui_sensor_and_wiring_check_the_coolant_leve" formatted="false">सेंसर और वायरिंग; कूलेंट लेवल जाँचें</string>
+    <string name="ui_throttle_position_sensor_circuit" formatted="false">थ्रॉटल पोज़िशन सेंसर सर्किट</string>
+    <string name="ui_throttle_body_and_its_plug" formatted="false">थ्रॉटल बॉडी और उसका प्लग</string>
+    <string name="ui_throttle_position_sensor_out_of_range" formatted="false">थ्रॉटल पोज़िशन सेंसर सीमा से बाहर</string>
+    <string name="ui_throttle_body_clean_it" formatted="false">थ्रॉटल बॉडी; इसे साफ़ करें</string>
+    <string name="ui_engine_warms_up_too_slowly" formatted="false">इंजन बहुत धीरे गरम होता है</string>
+    <string name="ui_thermostat_stuck_open" formatted="false">थर्मोस्टैट खुला अटका</string>
+    <string name="ui_oxygen_sensor_circuit_front" formatted="false">ऑक्सीजन सेंसर सर्किट (आगे)</string>
+    <string name="ui_front_oxygen_sensor_and_wiring" formatted="false">आगे का ऑक्सीजन सेंसर और वायरिंग</string>
+    <string name="ui_front_oxygen_sensor" formatted="false">आगे का ऑक्सीजन सेंसर</string>
+    <string name="ui_no_signal_from_the_front_oxygen_sensor" formatted="false">आगे के ऑक्सीजन सेंसर से सिग्नल नहीं</string>
+    <string name="ui_sensor_heater_fuse_and_wiring" formatted="false">सेंसर हीटर फ़्यूज़ और वायरिंग</string>
+    <string name="ui_oxygen_sensor_heater_front" formatted="false">ऑक्सीजन सेंसर हीटर (आगे)</string>
+    <string name="ui_sensor_heater_fuse_replace_the_sensor" formatted="false">सेंसर हीटर फ़्यूज़; सेंसर बदलें</string>
+    <string name="ui_oxygen_sensor_heater_rear" formatted="false">ऑक्सीजन सेंसर हीटर (पीछे)</string>
+    <string name="ui_rear_oxygen_sensor" formatted="false">पीछे का ऑक्सीजन सेंसर</string>
+    <string name="ui_air_leaks_dirty_air_flow_sensor_weak_fue" formatted="false">हवा का लीक, गंदा एयर फ़्लो सेंसर, कमज़ोर फ़्यूल पंप</string>
+    <string name="ui_engine_running_rich_too_much_fuel" formatted="false">इंजन रिच चल रहा है (ईंधन ज़्यादा)</string>
+    <string name="ui_air_filter_leaking_injector_oxygen_senso" formatted="false">एयर फ़िल्टर, लीक करता इंजेक्टर, ऑक्सीजन सेंसर</string>
+    <string name="ui_fuel_rail_pressure_sensor_circuit" formatted="false">फ़्यूल रेल प्रेशर सेंसर सर्किट</string>
+    <string name="ui_rail_pressure_sensor_and_plug" formatted="false">रेल प्रेशर सेंसर और प्लग</string>
+    <string name="ui_injector_circuit_cylinder_1" formatted="false">इंजेक्टर सर्किट, सिलिंडर 1</string>
+    <string name="ui_injector_1_plug_and_wiring" formatted="false">इंजेक्टर 1 का प्लग और वायरिंग</string>
+    <string name="ui_injector_circuit_cylinder_2" formatted="false">इंजेक्टर सर्किट, सिलिंडर 2</string>
+    <string name="ui_injector_2_plug_and_wiring" formatted="false">इंजेक्टर 2 का प्लग और वायरिंग</string>
+    <string name="ui_injector_circuit_cylinder_3" formatted="false">इंजेक्टर सर्किट, सिलिंडर 3</string>
+    <string name="ui_injector_3_plug_and_wiring" formatted="false">इंजेक्टर 3 का प्लग और वायरिंग</string>
+    <string name="ui_injector_circuit_cylinder_4" formatted="false">इंजेक्टर सर्किट, सिलिंडर 4</string>
+    <string name="ui_injector_4_plug_and_wiring" formatted="false">इंजेक्टर 4 का प्लग और वायरिंग</string>
+    <string name="ui_engine_overheating" formatted="false">इंजन ज़्यादा गरम</string>
+    <string name="ui_coolant_level_radiator_fan_water_pump" formatted="false">कूलेंट लेवल, रेडिएटर फ़ैन, वॉटर पंप</string>
+    <string name="ui_gearbox_overheating" formatted="false">गियरबॉक्स ज़्यादा गरम</string>
+    <string name="ui_gearbox_oil_level_and_cooler" formatted="false">गियरबॉक्स ऑयल लेवल और कूलर</string>
+    <string name="ui_engine_over_revved" formatted="false">इंजन बहुत ज़्यादा RPM पर गया</string>
+    <string name="ui_shift_earlier" formatted="false">जल्दी गियर बदलें</string>
+    <string name="ui_turbo_boost_too_high" formatted="false">टर्बो बूस्ट बहुत ज़्यादा</string>
+    <string name="ui_turbo_wastegate_and_boost_sensor" formatted="false">टर्बो वेस्टगेट और बूस्ट सेंसर</string>
+    <string name="ui_turbo_boost_too_low" formatted="false">टर्बो बूस्ट बहुत कम</string>
+    <string name="ui_turbo_hoses_for_leaks_the_intercooler" formatted="false">टर्बो पाइप में लीक, इंटरकूलर</string>
+    <string name="ui_spark_plugs_coils_fuel_quality" formatted="false">स्पार्क प्लग, कॉइल, ईंधन की क्वालिटी</string>
+    <string name="ui_spark_plug_and_coil_on_cylinder_1" formatted="false">सिलिंडर 1 का स्पार्क प्लग और कॉइल</string>
+    <string name="ui_spark_plug_and_coil_on_cylinder_2" formatted="false">सिलिंडर 2 का स्पार्क प्लग और कॉइल</string>
+    <string name="ui_spark_plug_and_coil_on_cylinder_3" formatted="false">सिलिंडर 3 का स्पार्क प्लग और कॉइल</string>
+    <string name="ui_spark_plug_and_coil_on_cylinder_4" formatted="false">सिलिंडर 4 का स्पार्क प्लग और कॉइल</string>
+    <string name="ui_knock_sensor_circuit" formatted="false">नॉक सेंसर सर्किट</string>
+    <string name="ui_knock_sensor_plug_and_wiring" formatted="false">नॉक सेंसर का प्लग और वायरिंग</string>
+    <string name="ui_knock_sensor_signal_low" formatted="false">नॉक सेंसर का सिग्नल कम</string>
+    <string name="ui_knock_sensor_and_wiring" formatted="false">नॉक सेंसर और वायरिंग</string>
+    <string name="ui_crank_sensor_the_engine_may_cut_out" formatted="false">क्रैंक सेंसर; इंजन बंद हो सकता है</string>
+    <string name="ui_cam_sensor_and_wiring" formatted="false">कैम सेंसर और वायरिंग</string>
+    <string name="ui_ignition_coil_circuit_cylinder_1" formatted="false">इग्निशन कॉइल सर्किट, सिलिंडर 1</string>
+    <string name="ui_coil_1_and_its_plug" formatted="false">कॉइल 1 और उसका प्लग</string>
+    <string name="ui_ignition_coil_circuit_cylinder_2" formatted="false">इग्निशन कॉइल सर्किट, सिलिंडर 2</string>
+    <string name="ui_coil_2_and_its_plug" formatted="false">कॉइल 2 और उसका प्लग</string>
+    <string name="ui_glow_plug_circuit_diesel" formatted="false">ग्लो प्लग सर्किट (डीज़ल)</string>
+    <string name="ui_glow_plugs_and_relay" formatted="false">ग्लो प्लग और रिले</string>
+    <string name="ui_exhaust_gas_recirculation_egr_flow" formatted="false">एग्ज़ॉस्ट गैस रीसर्कुलेशन (EGR) फ़्लो</string>
+    <string name="ui_clean_the_egr_valve" formatted="false">EGR वाल्व साफ़ करें</string>
+    <string name="ui_egr_flow_too_low" formatted="false">EGR फ़्लो बहुत कम</string>
+    <string name="ui_blocked_egr_valve_or_pipe" formatted="false">EGR वाल्व या पाइप बंद</string>
+    <string name="ui_egr_flow_too_high" formatted="false">EGR फ़्लो बहुत ज़्यादा</string>
+    <string name="ui_egr_valve_stuck_open" formatted="false">EGR वाल्व खुला अटका</string>
+    <string name="ui_catalytic_converter_oxygen_sensors" formatted="false">कैटेलिटिक कन्वर्टर; ऑक्सीजन सेंसर</string>
+    <string name="ui_catalytic_converter_warm_up_efficiency_l" formatted="false">कैटेलिटिक कन्वर्टर की वॉर्म-अप क्षमता कम</string>
+    <string name="ui_catalytic_converter" formatted="false">कैटेलिटिक कन्वर्टर</string>
+    <string name="ui_fuel_vapour_evap_system" formatted="false">ईंधन भाप (EVAP) सिस्टम</string>
+    <string name="ui_fuel_cap_evap_pipes" formatted="false">फ़्यूल कैप, EVAP पाइप</string>
+    <string name="ui_fuel_vapour_purge_flow" formatted="false">ईंधन भाप पर्ज फ़्लो</string>
+    <string name="ui_purge_valve" formatted="false">पर्ज वाल्व</string>
+    <string name="ui_fuel_cap_seal_evap_pipes" formatted="false">फ़्यूल कैप की सील, EVAP पाइप</string>
+    <string name="ui_fuel_vapour_purge_valve_circuit" formatted="false">ईंधन भाप पर्ज वाल्व सर्किट</string>
+    <string name="ui_purge_valve_and_plug" formatted="false">पर्ज वाल्व और प्लग</string>
+    <string name="ui_fuel_vapour_vent_control" formatted="false">ईंधन भाप वेंट कंट्रोल</string>
+    <string name="ui_vent_valve_and_canister" formatted="false">वेंट वाल्व और कैनिस्टर</string>
+    <string name="ui_large_fuel_vapour_evap_leak" formatted="false">ईंधन भाप (EVAP) का बड़ा लीक</string>
+    <string name="ui_check_the_fuel_cap_is_tight" formatted="false">देखें कि फ़्यूल कैप कसा है</string>
+    <string name="ui_very_small_fuel_vapour_evap_leak" formatted="false">ईंधन भाप (EVAP) का बहुत छोटा लीक</string>
+    <string name="ui_fuel_cap_seal" formatted="false">फ़्यूल कैप की सील</string>
+    <string name="ui_radiator_fan_circuit" formatted="false">रेडिएटर फ़ैन सर्किट</string>
+    <string name="ui_fan_fuse_and_relay_watch_the_temperature" formatted="false">फ़ैन का फ़्यूज़ और रिले; तापमान पर नज़र रखें</string>
+    <string name="ui_speed_sensor_the_speedometer_may_be_wron" formatted="false">स्पीड सेंसर; स्पीडोमीटर गलत हो सकता है</string>
+    <string name="ui_idle_speed_control" formatted="false">आइडल स्पीड कंट्रोल</string>
+    <string name="ui_clean_the_throttle_body" formatted="false">थ्रॉटल बॉडी साफ़ करें</string>
+    <string name="ui_idle_speed_too_low" formatted="false">आइडल स्पीड बहुत कम</string>
+    <string name="ui_throttle_body_air_leaks" formatted="false">थ्रॉटल बॉडी, हवा का लीक</string>
+    <string name="ui_idle_speed_too_high" formatted="false">आइडल स्पीड बहुत ज़्यादा</string>
+    <string name="ui_air_leaks_throttle_body" formatted="false">हवा का लीक, थ्रॉटल बॉडी</string>
+    <string name="ui_oil_pressure_sensor_circuit" formatted="false">ऑयल प्रेशर सेंसर सर्किट</string>
+    <string name="ui_check_the_oil_level_now" formatted="false">अभी ऑयल लेवल जाँचें</string>
+    <string name="ui_oil_pressure_too_low" formatted="false">ऑयल प्रेशर बहुत कम</string>
+    <string name="ui_system_voltage" formatted="false">सिस्टम वोल्टेज</string>
+    <string name="ui_battery_and_alternator" formatted="false">बैटरी और अल्टरनेटर</string>
+    <string name="ui_battery_alternator_belt" formatted="false">बैटरी, अल्टरनेटर बेल्ट</string>
+    <string name="ui_alternator_regulator" formatted="false">अल्टरनेटर रेगुलेटर</string>
+    <string name="ui_engine_computer_memory_error" formatted="false">इंजन कंप्यूटर की मेमोरी गड़बड़</string>
+    <string name="ui_engine_computer" formatted="false">इंजन कंप्यूटर</string>
+    <string name="ui_engine_computer_processor_fault" formatted="false">इंजन कंप्यूटर के प्रोसेसर में खराबी</string>
+    <string name="ui_read_the_gearbox_computer_s_own_codes" formatted="false">गियरबॉक्स कंप्यूटर के अपने कोड पढ़वाएँ</string>
+    <string name="ui_gear_selector_sensor" formatted="false">गियर सेलेक्टर सेंसर</string>
+    <string name="ui_gear_position_switch" formatted="false">गियर पोज़िशन स्विच</string>
+    <string name="ui_gearbox_input_speed_sensor" formatted="false">गियरबॉक्स इनपुट स्पीड सेंसर</string>
+    <string name="ui_gearbox_speed_sensor" formatted="false">गियरबॉक्स स्पीड सेंसर</string>
+    <string name="ui_gearbox_output_speed_sensor" formatted="false">गियरबॉक्स आउटपुट स्पीड सेंसर</string>
+    <string name="ui_torque_converter_clutch" formatted="false">टॉर्क कन्वर्टर क्लच</string>
+    <string name="ui_gearbox_oil_and_solenoid" formatted="false">गियरबॉक्स ऑयल और सोलेनॉइड</string>
+    <string name="ui_torque_converter_clutch_stuck_off" formatted="false">टॉर्क कन्वर्टर क्लच बंद अटका</string>
+    <string name="ui_diesel_particulate_filter_efficiency_low" formatted="false">डीज़ल पार्टिकुलेट फ़िल्टर की क्षमता कम</string>
+    <string name="ui_dpf_a_long_highway_drive_may_clean_it" formatted="false">DPF; हाईवे पर लंबी ड्राइव से साफ़ हो सकता है</string>
+    <string name="ui_throttle_sensors_disagree" formatted="false">थ्रॉटल सेंसर आपस में मेल नहीं खाते</string>
+    <string name="ui_throttle_body_and_accelerator_pedal" formatted="false">थ्रॉटल बॉडी और एक्सीलेरेटर पैडल</string>
+    <string name="ui_accelerator_pedal_sensors_disagree" formatted="false">एक्सीलेरेटर पैडल सेंसर आपस में मेल नहीं खाते</string>
+    <string name="ui_accelerator_pedal_sensor" formatted="false">एक्सीलेरेटर पैडल सेंसर</string>
+    <string name="ui_diesel_particulate_filter_blocked_with_a" formatted="false">डीज़ल पार्टिकुलेट फ़िल्टर राख से भरा</string>
+    <string name="ui_dpf_service" formatted="false">DPF सर्विस</string>
+    <string name="ui_diesel_particulate_filter_soot_build_up" formatted="false">डीज़ल पार्टिकुलेट फ़िल्टर में कालिख जमा</string>
+    <string name="ui_a_long_highway_drive_or_a_forced_regener" formatted="false">हाईवे पर लंबी ड्राइव, या फ़ोर्स्ड रीजनरेशन</string>
+    <string name="ui_lost_contact_with_the_engine_computer" formatted="false">इंजन कंप्यूटर से संपर्क टूटा</string>
+    <string name="ui_wiring_and_the_engine_computer" formatted="false">वायरिंग और इंजन कंप्यूटर</string>
+    <string name="ui_lost_contact_with_the_gearbox_computer" formatted="false">गियरबॉक्स कंप्यूटर से संपर्क टूटा</string>
+    <string name="ui_wiring_and_the_gearbox_computer" formatted="false">वायरिंग और गियरबॉक्स कंप्यूटर</string>
+    <string name="ui_lost_contact_with_the_abs_computer" formatted="false">ABS कंप्यूटर से संपर्क टूटा</string>
+    <string name="ui_abs_fuse_and_wiring" formatted="false">ABS फ़्यूज़ और वायरिंग</string>
+    <string name="ui_lost_contact_with_the_body_computer" formatted="false">बॉडी कंप्यूटर से संपर्क टूटा</string>
+    <string name="ui_body_computer_fuse_and_wiring" formatted="false">बॉडी कंप्यूटर फ़्यूज़ और वायरिंग</string>
+    <string name="ui_front_left_wheel_speed_sensor" formatted="false">आगे बाएँ पहिये का स्पीड सेंसर</string>
+    <string name="ui_abs_sensor_abs_may_be_off" formatted="false">ABS सेंसर; ABS बंद हो सकता है</string>
+    <string name="ui_front_right_wheel_speed_sensor" formatted="false">आगे दाएँ पहिये का स्पीड सेंसर</string>
+    <string name="ui_rear_left_wheel_speed_sensor" formatted="false">पीछे बाएँ पहिये का स्पीड सेंसर</string>
+    <string name="ui_rear_right_wheel_speed_sensor" formatted="false">पीछे दाएँ पहिये का स्पीड सेंसर</string>
+    <string name="ui_driver_airbag_circuit" formatted="false">ड्राइवर एयरबैग सर्किट</string>
+    <string name="ui_airbag_system_it_may_not_open_in_a_crash" formatted="false">एयरबैग सिस्टम; टक्कर में शायद न खुले</string>
+    <string name="ui_passenger_airbag_circuit" formatted="false">पैसेंजर एयरबैग सर्किट</string>
+    <string name="ui_ask_a_mechanic_to_read_this_code_for_you" formatted="false">मैकेनिक से अपनी कार के लिए यह कोड पढ़वाएँ</string>
+    <string name="ui_unknown_code" formatted="false">अनजान कोड</string>
+    <string name="ui_chassis_brakes_abs_or_steering" formatted="false">चेसिस: ब्रेक, ABS या स्टीयरिंग</string>
+    <string name="ui_body_airbags_seats_lights_or_locks" formatted="false">बॉडी: एयरबैग, सीटें, लाइटें या लॉक</string>
+    <string name="ui_network_the_car_s_computers_can_t_talk_t" formatted="false">नेटवर्क: कार के कंप्यूटर आपस में बात नहीं कर पा रहे</string>
+    <string name="ui_maker_s_own_engine_or_gearbox_code" formatted="false">कंपनी का अपना इंजन या गियरबॉक्स कोड</string>
+    <string name="ui_fuel_and_air_mixture" formatted="false">ईंधन और हवा का मिश्रण</string>
+    <string name="ui_ignition_or_misfire" formatted="false">इग्निशन या मिसफ़ायर</string>
+    <string name="ui_emissions_control" formatted="false">उत्सर्जन नियंत्रण</string>
+    <string name="ui_speed_idle_or_battery" formatted="false">स्पीड, आइडल या बैटरी</string>
+    <string name="ui_gearbox" formatted="false">गियरबॉक्स</string>
+    <string name="ui_engine" formatted="false">इंजन</string>
+    <string name="ui_check_1_s" formatted="false">जाँचें: %1$s</string>
+    <string name="ui_today_you_have_driven_1_s_km_in_2_s_minu" formatted="false">आज आपने %2$s मिनट में %1$s km चलाई है।</string>
+    <string name="ui_the_engine_adapter_isn_t_connected_so_i_" formatted="false">इंजन अडैप्टर जुड़ा नहीं है, इसलिए मैं इंजन नहीं देख सकता।</string>
+    <string name="ui_this_car_doesn_t_report_its_fuel_level" formatted="false">यह कार अपना ईंधन लेवल नहीं बताती।</string>
+    <string name="ui_fuel_is_low_1_s_percent_time_to_fill_up" formatted="false">ईंधन कम है, %1$s प्रतिशत। भरवाने का समय है।</string>
+    <string name="ui_fuel_is_at_1_s_percent" formatted="false">ईंधन %1$s प्रतिशत है।</string>
+    <string name="ui_i_can_t_read_the_battery_voltage" formatted="false">मैं बैटरी का वोल्टेज नहीं पढ़ सकता।</string>
+    <string name="ui_the_battery_is_weak_1_s_volts_get_it_che" formatted="false">बैटरी कमज़ोर है, %1$s वोल्ट। जाँच करवाएँ।</string>
+    <string name="ui_the_battery_is_1_s_volts_with_the_engine" formatted="false">इंजन चलते हुए बैटरी %1$s वोल्ट है, जो कम है; शायद अल्टरनेटर चार्ज नहीं कर रहा।</string>
+    <string name="ui_the_battery_is_fine_1_s_volts" formatted="false">बैटरी ठीक है, %1$s वोल्ट।</string>
+    <string name="ui_i_haven_t_read_the_fault_codes_yet_open_" formatted="false">मैंने अभी फ़ॉल्ट कोड नहीं पढ़े। इंजन बॉक्स खोलें और \"फ़ॉल्ट कोड पढ़ें\" दबाएँ।</string>
+    <string name="ui_no_fault_codes_are_stored" formatted="false">कोई फ़ॉल्ट कोड नहीं है।</string>
+    <string name="ui_1_s_fault_codes_are_stored_2_s" formatted="false">%1$s फ़ॉल्ट कोड हैं। %2$s</string>
+    <string name="ui_the_engine_is_hot_1_s_degrees_stop_when_" formatted="false">इंजन गरम है, %1$s डिग्री। सुरक्षित होते ही रुकें और ठंडा होने दें।</string>
+    <string name="ui_coolant_is_at_1_s_degrees" formatted="false">कूलेंट %1$s डिग्री पर है।</string>
+    <string name="ui_1_s_fault_codes_are_stored" formatted="false">%1$s फ़ॉल्ट कोड हैं।</string>
+    <string name="ui_the_engine_looks_fine" formatted="false">इंजन ठीक लगता है।</string>
+    <string name="ui_none_keep_my_theme" formatted="false">कोई नहीं (मेरी थीम रखें)</string>
+    <string name="ui_at_night_1_s" formatted="false">रात में: %1$s</string>
+    <string name="ui_when_1_s_connects_2_s" formatted="false">जब %1$s जुड़े: %2$s</string>
+    <string name="ui_a_phone" formatted="false">कोई फ़ोन</string>
+    <string name="ui_which_theme" formatted="false">कौन-सी थीम?</string>
+    <string name="ui_pair_the_phone_with_the_unit_first" formatted="false">पहले फ़ोन को यूनिट से पेयर करें</string>
+    <string name="ui_which_phone" formatted="false">कौन-सा फ़ोन?</string>
+    <string name="ui_turn_on_bluetooth_first" formatted="false">पहले Bluetooth चालू करें</string>
+    <string name="ui_looking_for_light_strips_keep_the_strip_" formatted="false">लाइट स्ट्रिप ढूँढ रहा है; स्ट्रिप चालू रखें</string>
+    <string name="ui_no_light_strip_found_nearby" formatted="false">पास में कोई लाइट स्ट्रिप नहीं मिली</string>
+    <string name="ui_which_light_strip" formatted="false">कौन-सी लाइट स्ट्रिप?</string>
+    <string name="ui_smooth_three" formatted="false">आराम से तीन दिन</string>
+    <string name="ui_three_driving_days_in_a_row_with_a_score" formatted="false">लगातार तीन ड्राइविंग दिन 90 या ज़्यादा स्कोर के साथ</string>
+    <string name="ui_smooth_week" formatted="false">आराम से एक हफ़्ता</string>
+    <string name="ui_seven_driving_days_in_a_row_with_a_score" formatted="false">लगातार सात ड्राइविंग दिन 90 या ज़्यादा स्कोर के साथ</string>
+    <string name="ui_smooth_month" formatted="false">आराम से एक महीना</string>
+    <string name="ui_thirty_driving_days_in_a_row_with_a_scor" formatted="false">लगातार तीस ड्राइविंग दिन 90 या ज़्यादा स्कोर के साथ</string>
+    <string name="ui_a_week_within_the_limit" formatted="false">सीमा के अंदर एक हफ़्ता</string>
+    <string name="ui_seven_driving_days_in_a_row_without_spee" formatted="false">लगातार सात ड्राइविंग दिन बिना ओवरस्पीड</string>
+    <string name="ui_perfect_day" formatted="false">बढ़िया दिन</string>
+    <string name="ui_a_day_of_20_km_or_more_with_a_score_of_1" formatted="false">20 km या ज़्यादा का दिन, 100 स्कोर के साथ</string>
+    <string name="ui_calm_long_drive" formatted="false">शांत लंबी ड्राइव</string>
+    <string name="ui_a_day_of_100_km_or_more_with_no_harsh_br" formatted="false">100 km या ज़्यादा का दिन, बिना तेज़ ब्रेक या झटके से शुरुआत के</string>
+    <string name="ui_1_000_km_driven_with_openrath" formatted="false">OpenRath के साथ 1,000 km चलाई</string>
+    <string name="ui_10_000_km_driven_with_openrath" formatted="false">OpenRath के साथ 10,000 km चलाई</string>
+    <string name="ui_new_badge_1_s" formatted="false">नया बैज: %1$s</string>
+    <string name="ui_badges_1_s_of_2_s" formatted="false">बैज: %2$s में से %1$s</string>
 </resources>

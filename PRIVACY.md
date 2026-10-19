@@ -62,8 +62,8 @@ Android asks the owner for most of these. Saying no turns off only the features 
 | Music and audio, Photos and images (Android 13 and newer) | Music files, theme pictures and your own logo picture |
 | All files access (Android 11 and newer) | The `OpenRath` folder on the unit's storage, which holds themes, backups, music and dashcam clips |
 | Notifications (Android 13 and newer) | The notification Android needs while music plays or a drive is being recorded |
-| Nearby devices (Android 12 and newer) | Bluetooth: the OBD-II adapter and tyre sensors. It is never used to find your location. |
-| Bluetooth (Android 11 and older) | The OBD-II adapter and tyre sensors |
+| Nearby devices (Android 12 and newer) | Bluetooth: the OBD-II adapter, tyre sensors and an LED light strip you choose. It is never used to find your location. |
+| Bluetooth (Android 11 and older) | The OBD-II adapter, tyre sensors and an LED light strip you choose |
 | Phone | Calling, answering and ending calls from the phone box, and knowing when a call is ringing |
 | Call logs | The last calls in the phone box |
 | SMS | Cab SOS, only when you trigger it |
