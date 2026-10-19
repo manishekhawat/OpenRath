@@ -898,6 +898,8 @@
     <string name="ui_clean_white_cards_on_light_grey_with_one" formatted="false">Clean white cards on light grey with one blue, like an electric car\'s screen</string>
     <string name="ui_carbon_black_and_racing_red_for_a_sports" formatted="false">Carbon black and racing red for a sports car</string>
     <string name="ui_thanks_to" formatted="false">THANKS TO</string>
+    <string name="ui_hold_a_steering_wheel_button" formatted="false">Hold a steering-wheel button</string>
+    <string name="ui_each_button_can_do_a_second_action_when_" formatted="false">Each button can do a second action when held down</string>
     <string-array name="ui_strings">
         <item>@string/ui_back_to_the_dashboard</item>
         <item>@string/ui_search_settings</item>
@@ -1795,5 +1797,7 @@
         <item>@string/ui_clean_white_cards_on_light_grey_with_one</item>
         <item>@string/ui_carbon_black_and_racing_red_for_a_sports</item>
         <item>@string/ui_thanks_to</item>
+        <item>@string/ui_hold_a_steering_wheel_button</item>
+        <item>@string/ui_each_button_can_do_a_second_action_when_</item>
     </string-array>
 </resources>
