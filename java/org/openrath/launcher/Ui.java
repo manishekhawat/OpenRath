@@ -39,6 +39,11 @@ final class Ui {
     private static final int[] THEME_COLOURS = {0xFF8A8F96, 0xFF9AA0A8, 0xFFE8E8E2, 0xFF6F8FC8, 0xFFD5525A,
             0xFF7D879C, 0xFFB98F6E, 0xFF5D9BE0};
 
+    /** The accent colour of THEMES[i]. */
+    static int colour(int i) {
+        return THEME_COLOURS[Math.max(0, Math.min(THEME_COLOURS.length - 1, i))];
+    }
+
     static void theme(Prefs p) {
         int i = Math.max(0, java.util.Arrays.asList(THEMES).indexOf(p.str("theme", THEMES[0])));
         ACCENT = THEME_COLOURS[i];

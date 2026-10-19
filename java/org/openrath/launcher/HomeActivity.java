@@ -46,8 +46,12 @@ public class HomeActivity extends Activity implements Cards.Host {
         setContentView(root);
         // location, storage, Bluetooth, notifications and the plain Android phone (Bluetooth hands-free
         // through the system phone), as this Android version names them
+        final boolean setup = Setup.needed(Features.on(prefs, "setup"), "yes".equals(prefs.str("setupDone", "")),
+                !prefs.str("setupStep", "").isEmpty(), Car.ready(prefs), Features.levelPicked(prefs));
         final String[] missing = Compat.missing(this);
-        if (missing.length > 0 && !"yes".equals(prefs.str("permsExplained", ""))) HomeDialogs.explainPermissions(this, missing);
+        if (setup) {
+            // the setup screens explain and ask
+        } else if (missing.length > 0 && !"yes".equals(prefs.str("permsExplained", ""))) HomeDialogs.explainPermissions(this, missing);
         else if (missing.length > 0) requestPermissions(missing, 1);
         HomeDialogs.findRadio(this);
         Drive.start(this);
@@ -61,6 +65,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         f.addAction(android.content.Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
         Compat.ownOnly(this, events, f);
         build();
+        if (setup) Setup.show(this);
         if (Intro.show(Features.on(prefs, "intro"), Motion.pick(prefs.str("motion", "standard")), b == null)) Intro.play(this, root);
         handleIntent(getIntent());
     }
@@ -267,6 +272,7 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     @Override
     protected void onDestroy() {
+        Setup.showing = null;
         try {
             unregisterReceiver(events);
         } catch (Throwable ignored) {
@@ -1052,6 +1058,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         Updates.resumed(this);
         Wake.watch(this);
         highwayStrip();
+        if (Setup.showing != null) Setup.showing.render();   // back from Android's settings: show what changed
         dash.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -1061,7 +1068,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         dash.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (!visible || Car.firstRun(HomeActivity.this)) return;   // the car setup first; the rest next time
+                if (!visible || Setup.showing != null || Car.firstRun(HomeActivity.this)) return;   // the car setup first; the rest next time
                 if (!Features.levelPicked(prefs)) {
                     HomeSettings.askLevel(HomeActivity.this, true);
                     return;   // one question at a time
@@ -1088,6 +1095,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         Drive.start(this);
         hub.stop();
         hub.start();
+        if (Setup.showing != null) Setup.showing.render();
     }
 
     /**
@@ -1126,6 +1134,10 @@ public class HomeActivity extends Activity implements Cards.Host {
     public void onBackPressed() {
         // this is the home screen: back only closes the settings or the box mover
         if (Extras.wake(this)) return;
+        if (Setup.showing != null) {
+            Setup.showing.back();
+            return;
+        }
         if (dash.editing()) stopMoving();
         else closeSettings();
     }

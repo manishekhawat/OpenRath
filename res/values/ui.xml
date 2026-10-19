@@ -813,6 +813,85 @@
     <string name="ui_badges_1_s_of_2_s" formatted="false">Badges: %1$s of %2$s</string>
     <string name="ui_openrath_logo_when_the_app_opens" formatted="false">OpenRath logo when the app opens</string>
     <string name="ui_the_openrath_wheel_rolls_in_and_the_name" formatted="false">The OpenRath wheel rolls in and the name appears, for two seconds; a tap skips it</string>
+    <string name="ui_setup_screens_on_first_open" formatted="false">Setup screens on first open</string>
+    <string name="ui_after_installing_language_permissions_yo" formatted="false">After installing: language, permissions, your car, the look, how much to show, your apps and the home app, step by step</string>
+    <string name="ui_run_setup_again" formatted="false">Run setup again</string>
+    <string name="ui_language_car_look_apps_and_the_home_app_" formatted="false">language, car, look, apps and the home app, step by step</string>
+    <string name="ui_welcome" formatted="false">Welcome</string>
+    <string name="ui_permissions" formatted="false">Permissions</string>
+    <string name="ui_your_car" formatted="false">Your car</string>
+    <string name="ui_how_much" formatted="false">How much</string>
+    <string name="ui_phone_and_home" formatted="false">Phone and home</string>
+    <string name="ui_location" formatted="false">Location</string>
+    <string name="ui_your_speed_the_map_speed_camera_alerts_a" formatted="false">Your speed, the map, speed-camera alerts and trip records. It stays on the unit.</string>
+    <string name="ui_music_and_photos" formatted="false">Music and photos</string>
+    <string name="ui_music_from_a_usb_stick_and_your_own_pict" formatted="false">Music from a USB stick, and your own pictures for the car and backgrounds.</string>
+    <string name="ui_nearby_devices" formatted="false">Nearby devices</string>
+    <string name="ui_your_phone_s_calls_over_bluetooth_and_ob" formatted="false">Your phone\'s calls over Bluetooth, and OBD or tyre sensors if you have them.</string>
+    <string name="ui_phone_and_calls" formatted="false">Phone and calls</string>
+    <string name="ui_shows_who_is_calling_and_lets_you_answer" formatted="false">Shows who is calling, and lets you answer and call back from the home screen.</string>
+    <string name="ui_notifications" formatted="false">Notifications</string>
+    <string name="ui_reminders_such_as_a_break_after_long_dri" formatted="false">Reminders such as a break after long driving.</string>
+    <string name="ui_step_1_s_of_2_s" formatted="false">Step %1$s of %2$s</string>
+    <string name="ui_back" formatted="false">Back</string>
+    <string name="ui_skip_setup" formatted="false">Skip setup</string>
+    <string name="ui_let_s_start" formatted="false">Let\'s start</string>
+    <string name="ui_allow_and_continue" formatted="false">Allow and continue</string>
+    <string name="ui_start_driving" formatted="false">Start driving</string>
+    <string name="ui_skip_setup_2" formatted="false">Skip setup?</string>
+    <string name="ui_openrath_starts_with_its_usual_settings_" formatted="false">OpenRath starts with its usual settings. You can set everything up later in Settings, or run this setup again from Settings, Help.</string>
+    <string name="ui_skip" formatted="false">Skip</string>
+    <string name="ui_keep_going" formatted="false">Keep going</string>
+    <string name="ui_all_set_long_press_any_box_or_open_setti" formatted="false">All set. Long-press any box, or open Settings, to change things.</string>
+    <string name="ui_let_s_get_your_stereo_ready_in_a_few_qui" formatted="false">Let\'s get your stereo ready in a few quick steps. You can change all of it later in Settings.</string>
+    <string name="ui_menus_and_voice_in_english" formatted="false">Menus and voice in English</string>
+    <string name="ui_allow_what_openrath_needs" formatted="false">Allow what OpenRath needs</string>
+    <string name="ui_android_asks_about_each_one_refuse_any_y" formatted="false">Android asks about each one. Refuse any you like: only that part stops working. Nothing is sent online.</string>
+    <string name="ui_allowed" formatted="false">Allowed</string>
+    <string name="ui_not_allowed" formatted="false">Not allowed</string>
+    <string name="ui_not_yet" formatted="false">Not yet</string>
+    <string name="ui_ask_again" formatted="false">Ask again</string>
+    <string name="ui_also_useful" formatted="false">Also useful</string>
+    <string name="ui_the_station_the_song_and_the_right_play_" formatted="false">The station, the song and the right play or pause button, from notification access.</string>
+    <string name="ui_the_openrath_folder" formatted="false">The OpenRath folder</string>
+    <string name="ui_backups_themes_dashcam_clips_and_music_o" formatted="false">Backups, themes, dashcam clips and music on USB sticks.</string>
+    <string name="ui_used_openrath_before" formatted="false">Used OpenRath before?</string>
+    <string name="ui_a_backup_from_1_s" formatted="false">A backup from %1$s</string>
+    <string name="ui_bring_back_those_settings_the_fuel_log_a" formatted="false">Bring back those settings, the fuel log and trips. OpenRath restarts with them, and the rest of setup isn\'t needed.</string>
+    <string name="ui_bring_it_back" formatted="false">Bring it back</string>
+    <string name="ui_it_picks_the_car_picture_the_name_beside" formatted="false">It picks the car picture, the name beside the logo, fuel words and service reminders.</string>
+    <string name="ui_brand_and_model" formatted="false">Brand and model</string>
+    <string name="ui_choose_your_car" formatted="false">Choose your car</string>
+    <string name="ui_choose" formatted="false">Choose</string>
+    <string name="ui_change" formatted="false">Change</string>
+    <string name="ui_runs_on" formatted="false">Runs on</string>
+    <string name="ui_leave_empty_if_unsure" formatted="false">Leave empty if unsure</string>
+    <string name="ui_your_name_for_the_greeting_under_the_car" formatted="false">Your name, for the greeting under the car</string>
+    <string name="ui_leave_empty_for_no_greeting" formatted="false">Leave empty for no greeting</string>
+    <string name="ui_which_brand" formatted="false">Which brand?</string>
+    <string name="ui_choose_the_look" formatted="false">Choose the look</string>
+    <string name="ui_your_car_s_colour_for_the_highlights_and" formatted="false">Your car\'s colour for the highlights, and a screen layout. Themes and more are in Settings.</string>
+    <string name="ui_start_simple_if_you_like_you_can_add_mor" formatted="false">Start simple if you like: you can add more any time in Settings, OpenRath level, or switch single features on.</string>
+    <string name="ui_your_apps" formatted="false">Your apps</string>
+    <string name="ui_the_buttons_and_boxes_open_these_openrat" formatted="false">The buttons and boxes open these. OpenRath found what it could; tap one to change it.</string>
+    <string name="ui_fm_and_am_from_the_stereo_s_radio_app" formatted="false">FM and AM, from the stereo\'s radio app</string>
+    <string name="ui_songs_from_usb_bluetooth_or_a_streaming_" formatted="false">Songs from USB, Bluetooth or a streaming app</string>
+    <string name="ui_opens_from_the_dock_and_from_saved_place" formatted="false">Opens from the dock and from saved places</string>
+    <string name="ui_calls_and_contacts" formatted="false">Calls and contacts</string>
+    <string name="ui_not_chosen_2" formatted="false">Not chosen</string>
+    <string name="ui_almost_done" formatted="false">Almost done</string>
+    <string name="ui_two_things_make_openrath_feel_like_part_" formatted="false">Two things make OpenRath feel like part of the car.</string>
+    <string name="ui_connect_your_phone" formatted="false">Connect your phone</string>
+    <string name="ui_paired_with_1_s_calls_and_music_come_thr" formatted="false">Paired with %1$s. Calls and music come through the stereo.</string>
+    <string name="ui_pair_it_in_bluetooth_settings_for_calls_" formatted="false">Pair it in Bluetooth settings for calls and music through the stereo.</string>
+    <string name="ui_paired" formatted="false">Paired</string>
+    <string name="ui_this_unit_has_no_bluetooth_settings_scre" formatted="false">This unit has no Bluetooth settings screen</string>
+    <string name="ui_make_openrath_the_home_app" formatted="false">Make OpenRath the home app</string>
+    <string name="ui_the_stereo_starts_in_openrath_and_the_ho" formatted="false">The stereo starts in OpenRath, and the Home button comes back to it.</string>
+    <string name="ui_set" formatted="false">Set</string>
+    <string name="ui_this_stereo_has_no_voice_so_openrath_can" formatted="false">This stereo has no voice, so OpenRath can\'t speak alerts or turns. Speech Services by Google is free.</string>
+    <string name="ui_get_it" formatted="false">Get it</string>
+    <string name="ui_tip_long_press_any_box_to_change_what_it" formatted="false">Tip: long-press any box to change what it shows. Settings is the gear in the buttons bar.</string>
     <string-array name="ui_strings">
         <item>@string/ui_back_to_the_dashboard</item>
         <item>@string/ui_search_settings</item>
@@ -1625,5 +1704,84 @@
         <item>@string/ui_badges_1_s_of_2_s</item>
         <item>@string/ui_openrath_logo_when_the_app_opens</item>
         <item>@string/ui_the_openrath_wheel_rolls_in_and_the_name</item>
+        <item>@string/ui_setup_screens_on_first_open</item>
+        <item>@string/ui_after_installing_language_permissions_yo</item>
+        <item>@string/ui_run_setup_again</item>
+        <item>@string/ui_language_car_look_apps_and_the_home_app_</item>
+        <item>@string/ui_welcome</item>
+        <item>@string/ui_permissions</item>
+        <item>@string/ui_your_car</item>
+        <item>@string/ui_how_much</item>
+        <item>@string/ui_phone_and_home</item>
+        <item>@string/ui_location</item>
+        <item>@string/ui_your_speed_the_map_speed_camera_alerts_a</item>
+        <item>@string/ui_music_and_photos</item>
+        <item>@string/ui_music_from_a_usb_stick_and_your_own_pict</item>
+        <item>@string/ui_nearby_devices</item>
+        <item>@string/ui_your_phone_s_calls_over_bluetooth_and_ob</item>
+        <item>@string/ui_phone_and_calls</item>
+        <item>@string/ui_shows_who_is_calling_and_lets_you_answer</item>
+        <item>@string/ui_notifications</item>
+        <item>@string/ui_reminders_such_as_a_break_after_long_dri</item>
+        <item>@string/ui_step_1_s_of_2_s</item>
+        <item>@string/ui_back</item>
+        <item>@string/ui_skip_setup</item>
+        <item>@string/ui_let_s_start</item>
+        <item>@string/ui_allow_and_continue</item>
+        <item>@string/ui_start_driving</item>
+        <item>@string/ui_skip_setup_2</item>
+        <item>@string/ui_openrath_starts_with_its_usual_settings_</item>
+        <item>@string/ui_skip</item>
+        <item>@string/ui_keep_going</item>
+        <item>@string/ui_all_set_long_press_any_box_or_open_setti</item>
+        <item>@string/ui_let_s_get_your_stereo_ready_in_a_few_qui</item>
+        <item>@string/ui_menus_and_voice_in_english</item>
+        <item>@string/ui_allow_what_openrath_needs</item>
+        <item>@string/ui_android_asks_about_each_one_refuse_any_y</item>
+        <item>@string/ui_allowed</item>
+        <item>@string/ui_not_allowed</item>
+        <item>@string/ui_not_yet</item>
+        <item>@string/ui_ask_again</item>
+        <item>@string/ui_also_useful</item>
+        <item>@string/ui_the_station_the_song_and_the_right_play_</item>
+        <item>@string/ui_the_openrath_folder</item>
+        <item>@string/ui_backups_themes_dashcam_clips_and_music_o</item>
+        <item>@string/ui_used_openrath_before</item>
+        <item>@string/ui_a_backup_from_1_s</item>
+        <item>@string/ui_bring_back_those_settings_the_fuel_log_a</item>
+        <item>@string/ui_bring_it_back</item>
+        <item>@string/ui_it_picks_the_car_picture_the_name_beside</item>
+        <item>@string/ui_brand_and_model</item>
+        <item>@string/ui_choose_your_car</item>
+        <item>@string/ui_choose</item>
+        <item>@string/ui_change</item>
+        <item>@string/ui_runs_on</item>
+        <item>@string/ui_leave_empty_if_unsure</item>
+        <item>@string/ui_your_name_for_the_greeting_under_the_car</item>
+        <item>@string/ui_leave_empty_for_no_greeting</item>
+        <item>@string/ui_which_brand</item>
+        <item>@string/ui_choose_the_look</item>
+        <item>@string/ui_your_car_s_colour_for_the_highlights_and</item>
+        <item>@string/ui_start_simple_if_you_like_you_can_add_mor</item>
+        <item>@string/ui_your_apps</item>
+        <item>@string/ui_the_buttons_and_boxes_open_these_openrat</item>
+        <item>@string/ui_fm_and_am_from_the_stereo_s_radio_app</item>
+        <item>@string/ui_songs_from_usb_bluetooth_or_a_streaming_</item>
+        <item>@string/ui_opens_from_the_dock_and_from_saved_place</item>
+        <item>@string/ui_calls_and_contacts</item>
+        <item>@string/ui_not_chosen_2</item>
+        <item>@string/ui_almost_done</item>
+        <item>@string/ui_two_things_make_openrath_feel_like_part_</item>
+        <item>@string/ui_connect_your_phone</item>
+        <item>@string/ui_paired_with_1_s_calls_and_music_come_thr</item>
+        <item>@string/ui_pair_it_in_bluetooth_settings_for_calls_</item>
+        <item>@string/ui_paired</item>
+        <item>@string/ui_this_unit_has_no_bluetooth_settings_scre</item>
+        <item>@string/ui_make_openrath_the_home_app</item>
+        <item>@string/ui_the_stereo_starts_in_openrath_and_the_ho</item>
+        <item>@string/ui_set</item>
+        <item>@string/ui_this_stereo_has_no_voice_so_openrath_can</item>
+        <item>@string/ui_get_it</item>
+        <item>@string/ui_tip_long_press_any_box_to_change_what_it</item>
     </string-array>
 </resources>

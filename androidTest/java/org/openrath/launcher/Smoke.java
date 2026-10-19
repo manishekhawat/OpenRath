@@ -248,6 +248,18 @@ public final class Smoke extends Instrumentation {
                 }
             }));
         }
+        // every setup step builds, and finishing it leaves the dashboard
+        String done = p.str("setupDone", "");
+        check("home: setup steps build", onMain(new Runnable() {
+            @Override
+            public void run() {
+                Setup.show(h);
+                for (int s = Setup.WELCOME; s <= Setup.FINISH; s++) Setup.showing.step(s);
+                Setup.showing.close();
+                if (Setup.showing != null) throw new IllegalStateException("setup still showing");
+            }
+        }));
+        p.put("setupDone", done);
         check("home: Hindi words loaded", Hindi.on && !"Search settings".equals(Hindi.t("Search settings")));
         p.put("lang", lang.isEmpty() ? "en" : lang);
         Hindi.load(h, p);

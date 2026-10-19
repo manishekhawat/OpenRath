@@ -1,0 +1,1 @@
+Setup screens on first open: language, permissions or a backup, your car, the look, how much to show, your apps, your phone and the home app, step by step. Each step can be skipped, and setup can be run again from Settings, Help.
