@@ -268,6 +268,7 @@ final class Chores {
     static void summary(HomeActivity a) {
         Prefs p = a.prefs;
         if (!Features.on(p, "startSummary")) return;
+        if (Setup.showing != null) return;   // not over the setup screens; it comes once they're done
         String today = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(new java.util.Date());
         if (today.equals(p.str("summaryDay", ""))) return;
         p.put("summaryDay", today);

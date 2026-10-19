@@ -53,6 +53,17 @@ public final class Shots extends Instrumentation {
         Intent i = new Intent(Intent.ACTION_MAIN).setClassName(c, HomeActivity.class.getName())
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         final HomeActivity h = (HomeActivity) startActivitySync(i);
+        // full screen, as most stereos run: no status bar, navigation bar or taskbar in the pictures
+        runOnMainSync(new Runnable() {
+            @Override
+            @SuppressWarnings("deprecation")
+            public void run() {
+                h.getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                h.getWindow().getDecorView().setSystemUiVisibility(android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            }
+        });
         SystemClock.sleep(3500);   // the opening logo (a moving picture; see docs/opening-logo.gif)
         if (Setup.showing == null) {
             out.append("no setup screen\n");

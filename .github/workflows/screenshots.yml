@@ -41,6 +41,7 @@ jobs:
             adb shell wm size 1024x600
             adb shell wm density 160
             adb shell settings put global policy_control immersive.full=*
+            adb shell settings put secure immersive_mode_confirmations confirmed
             adb install -r -g out/openrath.apk
             adb install -r out/openrath-test.apk
             adb shell am instrument -w org.openrath.launcher.test/org.openrath.launcher.Shots | tee shots.txt
