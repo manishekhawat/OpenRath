@@ -896,4 +896,5 @@
     <string name="ui_black_like_space_white_type_and_a_cool_b" formatted="false">अंतरिक्ष जैसा काला, सफ़ेद अक्षर और ठंडा नीला, लॉन्च कंसोल जैसा</string>
     <string name="ui_clean_white_cards_on_light_grey_with_one" formatted="false">हल्के ग्रे पर साफ़ सफ़ेद कार्ड और एक नीला रंग, इलेक्ट्रिक कार की स्क्रीन जैसा</string>
     <string name="ui_carbon_black_and_racing_red_for_a_sports" formatted="false">स्पोर्ट्स कार के लिए कार्बन काला और रेसिंग लाल</string>
+    <string name="ui_thanks_to" formatted="false">धन्यवाद</string>
 </resources>

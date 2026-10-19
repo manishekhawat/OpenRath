@@ -461,6 +461,12 @@ public final class Tests {
                     check("hindi: layout " + lm.group(1), all.containsKey(lm.group(2)));
                 }
                 check("13 picture layouts", layouts == 13);
+                // the GPLv3 section 7(b) credit term, in the notice, the README and the About screen
+                for (String doc : new String[]{"NOTICE.md", "README.md", "java/org/openrath/launcher/About.java"}) {
+                    java.io.File df = new java.io.File(doc);
+                    check("credit term in " + doc, df.exists() && new String(java.nio.file.Files.readAllBytes(df.toPath()), "UTF-8")
+                            .contains("Based on OpenRath by Manish Shekhawat"));
+                }
                 for (SettingsView.Section sec : SettingsView.SECTIONS) check("hindi: section " + sec.name, all.containsKey(sec.name) && all.containsKey(sec.about));
                 check("hindi: back button keeps its spaces", "‹  Back to the dashboard".equals(e.get("ui_back_to_the_dashboard")));
             } catch (java.io.IOException x) {
