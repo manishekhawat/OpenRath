@@ -143,6 +143,8 @@ final class HomeSettings {
                 .append(Drive.cameraM >= 0 ? ", camera " + Drive.cameraM + " m" : "")
                 .append(Drive.alertError.isEmpty() ? "" : " (" + Drive.alertError + ")").append("\n");
         if (Crash.last() != null) b.append("Last problem: ").append(Crash.last()).append("\n");
+        String exit = Crash.lastExit(a);
+        if (exit != null) b.append("Last closed because ").append(exit).append("\n");
         b.append("Weather: ").append(a.hub.temp).append(" ").append(a.hub.weather).append(" ").append(a.hub.place);
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Diagnostics")).setMessage(b.toString()).setPositiveButton(Hindi.t("OK"), null).show();

@@ -19,6 +19,24 @@ import java.util.Locale;
  * seen show without internet.
  */
 final class MapCard extends Cards.Card {
+
+    /** When the map's renderer last died, newest first (boot clock). */
+    private static final long[] deaths = new long[2];
+
+    static void died(long at) {
+        deaths[1] = deaths[0];
+        deaths[0] = at;
+    }
+
+    /** True when the map died twice in five minutes: show a note instead, until five minutes pass. */
+    static boolean resting(long now, long last, long before) {
+        return before > 0 && last - before < 5 * 60000 && now - last < 5 * 60000;
+    }
+
+    static boolean resting() {
+        return resting(android.os.SystemClock.elapsedRealtime(), deaths[0], deaths[1]);
+    }
+
     static final String MAP_BASE = "https://openrath.local/";
     final WebView web;
     double lastLat, lastLon;
@@ -36,6 +54,28 @@ final class MapCard extends Cards.Card {
         ws.setDomStorageEnabled(true);
         final android.content.res.AssetManager assets = c.getAssets();
         web.setWebViewClient(new WebViewClient() {
+            // the map's renderer died (out of memory, a WebView update): without this Android
+            // closes OpenRath with it. Drop the map; the dashboard rebuilds it, or shows a note
+            // after repeated crashes.
+            @Override
+            public boolean onRenderProcessGone(WebView v, android.webkit.RenderProcessGoneDetail d) {
+                died(android.os.SystemClock.elapsedRealtime());
+                try {
+                    removeView(v);
+                    v.destroy();
+                } catch (Throwable ignored) {
+                }
+                ready = false;
+                final Context ctx = getContext();
+                if (ctx instanceof HomeActivity) post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((HomeActivity) ctx).build();
+                    }
+                });
+                return true;
+            }
+
             @Override
             public void onPageFinished(WebView v, String url) {
                 ready = true;

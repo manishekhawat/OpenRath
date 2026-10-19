@@ -253,7 +253,7 @@ final class Extras {
         a.root.addView(s, lp);
         strip = s;
         s.setTranslationY(-Ui.px(90));
-        s.animate().translationY(0).setDuration(250).start();
+        s.animate().translationY(0).setDuration(Motion.ms(250)).start();
         final View mine = s;
         s.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,7 +270,7 @@ final class Extras {
     }
 
     private static void hide(final HomeActivity a, final View v) {
-        v.animate().translationY(-Ui.px(90)).setDuration(200).withEndAction(new Runnable() {
+        v.animate().translationY(-Ui.px(90)).setDuration(Motion.ms(200)).withEndAction(new Runnable() {
             @Override
             public void run() {
                 a.root.removeView(v);

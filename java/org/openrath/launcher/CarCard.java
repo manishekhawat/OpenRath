@@ -214,7 +214,7 @@ final class CarCard extends Cards.Card {
         protected void onDraw(android.graphics.Canvas c) {
             if (ground <= horizon) return;
             long now = android.os.SystemClock.uptimeMillis();
-            if (kmh > 0.5f && last != 0) {
+            if (kmh > 0.5f && last != 0 && Motion.frame() > 0) {
                 // a little slower than real life reads better at this size
                 travelled += kmh / 3.6f * 0.16f * Math.min(200, now - last) / 1000f;
                 travelled %= DASH + GAP;
@@ -244,7 +244,7 @@ final class CarCard extends Cards.Card {
                 if (b <= a) continue;
                 quad(c, cx, a, b, 0.028f, 0f);
             }
-            if (kmh > 0.5f) postInvalidateDelayed(33);
+            if (kmh > 0.5f && Motion.frame() > 0) postInvalidateDelayed(Motion.frame());
         }
 
         private void edge(android.graphics.Canvas c, float cx, int side) {

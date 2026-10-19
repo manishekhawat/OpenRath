@@ -24,6 +24,25 @@ final class Weather {
         return -1;
     }
 
+    /**
+     * Up to `n` values from `from` on, stopping at the first gap; empty when `from` is outside. For
+     * the 24-hour temperature curve.
+     */
+    static float[] next(double[] all, int from, int n) {
+        if (all == null || from < 0 || from >= all.length) return new float[0];
+        int end = Math.min(all.length, from + n), k = from;
+        while (k < end && !Double.isNaN(all[k])) k++;
+        float[] out = new float[k - from];
+        for (int i = 0; i < out.length; i++) out[i] = (float) all[from + i];
+        return out;
+    }
+
+    /** The hour, 0 to 23, at which rain (0.3 mm or more) is first expected, or -1. */
+    static int firstRain(float[] rain) {
+        for (int i = 0; rain != null && i < rain.length; i++) if (rain[i] >= 0.3f) return i;
+        return -1;
+    }
+
     /** "Offline · forecast from 3 h ago", under the weather. */
     static String savedNote(long savedAt, long nowMs) {
         long m = Math.max(0, (nowMs - savedAt) / 60000);
