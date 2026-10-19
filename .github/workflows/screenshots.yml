@@ -1,0 +1,49 @@
+# Screenshots of the opening logo, the setup steps, the dashboard layouts and Settings, on a 1024 x 600
+# emulator like a car stereo's screen. Download them from the run's "screenshots" artifact.
+name: screenshots
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  screenshots:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with: { distribution: temurin, java-version: '17' }
+      - name: Tools
+        run: |
+          sudo apt-get update && sudo apt-get install -y fonts-inter python3-pil python3-numpy
+          export THEME_TOOLS=$RUNNER_TEMP/tools
+          sh tools/fetch_tools.sh
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" > /dev/null
+          cp $ANDROID_HOME/platforms/android-34/android.jar $THEME_TOOLS/
+          cp $ANDROID_HOME/build-tools/34.0.0/lib/d8.jar $THEME_TOOLS/
+          echo "THEME_TOOLS=$THEME_TOOLS" >> $GITHUB_ENV
+      - name: APKs
+        run: |
+          OPENRATH_PUBLIC=1 python3 build.py out
+          python3 build.py androidtest out
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: default
+          disable-animations: false
+          script: |
+            adb shell wm size 1024x600
+            adb shell wm density 160
+            adb shell settings put global policy_control immersive.full=*
+            adb install -r -g out/openrath.apk
+            adb install -r out/openrath-test.apk
+            adb shell am instrument -w org.openrath.launcher.test/org.openrath.launcher.Shots | tee shots.txt
+            mkdir -p shots && adb pull /sdcard/Android/data/org.openrath.launcher/files/shots/. shots/
+            ls shots
+      - uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: shots/
