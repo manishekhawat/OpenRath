@@ -414,6 +414,7 @@ public final class Tests {
         performanceFixes();
         securityFixes();
         buildFixes();
+        finishFixes();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
     }
@@ -1641,6 +1642,57 @@ public final class Tests {
                 check("feature ids: files read", false);
             }
             check("feature ids: found the uses", seen > 100);
+        }
+    }
+
+    /** Caught errors, threads and screens held in static fields: the last of the 1.43 audit. */
+    private static void finishFixes() {
+        try {
+            java.util.List<java.nio.file.Path> srcs = new java.util.ArrayList<>();
+            try (java.util.stream.Stream<java.nio.file.Path> w = java.nio.file.Files.walk(java.nio.file.Paths.get("java"))) {
+                java.util.Iterator<java.nio.file.Path> it = w.iterator();
+                while (it.hasNext()) {
+                    java.nio.file.Path p = it.next();
+                    if (p.toString().endsWith(".java")) srcs.add(p);
+                }
+            }
+            check("finish: sources found", srcs.size() > 100);
+
+            // a catch that does nothing says why, unless it is in a probe of a stereo maker's service
+            java.util.Set<String> vendor = new java.util.HashSet<>(java.util.Arrays.asList("Xt.java", "Tuner.java", "MtcUnit.java",
+                    "FytUnit.java", "Probe.java", "SzUnit.java", "Fm.java", "StockRadio.java", "Tw.java", "Peek.java"));
+            java.util.regex.Pattern silent = java.util.regex.Pattern.compile("catch\\s*\\([^)]*\\)\\s*\\{\\s*\\}");
+            check("finish: the scan finds a silent catch", silent.matcher("try {\n x();\n} catch (Exception e) {\n   }\n").find());
+            check("finish: the scan passes a catch with a reason", !silent.matcher("} catch (Exception e) {\n // not on this unit\n}").find());
+            // a field of type HomeActivity or Activity keeps a closed dashboard in memory
+            java.util.regex.Pattern held = java.util.regex.Pattern.compile(
+                    "\\bstatic\\s+(?:(?:volatile|transient|final)\\s+)*(?:[\\w.]*\\.)?(?:HomeActivity|Activity)(?:\\[\\])?\\s+\\w+\\s*[;=,]");
+            check("finish: the scan finds a static screen", held.matcher("    private static HomeActivity owner;").find());
+            check("finish: the scan passes a method", !held.matcher("    static void step(final Activity a, Prefs p) {").find());
+            int notes = 0, threads = 0;
+            for (java.nio.file.Path p : srcs) {
+                String name = p.getFileName().toString(), text = new String(java.nio.file.Files.readAllBytes(p), "UTF-8");
+                java.util.regex.Matcher m = silent.matcher(text);
+                while (m.find()) {
+                    int line = text.substring(0, m.start()).split("\n", -1).length;
+                    if (!vendor.contains(name)) check("finish: " + name + ":" + line + " catch says why it does nothing", false);
+                }
+                java.util.regex.Matcher n = java.util.regex.Pattern.compile("Diag\\.note\\(").matcher(text);
+                while (n.find()) notes++;
+                String[] lines = text.split("\n", -1);
+                for (int i = 0; i < lines.length; i++) {
+                    if (lines[i].contains("new Thread(")) {
+                        threads++;
+                        check("finish: " + name + ":" + (i + 1) + " own thread says why (not Bg)",
+                                lines[i].contains("//") || (i > 0 && (lines[i - 1].trim().startsWith("//") || lines[i - 1].trim().endsWith("*/"))));
+                    }
+                    if (held.matcher(lines[i]).find()) check("finish: " + name + ":" + (i + 1) + " no screen in a static field", false);
+                }
+            }
+            check("finish: caught errors noted for Diagnostics", notes > 70);
+            check("finish: few threads of their own", threads <= 3);
+        } catch (Exception x) {
+            check("finish fixes: " + x, false);
         }
     }
 }

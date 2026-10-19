@@ -51,6 +51,7 @@ final class Obd {
                 try {
                     s.close();
                 } catch (Exception ignored) {
+                    // already closed
                 }
             }
             if (thread != null) thread.interrupt();
@@ -74,6 +75,7 @@ final class Obd {
         synchronized (Obd.class) {
             if (run != null && !run.stop.get() && run.thread.isAlive()) return;
             final Run r = new Run();
+            // its own thread: the connection loop runs, blocked on the adapter, for the whole drive
             r.thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -115,6 +117,7 @@ final class Obd {
                         ? out : rest).add(n + "|" + d.getAddress());
             }
         } catch (Throwable ignored) {
+            // no Bluetooth permission or adapter
         }
         out.addAll(rest);
         return out;
@@ -147,7 +150,8 @@ final class Obd {
                     break;
                 }
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("OBD Wi-Fi network", e);
         }
         java.net.Socket s = f.createSocket();
         s.connect(new java.net.InetSocketAddress(host, port), 8000);
@@ -168,6 +172,7 @@ final class Obd {
             try {
                 if (s != null) s.close();
             } catch (Exception ignored) {
+                // closing anyway
             }
             s = (BluetoothSocket) d.getClass().getMethod("createRfcommSocket", int.class).invoke(d, 1);
             s.connect();
@@ -254,6 +259,7 @@ final class Obd {
                 try {
                     if (s != null) s.close();
                 } catch (Exception ignored) {
+                    // closing anyway
                 }
             }
             if (stop.get()) break;

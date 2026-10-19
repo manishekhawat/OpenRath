@@ -145,7 +145,8 @@ final class Ui {
             if (ICONS != 0 && b != null && (name.startsWith("dock_") || name.startsWith("btn_"))) b = tint(b, ICONS);
             else if (!CHROME && b != null && name.equals("logo")) b = tint(b, SILVER);   // flat themes: logo in the text colour
             CACHE.put(name, b);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("icon load", e);
         }
         return b;
     }

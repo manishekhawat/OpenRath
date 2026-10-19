@@ -263,9 +263,9 @@ public final class Smoke extends Instrumentation {
             @Override
             public void run() {
                 Setup.show(h);
-                for (int s = Setup.WELCOME; s <= Setup.FINISH; s++) Setup.showing.step(s);
-                Setup.showing.close();
-                if (Setup.showing != null) throw new IllegalStateException("setup still showing");
+                for (int s = Setup.WELCOME; s <= Setup.FINISH; s++) Setup.showing().step(s);
+                Setup.showing().close();
+                if (Setup.showing() != null) throw new IllegalStateException("setup still showing");
             }
         }));
         p.put("setupDone", done);

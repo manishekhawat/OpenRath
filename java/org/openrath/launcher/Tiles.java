@@ -88,12 +88,12 @@ final class Tiles {
                     FileOutputStream w = new FileOutputStream(f);
                     w.write(data);
                     w.close();
-                    if (++written % 300 == 0) new Thread(new Runnable() {
+                    if (++written % 300 == 0) Bg.run(new Runnable() {
                         @Override
                         public void run() {
                             prune(c);
                         }
-                    }).start();
+                    });
                 }
             } catch (Exception ignored) {
                 // no storage permission or full: the map still shows the tile

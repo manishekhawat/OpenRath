@@ -125,7 +125,8 @@ final class Theme {
         for (String id : BUILT_IN) {
             try {
                 out.add(new Pack("@" + id, new JSONObject(read(c.getAssets().open("themes/" + id + "/theme.json"))), null));
-            } catch (Throwable ignored) {
+            } catch (Throwable e) {
+                Diag.note("built-in theme", e);
             }
         }
         File[] l = root().listFiles();
@@ -141,6 +142,7 @@ final class Theme {
                         broken.put("name", f.getName());
                         broken.put("description", "theme.json has a mistake: " + e.getMessage());
                     } catch (Throwable ignored) {
+                        // put of a plain string can't fail
                     }
                     out.add(new Pack(f.getName(), broken, f));
                 }
@@ -247,7 +249,8 @@ final class Theme {
             readError = Hindi.f("Couldn't read %1$s/theme.json: %2$s", want, e.getMessage());
             try {
                 json = new JSONObject(read(c.getAssets().open("themes/" + DEFAULT.substring(1) + "/theme.json")));
-            } catch (Throwable ignored) {
+            } catch (Throwable ex) {
+                Diag.note("default theme", ex);
             }
             pack = new Pack(DEFAULT, json, null);
         }
@@ -257,7 +260,8 @@ final class Theme {
             if (f.exists()) {
                 try {
                     font = Typeface.createFromFile(f);
-                } catch (Throwable ignored) {
+                } catch (Throwable e) {
+                    Diag.note("theme font", e);
                 }
             }
             File bg = new File(dir, "background.jpg");

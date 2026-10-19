@@ -57,6 +57,7 @@ final class SzUnit extends Unit {
         if (watch != null) try {
             ctx.getContentResolver().unregisterContentObserver(watch);
         } catch (Throwable ignored) {
+            // not registered on this unit
         }
         watch = null;
     }
@@ -66,6 +67,7 @@ final class SzUnit extends Unit {
         try {
             r = parse(Settings.Global.getString(ctx.getContentResolver(), JSON));
         } catch (Throwable ignored) {
+            // not on this unit
         }
         band = r == null ? "" : r[0];
         freq = r == null ? "" : r[1];
@@ -169,6 +171,7 @@ final class SzUnit extends Unit {
             double v = Double.parseDouble(f);
             send(tuneFrame(v >= 520 ? "AM" : band.startsWith("FM") ? band : "FM1", v));
         } catch (NumberFormatException ignored) {
+            // not a number: leave the tuner
         }
     }
 

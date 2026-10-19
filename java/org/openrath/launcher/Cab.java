@@ -297,7 +297,8 @@ final class Cab {
                 e.what = o.optString("w", "");
                 out.add(e);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("cab log read", e);
         }
         cache = out;
         cacheSrc = src;
@@ -324,7 +325,8 @@ final class Cab {
                 if (!e.what.isEmpty()) o.put("w", e.what);
                 a.put(o);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("cab log save", e);
         }
         p.put("cabLog", a.toString());
         version++;
@@ -651,7 +653,8 @@ final class Cab {
                     seen.add(pkg);
                 }
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("ride app list", e);
         }
         String last = p.str("cabLastRideApp", "");
         for (int i = 0; i < out.size(); i++) {
@@ -703,7 +706,8 @@ final class Cab {
                 int was = p.num("cabQuietWas", -1);
                 if (was >= 0) am.setStreamVolume(AudioManager.STREAM_MUSIC, was, 0);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("cab quiet volume", e);
         }
         quiet = yes;
         version++;
@@ -903,7 +907,8 @@ final class Cab {
                             JSONArray l = cng(p);
                             l.put(e);
                             p.put("cabCng", l.toString());
-                        } catch (Exception ignored) {
+                        } catch (Exception e) {
+                            Diag.note("CNG fill save", e);
                         }
                         // the fill is a cost in the earnings too
                         if (r > 0 && on(p, "cabEarnings")) addCost(p, r, "CNG");
@@ -931,7 +936,8 @@ final class Cab {
             JSONArray l = notesList(p);
             l.put(o);
             p.put("cabNotes", l.toString());
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("cab note save", e);
         }
     }
 

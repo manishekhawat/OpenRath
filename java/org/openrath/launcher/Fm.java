@@ -73,6 +73,7 @@ final class Fm {
             PackageInfo pi = app.getPackageManager().getPackageInfo(RADIO, PackageManager.GET_SERVICES);
             if (pi.services != null) for (ServiceInfo si : pi.services) out.add(si.name);
         } catch (Throwable ignored) {
+            // no stock radio on this unit
         }
         return out;
     }
@@ -98,6 +99,7 @@ final class Fm {
                         app.startActivity(new Intent(app, HomeActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                 | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     } catch (Throwable ignored) {
+                        // not allowed on this unit
                     }
                 }
             }, ms);

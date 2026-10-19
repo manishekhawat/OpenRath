@@ -95,6 +95,7 @@ final class Xt {
         try {
             ctx.unbindService(conn);
         } catch (Throwable ignored) {
+            // not bound
         }
         bound = false;
         api = null;
@@ -159,6 +160,7 @@ final class Xt {
                 for (Method m : cb.getDeclaredMethods()) if (m.getName().equals(name)) byCode.put(f.getInt(null), m);
             }
         } catch (Throwable ignored) {
+            // not on this unit
         }
         final Binder binder = new Binder() {
             @Override
@@ -173,6 +175,7 @@ final class Xt {
                     data.enforceInterface(cb.getName());
                     if (m != null) for (Class<?> t : m.getParameterTypes()) args.add(read(data, t));
                 } catch (Throwable ignored) {
+                    // a call this unit sends differently
                 }
                 final String name = cb.getSimpleName() + "." + (m == null ? "#" + code : m.getName());
                 final List<Object> a = args;
@@ -232,6 +235,7 @@ final class Xt {
                     try {
                         for (String k : bd.keySet()) Lights.live.put(base + "|" + k, String.valueOf(bd.get(k)));
                     } catch (Throwable ignored) {
+                        // another app's class we can't read: skip it
                     }
                 } else if (o instanceof int[]) {
                     Lights.live.put(base + "#" + i, java.util.Arrays.toString((int[]) o));
@@ -249,6 +253,7 @@ final class Xt {
                 try {
                     radioInfo |= "radioinfo".equals(((android.os.Bundle) o).getString("action")) && ((android.os.Bundle) o).containsKey("freq");
                 } catch (Throwable ignored) {
+                    // not readable on this unit
                 }
             }
         }
@@ -328,6 +333,7 @@ final class Xt {
                         if (f > 0) setFreq(Math.round(f * 100), f);
                     }
                 } catch (Throwable ignored) {
+                    // not readable on this unit
                 }
             } else if (o instanceof Boolean && (lm.contains("play") || lm.contains("state") || lm.contains("mute"))) {
                 playing = lm.contains("mute") ? !(Boolean) o : (Boolean) o;
@@ -388,6 +394,7 @@ final class Xt {
                 }
             }
         } catch (Throwable ignored) {
+            // not on this unit
         }
     }
 
@@ -443,6 +450,7 @@ final class Xt {
                     m.invoke(api);
                     return m.getName();
                 } catch (Throwable ignored) {
+                    // not on this unit: try the next
                 }
             }
         }
@@ -602,6 +610,7 @@ final class Xt {
                     m.invoke(api, p[0] == boolean.class ? (Object) v : (Object) (v ? 1 : 0));
                     return m.getName() + "(" + v + ")";
                 } catch (Throwable ignored) {
+                    // not on this unit: try the next
                 }
             }
         }
@@ -624,6 +633,7 @@ final class Xt {
                 a.add(r == boolean.class || r == Boolean.class ? v : r == int.class || r == Integer.class || r == String.class ? v : null);
                 if (a.get(0) != null) decode(m.getName(), a);
             } catch (Throwable ignored) {
+                // not on this unit: try the next
             }
         }
     }

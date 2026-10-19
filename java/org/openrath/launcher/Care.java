@@ -31,6 +31,7 @@ final class Care {
             try {
                 return Math.round(Drive.odoKm + Double.parseDouble(off));
             } catch (Exception ignored) {
+                // not a number: no offset
             }
         }
         return Math.round(Fuel.suggestOdo(p));
@@ -151,6 +152,7 @@ final class Care {
                 if (!due.isEmpty()) c.setTime(new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(due));
                 else c.add(Calendar.MONTH, 6);
             } catch (Exception ignored) {
+                // not a date: leave it as today
             }
             DatePickerDialog d = new DatePickerDialog(a, android.R.style.Theme_Material_Dialog_Alert, new DatePickerDialog.OnDateSetListener() {
                 @Override
@@ -211,7 +213,8 @@ final class Care {
                     JSONArray l = tolls(p);
                     l.put(new JSONObject().put("t", System.currentTimeMillis()).put("rs", v));
                     p.put("tolls", l.toString());
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    Diag.note("toll save", e);
                 }
                 done.run();
             }
@@ -331,6 +334,7 @@ final class Care {
                         try {
                             n.got(Double.parseDouble(e.getText().toString().trim()));
                         } catch (Exception ignored) {
+                            // not a number: nothing to save
                         }
                     }
                 }).setNegativeButton(Hindi.t("Cancel"), null).show();

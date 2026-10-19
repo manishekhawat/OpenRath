@@ -18,7 +18,8 @@ final class Managed {
         try {
             RestrictionsManager rm = (RestrictionsManager) c.getSystemService(Context.RESTRICTIONS_SERVICE);
             if (rm != null) b = rm.getApplicationRestrictions();
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("managed settings", e);
         }
         apply(p, b == null ? new Bundle() : b);
     }

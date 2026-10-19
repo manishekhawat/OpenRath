@@ -22,12 +22,14 @@ final class Bg {
 
                 @Override
                 public Thread newThread(final Runnable r) {
+                    // the pool's own threads
                     Thread t = new Thread(new Runnable() {
                         @Override
                         public void run() {
                             try {
                                 android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
                             } catch (Throwable ignored) {
+                                // keep the default priority
                             }
                             r.run();
                         }

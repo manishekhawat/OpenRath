@@ -48,6 +48,7 @@ final class OverMic {
             fx = Float.parseFloat(p.str("micX", "0.94"));
             fy = Float.parseFloat(p.str("micY", "0.80"));
         } catch (Exception ignored) {
+            // not a number: keep the default
         }
         float[] at = Floaters.place(fx, fy, w, h, size);
         return new int[]{Math.round(at[0]), Math.round(at[1])};
@@ -90,6 +91,7 @@ final class OverMic {
                             try {
                                 wm.updateViewLayout(this, lp);
                             } catch (Exception ignored) {
+                                // many times a second while dragging: skip this move
                             }
                         }
                         return true;
@@ -119,6 +121,7 @@ final class OverMic {
         try {
             ((WindowManager) app.getSystemService(Context.WINDOW_SERVICE)).removeView(shown);
         } catch (Exception ignored) {
+            // not shown any more
         }
         shown = null;
     }

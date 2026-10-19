@@ -104,6 +104,7 @@ final class Crash {
             List<File> all = files();
             for (int i = 10; i < all.size(); i++) all.get(i).delete();
         } catch (Throwable ignored) {
+            // crashing anyway: nothing more to do
         }
     }
 

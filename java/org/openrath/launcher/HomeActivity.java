@@ -35,7 +35,8 @@ public class HomeActivity extends Activity implements Cards.Host {
                 Crash.forgive();
                 prefs.put("crashForgiven", String.valueOf(v));
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("version check", e);
         }
         turn();
         hub = new Hub(this, prefs);
@@ -232,6 +233,7 @@ public class HomeActivity extends Activity implements Cards.Host {
                                 + "Show a new code later for a fresh position."));
                 return;
             } catch (Exception ignored) {
+                // a bad saved destination: share where we are instead
             }
         }
         Qr.show(this, Hindi.t("Where we are now"), Geo.mapsLink(lat, lon),
@@ -275,7 +277,8 @@ public class HomeActivity extends Activity implements Cards.Host {
         super.onStart();
         try {
             widgets.startListening();
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("widget host start", e);
         }
     }
 
@@ -284,17 +287,19 @@ public class HomeActivity extends Activity implements Cards.Host {
         OverMic.show(getApplicationContext(), prefs);
         try {
             widgets.stopListening();
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("widget host stop", e);
         }
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        Setup.showing = null;
+        Setup.forget();
         try {
             unregisterReceiver(events);
         } catch (Throwable ignored) {
+            // was not registered
         }
         // let go of everything that would keep this screen alive after Android drops it
         dash.removeCallbacks(chores);
@@ -708,6 +713,7 @@ public class HomeActivity extends Activity implements Cards.Host {
                 startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 return;
             } catch (Exception ignored) {
+                // app gone: let them pick another
             }
         }
         AppPicker.show(this, Hindi.f("Choose the app for %1$s", Hindi.t(name)), new AppPicker.Picked() {
@@ -863,6 +869,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             return;
         } catch (Exception ignored) {
+            // no Google Maps: try any map app below
         }
         // not Google Maps: any app that takes a map location
         Intent geo = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(String.format(java.util.Locale.US,
@@ -889,7 +896,8 @@ public class HomeActivity extends Activity implements Cards.Host {
                     // background start not allowed, or the service needs more than a plain start
                 }
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("radio app services", e);
         }
     }
 
@@ -1146,7 +1154,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         Updates.resumed(this);
         Wake.watch(this);
         highwayStrip();
-        if (Setup.showing != null) Setup.showing.render();   // back from Android's settings: show what changed
+        if (Setup.showing() != null) Setup.showing().render();   // back from Android's settings: show what changed
         // once per return to the dashboard: a quick back-and-forth doesn't queue them up again
         dash.removeCallbacks(chores);
         dash.removeCallbacks(questions);
@@ -1164,7 +1172,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     private final Runnable questions = new Runnable() {
         @Override
         public void run() {
-            if (!visible || Setup.showing != null || Car.firstRun(HomeActivity.this)) return;   // the car setup first; the rest next time
+            if (!visible || Setup.showing() != null || Car.firstRun(HomeActivity.this)) return;   // the car setup first; the rest next time
             if (!Features.levelPicked(prefs)) {
                 HomeSettings.askLevel(HomeActivity.this, true);
                 return;   // one question at a time
@@ -1190,7 +1198,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         Drive.start(this);
         hub.stop();
         hub.start();
-        if (Setup.showing != null) Setup.showing.render();
+        if (Setup.showing() != null) Setup.showing().render();
     }
 
     /**
@@ -1229,8 +1237,9 @@ public class HomeActivity extends Activity implements Cards.Host {
     public void onBackPressed() {
         // this is the home screen: back only closes the settings or the box mover
         if (Extras.wake(this)) return;
-        if (Setup.showing != null) {
-            Setup.showing.back();
+        Setup setup = Setup.showing();
+        if (setup != null) {
+            setup.back();
             return;
         }
         if (dash.editing()) stopMoving();

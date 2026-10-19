@@ -77,7 +77,7 @@ final class Updates {
     static void check(final HomeActivity a, final boolean told) {
         final Context app = a.getApplicationContext();
         final Prefs p = a.prefs;
-        new Thread(new Runnable() {
+        Bg.run(new Runnable() {
             @Override
             public void run() {
                 String msg;
@@ -111,7 +111,7 @@ final class Updates {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     /** A downloaded update, offered while parked; while moving it waits for the next stop. */
@@ -173,7 +173,8 @@ final class Updates {
                 android.content.pm.PackageInfo pi = path == null ? pm.getPackageInfo(c.getPackageName(), flag) : pm.getPackageArchiveInfo(path, flag);
                 if (pi != null) sigs = pi.signatures;
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("signature check", e);
         }
         if (sigs != null) for (android.content.pm.Signature s : sigs) out.add(s.toCharsString());
         return out;

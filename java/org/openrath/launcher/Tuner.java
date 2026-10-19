@@ -55,6 +55,7 @@ final class Tuner {
             try {
                 Thread.sleep(700);
             } catch (InterruptedException ignored) {
+                // woken early: carry on
             }
         }
         try {
@@ -93,6 +94,7 @@ final class Tuner {
             try {
                 com.android.fmradio.FmNative.setRds(true);
             } catch (Throwable ignored) {
+                // no RDS on this unit
             }
             on = true;
             return null;
@@ -111,6 +113,7 @@ final class Tuner {
                 com.android.fmradio.FmNative.closeDev();
             }
         } catch (Throwable ignored) {
+            // not on this unit
         }
         open = false;
         on = false;
@@ -129,6 +132,7 @@ final class Tuner {
                 return f;
             }
         } catch (Throwable ignored) {
+            // not on this unit
         }
         return 0;
     }
@@ -143,6 +147,7 @@ final class Tuner {
                 return true;
             }
         } catch (Throwable ignored) {
+            // not on this unit
         }
         return false;
     }
@@ -159,6 +164,7 @@ final class Tuner {
             }
             com.android.fmradio.FmNative.tune(mhz);
         } catch (Throwable ignored) {
+            // not on this unit
         }
         return out;
     }
@@ -174,6 +180,7 @@ final class Tuner {
             float f = Float.parseFloat(s);
             if (f >= 87.5f && f <= 108f) return f;
         } catch (Exception ignored) {
+            // not a number: use the default
         }
         return 98.3f;
     }
@@ -185,6 +192,7 @@ final class Tuner {
             byte[] ps = com.android.fmradio.FmNative.getPs();
             if (ps != null && ps.length > 0) name = new String(ps, "US-ASCII").trim();
         } catch (Throwable ignored) {
+            // no RDS on this unit
         }
     }
 
@@ -202,6 +210,7 @@ final class Tuner {
             am.setParameters("FM_mute=" + (yes ? 0 : 1));
             if (yes) am.setParameters("FM_Volume=" + am.getStreamVolume(AudioManager.STREAM_MUSIC));
         } catch (Throwable ignored) {
+            // not on this unit
         }
         // and the MCU's source, as the radio's screen does
         Tw.Radio r = Hub.radioLink;

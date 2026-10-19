@@ -58,7 +58,8 @@ final class Agenda {
                 String t = cur.getString(0);
                 out.add(new Event(t == null || t.trim().isEmpty() ? "(no title)" : t.trim(), start, end, allDay));
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("calendar read", e);
         } finally {
             if (cur != null) cur.close();
         }
