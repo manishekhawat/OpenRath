@@ -40,7 +40,7 @@ final class Snap {
         if (!Features.on(p, "parkPhoto") || Dashcam.cameras() == 0 || !Dashcam.allowed(c)) return;
         final File clip = Dashcam.lastClip();
         if (Dashcam.recording() && clip != null && System.currentTimeMillis() - clip.lastModified() < 3 * 60000) {
-            new Thread(new Runnable() {
+            Bg.run(new Runnable() {
                 @Override
                 public void run() {
                     MediaMetadataRetriever r = new MediaMetadataRetriever();
@@ -49,15 +49,17 @@ final class Snap {
                         long ms = Long.parseLong(r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
                         Bitmap b = r.getFrameAtTime(Math.max(0, ms - 500) * 1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
                         if (b != null) store(b);
-                    } catch (Throwable ignored) {
+                    } catch (Throwable e) {
+                        Diag.note("dashcam snapshot", e);
                     } finally {
                         try {
                             r.release();
                         } catch (Throwable ignored) {
+                            // already released
                         }
                     }
                 }
-            }).start();
+            });
             return;
         }
         if (Dashcam.recording()) return;   // the camera is busy and there's no clip yet
@@ -97,7 +99,7 @@ final class Snap {
                                 @Override
                                 public void onPictureTaken(final byte[] data, Camera camera) {
                                     camera.release();
-                                    new Thread(new Runnable() {
+                                    Bg.run(new Runnable() {
                                         @Override
                                         public void run() {
                                             try {
@@ -107,10 +109,11 @@ final class Snap {
                                                     store(b, to);
                                                     if (done != null) h.post(done);
                                                 }
-                                            } catch (Throwable ignored) {
+                                            } catch (Throwable e) {
+                                                Diag.note("camera snapshot", e);
                                             }
                                         }
-                                    }).start();
+                                    });
                                 }
                             });
                         } catch (Throwable t) {

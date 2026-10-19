@@ -321,7 +321,8 @@ final class CarCard extends Cards.Card {
             try {
                 android.graphics.Typeface tf = Theme.font();
                 setTypeface(tf != null ? tf : android.graphics.Typeface.createFromAsset(c.getAssets(), "fonts/InterDisplay-Light.otf"));
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Diag.note("car card font", e);
             }
             setLetterSpacing(0.42f);
             setSingleLine(true);

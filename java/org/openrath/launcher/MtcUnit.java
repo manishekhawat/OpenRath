@@ -74,6 +74,7 @@ final class MtcUnit extends Unit {
             Compat.fromOthers(ctx, calls, f);
             receiving = true;
         } catch (Throwable ignored) {
+            // not on this unit
         }
     }
 
@@ -82,17 +83,20 @@ final class MtcUnit extends Unit {
         if (car != null) try {
             car.getClass().getMethod("detach").invoke(car);
         } catch (Throwable ignored) {
+            // not on this unit
         }
         car = null;
         if (btBound) try {
             ctx.unbindService(conn);
         } catch (Throwable ignored) {
+            // not bound
         }
         btBound = false;
         bt = null;
         if (receiving) try {
             ctx.unregisterReceiver(calls);
         } catch (Throwable ignored) {
+            // was not registered
         }
         receiving = false;
     }
@@ -101,12 +105,12 @@ final class MtcUnit extends Unit {
         @Override
         public void onServiceConnected(ComponentName n, IBinder b) {
             bt = b;
-            new Thread(new Runnable() {
+            Bg.run(new Runnable() {
                 @Override
                 public void run() {
                     transact(T_INIT, null, false);
                 }
-            }).start();
+            });
         }
 
         @Override
@@ -198,6 +202,7 @@ final class MtcUnit extends Unit {
         try {
             if (v instanceof byte[]) return new String((byte[]) v, "UTF-8").replace('\0', ' ').trim();
         } catch (Exception ignored) {
+            // not text: return it as it is
         }
         return v == null ? "" : v.toString().trim();
     }
@@ -283,6 +288,7 @@ final class MtcUnit extends Unit {
         try {
             set("ctl_radio_frequency=" + Math.round(Float.parseFloat(f) * 1000));
         } catch (NumberFormatException ignored) {
+            // not a number: leave the tuner
         }
     }
 

@@ -25,7 +25,8 @@ final class Monsoon {
                 JSONArray s = a.getJSONArray(i);
                 out.add(new double[]{s.getDouble(0), s.getDouble(1), s.optLong(2)});
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("flood spots read", e);
         }
         return out;
     }

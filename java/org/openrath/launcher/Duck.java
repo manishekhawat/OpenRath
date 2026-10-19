@@ -49,7 +49,8 @@ final class Duck {
         try {
             ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE)).requestAudioFocus(NONE, AudioManager.STREAM_MUSIC,
                     AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("audio duck", e);
         }
     }
 
@@ -58,7 +59,8 @@ final class Duck {
         if (--speaking > 0) return;
         try {
             ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE)).abandonAudioFocus(NONE);
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("audio unduck", e);
         }
     }
 

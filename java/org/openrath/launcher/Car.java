@@ -164,7 +164,8 @@ final class Car {
                 for (int j = 0; j < m.length(); j++) br.models.add(m.getString(j));
                 out.add(br);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("car brand list", e);
         }
         return out;
     }
@@ -308,6 +309,7 @@ final class Car {
                                         try {
                                             l = Math.round(Float.parseFloat(v));
                                         } catch (NumberFormatException ignored) {
+                                            // not a number: keep 0
                                         }
                                         save(a, b, model, f, l);
                                     }

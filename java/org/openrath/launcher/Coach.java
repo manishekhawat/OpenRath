@@ -194,7 +194,8 @@ final class Coach {
         try {
             JSONArray a = new JSONArray(p.str("drives", "[]"));
             for (int i = 0; i < a.length(); i++) out.add(Trip.of(a.getJSONArray(i)));
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("drive list read", e);
         }
         return out;
     }
@@ -208,7 +209,8 @@ final class Coach {
             JSONArray keep = new JSONArray();
             for (int i = Math.max(0, a.length() - 120); i < a.length(); i++) keep.put(a.get(i));
             p.put("drives", keep.toString());
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("drive list save", e);
         }
     }
 

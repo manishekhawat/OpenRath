@@ -88,6 +88,7 @@ final class Tw {
             cls.getMethod("stop").invoke(util);
             cls.getMethod("close").invoke(util);
         } catch (Throwable ignored) {
+            // not on this unit
         }
     }
 

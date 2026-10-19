@@ -36,6 +36,7 @@ final class Eq {
             try {
                 g[k] = Math.max(-12, Math.min(12, Integer.parseInt(f[k].trim())));
             } catch (NumberFormatException ignored) {
+                // not a number: keep 0
             }
         }
         return g;

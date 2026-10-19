@@ -89,6 +89,7 @@ final class Tpms {
         try {
             BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner().stopScan(cb);
         } catch (Throwable ignored) {
+            // Bluetooth turned off meanwhile
         }
         cb = null;
         status = Hindi.t("Off");

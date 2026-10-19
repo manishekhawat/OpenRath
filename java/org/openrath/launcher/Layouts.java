@@ -62,7 +62,8 @@ final class Layouts {
             in.close();
             JSONArray ls = new JSONObject(new String(b, 0, n, "UTF-8")).getJSONArray("layouts");
             for (int i = 0; i < ls.length(); i++) out.add(parse(ls.getJSONObject(i)));
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("layouts read", e);
         }
         all = out;
         return out;

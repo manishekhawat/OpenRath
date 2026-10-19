@@ -24,6 +24,7 @@ final class Resume {
             AudioManager am = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
             p.put("resumeVol", String.valueOf(am.getStreamVolume(AudioManager.STREAM_MUSIC)));
         } catch (Throwable ignored) {
+            // every few seconds: too often to note; the next one tries again
         }
     }
 
@@ -51,7 +52,8 @@ final class Resume {
         try {
             AudioManager am = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
             am.setStreamVolume(AudioManager.STREAM_MUSIC, Math.min(v, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)), 0);
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("resume volume", e);
         }
     }
 

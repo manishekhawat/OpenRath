@@ -69,7 +69,8 @@ final class Profiles {
             JSONObject a = all(p);
             a.put(name, snap);
             p.put("profiles", a.toString());
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("profile save", e);
         }
     }
 
@@ -91,7 +92,8 @@ final class Profiles {
             if (vol >= 0) {
                 try {
                     ((AudioManager) a.getSystemService(Context.AUDIO_SERVICE)).setStreamVolume(AudioManager.STREAM_MUSIC, vol, 0);
-                } catch (Throwable ignored) {
+                } catch (Throwable e) {
+                    Diag.note("profile volume", e);
                 }
             }
         }

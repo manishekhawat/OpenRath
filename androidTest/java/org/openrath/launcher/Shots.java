@@ -65,7 +65,7 @@ public final class Shots extends Instrumentation {
             }
         });
         SystemClock.sleep(3500);   // the opening logo (a moving picture; see docs/opening-logo.gif)
-        if (Setup.showing == null) {
+        if (Setup.showing() == null) {
             out.append("no setup screen\n");
         } else {
             shot("02_setup_welcome");
@@ -75,7 +75,7 @@ public final class Shots extends Instrumentation {
                 main(new Runnable() {
                     @Override
                     public void run() {
-                        Setup.showing.step(to);
+                        Setup.showing().step(to);
                     }
                 });
                 shot(names[s]);
@@ -85,7 +85,7 @@ public final class Shots extends Instrumentation {
                 public void run() {
                     p.put("lang", "hi");
                     Hindi.load(h, p);
-                    Setup.showing.step(Setup.WELCOME);
+                    Setup.showing().step(Setup.WELCOME);
                 }
             });
             shot("09_setup_hindi");
@@ -94,7 +94,7 @@ public final class Shots extends Instrumentation {
                 public void run() {
                     p.put("lang", "en");
                     Hindi.load(h, p);
-                    Setup.showing.close();
+                    Setup.showing().close();
                 }
             });
             SystemClock.sleep(4000);   // the "All set" note goes

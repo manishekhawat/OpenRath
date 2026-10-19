@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -75,7 +76,8 @@ final class Extras {
             }
             Toast.makeText(a, Hindi.t("Carrying on where you left off"), Toast.LENGTH_SHORT).show();
             if (!"text".equals(a.prefs.str("summaryHow", "voice"))) Speak.say(a, "Welcome back. Carrying on where you left off.", false);
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            Diag.note("resume playback", e);
         }
         a.hub.notifyIfChanged(true);
     }
@@ -112,7 +114,8 @@ final class Extras {
     // ------------------------------------------------------------------ screensaver and screen off
 
     private static long lastTouch;
-    private static View cover;
+    /** The screensaver or screen-off cover while it shows; held weakly so it never keeps an old dashboard. */
+    private static WeakReference<View> cover = new WeakReference<>(null);
     private static boolean dark;
     private static Runnable saverCheck;
 
@@ -120,44 +123,54 @@ final class Extras {
         lastTouch = System.currentTimeMillis();
     }
 
-    private static HomeActivity saverOwner;
+    /** The dashboard the screensaver check is for, held weakly so a closed one can be freed. */
+    private static WeakReference<HomeActivity> saverOwner = new WeakReference<>(null);
 
-    private static Runnable saverCheck(final HomeActivity a) {
-        if (saverOwner != a) saverCheck = null;   // the dashboard was recreated
-        saverOwner = a;
-        if (saverCheck == null) saverCheck = new Runnable() {
-            @Override
-            public void run() {
-                if (!HomeActivity.visible) return;
-                int min = a.prefs.num("saverMin", 5);
-                boolean parked = System.currentTimeMillis() - Drive.fixAt > 10000 || Drive.kmhNow < 5;
-                if (cover == null && Features.on(a.prefs, "saver") && parked
-                        && System.currentTimeMillis() - lastTouch > min * 60000L) showCover(a, false);
-                a.dash.postDelayed(this, 20000);
-            }
-        };
+    private static Runnable saverCheck(HomeActivity a) {
+        if (saverOwner.get() != a) {   // the dashboard was recreated
+            saverCheck = null;
+            saverOwner = new WeakReference<>(a);
+        }
+        if (saverCheck == null) {
+            final WeakReference<HomeActivity> owner = saverOwner;
+            saverCheck = new Runnable() {
+                @Override
+                public void run() {
+                    HomeActivity home = owner.get();
+                    if (home == null || !HomeActivity.visible) return;
+                    int min = home.prefs.num("saverMin", 5);
+                    boolean parked = System.currentTimeMillis() - Drive.fixAt > 10000 || Drive.kmhNow < 5;
+                    if (cover.get() == null && Features.on(home.prefs, "saver") && parked
+                            && System.currentTimeMillis() - lastTouch > min * 60000L) showCover(home, false);
+                    home.dash.postDelayed(this, 20000);
+                }
+            };
+        }
         return saverCheck;
     }
 
     /** The dashboard was closed for good: let go of its views, so the old screen can be freed. */
     static void closed(HomeActivity a) {
-        if (saverOwner == a) {
-            saverOwner = null;
+        if (saverOwner.get() == a) {
+            saverOwner = new WeakReference<>(null);
             saverCheck = null;
         }
-        if (cover != null && cover.getContext() == a) {
-            cover = null;
+        View c = cover.get();
+        if (c != null && c.getContext() == a) {
+            cover = new WeakReference<>(null);
             dark = false;
         }
-        if (strip != null && strip.getContext() == a) strip = null;
+        View s = strip.get();
+        if (s != null && s.getContext() == a) strip = new WeakReference<>(null);
     }
 
     /** Remove the screensaver or screen-off cover; true if one was showing. */
     static boolean wake(HomeActivity a) {
         lastTouch = System.currentTimeMillis();
-        if (cover == null) return false;
-        a.root.removeView(cover);
-        cover = null;
+        View c = cover.get();
+        if (c == null) return false;
+        a.root.removeView(c);
+        cover = new WeakReference<>(null);
         if (dark) {
             android.view.WindowManager.LayoutParams lp = a.getWindow().getAttributes();
             lp.screenBrightness = android.view.WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
@@ -168,7 +181,7 @@ final class Extras {
     }
 
     static void screenOff(HomeActivity a) {
-        if (cover != null && dark) {
+        if (cover.get() != null && dark) {
             wake(a);
             return;
         }
@@ -217,7 +230,7 @@ final class Extras {
         }
         f.addView(col, new FrameLayout.LayoutParams(-1, -1));
         a.root.addView(f, new FrameLayout.LayoutParams(-1, -1));
-        cover = f;
+        cover = new WeakReference<View>(f);
         if (off) {
             android.view.WindowManager.LayoutParams lp = a.getWindow().getAttributes();
             lp.screenBrightness = 0.01f;
@@ -228,7 +241,7 @@ final class Extras {
 
     // ------------------------------------------------------------------ notification ticker
 
-    private static View strip;
+    private static WeakReference<View> strip = new WeakReference<>(null);
     private static long spokeAt;
 
     static void ticker(final HomeActivity a) {
@@ -242,7 +255,8 @@ final class Extras {
             a.speak(Ticker.spoken(p.str("readAloudMode", "names")));
         }
         if (!Features.on(p, "ticker") || !HomeActivity.visible) return;
-        if (strip != null) a.root.removeView(strip);
+        View old = strip.get();
+        if (old != null) a.root.removeView(old);
         LinearLayout s = new LinearLayout(a);
         s.setGravity(Gravity.CENTER_VERTICAL);
         s.setPadding(Ui.px(18), Ui.px(10), Ui.px(18), Ui.px(10));
@@ -264,7 +278,7 @@ final class Extras {
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(-1, -2, Gravity.TOP);
         lp.setMargins(Ui.px(140), Ui.px(10), Ui.px(140), 0);
         a.root.addView(s, lp);
-        strip = s;
+        strip = new WeakReference<View>(s);
         s.setTranslationY(-Ui.px(90));
         s.animate().translationY(0).setDuration(Motion.ms(250)).start();
         final View mine = s;
@@ -287,7 +301,7 @@ final class Extras {
             @Override
             public void run() {
                 a.root.removeView(v);
-                if (strip == v) strip = null;
+                if (strip.get() == v) strip = new WeakReference<>(null);
             }
         }).start();
     }
@@ -339,6 +353,7 @@ final class Extras {
                         try {
                             ok = m.bindAppWidgetIdIfAllowed(id, info.provider);
                         } catch (Throwable ignored) {
+                            // not allowed yet: ask below
                         }
                         if (ok) configure(a, id);
                         else {
@@ -458,7 +473,8 @@ final class Extras {
                     public void onClick(DialogInterface d, int w) {
                         try {
                             a.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                        } catch (Throwable ignored) {
+                        } catch (Throwable e) {
+                            Diag.note("Wi-Fi settings", e);
                         }
                     }
                 })
@@ -476,7 +492,8 @@ final class Extras {
                         public void onClick(DialogInterface d, int w) {
                             try {
                                 a.startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
-                            } catch (Throwable ignored) {
+                            } catch (Throwable e) {
+                                Diag.note("Bluetooth settings", e);
                             }
                         }
                     }).setNegativeButton(Hindi.t("Close"), null).show();
@@ -1465,6 +1482,7 @@ final class Extras {
         try {
             at = Long.parseLong(p.str("backupLast", "0"));
         } catch (Exception ignored) {
+            // not a number: keep 0
         }
         r.add(new SettingsView.Row(g, "Daily automatic backup", !Features.on(p, "backup") ? "off"
                 : at == 0 ? "on; none yet" : Hindi.f("on; last %1$s", Cards.TripCard.ago(at)), new Runnable() {

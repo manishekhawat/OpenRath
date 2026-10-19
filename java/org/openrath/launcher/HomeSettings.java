@@ -307,7 +307,7 @@ final class HomeSettings {
         if (list.isEmpty()) {
             final android.app.ProgressDialog wait = android.app.ProgressDialog.show(a, null,
                     web ? Hindi.t("Finding stations…") : Hindi.t("Looking for music…"), true);
-            new Thread(new Runnable() {
+            Bg.run(new Runnable() {
                 @Override
                 public void run() {
                     final java.util.List<Player.Track> l = web ? Player.fetchStations(a)
@@ -327,7 +327,7 @@ final class HomeSettings {
                         }
                     });
                 }
-            }).start();
+            });
             return;
         }
         String[] names = new String[list.size()];

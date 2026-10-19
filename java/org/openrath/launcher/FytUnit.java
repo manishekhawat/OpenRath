@@ -55,7 +55,7 @@ final class FytUnit extends Unit {
     private final ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName n, final IBinder toolkit) {
-            new Thread(new Runnable() {
+            Bg.run(new Runnable() {
                 @Override
                 public void run() {
                     mainM = module(toolkit, MAIN);
@@ -66,7 +66,7 @@ final class FytUnit extends Unit {
                     listen(btM, BT, U_PHONE_NUMBER, U_PHONE_STATE);
                     changed();
                 }
-            }, "fyt-toolkit").start();
+            });
         }
 
         @Override
@@ -92,6 +92,7 @@ final class FytUnit extends Unit {
         if (bound) try {
             ctx.unbindService(conn);
         } catch (Throwable ignored) {
+            // not bound
         }
         bound = false;
         mainM = radioM = btM = null;
@@ -158,6 +159,7 @@ final class FytUnit extends Unit {
                 m.transact(3, d, r, 0);
                 r.readException();
             } catch (Throwable ignored) {
+                // not on this unit
             } finally {
                 d.recycle();
                 r.recycle();
@@ -189,6 +191,7 @@ final class FytUnit extends Unit {
                 update(mod, u, ints, strs);
                 if (reply != null) reply.writeNoException();
             } catch (Throwable ignored) {
+                // a message this unit sends differently
             }
             return true;
         }
@@ -301,6 +304,7 @@ final class FytUnit extends Unit {
         try {
             cmd(radioM, C_FREQ, new int[]{FREQ_DIRECT, Math.round(Float.parseFloat(f) * 100)}, null);
         } catch (NumberFormatException ignored) {
+            // not a number: leave the tuner
         }
     }
 

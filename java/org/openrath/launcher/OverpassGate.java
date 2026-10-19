@@ -176,7 +176,8 @@ final class OverpassGate {
                 // copies older than a week go
                 File[] all = dir.listFiles();
                 if (all != null) for (File x : all) if (now - x.lastModified() > KEEP_MS) x.delete();
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Diag.note("map data cache", e);
             }
         }
 

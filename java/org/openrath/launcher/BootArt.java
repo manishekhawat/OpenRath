@@ -177,7 +177,8 @@ final class BootArt {
                     }
                     return m;
                 }
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Diag.note("car badge", e);
             }
         }
         m.wheel = true;
@@ -445,6 +446,7 @@ final class BootArt {
     private static void make(final HomeActivity a, final int w, final int h) {
         final AlertDialog wait = new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Making the boot animation"))
                 .setMessage(Hindi.f("Drawing frame %1$s of %2$s…", 1, FRAMES + 1)).setCancelable(false).show();
+        // its own thread: drawing and packing all the frames takes a while and would hold up the shared ones
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -472,7 +474,8 @@ final class BootArt {
                             File logoDir = new File(s, "logo");   // some firmwares look for the logo here instead
                             if (logoDir.isDirectory() || logoDir.mkdirs()) copy(made[0], new File(logoDir, made[0].getName()));
                             onUsb.add(s);
-                        } catch (IOException ignored) {
+                        } catch (IOException e) {
+                            Diag.note("boot logo to USB", e);
                         }
                     }
                 } catch (Throwable e) {

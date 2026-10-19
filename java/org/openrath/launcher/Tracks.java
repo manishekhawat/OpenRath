@@ -50,6 +50,7 @@ final class Tracks {
             w.write(String.format(Locale.US, "%d,%.6f,%.6f,%.0f,%.1f\n", now, lat, lon, alt, kmh));
             w.close();
         } catch (Exception ignored) {
+            // every few seconds while moving: too often to note; a missed point is harmless
         }
     }
 

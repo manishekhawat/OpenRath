@@ -44,7 +44,8 @@ final class View360 {
                 if (pkg.equals(c.getPackageName())) continue;
                 if (looks360(pkg, String.valueOf(r.loadLabel(pm)))) return pkg;
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("360 camera app search", e);
         }
         return null;
     }
