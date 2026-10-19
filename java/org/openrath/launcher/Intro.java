@@ -55,6 +55,7 @@ final class Intro extends View {
         } catch (Exception ignored) {
         }
         setContentDescription("OpenRath");
+        setElevation(Ui.px(30));   // above the setup screens
     }
 
     /** A step's progress, with the steps laid out on the standard 2-second timeline. */
