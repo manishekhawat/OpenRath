@@ -2,6 +2,10 @@
 
 Newest first.
 
+## 1.41: The OpenRath wheel on opening
+
+- **OpenRath logo when the app opens:** the wheel rolls in, its rim and spokes draw themselves, and the name appears before the dashboard shows, for two seconds. Shorter at Reduced movement, left out at Off, and a tap skips it. It plays when the app starts, not on every return home. It can be switched off in Settings, Dashboard.
+
 ## 1.40: Engine data and the car's mood
 
 - **Wi-Fi OBD-II adapters:** choose Bluetooth or Wi-Fi in Engine and tyres, OBD-II adapter. Join the adapter's Wi-Fi first; most are at 192.168.0.10, port 35000.

@@ -228,6 +228,17 @@ public final class Tests {
         eq("box names match", Prefs.CONTENTS.length, Prefs.CONTENT_NAMES.length);
     }
 
+    private static void intro() {
+        check("intro on start", Intro.show(true, "standard", true));
+        check("intro not on return", !Intro.show(true, "standard", false));
+        check("intro off with no movement", !Intro.show(true, "off", true));
+        check("intro switched off", !Intro.show(false, "reduced", true));
+        eq("intro before", 0f, Intro.part(100, 200, 400));
+        eq("intro after", 1f, Intro.part(700, 200, 400));
+        eq("intro halfway", 0.875f, Intro.part(400, 200, 400));
+        check("intro feature", Features.get("intro") != null);
+    }
+
     private static void nebulaIdeas() {
         // Wi-Fi adapters
         String[] w = Obd.wifiTarget("wifi:192.168.0.10:35000");
@@ -377,6 +388,7 @@ public final class Tests {
         femtoIdeas();
         miniAaIdeas();
         nebulaIdeas();
+        intro();
         bootArt();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);

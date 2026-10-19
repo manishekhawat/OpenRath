@@ -1,0 +1,1 @@
+The OpenRath wheel rolls in and the name appears when the app opens, for two seconds. Shorter at Reduced movement, left out at Off, a tap skips it, and it has its own switch.
