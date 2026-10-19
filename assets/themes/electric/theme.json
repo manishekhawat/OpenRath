@@ -1,0 +1,22 @@
+{
+  "name": "Electric",
+  "author": "OpenRath",
+  "description": "Clean white cards on light grey with one blue, like an electric car's screen",
+  "colours": {
+    "text": "#171A20",
+    "textDim": "#5C5E62",
+    "accent": "#3E6AE1",
+    "edge": "#00000000",
+    "panelTop": "#FFFFFF",
+    "panel": "#FFFFFF",
+    "background": "#E9EAEC",
+    "icons": "#171A20",
+    "road": "#D9DBDF",
+    "roadLine": "#FFFFFF"
+  },
+  "backgroundGradient": ["#F4F4F5", "#E2E3E6"],
+  "cornerRadius": 12,
+  "road": true,
+  "chromeText": false,
+  "welcomeTitle": ""
+}

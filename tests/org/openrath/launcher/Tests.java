@@ -443,6 +443,24 @@ public final class Tests {
                 check("hindi: the files have the settings", all.size() > 300);
                 check("hindi: every Hindi name is an English one", e.keySet().containsAll(h.keySet()));
                 for (Features.F x : Features.ALL) check("hindi: feature " + x.id, all.containsKey(x.name) || x.level == Features.DEV);
+                // built-in themes' descriptions and the picture layouts' names
+                String[] themes = new java.io.File("assets/themes").list();
+                check("8 built-in themes", themes != null && themes.length == 8);
+                for (String id : themes == null ? new String[0] : themes) {
+                    java.io.File tf = new java.io.File("assets/themes/" + id + "/theme.json");
+                    java.util.regex.Matcher dm = java.util.regex.Pattern.compile("\"description\": \"([^\"]+)\"")
+                            .matcher(new String(java.nio.file.Files.readAllBytes(tf.toPath()), "UTF-8"));
+                    check("hindi: theme " + id, dm.find() && all.containsKey(dm.group(1)));
+                }
+                java.io.File lf = new java.io.File("assets/layouts/layouts.json");
+                java.util.regex.Matcher lm = java.util.regex.Pattern.compile("\"id\": \"([^\"]+)\", \"name\": \"([^\"]+)\"")
+                        .matcher(new String(java.nio.file.Files.readAllBytes(lf.toPath()), "UTF-8"));
+                int layouts = 0;
+                while (lm.find()) {
+                    layouts++;
+                    check("hindi: layout " + lm.group(1), all.containsKey(lm.group(2)));
+                }
+                check("13 picture layouts", layouts == 13);
                 for (SettingsView.Section sec : SettingsView.SECTIONS) check("hindi: section " + sec.name, all.containsKey(sec.name) && all.containsKey(sec.about));
                 check("hindi: back button keeps its spaces", "‹  Back to the dashboard".equals(e.get("ui_back_to_the_dashboard")));
             } catch (java.io.IOException x) {

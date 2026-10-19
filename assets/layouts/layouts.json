@@ -111,6 +111,43 @@
         {"kind": "favourites", "x": 482, "y": 236, "w": 482, "h": 154, "ink": "#FFFFFF"},
         {"kind": "dock", "items": ["navi", "music", "radio", "apps", "bt", "phone", "settings"], "shape": "rect", "r": 18, "x": 60, "y": 420, "w": 904, "h": 90, "fill": "#DDE2E8", "alpha": 0.45, "ink": "#FFFFFF"}
       ]
+    },
+    {
+      "id": "mission", "name": "Mission control", "bg": "mission", "light": false,
+      "lines": [[40, 138, 984, 138], [40, 500, 984, 500]],
+      "parts": [
+        {"kind": "logo", "shape": "circle", "x": 40, "y": 30, "w": 84, "h": 84, "ink": "#FFFFFF"},
+        {"kind": "clock", "style": "digital-line", "x": 148, "y": 24, "w": 260, "h": 100, "ink": "#FFFFFF", "sub": "#8FA3BF", "opt": "time"},
+        {"kind": "weather", "style": "range", "x": 860, "y": 20, "w": 150, "h": 110, "ink": "#FFFFFF", "sub": "#8FA3BF", "opt": "weather"},
+        {"kind": "stats", "items": ["temp", "altitude", "direction"], "x": 40, "y": 170, "w": 260, "h": 300, "ink": "#FFFFFF", "sub": "#8FA3BF", "opt": "stats"},
+        {"kind": "speed", "style": "dial", "shape": "circle", "x": 362, "y": 160, "w": 300, "h": 300, "fill": "#05080E", "ink": "#FFFFFF", "sub": "#8FA3BF", "accent": "#4FA3FF", "opt": "speed"},
+        {"kind": "music", "style": "float", "shape": "rect", "r": 6, "x": 700, "y": 220, "w": 290, "h": 170, "fill": "#0E1420", "alpha": 0.6, "ink": "#FFFFFF", "sub": "#8FA3BF", "accent": "#4FA3FF", "opt": "media"},
+        {"kind": "dock", "items": ["navi", "radio", "music", "apps", "bt", "phone", "settings"], "x": 40, "y": 520, "w": 944, "h": 64, "ink": "#E6EEF8"}
+      ]
+    },
+    {
+      "id": "electric", "name": "Electric", "bg": "electric", "light": true,
+      "road": {"horizon": 250, "x": 200, "half": 170, "dash": "#FFFFFF"},
+      "parts": [
+        {"kind": "speed", "style": "number", "x": 75, "y": 36, "w": 250, "h": 110, "ink": "#171A20", "sub": "#5C5E62", "opt": "speed"},
+        {"kind": "car", "src": "car_rear_white", "x": 115, "y": 320, "w": 170, "h": 122, "opt": "car"},
+        {"kind": "music", "style": "wide", "shape": "rect", "r": 12, "x": 420, "y": 30, "w": 574, "h": 170, "fill": "#FFFFFF", "ink": "#171A20", "sub": "#5C5E62", "accent": "#3E6AE1", "opt": "media"},
+        {"kind": "clock", "style": "analog-dark", "shape": "rect", "r": 12, "x": 420, "y": 216, "w": 279, "h": 180, "fill": "#FFFFFF", "ink": "#171A20", "sub": "#5C5E62", "accent": "#3E6AE1", "opt": "clock"},
+        {"kind": "weather", "style": "card", "shape": "rect", "r": 12, "x": 715, "y": 216, "w": 279, "h": 180, "fill": "#5B84EE", "fill2": "#3E6AE1", "ink": "#FFFFFF", "sub": "#E8EEFF", "opt": "weather"},
+        {"kind": "dock", "items": ["navi", "music", "radio", "phone", "apps", "settings"], "shape": "rect", "r": 16, "x": 20, "y": 520, "w": 984, "h": 64, "fill": "#FFFFFF", "alpha": 0.9, "ink": "#171A20"}
+      ]
+    },
+    {
+      "id": "roadster", "name": "Roadster", "bg": "roadster", "light": false,
+      "road": {"horizon": 300, "x": 512, "half": 330, "dash": "#FFFFFF"},
+      "parts": [
+        {"kind": "clock", "style": "digital-line", "x": 40, "y": 24, "w": 260, "h": 100, "ink": "#FFFFFF", "sub": "#B8B8BE", "opt": "time"},
+        {"kind": "weather", "style": "range", "x": 860, "y": 20, "w": 150, "h": 110, "ink": "#FFFFFF", "sub": "#B8B8BE", "opt": "weather"},
+        {"kind": "speed", "style": "ring", "shape": "circle", "x": 60, "y": 180, "w": 220, "h": 220, "fill": "#101012", "alpha": 0.85, "ink": "#FFFFFF", "sub": "#B8B8BE", "accent": "#E82127", "opt": "speed"},
+        {"kind": "music", "style": "float", "shape": "rect", "r": 10, "x": 714, "y": 200, "w": 280, "h": 170, "fill": "#101012", "alpha": 0.75, "ink": "#FFFFFF", "sub": "#B8B8BE", "accent": "#E82127", "opt": "media"},
+        {"kind": "car", "src": "car_rear_red", "x": 412, "y": 350, "w": 200, "h": 143, "opt": "car"},
+        {"kind": "dock", "items": ["navi", "music", "radio", "apps", "bt", "phone"], "x": 40, "y": 525, "w": 944, "h": 60, "ink": "#FFFFFF"}
+      ]
     }
   ]
 }

@@ -1,0 +1,22 @@
+{
+  "name": "Roadster",
+  "author": "OpenRath",
+  "description": "Carbon black and racing red for a sports car",
+  "colours": {
+    "text": "#F4F4F4",
+    "textDim": "#A8A8AE",
+    "accent": "#E82127",
+    "edge": "#2E2E32",
+    "panelTop": "#1C1C1F",
+    "panel": "#121214",
+    "background": "#0B0B0C",
+    "icons": "#F4F4F4",
+    "road": "#161618",
+    "roadLine": "#E82127"
+  },
+  "backgroundGradient": ["#2A0708", "#0B0B0C", "#000000"],
+  "cornerRadius": 10,
+  "road": true,
+  "chromeText": false,
+  "welcomeTitle": "LET'S GO"
+}

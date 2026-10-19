@@ -129,6 +129,22 @@ public final class Shots extends Instrumentation {
                 h.closeSettings();
             }
         });
+        // the three looks: each theme on the boxes, then its picture layout
+        String[][] looks = {{"mission", "17_mission"}, {"electric", "18_electric"}, {"roadster", "19_roadster"}};
+        for (final String[] l : looks) {
+            for (final String layout : new String[]{Layouts.BOXES, l[0]}) {
+                main(new Runnable() {
+                    @Override
+                    public void run() {
+                        p.put("themePack", "@" + l[0]);
+                        p.put("layout", layout);
+                        h.build();
+                    }
+                });
+                SystemClock.sleep(2500);
+                shot(l[1] + (layout.equals(Layouts.BOXES) ? "_theme" : "_layout"));
+            }
+        }
     }
 
     private void main(Runnable r) {
