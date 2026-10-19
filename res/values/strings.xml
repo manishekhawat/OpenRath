@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">OpenRath</string>
+    <string name="app_name" translatable="false">OpenRath</string>
     <string name="keys_service_name">OpenRath steering-wheel buttons</string>
     <string name="keys_service_about">Lets the steering-wheel buttons you set up in OpenRath work while another app is on screen. It only looks at button presses, and only uses the ones you gave an action.</string>
-    <!-- managed settings for fleets (res/xml/app_restrictions.xml) -->
-    <string name="m_level">OpenRath level</string>
-    <string name="m_level_about">Simple, Full or Custom. Empty leaves it to the driver.</string>
-    <string name="m_lock_level">Lock the level</string>
-    <string name="m_lock_level_about">The driver can\'t change the level.</string>
-    <string name="m_features_on">Features turned on and locked</string>
-    <string name="m_features_on_about">Feature ids separated by commas, for example backup,speedAlerts,reports. See docs/MANAGED.md.</string>
-    <string name="m_features_off">Features turned off and locked</string>
-    <string name="m_features_off_about">Feature ids separated by commas, for example news,kids,cab.</string>
-    <string name="m_dev">Allow developer mode</string>
-    <string name="m_dev_about">Off hides developer mode and its diagnostics.</string>
-    <string name="m_report_url">Usage report address</string>
-    <string name="m_report_url_about">An https address of your own. With the reports feature on, the unit posts its crash and usage report there once a day.</string>
+    <!-- managed settings for fleets (res/xml/app_restrictions.xml), read by the fleet's administrator
+         in their device-management console, so in English only -->
+    <string name="m_level" translatable="false">OpenRath level</string>
+    <string name="m_level_about" translatable="false">Simple, Full or Custom. Empty leaves it to the driver.</string>
+    <string name="m_lock_level" translatable="false">Lock the level</string>
+    <string name="m_lock_level_about" translatable="false">The driver can\'t change the level.</string>
+    <string name="m_features_on" translatable="false">Features turned on and locked</string>
+    <string name="m_features_on_about" translatable="false">Feature ids separated by commas, for example backup,speedAlerts,reports. See docs/MANAGED.md.</string>
+    <string name="m_features_off" translatable="false">Features turned off and locked</string>
+    <string name="m_features_off_about" translatable="false">Feature ids separated by commas, for example news,kids,cab.</string>
+    <string name="m_dev" translatable="false">Allow developer mode</string>
+    <string name="m_dev_about" translatable="false">Off hides developer mode and its diagnostics.</string>
+    <string name="m_report_url" translatable="false">Usage report address</string>
+    <string name="m_report_url_about" translatable="false">An https address of your own. With the reports feature on, the unit posts its crash and usage report there once a day.</string>
 </resources>

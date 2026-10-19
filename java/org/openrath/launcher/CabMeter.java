@@ -96,6 +96,7 @@ final class CabMeter {
         row.addView(hide, bp);
         row.addView(stop, bp);
         col.addView(row);
+        Edge.fit(col);
         d.setContentView(col);
         final Runnable[] tick = new Runnable[1];
         tick[0] = new Runnable() {
