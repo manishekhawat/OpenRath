@@ -1,9 +1,12 @@
 # Screenshots of the opening logo, the setup steps, the dashboard layouts and Settings, on a 1024 x 600
-# emulator like a car stereo's screen. Download them from the run's "screenshots" artifact.
+# emulator like a car stereo's screen. They are kept in the run's "screenshots" artifact, and also pushed
+# to refs/screenshots/<branch> so they can be fetched with git (git fetch origin refs/screenshots/<branch>).
 name: screenshots
 on:
   pull_request:
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   screenshots:
     runs-on: ubuntu-24.04
@@ -47,3 +50,10 @@ jobs:
         with:
           name: screenshots
           path: shots/
+      - name: Keep the screenshots in git
+        if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          cd shots
+          git init -q && git checkout -q -b shots
+          git add . && git -c user.name="OpenRath screenshots" -c user.email="screenshots@openrath.invalid" commit -qm "Screenshots"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/screenshots/${{ github.head_ref || github.ref_name }}
