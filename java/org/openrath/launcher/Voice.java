@@ -85,6 +85,10 @@ final class Voice {
         // the news: "read the news", "headlines", "aaj ki khabar", "समाचार सुनाओ"
         if (has(s, "(\\bnews\\b|headlines|khabar|khabre|khabren|samachar|समाचार|खबर|ख़बर|न्यूज़|न्यूज)")) return c("news", "");
 
+        // questions about the car: fuel, engine, faults, battery, today's distance
+        String ask = CarAnswer.topic(s);
+        if (ask != null) return c("ask", ask);
+
         // volume
         if (has(s, "(volume|awaaz|awaz|आवाज़|आवाज)") || has(s, "^(louder|quieter|softer)")) {
             if (has(s, "(down|kam|कम|dheere|धीरे|धीमा|quieter|softer|low)")) return c("volDown", "");

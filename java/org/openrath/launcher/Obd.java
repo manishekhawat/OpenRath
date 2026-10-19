@@ -14,9 +14,10 @@ import java.util.Locale;
 import java.util.UUID;
 
 /**
- * Engine data from a Bluetooth ELM327 OBD-II adapter (the common blue plug under the dashboard):
- * RPM, speed, coolant temperature, engine load, battery voltage and fault codes. The adapter is
- * paired in the unit's Bluetooth settings first, then chosen in Settings > Engine (OBD-II).
+ * Engine data from an ELM327 OBD-II adapter (the common plug under the dashboard), over Bluetooth or
+ * Wi-Fi: RPM, speed, coolant and intake temperature, engine load, fuel level, battery voltage and
+ * fault codes. A Bluetooth adapter is paired in the unit's Bluetooth settings first; a Wi-Fi one is
+ * joined in the unit's Wi-Fi settings. Either is then chosen in Settings > Engine (OBD-II).
  * Runs on its own thread inside the trip service; the boxes read the static fields.
  */
 final class Obd {
@@ -24,7 +25,9 @@ final class Obd {
     private static final UUID SPP = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     // latest readings; -1 = not known
-    static volatile int rpm = -1, kmh = -1, coolant = -1, load = -1;
+    static volatile int rpm = -1, kmh = -1, coolant = -1, load = -1, fuel = -1, intake = -999;
+    /** The address most Wi-Fi ELM327 adapters use. */
+    static final String WIFI_DEFAULT = "192.168.0.10:35000";
     static volatile float volts = -1;
     static volatile long readAt;
     static volatile String status = Hindi.t("Not set up"), protocol = "";
@@ -92,31 +95,82 @@ final class Obd {
         return out;
     }
 
+    /** {host, port} for a Wi-Fi adapter saved as "wifi:host:port", or null for a Bluetooth one. */
+    static String[] wifiTarget(String saved) {
+        if (saved == null || !saved.startsWith("wifi:")) return null;
+        String t = saved.substring(5).trim();
+        int colon = t.lastIndexOf(':');
+        String host = colon > 0 ? t.substring(0, colon) : t, port = colon > 0 ? t.substring(colon + 1) : "35000";
+        try {
+            int n = Integer.parseInt(port);
+            if (n <= 0 || n > 65535 || host.isEmpty()) return null;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+        return new String[]{host, port};
+    }
+
+    /** A connection to a Wi-Fi adapter, through the Wi-Fi even when another network carries the internet. */
+    private static java.net.Socket wifiSocket(Context c, String host, int port) throws Exception {
+        javax.net.SocketFactory f = javax.net.SocketFactory.getDefault();
+        try {
+            android.net.ConnectivityManager cm = (android.net.ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+            for (android.net.Network n : cm.getAllNetworks()) {
+                android.net.NetworkCapabilities nc = cm.getNetworkCapabilities(n);
+                if (nc != null && nc.hasTransport(android.net.NetworkCapabilities.TRANSPORT_WIFI)) {
+                    f = n.getSocketFactory();
+                    break;
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        java.net.Socket s = f.createSocket();
+        s.connect(new java.net.InetSocketAddress(host, port), 8000);
+        return s;
+    }
+
+    private static BluetoothSocket bluetooth(String mac) throws Exception {
+        BluetoothAdapter a = BluetoothAdapter.getDefaultAdapter();
+        if (a == null || !a.isEnabled()) throw new IllegalStateException(Hindi.t("Bluetooth is off"));
+        BluetoothDevice d = a.getRemoteDevice(mac);
+        a.cancelDiscovery();
+        BluetoothSocket s = null;
+        try {
+            s = d.createRfcommSocketToServiceRecord(SPP);
+            s.connect();
+        } catch (Exception first) {
+            // many cheap adapters only answer on channel 1
+            try {
+                if (s != null) s.close();
+            } catch (Exception ignored) {
+            }
+            s = (BluetoothSocket) d.getClass().getMethod("createRfcommSocket", int.class).invoke(d, 1);
+            s.connect();
+        }
+        return s;
+    }
+
     private static void loop(Context c, String mac) {
         long backoff = 5000;
+        String[] wifi = wifiTarget(mac);
         while (!stop) {
-            BluetoothSocket s = null;
+            java.io.Closeable s = null;
             try {
                 status = Hindi.t("Connecting…");
                 changed(c);
-                BluetoothAdapter a = BluetoothAdapter.getDefaultAdapter();
-                if (a == null || !a.isEnabled()) throw new IllegalStateException(Hindi.t("Bluetooth is off"));
-                BluetoothDevice d = a.getRemoteDevice(mac);
-                a.cancelDiscovery();
-                try {
-                    s = d.createRfcommSocketToServiceRecord(SPP);
-                    s.connect();
-                } catch (Exception first) {
-                    // many cheap adapters only answer on channel 1
-                    try {
-                        if (s != null) s.close();
-                    } catch (Exception ignored) {
-                    }
-                    s = (BluetoothSocket) d.getClass().getMethod("createRfcommSocket", int.class).invoke(d, 1);
-                    s.connect();
+                InputStream in;
+                OutputStream out;
+                if (wifi != null) {
+                    java.net.Socket ws = wifiSocket(c, wifi[0], Integer.parseInt(wifi[1]));
+                    s = ws;
+                    in = ws.getInputStream();
+                    out = ws.getOutputStream();
+                } else {
+                    BluetoothSocket bs = bluetooth(mac);
+                    s = bs;
+                    in = bs.getInputStream();
+                    out = bs.getOutputStream();
                 }
-                InputStream in = s.getInputStream();
-                OutputStream out = s.getOutputStream();
                 for (String cmd : new String[]{"ATZ", "ATE0", "ATL0", "ATS0", "ATH0", "ATAT1", "ATSP0"}) ask(in, out, cmd, cmd.equals("ATZ") ? 3000 : 1500);
                 String first = ask(in, out, "0100", 10000);   // the adapter searches for the car's protocol here
                 if (first.contains("UNABLE") || first.contains("ERROR") || first.contains("NODATA") || first.contains("CANTCONNECT"))
@@ -151,6 +205,8 @@ final class Obd {
                     if (round % 5 == 0) {
                         coolant = coolant(ask(in, out, "0105", 1500));
                         load = load(ask(in, out, "0104", 1500));
+                        fuel = fuel(ask(in, out, "012F", 1500));
+                        intake = intake(ask(in, out, "010F", 1500));
                         volts = volts(ask(in, out, "ATRV", 1500));
                     }
                     readAt = System.currentTimeMillis();
@@ -247,6 +303,18 @@ final class Obd {
         return b == null || b.length < 1 ? -1 : Math.round(b[0] * 100 / 255f);
     }
 
+    /** Fuel tank level in percent (PID 2F); many cars don't report it. */
+    static int fuel(String r) {
+        int[] b = bytes(r, "412F");
+        return b == null || b.length < 1 ? -1 : Math.round(b[0] * 100 / 255f);
+    }
+
+    /** Intake air temperature in °C (PID 0F), or -999. */
+    static int intake(String r) {
+        int[] b = bytes(r, "410F");
+        return b == null || b.length < 1 ? -999 : b[0] - 40;
+    }
+
     /** ATRV answers like "12.6V". */
     static float volts(String r) {
         String s = clean(r).replace("V", "");
@@ -303,20 +371,9 @@ final class Obd {
         return out;
     }
 
-    /** A few common codes, in words; others link to a search. */
+    /** A code in plain words (FaultCodes). */
     static String meaning(String code) {
-        String[][] known = {
-                {"P0101", "Air flow sensor reading out of range"}, {"P0115", "Coolant temperature sensor"},
-                {"P0120", "Throttle position sensor"}, {"P0130", "Oxygen sensor (front)"}, {"P0133", "Oxygen sensor slow (front)"},
-                {"P0171", "Engine running lean"}, {"P0172", "Engine running rich"}, {"P0300", "Random misfire"},
-                {"P0301", "Misfire, cylinder 1"}, {"P0302", "Misfire, cylinder 2"}, {"P0303", "Misfire, cylinder 3"},
-                {"P0304", "Misfire, cylinder 4"}, {"P0335", "Crankshaft position sensor"}, {"P0340", "Camshaft position sensor"},
-                {"P0420", "Catalytic converter efficiency low"}, {"P0442", "Small fuel vapour (EVAP) leak"},
-                {"P0455", "Large fuel vapour (EVAP) leak; check the fuel cap"}, {"P0500", "Vehicle speed sensor"},
-                {"P0505", "Idle air control"}, {"P0562", "Battery voltage low"}, {"P0563", "Battery voltage high"},
-                {"P0700", "Gearbox control fault"}};
-        for (String[] k : known) if (k[0].equals(code)) return Hindi.t(k[1]);
-        return Hindi.t("Look this code up for your car");
+        return Hindi.t((String) FaultCodes.look(code)[0]);
     }
 
     private Obd() {

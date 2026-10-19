@@ -2,6 +2,16 @@
 
 Newest first.
 
+## 1.40: Engine data and the car's mood
+
+- **Wi-Fi OBD-II adapters:** choose Bluetooth or Wi-Fi in Engine and tyres, OBD-II adapter. Join the adapter's Wi-Fi first; most are at 192.168.0.10, port 35000.
+- **Fuel level and intake air temperature** in the engine box, on cars that report them.
+- **Fault codes in plain words:** each code shows what it means, what to check and how urgent it is, from a table of about 95 common codes kept on the unit. Other codes say which part of the car they point at.
+- **Ask the car by voice:** "how's the engine?", "how much fuel?", "any faults?", "how's the battery?" or "how far today?", in English or Hindi.
+- **Theme changes by itself** (off until you choose a theme in Themes): one theme at night, another when a chosen phone connects.
+- **LED light strip** (off until you turn it on): an ELK-BLEDOM Bluetooth strip takes the theme's colour, dims at night and turns red when the engine is hot or the car is over the limit.
+- **Badges for good driving** in Driving: smooth-driving streaks, a week within the limit, calm long drives and distance milestones.
+
 ## 1.39: Sleep, units and the music box
 
 - **Recover after deep sleep:** many stereos sleep with the ignition instead of switching off, often with OpenRath still on screen. On waking, the GPS, the link to music apps and the map now start again, and the music carries on.
