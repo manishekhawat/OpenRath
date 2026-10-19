@@ -301,6 +301,8 @@ public class HomeActivity extends Activity implements Cards.Host {
         hub.clearListeners();
         dash.removeAllViews();
         Motion.load(prefs);
+        Units.load(prefs);
+        Fixes.stillKmh = prefs.num("speedFilter", 2);
         dash.swapped = prefs.swapped();
         dash.setSizes(prefs.str("boxSizes", null));
         dash.dockAt = prefs.str("dockAt", "left");
@@ -483,7 +485,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             night = null;
         }
         if (night != null) {
-            night.setSpeed(h.speed());
+            night.setSpeed(h.speedShown());
             night.setMap(mapCard());
         }
     }
@@ -509,7 +511,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             root.removeView(fog);
             fog = null;
         }
-        if (fog != null) fog.setSpeed(h.speed());
+        if (fog != null) fog.setSpeed(h.speedShown());
     }
 
     private android.widget.TextView highwayView;
@@ -1047,6 +1049,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         Extras.resumed(this);
         Reports.maybeSend(versionName());
         Updates.resumed(this);
+        Wake.watch(this);
         highwayStrip();
         dash.postDelayed(new Runnable() {
             @Override

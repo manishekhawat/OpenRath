@@ -9,6 +9,8 @@ final class Fixes {
 
     /** Below this the car is standing still: GPS drift at a red light reads 1–2 km/h. */
     static final float STILL_KMH = 2f;
+    /** Below this the speed shows 0: the owner's speed filter (Settings > Driving), for GPS that drifts when parked. */
+    static float stillKmh = STILL_KMH;
 
     /** True when a fix can be used: real coordinates, and not older than the last fix used (0 = none yet). */
     static boolean usable(double lat, double lon, long fixNanos, long lastNanos) {
@@ -26,7 +28,7 @@ final class Fixes {
      * jump digit to digit, and 0 below walking pace so it doesn't crawl at a red light.
      */
     static float smooth(float shown, float raw, long dtMs) {
-        if (raw < STILL_KMH) return 0;
+        if (raw < stillKmh) return 0;
         if (shown <= 0 || dtMs <= 0 || dtMs > 5000) return raw;
         double a = 1 - Math.exp(-dtMs / 350.0);
         return (float) (shown + a * (raw - shown));

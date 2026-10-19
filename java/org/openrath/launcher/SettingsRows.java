@@ -260,6 +260,23 @@ final class SettingsRows {
                         }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
+        r.add(new SettingsView.Row(g, "Units", (Units.mph ? "mph" : "km/h") + ", " + (Units.fahrenheit ? "°F" : "°C"), new Runnable() {
+            @Override
+            public void run() {
+                final String[] names = {"km/h and °C", "mph and °F", "km/h and °F", "mph and °C"};
+                final String[][] vals = {{"kmh", "c"}, {"mph", "f"}, {"kmh", "f"}, {"mph", "c"}};
+                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Units for speed and temperature"))
+                        .setItems(names, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface d, int w) {
+                                a.prefs.put("speedUnit", vals[w][0]);
+                                a.prefs.put("tempUnit", vals[w][1]);
+                                a.build();
+                                a.hub.refreshWeather();
+                            }
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
+            }
+        }));
         r.add(new SettingsView.Row(g, "Less movement", Hindi.t(Motion.NAMES[java.util.Arrays.asList(Motion.LEVELS).indexOf(Motion.pick(a.prefs.str("motion", "standard")))]), new Runnable() {
             @Override
             public void run() {
@@ -719,6 +736,30 @@ final class SettingsRows {
                             @Override
                             public void onClick(DialogInterface d, int w) {
                                 a.prefs.put("speedFix", String.valueOf(steps[w]));
+                                d.dismiss();
+                                if (a.settingsView != null) a.settingsView.refresh();
+                            }
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
+            }
+        }));
+        final int filter = a.prefs.num("speedFilter", 2);
+        r.add(new SettingsView.Row(g, "Speed filter", filter == 0 ? "off" : Hindi.f("0 below %1$s km/h", filter), new Runnable() {
+            @Override
+            public void run() {
+                final int[] steps = {0, 2, 3, 4, 5, 6, 8};
+                String[] names = new String[steps.length];
+                int cur = 1;
+                for (int i = 0; i < steps.length; i++) {
+                    names[i] = steps[i] == 0 ? Hindi.t("off") : steps[i] + " km/h";
+                    if (steps[i] == filter) cur = i;
+                }
+                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                        .setTitle(Hindi.t("Show 0 below this speed, for GPS that drifts when parked"))
+                        .setSingleChoiceItems(names, cur, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface d, int w) {
+                                a.prefs.put("speedFilter", String.valueOf(steps[w]));
+                                Fixes.stillKmh = steps[w];
                                 d.dismiss();
                                 if (a.settingsView != null) a.settingsView.refresh();
                             }

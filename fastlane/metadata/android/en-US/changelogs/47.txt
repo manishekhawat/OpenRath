@@ -1,0 +1,1 @@
+Recovers after the stereo's deep sleep, a speed filter for drifting GPS, mph and °F, music box colours from the album cover, drag to seek, 4G and 5G on the dock icon, a drive summary when stopped, and an optional tap sound and buzz.
