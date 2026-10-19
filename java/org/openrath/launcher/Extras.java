@@ -1779,7 +1779,8 @@ final class Extras {
         new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Restore which backup?")).setItems(names, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, final int w) {
-                new AlertDialog.Builder(a, DIALOG).setMessage(Hindi.t("Replace every setting, the fuel log and trip history with this backup? "
+                new AlertDialog.Builder(a, DIALOG).setTitle(Backup.label(files.get(w)))
+                        .setMessage(Hindi.t("Replace every setting, the fuel log and trip history with this backup? "
                         + "A copy of what's here now is saved first."))
                         .setPositiveButton(Hindi.t("Restore"), new DialogInterface.OnClickListener() {
                             @Override

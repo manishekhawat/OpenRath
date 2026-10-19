@@ -225,7 +225,7 @@ final class LedStrip {
                         .setItems(names, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
-                                String[] p = found.get(w).split("\\|");
+                                String[] p = nameAndMac(found.get(w));
                                 a.prefs.put("ledName", p[0]);
                                 a.prefs.put("ledMac", p[1]);
                                 Features.set(a.prefs, "ledStrip", true);
@@ -235,6 +235,12 @@ final class LedStrip {
                         }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }, 8000);
+    }
+
+    /** "name|MAC" from the scan: the MAC is after the last bar, as a strip's name can hold one too. */
+    static String[] nameAndMac(String found) {
+        int bar = found.lastIndexOf('|');
+        return bar < 0 ? new String[]{found, ""} : new String[]{found.substring(0, bar), found.substring(bar + 1)};
     }
 
     private LedStrip() {

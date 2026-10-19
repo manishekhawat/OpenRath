@@ -239,7 +239,7 @@ final class Obd {
         long now = System.currentTimeMillis();
         if (now - changedAt < 900) return;   // the boxes redraw once a second anyway
         changedAt = now;
-        c.sendBroadcast(new Intent(Drive.CHANGED).setPackage(c.getPackageName()));
+        Compat.send(c, new Intent(Drive.CHANGED));
     }
 
     /** Send one command and read up to the '>' prompt. */

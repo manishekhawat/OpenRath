@@ -207,7 +207,7 @@ final class Theme {
         Ui.ROAD_FILL = look.roadFill;
         Ui.ROAD_LINE = look.roadLine;
         if (dir != null) {
-            File f = new File(dir, json.optString("font", "font.otf"));
+            File f = new File(dir, Storage.bareName(json.optString("font", "font.otf"), "font.otf"));
             if (!f.exists()) f = new File(dir, "font.ttf");
             if (f.exists()) {
                 try {
@@ -309,9 +309,13 @@ final class Theme {
         return d;
     }
 
+    /** Largest file, and largest total, unpacked from a theme .zip. */
+    static final long MAX_FILE = 8L * 1024 * 1024, MAX_TOTAL = 32L * 1024 * 1024;
+
     /** Unpack a theme .zip into OpenRath/themes; returns the folder name. */
     static String importZip(File zip) throws Exception {
-        String folder = zip.getName().replaceAll("(?i)\\.zip$", "").replaceAll("[^A-Za-z0-9 _.-]", "_");
+        String folder = Storage.folderFor(zip.getName());
+        if (folder == null) throw new IllegalStateException("no usable name: " + zip.getName());
         File d = new File(root(), folder);
         d.mkdirs();
         ZipFile z = new ZipFile(zip);
@@ -328,14 +332,23 @@ final class Theme {
             }
             en = z.entries();
             boolean found = false;
+            long total = 0;
             while (en.hasMoreElements()) {
                 ZipEntry e = en.nextElement();
                 String n = e.getName();
                 if (e.isDirectory() || !n.startsWith(prefix)) continue;
                 String rel = n.substring(prefix.length());
                 if (rel.contains("/") || rel.contains("..") || rel.isEmpty()) continue;   // flat folder only
-                if (e.getSize() > 8L * 1024 * 1024) continue;
-                copy(z.getInputStream(e), new File(d, rel));
+                if (e.getSize() > MAX_FILE) continue;
+                File to = new File(d, rel);
+                // the bytes really copied count, not the size the zip claims
+                long got = copy(z.getInputStream(e), to, Math.min(MAX_FILE, MAX_TOTAL - total));
+                if (got < 0) {
+                    to.delete();
+                    if (total + MAX_FILE > MAX_TOTAL) throw new IllegalStateException("the theme is too big");
+                    continue;
+                }
+                total += got;
                 if (rel.equals("theme.json")) found = true;
             }
             if (!found) throw new IllegalStateException("no theme.json in " + zip.getName());
@@ -351,6 +364,24 @@ final class Theme {
         File[] l = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles();
         if (l != null) for (File f : l) if (f.getName().toLowerCase(java.util.Locale.US).endsWith(".zip")) out.add(f);
         return out;
+    }
+
+    /** Copies at most `max` bytes; -1 when there was more. */
+    private static long copy(InputStream in, File to, long max) throws Exception {
+        OutputStream o = new FileOutputStream(to);
+        byte[] b = new byte[65536];
+        long total = 0;
+        int n;
+        try {
+            while ((n = in.read(b)) > 0) {
+                if ((total += n) > max) return -1;
+                o.write(b, 0, n);
+            }
+        } finally {
+            o.close();
+            in.close();
+        }
+        return total;
     }
 
     private static void copy(InputStream in, File to) throws Exception {
