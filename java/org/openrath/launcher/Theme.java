@@ -27,8 +27,8 @@ import java.util.zip.ZipFile;
  */
 final class Theme {
 
-    /** The five themes built into the app, in assets/themes/<id>; their ids start with @. */
-    static final String[] BUILT_IN = {"magma-grey", "light", "minimal", "auto", "genz"};
+    /** The themes built into the app, in assets/themes/<id>; their ids start with @. */
+    static final String[] BUILT_IN = {"magma-grey", "light", "minimal", "auto", "genz", "mission", "electric", "roadster"};
     static final String DEFAULT = "@magma-grey";
 
     /** OpenRath/themes on the unit's storage. */

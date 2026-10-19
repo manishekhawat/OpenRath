@@ -1,0 +1,22 @@
+{
+  "name": "Mission control",
+  "author": "OpenRath",
+  "description": "Black like space, white type and a cool blue, like a launch console",
+  "colours": {
+    "text": "#FFFFFF",
+    "textDim": "#8FA3BF",
+    "accent": "#4FA3FF",
+    "edge": "#1F2A3A",
+    "panelTop": "#0A0F18",
+    "panel": "#05080E",
+    "background": "#000000",
+    "icons": "#E6EEF8",
+    "road": "#0B1220",
+    "roadLine": "#4FA3FF"
+  },
+  "backgroundGradient": ["#000000", "#03070F", "#0A1A33"],
+  "cornerRadius": 4,
+  "road": true,
+  "chromeText": false,
+  "welcomeTitle": "READY"
+}

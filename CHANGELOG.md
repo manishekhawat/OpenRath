@@ -6,6 +6,7 @@ Newest first.
 
 - **Setup screens on first open:** after the logo, a new install goes step by step through the language, permissions (each one explained, or a backup to bring back), your car, the colour and screen layout, how much OpenRath shows, the radio, music, navigation and phone apps, and pairing your phone and making OpenRath the home app. Every step can be skipped, Back goes a step back, and Settings > Help > Run setup again goes through it later. It replaces the string of questions that popped up one after another.
 - **Screenshots** of the setup steps, the dashboard layouts and Settings in the README, taken on a 1024 x 600 emulator by a new check.
+- **Three new looks, each a screen layout and a matching theme:** Mission control (black like space, the Earth's edge glowing blue, telemetry and a big speed dial), Electric (white cards on light grey with the car on its own panel and one blue) and Roadster (a red sports car on a dark road into a red dusk). Pick them in Settings > Look and Settings > Themes, or during setup.
 - **No greeting until you type your name:** the line under the car is empty until you enter your name in setup or Settings.
 
 ## 1.41: The OpenRath wheel on opening
