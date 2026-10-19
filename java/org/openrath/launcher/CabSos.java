@@ -129,6 +129,7 @@ final class CabSos {
         bp.topMargin = Ui.px(20);
         bp.gravity = Gravity.CENTER_HORIZONTAL;
         col.addView(cancel, bp);
+        Edge.fit(col);
         d.setContentView(col);
         final String who = c1 != null && c2 != null ? Hindi.f("%1$s and %2$s", c1[0], c2[0]) : c1 != null ? c1[0] : c2 != null ? c2[0] : "";
         info.setText(Hindi.f("Sending SOS with your location to %1$s", who));

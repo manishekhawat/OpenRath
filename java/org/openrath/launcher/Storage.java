@@ -18,6 +18,19 @@ final class Storage {
         return new File(root(), sub);
     }
 
+    /** A file named by a theme or a backup: the bare name only, never a path ("." and ".." give `fallback`). */
+    static String bareName(String name, String fallback) {
+        String n = name == null ? "" : new File(name).getName();
+        return n.isEmpty() || n.equals(".") || n.equals("..") ? fallback : n;
+    }
+
+    /** The folder a .zip unpacks into, from its file name; null when no usable name is left ("..zip"). */
+    static String folderFor(String zipName) {
+        String folder = zipName == null ? "" : zipName.replaceAll("(?i)\\.zip$", "").replaceAll("[^A-Za-z0-9 _.-]", "_").trim();
+        if (folder.isEmpty() || folder.replace(".", "").isEmpty()) return null;   // ".", ".." and the like
+        return folder;
+    }
+
     /** Rename OpenRath/ to OpenRath/ when only the old one exists; true when it moved. */
     static boolean migrate() {
         try {

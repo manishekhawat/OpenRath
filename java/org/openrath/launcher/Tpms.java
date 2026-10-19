@@ -66,7 +66,7 @@ final class Tpms {
                     for (int w = 0; w < 4; w++) {
                         if (t.id.equals(p.str("tpms" + w, ""))) {
                             tyres[w] = t;
-                            app.sendBroadcast(new Intent(Drive.CHANGED).setPackage(app.getPackageName()));
+                            Compat.send(app, new Intent(Drive.CHANGED));
                         }
                     }
                 }

@@ -77,7 +77,7 @@ final class About {
         }
         String[] names = new String[files.size()];
         for (int i = 0; i < names.length; i++) names[i] = files.get(i).getName();
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Crash reports (in OpenRath/logs)")).setItems(names, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Crash reports")).setItems(names, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 final String body = Crash.read(files.get(w));
@@ -90,7 +90,7 @@ final class About {
                                 try {
                                     a.startActivity(Intent.createChooser(s, Hindi.t("Share the report")));
                                 } catch (Throwable e) {
-                                    Toast.makeText(a, Hindi.t("No app to share with; the file is in OpenRath/logs"), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(a, Hindi.t("No app to share with"), Toast.LENGTH_LONG).show();
                                 }
                             }
                         }).setNegativeButton(Hindi.t("Close"), null).show();

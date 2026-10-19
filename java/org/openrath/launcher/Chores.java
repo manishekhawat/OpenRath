@@ -200,6 +200,7 @@ final class Chores {
                 d.dismiss();
             }
         });
+        Edge.fit(img);
         d.setContentView(img);
         d.show();
         Toast.makeText(a, Hindi.f("Taken %1$s. Tap to close.", new java.text.SimpleDateFormat("EEE h:mm a", java.util.Locale.US).format(new java.util.Date(f.lastModified()))), Toast.LENGTH_LONG).show();

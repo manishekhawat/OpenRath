@@ -899,4 +899,9 @@
     <string name="ui_thanks_to" formatted="false">धन्यवाद</string>
     <string name="ui_hold_a_steering_wheel_button" formatted="false">स्टीयरिंग-व्हील बटन दबाए रखें</string>
     <string name="ui_each_button_can_do_a_second_action_when_" formatted="false">हर बटन दबाए रखने पर कोई दूसरा काम भी कर सकता है</string>
+    <string name="ui_call_1_s" formatted="false">%1$s को कॉल करें?</string>
+    <string name="ui_it_is_not_openrath" formatted="false">यह OpenRath नहीं है</string>
+    <string name="ui_it_is_not_newer_than_this_version" formatted="false">यह इस संस्करण से नया नहीं है</string>
+    <string name="ui_it_is_signed_with_a_different_key" formatted="false">इस पर किसी दूसरी कुंजी से हस्ताक्षर है</string>
+    <string name="ui_too_many_wrong_pins_try_again_in_1_s_s" formatted="false">बहुत बार ग़लत पिन। %1$s सेकंड बाद फिर कोशिश करें</string>
 </resources>
