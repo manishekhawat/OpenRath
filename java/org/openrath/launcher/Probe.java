@@ -160,6 +160,11 @@ final class Probe {
     /** Interfaces and constants in a Topway system app: the vocabulary of its messages. */
     private static void constants(Activity a, String pkg, StringBuilder out) throws Exception {
         ApplicationInfo ai = a.getPackageManager().getApplicationInfo(pkg, 0);
+        // reading a constant runs the class's code: only for the firmware's own apps
+        if (!Compat.systemFlags(ai.flags)) {
+            out.append(pkg).append(" constants: skipped, not part of the firmware\n\n");
+            return;
+        }
         ClassLoader cl = a.createPackageContext(pkg, android.content.Context.CONTEXT_INCLUDE_CODE
                 | android.content.Context.CONTEXT_IGNORE_SECURITY).getClassLoader();
         out.append("■ ").append(pkg).append(" classes\n");

@@ -21,8 +21,9 @@ import java.security.MessageDigest;
 /**
  * New versions from the project's GitHub releases. Once a day it reads a small update.json from the
  * latest release ({"versionCode", "versionName", "apk", "sha256"}), downloads a newer APK, checks
- * its SHA-256, and offers to install it only while the car is parked. Android itself refuses an
- * APK signed with a different key. Nothing is sent: it only downloads.
+ * its SHA-256, and offers to install it only while the car is parked. Before installing it checks
+ * the APK is OpenRath, newer, and signed with the same key (Android refuses another key too).
+ * Nothing is sent: it only downloads.
  */
 final class Updates {
 
@@ -142,7 +143,59 @@ final class Updates {
                 .setNegativeButton(Hindi.t("Later"), null).show();
     }
 
+    /**
+     * Why a downloaded APK may not be installed, or null when it may: it must be OpenRath, newer than
+     * the installed version, and signed with the same key. Kept apart from Android for the tests.
+     */
+    static String refusal(String pkg, String ours, long code, long installed, java.util.Set<String> signers, java.util.Set<String> ourSigners) {
+        if (pkg == null || !pkg.equals(ours)) return Hindi.t("it is not OpenRath");
+        if (code <= installed) return Hindi.t("it is not newer than this version");
+        if (signers == null || signers.isEmpty() || ourSigners == null || !signers.equals(ourSigners))
+            return Hindi.t("it is signed with a different key");
+        return null;
+    }
+
+    /** The signing certificates of a package, installed (`path` null) or in an APK file, as hex. */
+    @SuppressWarnings("deprecation")
+    private static java.util.Set<String> signers(Context c, String path) {
+        java.util.Set<String> out = new java.util.HashSet<>();
+        android.content.pm.PackageManager pm = c.getPackageManager();
+        android.content.pm.Signature[] sigs = null;
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= 28) {
+                // GET_SIGNING_CERTIFICATES and PackageInfo.signingInfo (Android 9), by reflection: the build's android.jar predates them
+                int flag = 0x08000000;
+                android.content.pm.PackageInfo pi = path == null ? pm.getPackageInfo(c.getPackageName(), flag) : pm.getPackageArchiveInfo(path, flag);
+                Object si = pi == null ? null : android.content.pm.PackageInfo.class.getField("signingInfo").get(pi);
+                if (si != null) sigs = (android.content.pm.Signature[]) si.getClass().getMethod("getApkContentsSigners").invoke(si);
+            } else {
+                int flag = android.content.pm.PackageManager.GET_SIGNATURES;
+                android.content.pm.PackageInfo pi = path == null ? pm.getPackageInfo(c.getPackageName(), flag) : pm.getPackageArchiveInfo(path, flag);
+                if (pi != null) sigs = pi.signatures;
+            }
+        } catch (Exception ignored) {
+        }
+        if (sigs != null) for (android.content.pm.Signature s : sigs) out.add(s.toCharsString());
+        return out;
+    }
+
+    /** Checks the downloaded APK against the installed app; null when it may be installed. */
+    @SuppressWarnings("deprecation")
+    private static String check(Context c, File f) {
+        android.content.pm.PackageInfo pi = c.getPackageManager().getPackageArchiveInfo(f.getPath(), 0);
+        if (pi == null) return Hindi.t("it is not OpenRath");
+        return refusal(pi.packageName, c.getPackageName(), pi.versionCode, ours(c), signers(c, f.getPath()), signers(c, null));
+    }
+
     private static void install(Context c) {
+        File apk = apk(c);
+        String why = check(c, apk);
+        if (why != null) {
+            apk.delete();
+            new Prefs(c).put("updateReady", "");
+            Toast.makeText(c, Hindi.f("Couldn't install the update: %1$s", why), Toast.LENGTH_LONG).show();
+            return;
+        }
         try {
             PackageInstaller pi = c.getPackageManager().getPackageInstaller();
             PackageInstaller.SessionParams sp = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
@@ -184,7 +237,7 @@ final class Updates {
 
     private static HttpURLConnection open(String u) throws Exception {
         if (!safe(u)) throw new Exception("not https");
-        HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
+        HttpURLConnection c = Compat.https(u);
         c.setConnectTimeout(15000);
         c.setReadTimeout(30000);
         c.setInstanceFollowRedirects(true);

@@ -58,13 +58,9 @@ final class Stereo {
         }
     }
 
+    /** The maker's app is on the unit as part of the firmware (an app installed under its name doesn't count). */
     private static boolean has(PackageManager pm, String pkg) {
-        try {
-            pm.getPackageInfo(pkg, 0);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        return Compat.isSystemApp(pm, pkg);
     }
 
     private static boolean cls(String name) {

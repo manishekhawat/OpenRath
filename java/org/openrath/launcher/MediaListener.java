@@ -33,7 +33,7 @@ public class MediaListener extends NotificationListenerService {
                 app = pkg;
             }
             if (!Ticker.post(app, title == null ? "" : title.toString(), text == null ? "" : text.toString())) return;
-            sendBroadcast(new Intent(Ticker.CHANGED).setPackage(getPackageName()));
+            Compat.send(this, new Intent(Ticker.CHANGED));
         } catch (Throwable ignored) {
         }
     }

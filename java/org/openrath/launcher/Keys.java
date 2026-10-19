@@ -27,6 +27,46 @@ final class Keys {
             "Paid parking reminder", "Guest Wi-Fi code", "Read the news aloud",
             "Cab menu", "Fare meter start / stop", "Cab SOS"};
     static final String ACTION = "org.openrath.launcher.KEY_ACTION";
+    /** The extra on a key action that carries this install's token (see token()). */
+    static final String TOKEN = "token";
+    private static volatile String token;
+
+    /**
+     * A random code made once per install and kept in the settings (never in backups). OpenRath's
+     * own key actions carry it; the dashboard ignores a key action without it, so another app
+     * can't make it answer a call, start an SOS or switch the hotspot on.
+     */
+    static String token(Context c) {
+        String t = token;
+        if (t != null) return t;
+        synchronized (Keys.class) {
+            if (token != null) return token;
+            Prefs p = new Prefs(c.getApplicationContext());
+            t = p.str("keyToken", "");
+            if (t.length() < 32) {
+                byte[] b = new byte[16];
+                new java.security.SecureRandom().nextBytes(b);
+                StringBuilder h = new StringBuilder();
+                for (byte x : b) h.append(String.format(java.util.Locale.US, "%02x", x & 0xFF));
+                t = h.toString();
+                p.put("keyToken", t);
+            }
+            token = t;
+            return t;
+        }
+    }
+
+    /** Whether the token on an intent is this install's. Kept apart from Android for the tests. */
+    static boolean tokenOk(String want, String got) {
+        if (want == null || got == null || want.length() < 32) return false;
+        return java.security.MessageDigest.isEqual(want.getBytes(java.nio.charset.StandardCharsets.UTF_8),
+                got.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+    }
+
+    /** The intent that hands a key action to the dashboard, with the token. */
+    static Intent intent(Context c, String action) {
+        return new Intent(c, HomeActivity.class).setAction(ACTION).putExtra("action", action).putExtra(TOKEN, token(c));
+    }
 
     /** The main thread's handler, made when first needed (so the press logic can be tested off Android). */
     private static final class Main {
@@ -222,13 +262,12 @@ final class Keys {
                     android.media.AudioManager.FLAG_SHOW_UI);
             return;
         }
-        Intent i = new Intent(app, HomeActivity.class).setAction(ACTION).putExtra("action", action)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Intent i = intent(app, action).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         boolean showsScreen = "dash".equals(action) || "voice".equals(action) || "screen".equals(action) || "page".equals(action)
                 || "driver".equals(action) || "docs".equals(action) || "kids".equals(action) || "fog".equals(action)
                 || "share".equals(action) || "split".equals(action) || "parkTimer".equals(action) || "hotspot".equals(action);
         if (showsScreen || HomeActivity.visible) app.startActivity(i);
-        else app.sendBroadcast(new Intent(ACTION).setPackage(app.getPackageName()).putExtra("action", action));
+        else Compat.send(app, new Intent(ACTION).putExtra("action", action).putExtra(TOKEN, token(app)));
     }
 
     private Keys() {
