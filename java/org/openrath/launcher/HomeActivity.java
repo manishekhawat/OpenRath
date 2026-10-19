@@ -300,6 +300,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     void build() {
         hub.clearListeners();
         dash.removeAllViews();
+        Motion.load(prefs);
         dash.swapped = prefs.swapped();
         dash.setSizes(prefs.str("boxSizes", null));
         dash.dockAt = prefs.str("dockAt", "left");
@@ -689,11 +690,13 @@ public class HomeActivity extends Activity implements Cards.Host {
     }
 
     void parkHere() {
-        if (hub.fix == null) {
+        // only a live GPS fix: the network's rough position or an old one can be hundreds of metres off
+        android.location.Location f = hub.liveFix();
+        if (f == null) {
             Toast.makeText(this, Hindi.t("No GPS position yet"), Toast.LENGTH_LONG).show();
             return;
         }
-        Drive.setPark(this, hub.fix.getLatitude(), hub.fix.getLongitude());
+        Drive.setPark(this, f.getLatitude(), f.getLongitude());
         Toast.makeText(this, Hindi.t("Parking spot saved"), Toast.LENGTH_SHORT).show();
     }
 
@@ -1043,6 +1046,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         hub.start();
         Extras.resumed(this);
         Reports.maybeSend(versionName());
+        Updates.resumed(this);
         highwayStrip();
         dash.postDelayed(new Runnable() {
             @Override

@@ -10,11 +10,11 @@ final class Prefs {
     static final String CAR = "car", CLOCK = "clock", WEATHER = "weather", MAP = "map",
             RADIO = "radio", MUSIC = "music", TRIP = "trip", FUEL = "fuel", PHONE = "phone",
             OBD = "obd", TYRES = "tyres", WIDGET1 = "widget1", WIDGET2 = "widget2", PERF = "perf", NEWS = "news", CAB = "cab",
-            COMPASS = "compass", SOUNDS = "sounds";
-    static final String[] CONTENTS = {CAR, CLOCK, WEATHER, MAP, RADIO, MUSIC, TRIP, FUEL, PHONE, OBD, TYRES, NEWS, CAB, COMPASS, SOUNDS, PERF, WIDGET1, WIDGET2};
+            COMPASS = "compass", SOUNDS = "sounds", CALENDAR = "calendar", VIDEO = "video";
+    static final String[] CONTENTS = {CAR, CLOCK, WEATHER, MAP, RADIO, MUSIC, TRIP, FUEL, PHONE, OBD, TYRES, NEWS, CAB, COMPASS, SOUNDS, CALENDAR, VIDEO, PERF, WIDGET1, WIDGET2};
     static final String[] CONTENT_NAMES = {"Car and speed", "Clock and date", "Weather", "Map",
             "Radio", "Music", "Trip computer", "Fuel log", "Phone", "Engine (OBD-II)", "Tyre pressure", "News (top 5 headlines)", "Cab driver (earnings, meter)",
-            "Compass and altitude", "Soundboard (horn and fun sounds)", "Performance (FPS, CPU, temperature)", "Widget from another app", "Second widget"};
+            "Compass and altitude", "Soundboard (horn and fun sounds)", "Calendar", "Video (picture only when parked)", "Performance (FPS, CPU, temperature)", "Widget from another app", "Second widget"};
 
     // Boxes: left column top (50%), middle (25%), bottom (25%); right column top (75%), bottom (25%)
     static final int SLOTS = 5;

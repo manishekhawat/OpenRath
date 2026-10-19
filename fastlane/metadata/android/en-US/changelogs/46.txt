@@ -1,0 +1,1 @@
+Search, pinned and recent apps in All apps; Wi-Fi, signal, Bluetooth, GPS and battery icons in the dock; saved places for any navigation app; a calendar box; a parked-only video box; hourly weather; smoother speed; a Less movement setting; optional updates from GitHub; and fixes for map crashes and replayed GPS fixes.

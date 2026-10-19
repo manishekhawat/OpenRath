@@ -4,7 +4,7 @@ OpenRath has no account, no ads, no analytics and no tracking. It never sends an
 
 ## What stays on the unit
 
-Trips, driving score, recorded routes (GPX), fuel and toll logs, the parking spot, service reminders, phone favourites, learnt car signals and steering-wheel buttons, OBD-II and tyre readings, crash reports, settings and backups.
+Trips, saved places, driving score, recorded routes (GPX), fuel and toll logs, the parking spot, service reminders, phone favourites, learnt car signals and steering-wheel buttons, OBD-II and tyre readings, crash reports, settings and backups.
 
 - Backups are written to `OpenRath/backup` on the unit's own storage. Anyone with the unit can read them.
 - Crash reports are written to `OpenRath/logs` and are only shared if the owner taps **Share**.
@@ -32,6 +32,7 @@ Each of these can be switched off under **Turn on or off** in its Settings secti
 | Place search | Photon (photon.komoot.io), and Nominatim (nominatim.openstreetmap.org) if Photon doesn't answer | What was typed or said, and the map centre (Photon only) |
 | Voice search | The unit's speech recogniser, usually Google | The spoken words |
 | Online radio | radio-browser.info, then the radio station itself | The station list request, and the stream |
+| App updates from GitHub (off until switched on) | GitHub (github.com, and its download servers) | Nothing about you or the car; only the request for update.json and the APK, once a day |
 
 Every request goes directly from the unit to that service, so each service also sees the unit's internet address.
 
@@ -39,7 +40,7 @@ Every request goes directly from the unit to that service, so each service also 
 
 Some things open another app, which then follows its own privacy policy. OpenRath sends nothing itself.
 
-- **Guidance in another app:** Google Maps, Organic Maps or OsmAnd receive the destination when guidance is handed to them.
+- **Guidance in another app:** Google Maps, Organic Maps or OsmAnd receive the destination when guidance is handed to them, and the saved place you tap in Saved places.
 - **Spoken voice:** when the unit has no text-to-speech voice, OpenRath offers to open "Speech Services by Google" in the Play Store.
 - **QR codes** (parking spot, calendar reminder, UPI payment, SOS text) are drawn on the unit. Nothing is sent until a phone scans one and opens the link.
 
@@ -67,6 +68,10 @@ Android asks the owner for most of these. Saying no turns off only the features 
 | Call logs | The last calls in the phone box |
 | SMS | Cab SOS, only when you trigger it |
 | Camera | The dashcam, and photos of items left in the car |
+| Calendar (optional) | The calendar box: today's and the next few days' events, read on the unit and never stored |
+| Videos (Android 13 and newer) | The video box |
+| Wi-Fi state | The Wi-Fi icon in the dock |
+| Install and remove apps | Installing a downloaded OpenRath update after you confirm, and Uninstall in the all-apps screen. Android asks you each time. |
 | Display over other apps (optional) | The floating mic button on top of other apps |
 | See all apps | The app drawer and picking apps for buttons, which is what a home screen needs |
 | Internet | The services above |
