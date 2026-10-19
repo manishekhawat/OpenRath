@@ -897,4 +897,6 @@
     <string name="ui_clean_white_cards_on_light_grey_with_one" formatted="false">हल्के ग्रे पर साफ़ सफ़ेद कार्ड और एक नीला रंग, इलेक्ट्रिक कार की स्क्रीन जैसा</string>
     <string name="ui_carbon_black_and_racing_red_for_a_sports" formatted="false">स्पोर्ट्स कार के लिए कार्बन काला और रेसिंग लाल</string>
     <string name="ui_thanks_to" formatted="false">धन्यवाद</string>
+    <string name="ui_hold_a_steering_wheel_button" formatted="false">स्टीयरिंग-व्हील बटन दबाए रखें</string>
+    <string name="ui_each_button_can_do_a_second_action_when_" formatted="false">हर बटन दबाए रखने पर कोई दूसरा काम भी कर सकता है</string>
 </resources>
