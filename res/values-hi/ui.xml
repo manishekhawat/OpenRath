@@ -897,4 +897,9 @@
     <string name="ui_clean_white_cards_on_light_grey_with_one" formatted="false">हल्के ग्रे पर साफ़ सफ़ेद कार्ड और एक नीला रंग, इलेक्ट्रिक कार की स्क्रीन जैसा</string>
     <string name="ui_carbon_black_and_racing_red_for_a_sports" formatted="false">स्पोर्ट्स कार के लिए कार्बन काला और रेसिंग लाल</string>
     <string name="ui_thanks_to" formatted="false">धन्यवाद</string>
+    <string name="ui_call_1_s" formatted="false">%1$s को कॉल करें?</string>
+    <string name="ui_it_is_not_openrath" formatted="false">यह OpenRath नहीं है</string>
+    <string name="ui_it_is_not_newer_than_this_version" formatted="false">यह इस संस्करण से नया नहीं है</string>
+    <string name="ui_it_is_signed_with_a_different_key" formatted="false">इस पर किसी दूसरी कुंजी से हस्ताक्षर है</string>
+    <string name="ui_too_many_wrong_pins_try_again_in_1_s_s" formatted="false">बहुत बार ग़लत पिन। %1$s सेकंड बाद फिर कोशिश करें</string>
 </resources>

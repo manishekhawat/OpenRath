@@ -39,6 +39,20 @@ final class MapCard extends Cards.Card {
 
     static final String MAP_BASE = "https://openrath.local/";
     final WebView web;
+    /** The map's own page is on screen (checked on the main thread as pages start). The bridge answers only then. */
+    private volatile boolean ownPage;
+
+    /** True for an address on the map's own made-up origin, https://openrath.local. */
+    static boolean ownOrigin(String url) {
+        if (url == null) return false;
+        try {
+            java.net.URI u = new java.net.URI(url);
+            return "https".equalsIgnoreCase(u.getScheme()) && "openrath.local".equalsIgnoreCase(u.getHost())
+                    && u.getPort() == -1 && u.getUserInfo() == null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     double lastLat, lastLon;
     long lastPark = -1;
     boolean ready;
@@ -49,7 +63,9 @@ final class MapCard extends Cards.Card {
         web = new WebView(c);
         WebSettings ws = web.getSettings();
         ws.setJavaScriptEnabled(true);
-        ws.setAllowFileAccess(true);
+        // the page and its scripts come from the made-up origin below, not from files
+        ws.setAllowFileAccess(false);
+        ws.setAllowContentAccess(false);
         web.setBackgroundColor(0xFF0E0F12);
         ws.setDomStorageEnabled(true);
         final android.content.res.AssetManager assets = c.getAssets();
@@ -77,7 +93,26 @@ final class MapCard extends Cards.Card {
             }
 
             @Override
+            public void onPageStarted(WebView v, String url, android.graphics.Bitmap icon) {
+                ownPage = ownOrigin(url);
+            }
+
+            // the map stays on its own page: a link elsewhere (the map's credits) opens in the
+            // browser when tapped, and anything else is ignored
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView v, android.webkit.WebResourceRequest r) {
+                return leave(r.getUrl() == null ? null : r.getUrl().toString(), r.isForMainFrame() && r.hasGesture());
+            }
+
+            @Override
+            @SuppressWarnings("deprecation")
+            public boolean shouldOverrideUrlLoading(WebView v, String url) {
+                return leave(url, false);
+            }
+
+            @Override
             public void onPageFinished(WebView v, String url) {
+                ownPage = ownOrigin(url);
                 ready = true;
                 lastLat = lastLon = 0;
                 lastPark = -1;
@@ -102,6 +137,7 @@ final class MapCard extends Cards.Card {
                 }
             }
         });
+        ownPage = true;   // the only page this WebView ever loads; any other one turns the bridge off
         web.loadUrl(MAP_BASE + "map.html");
         final float r = Ui.RADIUS * Ui.k;
         setOutlineProvider(new ViewOutlineProvider() {
@@ -122,12 +158,39 @@ final class MapCard extends Cards.Card {
         addView(ring, new LayoutParams(-1, -1));
     }
 
-    /** What the map page can ask of the app. */
+    /** True to keep the map from loading `url`; a tapped web link opens in the browser instead. */
+    private boolean leave(String url, boolean tapped) {
+        if (ownOrigin(url)) return false;
+        if (tapped && url != null && url.toLowerCase(Locale.US).startsWith("https://")) {
+            try {
+                getContext().startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))
+                        .addCategory(android.content.Intent.CATEGORY_BROWSABLE).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
+            } catch (Throwable ignored) {   // no browser on the unit
+            }
+        }
+        return true;
+    }
+
+    /** Run a bridge request on the main thread, only while the map's own page is the one showing. */
+    private void fromPage(final Runnable r) {
+        if (!ownPage) return;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (ownOrigin(web.getUrl())) r.run();
+            }
+        });
+    }
+
+    /**
+     * What the map page can ask of the app. Requests are answered only while the map's own page
+     * (https://openrath.local) is loaded; the page can't go anywhere else.
+     */
     final class Bridge {
         /** Turn-by-turn in Google Maps (when navigation is set to Google Maps). */
         @android.webkit.JavascriptInterface
         public void navigate(final double lat, final double lon, final String name) {
-            post(new Runnable() {
+            fromPage(new Runnable() {
                 @Override
                 public void run() {
                     host.navigate(lat, lon, name);
@@ -137,19 +200,20 @@ final class MapCard extends Cards.Card {
 
         @android.webkit.JavascriptInterface
         public boolean online() {
-            return Player.online(getContext());
+            return ownPage && Player.online(getContext());
         }
 
         /** The offline map app Go hands over to without internet, or "" when there is none. */
         @android.webkit.JavascriptInterface
         public String offlineNavName() {
+            if (!ownPage) return "";
             String pkg = OfflineNav.app(getContext(), host.prefs());
             return pkg == null ? "" : OfflineNav.label(getContext(), pkg);
         }
 
         @android.webkit.JavascriptInterface
         public void navigateOffline(final double lat, final double lon, final String name) {
-            post(new Runnable() {
+            fromPage(new Runnable() {
                 @Override
                 public void run() {
                     host.navigateOffline(lat, lon, name);
@@ -160,17 +224,18 @@ final class MapCard extends Cards.Card {
         /** "own" to guide in this map, "google" to hand over to Google Maps. */
         @android.webkit.JavascriptInterface
         public String navMode() {
-            return host.prefs().source("navi");
+            return ownPage ? host.prefs().source("navi") : "own";
         }
 
         @android.webkit.JavascriptInterface
         public void setNavMode(String v) {
+            if (!ownPage) return;
             host.prefs().setSource("navi", "google".equals(v) ? "google" : "own");
         }
 
         @android.webkit.JavascriptInterface
         public void speak(final String text) {
-            post(new Runnable() {
+            fromPage(new Runnable() {
                 @Override
                 public void run() {
                     host.speak(text);
@@ -181,7 +246,7 @@ final class MapCard extends Cards.Card {
         /** Rain expected on the planned route ("" = none), shown in the weather box. */
         @android.webkit.JavascriptInterface
         public void routeRain(final String text) {
-            post(new Runnable() {
+            fromPage(new Runnable() {
                 @Override
                 public void run() {
                     Hub.routeRain = text == null ? "" : text;
@@ -192,13 +257,13 @@ final class MapCard extends Cards.Card {
         /** Rupees per toll plaza, for the route's toll estimate. */
         @android.webkit.JavascriptInterface
         public int tollRate() {
-            return Features.on(host.prefs(), "tolls") ? host.prefs().num("tollRate", 100) : 0;
+            return ownPage && Features.on(host.prefs(), "tolls") ? host.prefs().num("tollRate", 100) : 0;
         }
 
         /** Save where the car is now as the parking spot. */
         @android.webkit.JavascriptInterface
         public void parkHere(final double lat, final double lon) {
-            post(new Runnable() {
+            fromPage(new Runnable() {
                 @Override
                 public void run() {
                     Drive.setPark(getContext(), lat, lon);
@@ -209,10 +274,10 @@ final class MapCard extends Cards.Card {
         /** Call a place's phone number through the unit's Bluetooth phone. */
         @android.webkit.JavascriptInterface
         public void call(final String number) {
-            post(new Runnable() {
+            fromPage(new Runnable() {
                 @Override
                 public void run() {
-                    host.call(number);
+                    confirmCall(number);
                 }
             });
         }
@@ -220,12 +285,14 @@ final class MapCard extends Cards.Card {
         /** "Mine" on a service centre: kept for the service booking reminder. */
         @android.webkit.JavascriptInterface
         public void saveService(String name, String phone) {
+            if (!ownPage) return;
             host.prefs().put("myService", (name == null ? "" : name.replace("|", " ")) + "|" + (phone == null ? "" : phone));
         }
 
         /** Where the map is taking you, for the kids' distance countdown. */
         @android.webkit.JavascriptInterface
         public void destination(String name, double lat, double lon) {
+            if (!ownPage) return;
             if (!host.prefs().str("dest", "").startsWith((name == null ? "" : name.replace("|", " ")) + "|"))
                 host.prefs().put("destNick", "");   // a new place: the children's name for the old one no longer fits
             host.prefs().put("dest", (name == null ? "" : name.replace("|", " ")) + "|" + String.format(Locale.US, "%.6f|%.6f", lat, lon));
@@ -234,20 +301,20 @@ final class MapCard extends Cards.Card {
         /** The map's saved Home and Office, so drives can be named for the commute insights. */
         @android.webkit.JavascriptInterface
         public void savedPlace(String name, double lat, double lon) {
-            if ("Home".equals(name) || "Office".equals(name))
+            if (ownPage && ("Home".equals(name) || "Office".equals(name)))
                 host.prefs().put("place:" + name, String.format(Locale.US, "%.6f,%.6f", lat, lon));
         }
 
         /** Whether the parking panel shows its QR code. */
         @android.webkit.JavascriptInterface
         public boolean parkLink() {
-            return Features.on(host.prefs(), "parkLink");
+            return ownPage && Features.on(host.prefs(), "parkLink");
         }
 
         /** Tap on the parking panel's code: show it full screen and bright, which phones read far better. */
         @android.webkit.JavascriptInterface
         public void bigQr() {
-            post(new Runnable() {
+            fromPage(new Runnable() {
                 @Override
                 public void run() {
                     host.parkQr();
@@ -257,29 +324,44 @@ final class MapCard extends Cards.Card {
 
         @android.webkit.JavascriptInterface
         public String carBrand() {
-            return Car.brandName(host.prefs());
+            return !ownPage ? "" : Car.brandName(host.prefs());
         }
 
         /** Words to find the brand's workshops by in OpenStreetMap names, as a regular expression. */
         @android.webkit.JavascriptInterface
         public String brandWords() {
-            return Car.searchWords(Car.brand(host.prefs()), Car.brandName(host.prefs()));
+            return !ownPage ? "" : Car.searchWords(Car.brand(host.prefs()), Car.brandName(host.prefs()));
         }
 
         @android.webkit.JavascriptInterface
         public boolean serviceFinder() {
-            return Features.on(host.prefs(), "serviceFinder");
+            return ownPage && Features.on(host.prefs(), "serviceFinder");
         }
 
         @android.webkit.JavascriptInterface
         public void voice() {
-            post(new Runnable() {
+            fromPage(new Runnable() {
                 @Override
                 public void run() {
                     host.voiceSearch(MapCard.this);
                 }
             });
         }
+    }
+
+    /** A phone number from the map page: called only after the driver says yes. */
+    private void confirmCall(String number) {
+        final String n = number == null ? "" : number.replaceAll("[^0-9+]", "");
+        if (n.isEmpty() || !(getContext() instanceof android.app.Activity)) return;
+        new android.app.AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
+                .setMessage(Hindi.f("Call %1$s?", n))
+                .setPositiveButton(Hindi.t("Call"), new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface d, int w) {
+                        host.call(n);
+                    }
+                })
+                .setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     /** Run a function of the map page, e.g. "goFav('Home')". */

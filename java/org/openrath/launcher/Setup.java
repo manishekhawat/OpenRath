@@ -479,7 +479,8 @@ final class Setup extends FrameLayout {
         c.addView(label(Hindi.t("Used OpenRath before?")));
         space(c, 10);
         c.addView(row(Hindi.f("A backup from %1$s", when),
-                Hindi.t("Bring back those settings, the fuel log and trips. OpenRath restarts with them, and the rest of setup isn't needed."),
+                Hindi.t("Bring back those settings, the fuel log and trips. OpenRath restarts with them, and the rest of setup isn't needed.")
+                        + "\n" + Backup.label(f),
                 Hindi.t("Bring it back"), false, new Runnable() {
                     @Override
                     public void run() {

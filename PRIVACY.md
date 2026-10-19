@@ -6,8 +6,13 @@ OpenRath has no account, no ads, no analytics and no tracking. It never sends an
 
 Trips, saved places, driving score, recorded routes (GPX), fuel and toll logs, the parking spot, service reminders, phone favourites, learnt car signals and steering-wheel buttons, OBD-II and tyre readings, crash reports, settings and backups.
 
-- Backups are written to `OpenRath/backup` on the unit's own storage. Anyone with the unit can read them.
-- Crash reports are written to `OpenRath/logs` and are only shared if the owner taps **Share**.
+- These are in the `OpenRath` folder on the unit's shared storage, where anyone with the unit, and apps allowed to read files, can read them:
+  - backups, in `OpenRath/backup` (they leave out the valet PIN and the hotspot password);
+  - routes exported as GPX, in `OpenRath/gpx`;
+  - dashcam clips, in `OpenRath/dashcam`, when the dashcam is on;
+  - map tiles kept by versions before 1.43, in `OpenRath/maps/tiles` (read until cleared; new ones are kept in the app's private storage);
+  - themes, and pictures of items left in a cab.
+- Crash reports are kept in the app's private storage, with web addresses and position-like numbers removed, and are only shared if the owner taps **Share**.
 - Messages shown by the notification ticker are read on the unit and never stored.
 - Android's own cloud backup is turned off for OpenRath, so its data isn't copied to a Google account.
 
@@ -49,7 +54,7 @@ Some things open another app, which then follows its own privacy policy. OpenRat
 - **Data collected:** none. Nothing is sent to the people who make OpenRath, and there is no server of ours to send it to.
 - **Data shared:** only with the services in the table above, only when that feature is used, and only what the table lists.
 - **Encryption in transit:** every service above is reached over HTTPS. The one exception can be online radio: some stations only stream over plain HTTP, and that stream is not encrypted. The station list itself comes over HTTPS.
-- **Data deletion:** uninstalling OpenRath, or clearing its data in Android's settings, removes everything it kept. Files in the `OpenRath` folder (backups in `OpenRath/backup`, crash reports in `OpenRath/logs`, dashcam clips, GPX files, themes) belong to the owner and stay until the owner deletes them.
+- **Data deletion:** uninstalling OpenRath, or clearing its data in Android's settings, removes everything it kept. Files in the `OpenRath` folder (backups in `OpenRath/backup`, dashcam clips, GPX files, themes, older map tiles) belong to the owner and stay until the owner deletes them.
 
 ## Permissions
 

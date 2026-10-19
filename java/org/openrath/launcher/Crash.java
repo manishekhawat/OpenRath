@@ -19,11 +19,14 @@ import java.io.StringWriter;
 final class Crash {
 
     private static SharedPreferences sp;
+    private static File logs;
 
     /** Once per process, from App: later calls do nothing, so the handler isn't chained twice. */
     static synchronized void install(Context c) {
         if (sp != null) return;
         sp = c.getApplicationContext().getSharedPreferences("crash", Context.MODE_PRIVATE);
+        logs = new File(c.getApplicationContext().getFilesDir(), "logs");
+        moveOld();
         try {
             version = c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;
         } catch (Exception e) {
@@ -42,6 +45,7 @@ final class Crash {
                 e.printStackTrace(new PrintWriter(w));
                 String s = w.toString();
                 String running = sp.getString("running", null);
+                s = scrub(s);
                 SharedPreferences.Editor ed = sp.edit().putString("last", s.length() > 700 ? s.substring(0, 700) : s);
                 if (running != null) ed.remove("running").putBoolean("skip:" + running, true);
                 ed.commit();
@@ -51,8 +55,40 @@ final class Crash {
         });
     }
 
+    /** Crash reports: in the app's private storage, shown and shared from Help > Crash reports. */
     static File dir() {
-        return Storage.dir("logs");
+        return logs != null ? logs : new File("/nonexistent");
+    }
+
+    private static final java.util.regex.Pattern URL = java.util.regex.Pattern.compile("(?i)\\b[a-z][a-z0-9+.-]*://[^\\s\"'<>)]*");
+    private static final java.util.regex.Pattern COORD = java.util.regex.Pattern.compile("(?<![\\w.])-?\\d{1,3}\\.\\d{4,}(?![\\w.])");
+
+    /**
+     * A trace with what could say where the car was taken out: web and file addresses, and numbers
+     * that look like a latitude or longitude (four or more decimals). Line numbers stay.
+     */
+    static String scrub(String s) {
+        if (s == null) return null;
+        s = URL.matcher(s).replaceAll("<address>");
+        return COORD.matcher(s).replaceAll("<number>");
+    }
+
+    /** Earlier versions wrote reports to OpenRath/logs on shared storage: bring them in, scrubbed, and delete them there. */
+    private static void moveOld() {
+        try {
+            File[] l = Storage.dir("logs").listFiles();
+            if (l == null) return;
+            for (File f : l) {
+                if (!f.getName().startsWith("crash-") || !f.getName().endsWith(".txt")) continue;
+                if ((logs.isDirectory() || logs.mkdirs()) && f.length() < 256 * 1024) {
+                    java.io.Writer w = new java.io.FileWriter(new File(logs, f.getName()));
+                    w.write(scrub(read(f)));
+                    w.close();
+                }
+                f.delete();
+            }
+        } catch (Throwable ignored) {   // no storage permission: try next start
+        }
     }
 
     /** A crash report file for Help > Crash reports; the last 10 are kept. Nothing is sent anywhere. */

@@ -19,19 +19,74 @@ final class Compat {
     /** Context.RECEIVER_EXPORTED and RECEIVER_NOT_EXPORTED (API 33), spelt out for older SDKs. */
     static final int EXPORTED = 0x2, NOT_EXPORTED = 0x4;
 
+    /**
+     * The permission OpenRath's own broadcasts are sent with and received under. It is declared in
+     * AndroidManifest.xml at signature level, so only apps signed with OpenRath's key (OpenRath
+     * itself) hold it.
+     */
+    static final String OWN = "org.openrath.launcher.permission.OWN_BROADCAST";
+
     /** A receiver for broadcasts from the stereo's own apps and services (other packages). */
     static Intent fromOthers(Context c, BroadcastReceiver r, IntentFilter f) {
-        return register(c, r, f, EXPORTED);
+        return register(c, r, f, EXPORTED, null);
     }
 
-    /** A receiver for OpenRath's own broadcasts and the system's; other apps can't reach it. */
+    /**
+     * A receiver for OpenRath's own broadcasts. Before Android 13 a receiver registered in code can
+     * be reached by any app, so the sender must also hold OpenRath's own permission (see send()).
+     */
     static Intent ownOnly(Context c, BroadcastReceiver r, IntentFilter f) {
-        return register(c, r, f, NOT_EXPORTED);
+        return register(c, r, f, NOT_EXPORTED, OWN);
     }
 
-    private static Intent register(Context c, BroadcastReceiver r, IntentFilter f, int flag) {
-        if (Build.VERSION.SDK_INT >= 33) return c.registerReceiver(r, f, flag);
-        return c.registerReceiver(r, f);
+    /**
+     * A receiver for the system's protected broadcasts (screen off, managed settings changed). Only
+     * the system can send those, so no permission is asked of the sender.
+     */
+    static Intent fromSystem(Context c, BroadcastReceiver r, IntentFilter f) {
+        return register(c, r, f, NOT_EXPORTED, null);
+    }
+
+    private static Intent register(Context c, BroadcastReceiver r, IntentFilter f, int flag, String permission) {
+        if (Build.VERSION.SDK_INT >= 33) return c.registerReceiver(r, f, permission, null, flag);
+        return c.registerReceiver(r, f, permission, null);
+    }
+
+    /** Send one of OpenRath's own broadcasts: only to OpenRath, and only receivers holding its permission hear it. */
+    static void send(Context c, Intent i) {
+        c.sendBroadcast(i.setPackage(c.getPackageName()), OWN);
+    }
+
+    /** Whether OpenRath may fetch `url` itself: https only (plain http is left to radio streams). */
+    static boolean httpsOnly(String url) {
+        return url != null && url.regionMatches(true, 0, "https://", 0, 8) && url.length() > 8;
+    }
+
+    /** A connection for OpenRath's own downloads; refuses anything but https. */
+    static java.net.HttpURLConnection https(String url) throws java.io.IOException {
+        if (!httpsOnly(url)) throw new java.io.IOException("not https");
+        java.net.URLConnection c = new java.net.URL(url).openConnection();
+        if (!(c instanceof javax.net.ssl.HttpsURLConnection)) throw new java.io.IOException("not https");
+        return (java.net.HttpURLConnection) c;
+    }
+
+    /** FLAG_SYSTEM or FLAG_UPDATED_SYSTEM_APP: the app came with the firmware. */
+    static boolean systemFlags(int flags) {
+        return (flags & (android.content.pm.ApplicationInfo.FLAG_SYSTEM
+                | android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) != 0;
+    }
+
+    /**
+     * True when `pkg` is installed as part of the firmware. An app the owner installed under the same
+     * package name is not, so its code is never loaded into OpenRath.
+     */
+    static boolean isSystemApp(android.content.pm.PackageManager pm, String pkg) {
+        if (pm == null || pkg == null) return false;
+        try {
+            return systemFlags(pm.getApplicationInfo(pkg, 0).flags);
+        } catch (Throwable e) {
+            return false;
+        }
     }
 
     /**

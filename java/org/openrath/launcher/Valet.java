@@ -46,17 +46,59 @@ final class Valet {
         }
     }
 
+    /** Wrong PINs in a row: after five, no PIN is taken for a minute. Kept while the app runs. */
+    static final class Tries {
+        static final int MAX = 5;
+        static final long LOCK_MS = 60000;
+        private int wrong;
+        private long until;
+
+        /** Milliseconds left before a PIN may be tried again; 0 when it may be now. */
+        long waitMs(long now) {
+            return now < until ? until - now : 0;
+        }
+
+        void failed(long now) {
+            if (++wrong >= MAX) {
+                wrong = 0;
+                until = now + LOCK_MS;
+            }
+        }
+
+        void passed() {
+            wrong = 0;
+            until = 0;
+        }
+    }
+
+    private static final Tries tries = new Tries();
+
+    /** Says how long to wait, when too many wrong PINs locked entry; true then. */
+    private static boolean locked(Activity a) {
+        long w = tries.waitMs(android.os.SystemClock.elapsedRealtime());
+        if (w <= 0) return false;
+        Toast.makeText(a, Hindi.f("Too many wrong PINs. Try again in %1$s s", (w + 999) / 1000), Toast.LENGTH_LONG).show();
+        return true;
+    }
+
     /** Run `ok` straight away when valet mode is off, else after the right PIN. */
     static void unlock(final Activity a, final Prefs p, final Runnable ok) {
         if (!on(p)) {
             ok.run();
             return;
         }
+        if (locked(a)) return;
         askPin(a, Hindi.t("Valet mode is on. Enter the PIN"), new Pin() {
             @Override
             public void entered(String pin) {
-                if (pin.equals(pin(p))) ok.run();
-                else Toast.makeText(a, Hindi.t("Wrong PIN"), Toast.LENGTH_SHORT).show();
+                if (locked(a)) return;
+                if (pin.equals(pin(p))) {
+                    tries.passed();
+                    ok.run();
+                } else {
+                    tries.failed(android.os.SystemClock.elapsedRealtime());
+                    Toast.makeText(a, Hindi.t("Wrong PIN"), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

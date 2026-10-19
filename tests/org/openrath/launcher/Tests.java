@@ -411,9 +411,110 @@ public final class Tests {
         intro();
         setupScreens();
         bootArt();
+        securityFixes();
         buildFixes();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
+    }
+
+    /** Vendor code loading, key-action tokens, the map page, backups, downloads and file names. */
+    private static void securityFixes() {
+        // only the firmware's own apps have their code loaded
+        check("system app", Compat.systemFlags(android.content.pm.ApplicationInfo.FLAG_SYSTEM));
+        check("updated system app", Compat.systemFlags(android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP | 0x10));
+        check("installed app is not system", !Compat.systemFlags(0) && !Compat.systemFlags(0x10));
+        // key actions need this install's token
+        String tok = "0123456789abcdef0123456789abcdef";
+        check("key token matches", Keys.tokenOk(tok, tok));
+        check("key token missing", !Keys.tokenOk(tok, null) && !Keys.tokenOk(tok, ""));
+        check("key token wrong", !Keys.tokenOk(tok, tok.replace('0', '1')));
+        check("key token too short to trust", !Keys.tokenOk("", "") && !Keys.tokenOk("abc", "abc") && !Keys.tokenOk(null, null));
+        // the map page's own origin
+        check("map origin", MapCard.ownOrigin("https://openrath.local/map.html") && MapCard.ownOrigin("https://openrath.local/leaflet.js?v=1"));
+        check("map origin: other host", !MapCard.ownOrigin("https://openrath.local.evil.example/map.html")
+                && !MapCard.ownOrigin("https://evil.example/?u=https://openrath.local/"));
+        check("map origin: http, port, user", !MapCard.ownOrigin("http://openrath.local/map.html")
+                && !MapCard.ownOrigin("https://openrath.local:8443/map.html") && !MapCard.ownOrigin("https://x@openrath.local/"));
+        check("map origin: others", !MapCard.ownOrigin(null) && !MapCard.ownOrigin("file:///android_asset/map/map.html")
+                && !MapCard.ownOrigin("javascript:alert(1)") && !MapCard.ownOrigin("about:blank"));
+        // backups: secrets left out, and some settings never restored
+        check("backup leaves out the valet PIN", !Backup.backedUp("x:valetPin") && !Backup.backedUp("x:apPass") && !Backup.backedUp("x:keyToken"));
+        check("backup keeps settings and SOS contacts", Backup.backedUp("x:cabSos1") && Backup.backedUp("slot0") && Backup.backedUp("x:updateUrl"));
+        check("restore keeps SOS contacts", Backup.restorable("x:cabSos1") && Backup.restorable("x:cabSos2") && Backup.restorable("slot0"));
+        check("restore skips addresses", !Backup.restorable("x:updateUrl") && !Backup.restorable("x:reportUrl"));
+        check("restore skips secrets", !Backup.restorable("x:valetPin") && !Backup.restorable("x:apPass")
+                && !Backup.restorable("x:keyToken") && !Backup.restorable("x:valet"));
+        check("restore skips managed settings", !Backup.restorable("x:m:feat:radio") && !Backup.restorable("x:m:noDev") && !Backup.restorable(null));
+        try {
+            java.io.ByteArrayOutputStream o = new java.io.ByteArrayOutputStream();
+            eq("backup copy within the cap", 10L, Backup.copy(new java.io.ByteArrayInputStream(new byte[10]), o, 10));
+            eq("backup copy over the cap", -1L, Backup.copy(new java.io.ByteArrayInputStream(new byte[11]), new java.io.ByteArrayOutputStream(), 10));
+        } catch (Exception e) {
+            check("backup copy: " + e, false);
+        }
+        // online radio: web streams only
+        check("stream http", Player.streamable("http://stream.example:8000/live.mp3") && Player.streamable("HTTPS://s.example/a"));
+        check("stream not files", !Player.streamable("file:///sdcard/x.mp3") && !Player.streamable("content://media/1")
+                && !Player.streamable("rtsp://s.example/a") && !Player.streamable("") && !Player.streamable(null) && !Player.streamable("http://"));
+        check("own downloads https only", Compat.httpsOnly("https://api.open-meteo.com/v1") && Compat.httpsOnly("HTTPS://x.example")
+                && !Compat.httpsOnly("http://x.example") && !Compat.httpsOnly("https://") && !Compat.httpsOnly(null));
+        // updates: OpenRath, newer, same key
+        java.util.Set<String> key = new java.util.HashSet<>(java.util.Arrays.asList("3082aa")), other = new java.util.HashSet<>(java.util.Arrays.asList("3082bb"));
+        eq("update accepted", null, Updates.refusal("org.openrath.launcher", "org.openrath.launcher", 144, 143, key, key));
+        check("update other app", Updates.refusal("org.evil", "org.openrath.launcher", 144, 143, key, key) != null);
+        check("update not newer", Updates.refusal("org.openrath.launcher", "org.openrath.launcher", 143, 143, key, key) != null);
+        check("update other key", Updates.refusal("org.openrath.launcher", "org.openrath.launcher", 144, 143, other, key) != null);
+        check("update unsigned", Updates.refusal("org.openrath.launcher", "org.openrath.launcher", 144, 143, new java.util.HashSet<String>(), key) != null);
+        // theme zips and fonts: names, never paths
+        eq("theme folder", "My theme", Storage.folderFor("My theme.zip"));
+        eq("theme folder odd letters", "a_b", Storage.folderFor("a/b.ZIP"));
+        check("theme folder dots", Storage.folderFor("..zip") == null && Storage.folderFor("...zip") == null
+                && Storage.folderFor(".zip") == null && Storage.folderFor(" .zip") == null);
+        eq("theme font", "f.ttf", Storage.bareName("../../x/f.ttf", "font.otf"));
+        eq("theme font dots", "font.otf", Storage.bareName("..", "font.otf"));
+        eq("theme font empty", "font.otf", Storage.bareName("", "font.otf"));
+        // crash reports: no addresses or positions
+        String trace = "java.io.IOException: https://api.example/x?lat=28.613900&lon=77.209000 failed\n"
+                + "\tat org.openrath.launcher.Hub.get(Hub.java:499)\n at 28.6139, -77.2090 content://media/1";
+        String clean = Crash.scrub(trace);
+        check("scrub address", !clean.contains("api.example") && !clean.contains("content://"));
+        check("scrub position", !clean.contains("28.6139") && !clean.contains("77.2090"));
+        check("scrub keeps line numbers", clean.contains("Hub.java:499") && clean.contains("IOException"));
+        eq("scrub keeps versions", "OpenRath 1.43", Crash.scrub("OpenRath 1.43"));
+        // report address
+        check("reports address well formed", !Reports.sendable("https://user:pw@fleet.example/r") && !Reports.sendable("https:// bad")
+                && Reports.sendable(" https://fleet.example/r "));
+        // boot receiver and others
+        check("boot action", Resume.bootAction("android.intent.action.BOOT_COMPLETED") && Resume.bootAction("android.intent.action.QUICKBOOT_POWERON"));
+        check("not a boot action", !Resume.bootAction("org.evil.X") && !Resume.bootAction(null));
+        Valet.Tries t = new Valet.Tries();
+        for (int i = 0; i < 4; i++) t.failed(1000);
+        eq("valet: four wrong PINs", 0L, t.waitMs(1000));
+        t.failed(1000);
+        check("valet: fifth locks", t.waitMs(1000) == Valet.Tries.LOCK_MS);
+        eq("valet: lock ends", 0L, t.waitMs(1000 + Valet.Tries.LOCK_MS));
+        t.failed(70000);
+        t.passed();
+        eq("valet: right PIN clears", 0L, t.waitMs(70000));
+        String[] led = LedStrip.nameAndMac("ELK|BLE|AA:BB:CC:DD:EE:FF");
+        check("led strip name with a bar", "ELK|BLE".equals(led[0]) && "AA:BB:CC:DD:EE:FF".equals(led[1]));
+        check("art: content only", Hub.artUriOk("content://media/external/audio/albumart/1") && !Hub.artUriOk("file:///data/data/x/a.png")
+                && !Hub.artUriOk("android.resource://x/1") && !Hub.artUriOk(null));
+        // the map page's content security policy covers what the page loads
+        try {
+            String html = new String(java.nio.file.Files.readAllBytes(new java.io.File("assets/map/map.html").toPath()), "UTF-8");
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile("Content-Security-Policy\" content=\"([^\"]+)\"").matcher(html);
+            check("map CSP present", m.find());
+            String csp = m.group(1);
+            check("map CSP no eval", !csp.contains("unsafe-eval"));
+            java.util.regex.Matcher u = java.util.regex.Pattern.compile("'(https://[a-z0-9.-]+)/").matcher(html);
+            while (u.find()) {
+                if (u.group(1).equals("https://maps.google.com")) continue;   // inside a QR code, never loaded
+                check("map CSP allows " + u.group(1), csp.contains(u.group(1)));
+            }
+        } catch (Exception e) {
+            check("map CSP read: " + e, false);
+        }
     }
 
     private static void hindi() {
