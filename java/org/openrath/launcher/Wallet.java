@@ -203,6 +203,7 @@ final class Wallet {
                 }
             }
         });
+        Edge.fit(f);
         d.setContentView(f);
         d.show();
     }
