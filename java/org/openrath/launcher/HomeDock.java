@@ -140,6 +140,7 @@ final class HomeDock {
                     : new LinearLayout.LayoutParams(Ui.px(62), 0, 1f);
             v.setLayoutParams(p);
             v.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            gap(v, across);
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View x) {
@@ -178,6 +179,7 @@ final class HomeDock {
         ImageView gear = new ImageView(a);
         gear.setImageBitmap(Ui.img(a, "dock_settings"));
         gear.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        gap(gear, across);
         gear.setLayoutParams(across ? new LinearLayout.LayoutParams(0, Ui.px(62), 1f) : new LinearLayout.LayoutParams(Ui.px(62), 0, 1f));
         gear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +198,18 @@ final class HomeDock {
                 : new android.widget.FrameLayout.LayoutParams(thin, -1, "right".equals(at) ? Gravity.LEFT : Gravity.RIGHT);
         wrap.addView(line, lp);
         return wrap;
+    }
+
+    /**
+     * A little room either side of a ring along the dock, so on a short screen (a stereo's own status
+     * bar, the status icons) the rings shrink a touch and keep apart, the same gap between each,
+     * instead of touching. Where there's room the ring is already narrower than its space, so it
+     * doesn't change.
+     */
+    private static void gap(ImageView v, boolean across) {
+        int g = Ui.px(5);
+        if (across) v.setPadding(g, 0, g, 0);
+        else v.setPadding(0, g, 0, g);
     }
 
     /** Music and radio share their app with the music and radio boxes. */

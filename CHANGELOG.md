@@ -11,6 +11,7 @@ Newest first.
 - **Android 15:** OpenRath now targets Android 15 and keeps its screens clear of the status and navigation bars there.
 - **Diagnostics** in Settings > Help now list the errors OpenRath caught and carried on from since it started, and crashes are recorded from the moment the app starts.
 - **Hold a steering-wheel button** now has its own switch in Settings.
+- **Tidier Home screen settings:** the five rows for the boxes are now one, What the boxes show, which lists the boxes on this page and what each shows (a long-press on a box still does the same). The dock's rings keep a small gap between them on stereos whose own status bar makes the screen shorter, instead of touching.
 
 ## 1.42: Setup screens
 
