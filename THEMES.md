@@ -4,7 +4,7 @@ A theme is a folder of plain files. No app source, Android Studio or rebuild is 
 
 ## Built-in themes
 
-**Settings → Themes** shows every theme as a picture of the home screen in its colours. Five come with the app:
+**Settings → Themes** shows every theme as a picture of the home screen in its colours. Eight come with the app:
 
 | Theme | Look |
 | --- | --- |
@@ -13,6 +13,9 @@ A theme is a folder of plain files. No app source, Android Studio or rebuild is 
 | Minimal | Pure black, borderless boxes, one blue accent (Tesla-style) |
 | Auto | Soft dark grey cards and a light blue accent (Android Auto-style) |
 | Gen Z | Purple night gradient, see-through boxes, neon pink and mint |
+| Mission control | Black like space, white type and a cool blue, square corners, like a launch console |
+| Electric | Clean white cards on light grey, no borders, one blue, like an electric car's screen |
+| Roadster | Carbon black and racing red for a sports car |
 
 Their `theme.json` files are in `assets/themes/` in the source and make good starting points.
 

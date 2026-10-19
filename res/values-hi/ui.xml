@@ -891,4 +891,9 @@
     <string name="ui_this_stereo_has_no_voice_so_openrath_can" formatted="false">इस स्टीरियो में आवाज़ नहीं है, इसलिए OpenRath अलर्ट या मोड़ नहीं बोल सकता। Google की Speech Services मुफ़्त है।</string>
     <string name="ui_get_it" formatted="false">लें</string>
     <string name="ui_tip_long_press_any_box_to_change_what_it" formatted="false">सुझाव: बॉक्स में क्या दिखे यह बदलने के लिए उसे देर तक दबाएँ। सेटिंग्स बटन बार में गियर है।</string>
+    <string name="ui_mission_control" formatted="false">मिशन कंट्रोल</string>
+    <string name="ui_roadster" formatted="false">रोडस्टर</string>
+    <string name="ui_black_like_space_white_type_and_a_cool_b" formatted="false">अंतरिक्ष जैसा काला, सफ़ेद अक्षर और ठंडा नीला, लॉन्च कंसोल जैसा</string>
+    <string name="ui_clean_white_cards_on_light_grey_with_one" formatted="false">हल्के ग्रे पर साफ़ सफ़ेद कार्ड और एक नीला रंग, इलेक्ट्रिक कार की स्क्रीन जैसा</string>
+    <string name="ui_carbon_black_and_racing_red_for_a_sports" formatted="false">स्पोर्ट्स कार के लिए कार्बन काला और रेसिंग लाल</string>
 </resources>
