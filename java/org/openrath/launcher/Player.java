@@ -188,6 +188,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
         mp.setOnErrorListener(this);
         Eq.apply(this, new Prefs(this), mp.getAudioSessionId());
         try {
+            if (WEB.equals(mode) && !streamable(t.src)) throw new java.io.IOException("not a web stream");
             mp.setDataSource(t.src);
             busy = true;
             status = "";
@@ -331,6 +332,22 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
         songs.clear();
     }
 
+    /**
+     * A web radio address the player may open: http or https with a host, nothing else (no file:,
+     * content: or rtsp:). Plain http stays allowed because many stations only stream that way; see
+     * res/xml/network_security_config.xml.
+     */
+    static boolean streamable(String url) {
+        if (url == null) return false;
+        try {
+            java.net.URL u = new java.net.URL(url.trim());
+            String p = u.getProtocol().toLowerCase(Locale.US);
+            return (p.equals("http") || p.equals("https")) && u.getHost() != null && !u.getHost().isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     static List<Track> fetchStations(Context c) {
         SharedPreferences sp = c.getSharedPreferences("player", MODE_PRIVATE);
         String json = null;
@@ -356,7 +373,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
                 String codec = s.optString("codec", "").toUpperCase(Locale.US);
                 String url = s.optString("url_resolved", s.optString("url", ""));
                 String name = s.optString("name", "").trim();
-                if (url.isEmpty() || name.isEmpty() || seen.contains(name.toLowerCase(Locale.US))) continue;
+                if (!streamable(url) || name.isEmpty() || seen.contains(name.toLowerCase(Locale.US))) continue;
                 if (!(codec.contains("MP3") || codec.contains("AAC") || codec.isEmpty())) continue;
                 seen.add(name.toLowerCase(Locale.US));
                 String tags = s.optString("tags", "");
@@ -369,7 +386,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
     }
 
     private static String get(String u) throws Exception {
-        HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
+        HttpURLConnection c = Compat.https(u);
         c.setConnectTimeout(8000);
         c.setReadTimeout(10000);
         c.setRequestProperty("User-Agent", "OpenRath");
@@ -446,7 +463,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
                 .setState(playing ? PlaybackState.STATE_PLAYING : PlaybackState.STATE_PAUSED, 0, 1f).build());
         if (playing) errors = 0;
         foreground();
-        sendBroadcast(new Intent(CHANGED).setPackage(getPackageName()));
+        Compat.send(this, new Intent(CHANGED));
         if (t == null) return;
     }
 

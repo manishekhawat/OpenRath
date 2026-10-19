@@ -166,7 +166,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         tts = new TextToSpeech(this, this);
         screen = new Resume.Screen();
         android.content.IntentFilter sf = new android.content.IntentFilter(Intent.ACTION_SCREEN_OFF);
-        Compat.ownOnly(this, screen, sf);
+        Compat.fromSystem(this, screen, sf);
     }
 
     private Resume.Screen screen;
@@ -449,11 +449,11 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
             if (hw != 0) {
                 if (ttsReady) tts.speak(hw > 0 ? "Highway mode on. Messages will wait until you slow down." : Highway.endText(Highway.held),
                         TextToSpeech.QUEUE_ADD, null, "highway");
-                sendBroadcast(new Intent(HIGHWAY).setPackage(getPackageName()));
+                Compat.send(this, new Intent(HIGHWAY));
             }
         } else if (Highway.on) {
             highway.reset();
-            sendBroadcast(new Intent(HIGHWAY).setPackage(getPackageName()));
+            Compat.send(this, new Intent(HIGHWAY));
         }
         parkedMusic(kmh, now);
         learnt(kmh, now);
@@ -464,7 +464,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
             String low = FuelPlan.check(prefs);
             if (low != null) {
                 if (ttsReady) tts.speak(low, TextToSpeech.QUEUE_ADD, null, "fuel");
-                sendBroadcast(new Intent(FUEL_LOW).setPackage(getPackageName()));
+                Compat.send(this, new Intent(FUEL_LOW));
             }
         }
         if (Features.on(prefs, "parking")) parking(l, kmh, now);
@@ -523,7 +523,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         parkAt = System.currentTimeMillis();
         c.getSharedPreferences("drive", MODE_PRIVATE).edit().putFloat("parkLat", (float) lat)
                 .putFloat("parkLon", (float) lon).putLong("parkAt", parkAt).apply();
-        c.sendBroadcast(new Intent(CHANGED).setPackage(c.getPackageName()));
+        Compat.send(c, new Intent(CHANGED));
     }
 
     // ------------------------------------------------------------------ speed limit and cameras
@@ -631,7 +631,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     }
 
     private static String post(String u, String body) throws Exception {
-        HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
+        HttpURLConnection c = Compat.https(u);
         c.setConnectTimeout(8000);
         c.setReadTimeout(12000);
         c.setDoOutput(true);
@@ -803,7 +803,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         String h = mins >= 90 && mins % 60 < 15 ? (mins / 60) + (mins / 60 == 1 ? " hour" : " hours") : mins + " minutes";
         if (ttsReady) tts.speak("You've been driving for " + h + ". Time for a short break. Looking for a stop ahead.",
                 TextToSpeech.QUEUE_ADD, null, "rest");
-        sendBroadcast(new Intent(REST).setPackage(getPackageName()));
+        Compat.send(this, new Intent(REST));
     }
 
     private void accelDone(float t100, float t60) {
@@ -822,7 +822,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     }
 
     private void changed() {
-        sendBroadcast(new Intent(CHANGED).setPackage(getPackageName()));
+        Compat.send(this, new Intent(CHANGED));
     }
 
     @Override public void onStatusChanged(String p, int s, Bundle b) {}

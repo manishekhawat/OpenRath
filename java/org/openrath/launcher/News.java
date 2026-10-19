@@ -177,7 +177,7 @@ final class News {
     }
 
     private static String get(String url) throws java.io.IOException {
-        HttpURLConnection h = (HttpURLConnection) new URL(url).openConnection();
+        HttpURLConnection h = Compat.https(url);
         h.setConnectTimeout(10000);
         h.setReadTimeout(10000);
         h.setRequestProperty("User-Agent", "OpenRath (car head unit; open source home screen)");

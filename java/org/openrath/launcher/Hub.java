@@ -143,7 +143,7 @@ final class Hub implements LocationListener {
             });
         }
         if (fm != null) fm.open();
-        if (maker && xt == null && installed(Xt.PKG)) {
+        if (maker && xt == null && Compat.isSystemApp(ctx.getPackageManager(), Xt.PKG)) {
             xt = new Xt(ctx, new Xt.Listener() {
                 @Override
                 public void radioChanged() {
@@ -266,15 +266,6 @@ final class Hub implements LocationListener {
             handler.postDelayed(this, 400);
         }
     };
-
-    private boolean installed(String pkg) {
-        try {
-            ctx.getPackageManager().getPackageInfo(pkg, 0);
-            return true;
-        } catch (Throwable e) {
-            return false;
-        }
-    }
 
     private final Runnable tick = new Runnable() {
         @Override
@@ -434,12 +425,21 @@ final class Hub implements LocationListener {
     private static String artUri;
     private static android.graphics.Bitmap artFromUri;
 
-    /** The picture at the app's art address, when it's on the unit (content:, file:); kept while the address stays the same. */
+    /**
+     * Whether OpenRath opens an art address another app's media session gives: content: only, which
+     * the other app must share on purpose. A file: address would be opened with OpenRath's own
+     * storage access, so it isn't.
+     */
+    static boolean artUriOk(String u) {
+        return u != null && u.regionMatches(true, 0, "content:", 0, 8);
+    }
+
+    /** The picture at the app's art address (content:); kept while the address stays the same. */
     private android.graphics.Bitmap artFrom(MediaMetadata md) {
         String u = md.getString(MediaMetadata.METADATA_KEY_ART_URI);
         if (u == null) u = md.getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI);
         if (u == null) u = md.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI);
-        if (u == null || !(u.startsWith("content:") || u.startsWith("file:") || u.startsWith("android.resource:"))) return null;
+        if (!artUriOk(u)) return null;
         if (u.equals(artUri)) return artFromUri;
         artUri = u;
         artFromUri = null;
@@ -496,7 +496,7 @@ final class Hub implements LocationListener {
     // ------------------------------------------------------------------ weather
 
     private static String get(String url) throws java.io.IOException {
-        HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
+        HttpURLConnection c = Compat.https(url);
         c.setConnectTimeout(10000);
         c.setReadTimeout(10000);
         BufferedReader r = new BufferedReader(new InputStreamReader(c.getInputStream(), "UTF-8"));
@@ -712,7 +712,7 @@ final class Hub implements LocationListener {
             URL u = new URL(String.format(Locale.US,
                     "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=%.4f&longitude=%.4f&localityLanguage=en",
                     lat, lon));
-            HttpURLConnection c = (HttpURLConnection) u.openConnection();
+            HttpURLConnection c = Compat.https(u.toString());
             c.setConnectTimeout(10000);
             c.setReadTimeout(10000);
             BufferedReader r = new BufferedReader(new InputStreamReader(c.getInputStream(), "UTF-8"));
