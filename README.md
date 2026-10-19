@@ -8,6 +8,56 @@ A free, open source home screen for any Android-based aftermarket car stereo, wh
 
 **Goal:** one launcher for every Android aftermarket stereo. The core uses only standard Android; anything that needs a stereo maker's own services (Topway, FYT, MTCD/Joying) is an optional add-on with its own switch, so no feature depends on one maker.
 
+## Screenshots
+
+Taken on a 1024 x 600 screen, the usual 7 inch stereo size.
+
+**Dashboards**
+
+<table>
+<tr>
+<td align="center"><img src="docs/screenshots/dashboard-boxes.png" alt="Boxes" width="400"><br>Boxes</td>
+<td align="center"><img src="docs/screenshots/dashboard-wide-map.png" alt="Wide map" width="400"><br>Wide map</td>
+</tr>
+<tr>
+<td align="center"><img src="docs/screenshots/dashboard-scenery.png" alt="Scenery" width="400"><br>Scenery</td>
+<td align="center"><img src="docs/screenshots/dashboard-columns.png" alt="Columns" width="400"><br>Columns</td>
+</tr>
+<tr>
+<td align="center"><img src="docs/screenshots/dashboard-strip.png" alt="Strip" width="400"><br>Strip</td>
+<td align="center"><img src="docs/screenshots/dashboard-twin-dials.png" alt="Twin dials" width="400"><br>Twin dials</td>
+</tr>
+</table>
+
+**Setup on first start**
+
+<table>
+<tr>
+<td align="center"><img src="docs/screenshots/setup-welcome.png" alt="Welcome and language" width="400"><br>Welcome and language</td>
+<td align="center"><img src="docs/screenshots/setup-permissions.png" alt="Permissions" width="400"><br>Permissions</td>
+</tr>
+<tr>
+<td align="center"><img src="docs/screenshots/setup-car.png" alt="Your car" width="400"><br>Your car</td>
+<td align="center"><img src="docs/screenshots/setup-look.png" alt="Colour and layout" width="400"><br>Colour and layout</td>
+</tr>
+<tr>
+<td align="center"><img src="docs/screenshots/setup-level.png" alt="How much to show" width="400"><br>How much to show</td>
+<td align="center"><img src="docs/screenshots/setup-apps.png" alt="Your apps" width="400"><br>Your apps</td>
+</tr>
+<tr>
+<td align="center"><img src="docs/screenshots/setup-phone-home.png" alt="Phone and home app" width="400"><br>Phone and home app</td>
+<td align="center"><img src="docs/screenshots/setup-hindi.png" alt="In Hindi" width="400"><br>In Hindi</td>
+</tr>
+</table>
+
+**Settings**
+
+<table>
+<tr>
+<td align="center"><img src="docs/screenshots/settings.png" alt="Settings" width="400"><br>Settings</td>
+</tr>
+</table>
+
 ## Works with
 
 - **Any car.** On the first start, setup screens ask for the brand, model, shape, fuel (petrol, diesel, CNG, hybrid or electric) and tank size. The name beside the logo, the service centre search, fuel words and expected mileage all follow it. Change it any time in Settings > Car.
