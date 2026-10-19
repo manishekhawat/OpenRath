@@ -188,7 +188,7 @@ final class Prefs {
 
     /** Shown under the car; empty hides the line. */
     String welcome() {
-        return p.getString("welcome", "Manish Shekhawat");
+        return p.getString("welcome", "");
     }
 
     void setWelcome(String v) {

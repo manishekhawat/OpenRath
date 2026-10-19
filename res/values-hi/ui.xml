@@ -812,4 +812,83 @@
     <string name="ui_badges_1_s_of_2_s" formatted="false">बैज: %2$s में से %1$s</string>
     <string name="ui_openrath_logo_when_the_app_opens" formatted="false">ऐप खुलने पर OpenRath लोगो</string>
     <string name="ui_the_openrath_wheel_rolls_in_and_the_name" formatted="false">OpenRath का पहिया घूमकर आता है और नाम दिखता है, दो सेकंड के लिए; टैप करने पर छूट जाता है</string>
+    <string name="ui_setup_screens_on_first_open" formatted="false">ऐप पहली बार खुलने पर सेटअप</string>
+    <string name="ui_after_installing_language_permissions_yo" formatted="false">इंस्टॉल के बाद: भाषा, अनुमतियाँ, आपकी कार, लुक, कितना दिखाना है, आपके ऐप और होम ऐप, एक-एक करके</string>
+    <string name="ui_run_setup_again" formatted="false">सेटअप फिर से चलाएँ</string>
+    <string name="ui_language_car_look_apps_and_the_home_app_" formatted="false">भाषा, कार, लुक, ऐप और होम ऐप, एक-एक करके</string>
+    <string name="ui_welcome" formatted="false">स्वागत</string>
+    <string name="ui_permissions" formatted="false">अनुमतियाँ</string>
+    <string name="ui_your_car" formatted="false">आपकी कार</string>
+    <string name="ui_how_much" formatted="false">कितना</string>
+    <string name="ui_phone_and_home" formatted="false">फ़ोन और होम</string>
+    <string name="ui_location" formatted="false">लोकेशन</string>
+    <string name="ui_your_speed_the_map_speed_camera_alerts_a" formatted="false">आपकी स्पीड, मैप, स्पीड-कैमरा अलर्ट और ट्रिप रिकॉर्ड। यह यूनिट पर ही रहता है।</string>
+    <string name="ui_music_and_photos" formatted="false">संगीत और फ़ोटो</string>
+    <string name="ui_music_from_a_usb_stick_and_your_own_pict" formatted="false">USB स्टिक से संगीत, और कार व बैकग्राउंड के लिए आपकी अपनी तस्वीरें।</string>
+    <string name="ui_nearby_devices" formatted="false">आस-पास के डिवाइस</string>
+    <string name="ui_your_phone_s_calls_over_bluetooth_and_ob" formatted="false">Bluetooth से आपके फ़ोन की कॉल, और OBD या टायर सेंसर अगर आपके पास हैं।</string>
+    <string name="ui_phone_and_calls" formatted="false">फ़ोन और कॉल</string>
+    <string name="ui_shows_who_is_calling_and_lets_you_answer" formatted="false">कौन कॉल कर रहा है दिखाता है, और होम स्क्रीन से जवाब देने और वापस कॉल करने देता है।</string>
+    <string name="ui_notifications" formatted="false">सूचनाएँ</string>
+    <string name="ui_reminders_such_as_a_break_after_long_dri" formatted="false">याद दिलाना, जैसे लंबी ड्राइव के बाद आराम।</string>
+    <string name="ui_step_1_s_of_2_s" formatted="false">%2$s में से चरण %1$s</string>
+    <string name="ui_back" formatted="false">वापस</string>
+    <string name="ui_skip_setup" formatted="false">सेटअप छोड़ें</string>
+    <string name="ui_let_s_start" formatted="false">शुरू करें</string>
+    <string name="ui_allow_and_continue" formatted="false">अनुमति दें और आगे बढ़ें</string>
+    <string name="ui_start_driving" formatted="false">ड्राइव शुरू करें</string>
+    <string name="ui_skip_setup_2" formatted="false">सेटअप छोड़ें?</string>
+    <string name="ui_openrath_starts_with_its_usual_settings_" formatted="false">OpenRath अपनी सामान्य सेटिंग्स के साथ शुरू होगा। आप बाद में सेटिंग्स में सब सेट कर सकते हैं, या सेटिंग्स, मदद से यह सेटअप फिर चला सकते हैं।</string>
+    <string name="ui_skip" formatted="false">छोड़ें</string>
+    <string name="ui_keep_going" formatted="false">जारी रखें</string>
+    <string name="ui_all_set_long_press_any_box_or_open_setti" formatted="false">सब तैयार। कुछ बदलने के लिए किसी बॉक्स को देर तक दबाएँ, या सेटिंग्स खोलें।</string>
+    <string name="ui_let_s_get_your_stereo_ready_in_a_few_qui" formatted="false">कुछ आसान चरणों में अपना स्टीरियो तैयार करें। यह सब आप बाद में सेटिंग्स में बदल सकते हैं।</string>
+    <string name="ui_menus_and_voice_in_english" formatted="false">मेन्यू और आवाज़ अंग्रेज़ी में</string>
+    <string name="ui_allow_what_openrath_needs" formatted="false">OpenRath को जो चाहिए उसकी अनुमति दें</string>
+    <string name="ui_android_asks_about_each_one_refuse_any_y" formatted="false">Android हर एक के बारे में पूछेगा। आप कोई भी मना कर सकते हैं: सिर्फ़ वही हिस्सा काम करना बंद करेगा। कुछ भी ऑनलाइन नहीं भेजा जाता।</string>
+    <string name="ui_allowed" formatted="false">अनुमति है</string>
+    <string name="ui_not_allowed" formatted="false">अनुमति नहीं</string>
+    <string name="ui_not_yet" formatted="false">अभी नहीं</string>
+    <string name="ui_ask_again" formatted="false">फिर से पूछें</string>
+    <string name="ui_also_useful" formatted="false">यह भी काम का है</string>
+    <string name="ui_the_station_the_song_and_the_right_play_" formatted="false">स्टेशन, गाना और सही प्ले या पॉज़ बटन, सूचना ऐक्सेस से।</string>
+    <string name="ui_the_openrath_folder" formatted="false">OpenRath फ़ोल्डर</string>
+    <string name="ui_backups_themes_dashcam_clips_and_music_o" formatted="false">बैकअप, थीम, डैशकैम क्लिप और USB स्टिक पर संगीत।</string>
+    <string name="ui_used_openrath_before" formatted="false">पहले OpenRath इस्तेमाल किया है?</string>
+    <string name="ui_a_backup_from_1_s" formatted="false">%1$s का बैकअप</string>
+    <string name="ui_bring_back_those_settings_the_fuel_log_a" formatted="false">वो सेटिंग्स, फ़्यूल लॉग और ट्रिप वापस लाएँ। OpenRath उनके साथ फिर शुरू होगा, और बाकी सेटअप की ज़रूरत नहीं।</string>
+    <string name="ui_bring_it_back" formatted="false">वापस लाएँ</string>
+    <string name="ui_it_picks_the_car_picture_the_name_beside" formatted="false">इससे कार की तस्वीर, लोगो के पास का नाम, ईंधन के शब्द और सर्विस रिमाइंडर तय होते हैं।</string>
+    <string name="ui_brand_and_model" formatted="false">ब्रांड और मॉडल</string>
+    <string name="ui_choose_your_car" formatted="false">अपनी कार चुनें</string>
+    <string name="ui_choose" formatted="false">चुनें</string>
+    <string name="ui_change" formatted="false">बदलें</string>
+    <string name="ui_runs_on" formatted="false">किस पर चलती है</string>
+    <string name="ui_leave_empty_if_unsure" formatted="false">पक्का न हो तो खाली छोड़ें</string>
+    <string name="ui_your_name_for_the_greeting_under_the_car" formatted="false">आपका नाम, कार के नीचे अभिवादन के लिए</string>
+    <string name="ui_leave_empty_for_no_greeting" formatted="false">अभिवादन न चाहें तो खाली छोड़ें</string>
+    <string name="ui_which_brand" formatted="false">कौन-सा ब्रांड?</string>
+    <string name="ui_choose_the_look" formatted="false">लुक चुनें</string>
+    <string name="ui_your_car_s_colour_for_the_highlights_and" formatted="false">हाइलाइट के लिए आपकी कार का रंग, और स्क्रीन लेआउट। थीम और बहुत कुछ सेटिंग्स में है।</string>
+    <string name="ui_start_simple_if_you_like_you_can_add_mor" formatted="false">चाहें तो सरल से शुरू करें: आप कभी भी सेटिंग्स, OpenRath लेवल में और जोड़ सकते हैं, या एक-एक फ़ीचर चालू कर सकते हैं।</string>
+    <string name="ui_your_apps" formatted="false">आपके ऐप</string>
+    <string name="ui_the_buttons_and_boxes_open_these_openrat" formatted="false">बटन और बॉक्स इन्हें खोलते हैं। OpenRath को जो मिला वो चुन लिया; बदलने के लिए टैप करें।</string>
+    <string name="ui_fm_and_am_from_the_stereo_s_radio_app" formatted="false">स्टीरियो के रेडियो ऐप से FM और AM</string>
+    <string name="ui_songs_from_usb_bluetooth_or_a_streaming_" formatted="false">USB, Bluetooth या स्ट्रीमिंग ऐप से गाने</string>
+    <string name="ui_opens_from_the_dock_and_from_saved_place" formatted="false">डॉक और सेव की गई जगहों से खुलता है</string>
+    <string name="ui_calls_and_contacts" formatted="false">कॉल और संपर्क</string>
+    <string name="ui_not_chosen_2" formatted="false">नहीं चुना</string>
+    <string name="ui_almost_done" formatted="false">लगभग हो गया</string>
+    <string name="ui_two_things_make_openrath_feel_like_part_" formatted="false">दो चीज़ें OpenRath को कार का हिस्सा बना देती हैं।</string>
+    <string name="ui_connect_your_phone" formatted="false">अपना फ़ोन जोड़ें</string>
+    <string name="ui_paired_with_1_s_calls_and_music_come_thr" formatted="false">%1$s से पेयर है। कॉल और संगीत स्टीरियो से आते हैं।</string>
+    <string name="ui_pair_it_in_bluetooth_settings_for_calls_" formatted="false">स्टीरियो से कॉल और संगीत के लिए Bluetooth सेटिंग्स में पेयर करें।</string>
+    <string name="ui_paired" formatted="false">पेयर है</string>
+    <string name="ui_this_unit_has_no_bluetooth_settings_scre" formatted="false">इस यूनिट में Bluetooth सेटिंग्स स्क्रीन नहीं है</string>
+    <string name="ui_make_openrath_the_home_app" formatted="false">OpenRath को होम ऐप बनाएँ</string>
+    <string name="ui_the_stereo_starts_in_openrath_and_the_ho" formatted="false">स्टीरियो OpenRath में शुरू होता है, और होम बटन इसी पर लौटता है।</string>
+    <string name="ui_set" formatted="false">सेट करें</string>
+    <string name="ui_this_stereo_has_no_voice_so_openrath_can" formatted="false">इस स्टीरियो में आवाज़ नहीं है, इसलिए OpenRath अलर्ट या मोड़ नहीं बोल सकता। Google की Speech Services मुफ़्त है।</string>
+    <string name="ui_get_it" formatted="false">लें</string>
+    <string name="ui_tip_long_press_any_box_to_change_what_it" formatted="false">सुझाव: बॉक्स में क्या दिखे यह बदलने के लिए उसे देर तक दबाएँ। सेटिंग्स बटन बार में गियर है।</string>
 </resources>
