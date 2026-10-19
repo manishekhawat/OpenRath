@@ -1,5 +1,7 @@
 # OpenRath
 
+<p align="center"><img src="docs/opening-logo.gif" alt="The OpenRath wheel rolling in when the app opens" width="512"></p>
+
 A free, open source home screen for any Android-based aftermarket car stereo, whatever its make. It replaces the stereo's own launcher with a dashboard you can rearrange: your car with live speed, the clock, weather, a map with turn-by-turn guidance, radio and music, a trip computer and fuel log, and many driving helpers (speed limits and cameras, parking spot, service reminders, dashcam, voice commands, steering-wheel buttons). Every feature has its own switch under "Turn on or off" in its Settings section.
 
 *Rath* (रथ) is Sanskrit for chariot.
@@ -8,7 +10,7 @@ A free, open source home screen for any Android-based aftermarket car stereo, wh
 
 ## Works with
 
-- **Any car.** On the first start a short setup asks for the brand, model, fuel (petrol, diesel, CNG, hybrid or electric) and tank size. The name beside the logo, the service centre search, fuel words and expected mileage all follow it. Change it any time in Settings > Car.
+- **Any car.** On the first start, setup screens ask for the brand, model, shape, fuel (petrol, diesel, CNG, hybrid or electric) and tank size. The name beside the logo, the service centre search, fuel words and expected mileage all follow it. Change it any time in Settings > Car.
 - **Any screen.** The dashboard is designed at 1024 x 600 and scales to fit any size: 7 to 13 inch, 1280 x 720, 1920 x 720 ultra-wide. Portrait screens stack the boxes with the apps along the bottom. Settings > Dashboard has the size of text and boxes (80 to 130%) and which way up the screen is.
 - **Android 8.0 and newer.** It was built on a Topway TS7 (Android 8.1). OpenRath runs on plain Android: the radio box follows any radio app's media controls, and calls go through the system phone (Bluetooth hands-free on most units). Stereo makers' own services are optional add-ons (`Unit.java` is the plain Android version, `TopwayUnit.java` the Topway add-on), loaded only on that make and only while the "Stereo maker's services" switch (developer mode) is on. The Topway add-on (`TopwayUnit.java`) adds FM in the radio box, Bluetooth calls through Topway's phone app and reverse gear. The FYT add-on (`FytUnit.java`) does FM, calls, reverse gear and the headlight wire through the com.syu.ms toolkit service. The MTCD/Joying add-on (`MtcUnit.java`) does FM through CarManager and calls through the android.microntek.mtcser Bluetooth service. The FYT and MTCD add-ons follow the makers' own apps and open-source projects (fyt-dialer, honda-customizer, MTCD-E_Radio-app, MtcDialer) and still need trying on real units. See [docs/STEREOS.md](docs/STEREOS.md) for the common stereo families, their screen sizes and what works on each.
 
@@ -16,8 +18,7 @@ A free, open source home screen for any Android-based aftermarket car stereo, wh
 
 1. Copy `package/openrath.apk` to the stereo (USB stick or download) and install it with the file manager. Allow installs from unknown sources if asked.
 2. Press Home. Android asks which home app to use: pick **OpenRath**, then **Always**. If it doesn't ask, go to Settings > Apps > Default apps > Home app.
-3. Allow location (speed, weather, map) and storage (backups, themes, dashcam).
-4. On the first start, set up your car, or bring back a backup.
+3. Open OpenRath. After the logo, the setup screens take you through the language, permissions (or bringing back a backup), your car, the look, how much to show, your apps, and pairing your phone and making OpenRath the home app. Each step can be skipped, and Settings > Help > Run setup again goes through it later.
 
 ## Go back to the stock launcher
 

@@ -4,4 +4,6 @@
     <application android:label="OpenRath tests" android:hasCode="true" />
     <instrumentation android:name="org.openrath.launcher.Smoke" android:targetPackage="org.openrath.launcher"
         android:label="OpenRath on-device tests" />
+    <instrumentation android:name="org.openrath.launcher.Shots" android:targetPackage="org.openrath.launcher"
+        android:label="OpenRath screenshots" />
 </manifest>

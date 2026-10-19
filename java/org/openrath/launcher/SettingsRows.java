@@ -950,6 +950,14 @@ final class SettingsRows {
                 else if (!Compat.askHome(a)) Toast.makeText(a, Hindi.t("This unit has no screen to choose the home app; press Home and choose OpenRath, Always"), Toast.LENGTH_LONG).show();
             }
         }));
+        r.add(new SettingsView.Row(g, "Run setup again", "language, car, look, apps and the home app, step by step", new Runnable() {
+            @Override
+            public void run() {
+                a.closeSettings();
+                a.prefs.put("setupDone", "");
+                Setup.show(a);
+            }
+        }));
         r.add(new SettingsView.Row(g, "Diagnostics", "send a photo if something doesn't work", new Runnable() {
             @Override
             public void run() {

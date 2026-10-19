@@ -228,6 +228,26 @@ public final class Tests {
         eq("box names match", Prefs.CONTENTS.length, Prefs.CONTENT_NAMES.length);
     }
 
+    private static void setupScreens() {
+        check("setup on a fresh install", Setup.needed(true, false, false, false, false));
+        check("setup not after an update", !Setup.needed(true, false, false, true, true));
+        check("setup carries on where it was", Setup.needed(true, false, true, true, true));
+        check("setup not once done", !Setup.needed(true, true, true, false, false));
+        check("setup switched off", !Setup.needed(false, false, false, false, false));
+        eq("setup next", Setup.CAR, Setup.next(Setup.ACCESS, false));
+        eq("setup skips the level when a fleet sets it", Setup.APPS, Setup.next(Setup.LOOK, true));
+        eq("setup back over the level", Setup.LOOK, Setup.back(Setup.APPS, true));
+        eq("setup last", Setup.FINISH, Setup.next(Setup.FINISH, false));
+        eq("setup first", Setup.WELCOME, Setup.back(Setup.WELCOME, false));
+        eq("setup location", "location", Setup.kind("android.permission.ACCESS_FINE_LOCATION"));
+        eq("setup music", "files", Setup.kind("android.permission.READ_MEDIA_AUDIO"));
+        eq("setup bluetooth", "bluetooth", Setup.kind("android.permission.BLUETOOTH_CONNECT"));
+        eq("setup calls", "phone", Setup.kind("android.permission.READ_CALL_LOG"));
+        eq("setup notifications", "notifications", Setup.kind("android.permission.POST_NOTIFICATIONS"));
+        eq("setup steps", Setup.FINISH + 1, Setup.STEPS.length);
+        check("setup feature", Features.get("setup") != null);
+    }
+
     private static void intro() {
         check("intro on start", Intro.show(true, "standard", true));
         check("intro not on return", !Intro.show(true, "standard", false));
@@ -389,6 +409,7 @@ public final class Tests {
         miniAaIdeas();
         nebulaIdeas();
         intro();
+        setupScreens();
         bootArt();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
