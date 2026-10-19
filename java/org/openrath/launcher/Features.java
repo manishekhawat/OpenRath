@@ -120,6 +120,7 @@ final class Features {
             new F("artColour", "Music box colours from the album cover", "Dashboard", true, "The music box takes its colour from the song's cover"),
             new F("seek", "Drag to seek in the music box", "Dashboard", true, "A bar with the time played; drag along it to move in the song (music apps that allow it)"),
             new F("stopSummary", "Drive summary when stopped", "Dashboard", true, "Stopped for 5 seconds: distance, time, average and top speed of this drive in the car box"),
+            new F("intro", "OpenRath logo when the app opens", "Dashboard", true, "The OpenRath wheel rolls in and the name appears, for two seconds; a tap skips it"),
             new F("autoTheme", "Theme changes by itself", "Dashboard", false, "A theme for the night, and one for when a chosen phone connects"),
             new F("tapFeedback", "Tap sound and buzz", "Dashboard", false, "A short tick and a buzz on each box and dock button"),
             new F("perf", "Performance box", "Dashboard", false, "Frames per second, CPU use, temperature and free memory in a corner"),
