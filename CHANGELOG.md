@@ -5,6 +5,7 @@ Newest first.
 ## 1.42: Setup screens
 
 - **Setup screens on first open:** after the logo, a new install goes step by step through the language, permissions (each one explained, or a backup to bring back), your car, the colour and screen layout, how much OpenRath shows, the radio, music, navigation and phone apps, and pairing your phone and making OpenRath the home app. Every step can be skipped, Back goes a step back, and Settings > Help > Run setup again goes through it later. It replaces the string of questions that popped up one after another.
+- **Screenshots** of the setup steps, the dashboard layouts and Settings in the README, taken on a 1024 x 600 emulator by a new check.
 - **No greeting until you type your name:** the line under the car is empty until you enter your name in setup or Settings.
 
 ## 1.41: The OpenRath wheel on opening
