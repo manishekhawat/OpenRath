@@ -6,6 +6,10 @@ Copyright (C) Manish Shekhawat and the OpenRath contributors.
 
 OpenRath is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See `LICENSE` for the full text (SPDX: GPL-3.0-or-later).
 
+## Additional term: credit
+
+Under section 7(b) of the GNU GPL version 3, anyone who conveys OpenRath or a modified version of it must keep the author attribution "Based on OpenRath by Manish Shekhawat", with a link to https://github.com/manishekhawat/OpenRath, in its About or credits screen, or in its documentation if it has no such screen. This is the only additional term; everything else is the plain GPL.
+
 ## Third-party parts
 
 These are bundled in the source or in the APK. Each keeps its own licence, and the licence texts are in `LICENSES/` (and beside the files in `assets/map/`).
