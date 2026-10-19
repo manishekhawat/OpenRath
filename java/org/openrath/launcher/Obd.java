@@ -35,8 +35,29 @@ final class Obd {
     static final List<String> codes = new ArrayList<>();
     static volatile long codesAt;
 
-    private static Thread thread;
-    private static volatile boolean stop;
+    /**
+     * One connection attempt loop: its own stop switch, so a stop() followed quickly by start() can't
+     * let the old loop carry on, and its socket, which stop() closes so a waiting read ends at once.
+     */
+    private static final class Run {
+        final java.util.concurrent.atomic.AtomicBoolean stop = new java.util.concurrent.atomic.AtomicBoolean();
+        volatile java.io.Closeable socket;
+        Thread thread;
+
+        void end() {
+            stop.set(true);
+            java.io.Closeable s = socket;
+            if (s != null) {
+                try {
+                    s.close();
+                } catch (Exception ignored) {
+                }
+            }
+            if (thread != null) thread.interrupt();
+        }
+    }
+
+    private static Run run;
     private static volatile String pending;   // "03" read codes or "04" clear codes, asked from Settings
 
     /** Speed from the car itself, when the adapter answered in the last 3 seconds; else -1. */
@@ -50,22 +71,26 @@ final class Obd {
             status = Hindi.t("Not set up");
             return;
         }
-        if (thread != null && thread.isAlive()) return;
-        stop = false;
-        thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loop(c.getApplicationContext(), mac);
-            }
-        }, "obd");
-        thread.setDaemon(true);
-        thread.start();
+        synchronized (Obd.class) {
+            if (run != null && !run.stop.get() && run.thread.isAlive()) return;
+            final Run r = new Run();
+            r.thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    loop(c.getApplicationContext(), mac, r);
+                }
+            }, "obd");
+            r.thread.setDaemon(true);
+            run = r;
+            r.thread.start();
+        }
     }
 
     static void stop() {
-        stop = true;
-        if (thread != null) thread.interrupt();
-        thread = null;
+        synchronized (Obd.class) {
+            if (run != null) run.end();
+            run = null;
+        }
         connected = false;
     }
 
@@ -150,18 +175,20 @@ final class Obd {
         return s;
     }
 
-    private static void loop(Context c, String mac) {
+    private static void loop(Context c, String mac, Run run) {
         long backoff = 5000;
         String[] wifi = wifiTarget(mac);
-        while (!stop) {
+        java.util.concurrent.atomic.AtomicBoolean stop = run.stop;
+        while (!stop.get()) {
             java.io.Closeable s = null;
             try {
                 status = Hindi.t("Connecting…");
                 changed(c);
                 InputStream in;
                 OutputStream out;
+                java.net.Socket ws = null;
                 if (wifi != null) {
-                    java.net.Socket ws = wifiSocket(c, wifi[0], Integer.parseInt(wifi[1]));
+                    ws = wifiSocket(c, wifi[0], Integer.parseInt(wifi[1]));
                     s = ws;
                     in = ws.getInputStream();
                     out = ws.getOutputStream();
@@ -171,21 +198,24 @@ final class Obd {
                     in = bs.getInputStream();
                     out = bs.getOutputStream();
                 }
-                for (String cmd : new String[]{"ATZ", "ATE0", "ATL0", "ATS0", "ATH0", "ATAT1", "ATSP0"}) ask(in, out, cmd, cmd.equals("ATZ") ? 3000 : 1500);
-                String first = ask(in, out, "0100", 10000);   // the adapter searches for the car's protocol here
+                run.socket = s;
+                if (stop.get()) break;   // stopped while connecting: the finally closes it
+                for (String cmd : new String[]{"ATZ", "ATE0", "ATL0", "ATS0", "ATH0", "ATAT1", "ATSP0"}) ask(in, out, ws, cmd, cmd.equals("ATZ") ? 3000 : 1500);
+                String first = ask(in, out, ws, "0100", 10000);   // the adapter searches for the car's protocol here
                 if (first.contains("UNABLE") || first.contains("ERROR") || first.contains("NODATA") || first.contains("CANTCONNECT"))
                     throw new IllegalStateException(Hindi.t("adapter can't reach the car (ignition on?)"));
-                protocol = clean(ask(in, out, "ATDP", 1500));
+                protocol = clean(ask(in, out, ws, "ATDP", 1500));
+                if (stop.get()) break;
                 connected = true;
                 status = Hindi.t("Connected");
                 backoff = 5000;
                 changed(c);
                 int round = 0;
-                while (!stop) {
+                while (!stop.get()) {
                     String job = pending;
                     if (job != null) {
                         pending = null;
-                        String r = ask(in, out, job, 5000);
+                        String r = ask(in, out, ws, job, 5000);
                         if ("03".equals(job)) {
                             List<String> found = dtcs(r, protocol.contains("CAN") || protocol.contains("15765"));
                             synchronized (codes) {
@@ -200,14 +230,14 @@ final class Obd {
                             codesAt = System.currentTimeMillis();
                         }
                     }
-                    kmh = speed(ask(in, out, "010D", 1500));
-                    rpm = rpm(ask(in, out, "010C", 1500));
+                    kmh = speed(ask(in, out, ws, "010D", 1500));
+                    rpm = rpm(ask(in, out, ws, "010C", 1500));
                     if (round % 5 == 0) {
-                        coolant = coolant(ask(in, out, "0105", 1500));
-                        load = load(ask(in, out, "0104", 1500));
-                        fuel = fuel(ask(in, out, "012F", 1500));
-                        intake = intake(ask(in, out, "010F", 1500));
-                        volts = volts(ask(in, out, "ATRV", 1500));
+                        coolant = coolant(ask(in, out, ws, "0105", 1500));
+                        load = load(ask(in, out, ws, "0104", 1500));
+                        fuel = fuel(ask(in, out, ws, "012F", 1500));
+                        intake = intake(ask(in, out, ws, "010F", 1500));
+                        volts = volts(ask(in, out, ws, "ATRV", 1500));
                     }
                     readAt = System.currentTimeMillis();
                     round++;
@@ -215,15 +245,18 @@ final class Obd {
                     Thread.sleep(250);
                 }
             } catch (Throwable e) {
+                if (stop.get()) break;   // stop() closed the socket: not a fault to show
                 connected = false;
                 status = Hindi.f("Not connected: %1$s", e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
                 changed(c);
             } finally {
+                run.socket = null;
                 try {
                     if (s != null) s.close();
                 } catch (Exception ignored) {
                 }
             }
+            if (stop.get()) break;
             try {
                 Thread.sleep(backoff);
             } catch (InterruptedException e) {
@@ -242,20 +275,42 @@ final class Obd {
         c.sendBroadcast(new Intent(Drive.CHANGED).setPackage(c.getPackageName()));
     }
 
-    /** Send one command and read up to the '>' prompt. */
-    private static String ask(InputStream in, OutputStream out, String cmd, long timeout) throws Exception {
-        while (in.available() > 0) in.read();
+    /**
+     * Send one command and read up to the '>' prompt. A Wi-Fi adapter's socket (ws) waits for the
+     * answer itself, with a time limit; a Bluetooth socket has none, so it is checked every 40 ms.
+     */
+    private static String ask(InputStream in, OutputStream out, java.net.Socket ws, String cmd, long timeout) throws Exception {
+        byte[] buf = new byte[64];
+        int left;
+        while ((left = in.available()) > 0) in.read(buf, 0, Math.min(left, buf.length));   // anything stale
         out.write((cmd + "\r").getBytes("US-ASCII"));
         out.flush();
         StringBuilder sb = new StringBuilder();
         long end = System.currentTimeMillis() + timeout;
-        while (System.currentTimeMillis() < end) {
-            if (in.available() > 0) {
-                int b = in.read();
-                if (b < 0) throw new IllegalStateException(Hindi.t("adapter disconnected"));
-                if (b == '>') break;
-                sb.append((char) b);
-            } else Thread.sleep(10);
+        while (true) {
+            long wait = end - System.currentTimeMillis();
+            if (wait <= 0) break;
+            int n;
+            if (ws != null) {
+                ws.setSoTimeout((int) Math.max(1, wait));
+                try {
+                    n = in.read(buf);
+                } catch (java.net.SocketTimeoutException timedOut) {
+                    break;
+                }
+            } else {
+                int av = in.available();
+                if (av <= 0) {
+                    Thread.sleep(40);
+                    continue;
+                }
+                n = in.read(buf, 0, Math.min(av, buf.length));
+            }
+            if (n < 0) throw new IllegalStateException(Hindi.t("adapter disconnected"));
+            int prompt = -1;
+            for (int i = 0; i < n && prompt < 0; i++) if (buf[i] == '>') prompt = i;
+            for (int i = 0; i < (prompt < 0 ? n : prompt); i++) sb.append((char) buf[i]);
+            if (prompt >= 0) break;
         }
         return sb.toString();
     }

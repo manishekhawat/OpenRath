@@ -28,8 +28,9 @@ final class ThemeAuto {
         return null;
     }
 
+    /** Night at the dashboard's position, or by the clock (a may be null). */
     static boolean night(HomeActivity a, long now) {
-        android.location.Location f = a.hub == null ? null : a.hub.fix;
+        android.location.Location f = a == null || a.hub == null ? null : a.hub.fix;
         if (f != null) return Care.dark(f.getLatitude(), f.getLongitude(), now);
         int h = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
         return h >= 19 || h < 6;

@@ -53,7 +53,7 @@ final class Hub implements LocationListener {
 
     Location fix;
     private long fixAt;
-    private long weatherAt;
+    private volatile long weatherAt;
     String temp = "--°", weather = "Weather", place = "", weatherIcon = "w_cloud";
     /** Rain here in the next hour (Open-Meteo), and along the planned route (from the map). */
     String rainSoon = "";
@@ -76,7 +76,9 @@ final class Hub implements LocationListener {
     private long leftAt, rightAt;
     private String[] leftSig, rightSig;                       // something is playing, even without a media session
     final List<String> sessionPkgs = new ArrayList<>();
-    private String lastState = "";
+    private final Stamp stamp = new Stamp();
+    private long lastStamp;
+    private boolean stamped;
 
     Hub(Context c, Prefs p) {
         ctx = c;
@@ -158,7 +160,8 @@ final class Hub implements LocationListener {
         playerReceiver = new android.content.BroadcastReceiver() {
             @Override
             public void onReceive(Context c, android.content.Intent i) {
-                notifyIfChanged(true);
+                // the trip service and the engine adapter send this every second: redraw only what changed
+                notifyIfChanged(!Drive.CHANGED.equals(i.getAction()));
             }
         };
         android.content.IntentFilter f = new android.content.IntentFilter(Player.CHANGED);
@@ -167,6 +170,8 @@ final class Hub implements LocationListener {
         handler.removeCallbacks(blink);
         if (leftSig != null || rightSig != null) handler.post(blink);
         handler.removeCallbacks(tick);
+        mediaDirty = true;
+        watchSessions();
         handler.post(tick);
         handler.removeCallbacks(reversePoll);
         handler.postDelayed(reversePoll, 1500);
@@ -201,6 +206,8 @@ final class Hub implements LocationListener {
     void stop() {
         unit.stop();
         handler.removeCallbacks(tick);
+        handler.removeCallbacks(mediaNow);
+        unwatchSessions();
         handler.removeCallbacks(blink);
         handler.removeCallbacks(reversePoll);
         if (spy != null) {
@@ -263,7 +270,8 @@ final class Hub implements LocationListener {
                     notifyIfChanged(true);
                 }
             }
-            handler.postDelayed(this, 400);
+            // a unit that can't tell (yet) is asked less often
+            handler.postDelayed(this, rv == null ? 2000 : 400);
         }
     };
 
@@ -303,18 +311,40 @@ final class Hub implements LocationListener {
     };
 
     void notifyIfChanged(boolean force) {
-        String s = Cab.stamp(prefs) + "|" + lightsOn() + "|" + speed() + "|" + temp + weather + place + weatherIcon + rainSoon + routeRain + hours.length + (hours.length > 0 ? hours[0] : 0) + "|"
-                + describe(music) + "|" + describe(radio) + "|" + audioActive + online + leftOn + rightOn + "|"
-                + unit.stamp() + Player.mode + Player.playing + Player.busy + Player.status + Player.station + Player.song + "|" + (fix == null ? "" : fix.getLatitude() + "," + fix.getLongitude())
-                + "|" + Math.round(Drive.todayKm * 10) + Drive.todaySec / 60 + Math.round(Drive.driveKm * 10) + Drive.limit + Drive.cameraM / 50 + Drive.over + Drive.parkAt + prefs.fuelLog().length()
-                + "|" + reverse + btConnected + phoneStatus + (lastCall == null ? "" : lastCall[0] + lastCall[1]) + Care.alert(prefs) + Drive.score();
-        if (!force && s.equals(lastState)) return;
-        lastState = s;
+        // a fingerprint of everything the boxes show, instead of a long string built every second
+        Stamp t = stamp.reset();
+        t.add(Cab.stamp(prefs)).add(lightsOn()).add(speed()).add(temp).add(weather).add(place).add(weatherIcon).add(rainSoon).add(routeRain)
+                .add(hours.length).add(hours.length > 0 ? hours[0] : 0);
+        media(t, music);
+        media(t, radio);
+        t.add(audioActive).add(online).add(leftOn).add(rightOn).add(unit.stamp()).add(Player.mode).add(Player.playing).add(Player.busy)
+                .add(Player.status).add(Player.station).add(Player.song);
+        if (fix == null) t.add(false);
+        else t.add(true).add(fix.getLatitude()).add(fix.getLongitude());
+        t.add(Math.round(Drive.todayKm * 10)).add(Drive.todaySec / 60).add(Math.round(Drive.driveKm * 10)).add(Drive.limit).add(Drive.cameraM / 50)
+                .add(Drive.over).add(Drive.parkAt).add(prefs.fuelLog().length()).add(reverse).add(btConnected).add(phoneStatus);
+        if (lastCall != null) t.add(lastCall[0]).add(lastCall[1]);
+        t.add(Care.alert(prefs)).add(Drive.score());
+        // what the boxes read from the trip service, the engine adapter and the tyre sensors
+        t.add(Math.round(Drive.kmhNow)).add(Math.round(Drive.headingNow)).add(Math.round(Drive.headingKept)).add(Math.round(Drive.altNow))
+                .add(Drive.driveSec / 60).add(Math.round(Drive.driveTop)).add(Drive.alertError).add(Math.round(Drive.odoKm * 10))
+                .add(Highway.on).add(Highway.held).add(Math.round(Ahead.bendM)).add(Ahead.bendDir);
+        t.add(Obd.connected).add(Obd.status).add(Obd.rpm).add(Obd.kmh).add(Obd.coolant).add(Obd.load).add(Obd.fuel).add(Obd.intake)
+                .add(Obd.volts).add(Obd.codesAt).add(Tpms.status);
+        for (Tpms.Tyre y : Tpms.tyres) {
+            if (y == null) t.add(false);
+            else t.add(y.kpa).add(y.tempC).add(y.at);
+        }
+        long v = t.value();
+        if (!force && stamped && v == lastStamp) return;
+        stamped = true;
+        lastStamp = v;
         for (Listener l : new ArrayList<>(listeners)) l.changed(this);
     }
 
-    private static String describe(Media m) {
-        return m == null ? "-" : m.title + m.subtitle + m.playing;
+    private static void media(Stamp t, Media m) {
+        if (m == null) t.add(false);
+        else t.add(true).add(m.title).add(m.subtitle).add(m.playing);
     }
 
     boolean lightsOn() {
@@ -392,12 +422,119 @@ final class Hub implements LocationListener {
 
     // ------------------------------------------------------------------ media
 
-    private void readMedia() {
-        online = Player.online(ctx);
-        try {
-            audioActive = ((android.media.AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE)).isMusicActive();
-        } catch (Exception ignored) {
+    /**
+     * The music apps' sessions are read again when one of them says something changed (a new song,
+     * play or pause, a session started or ended), and otherwise every 5 seconds in case an app
+     * doesn't say; the internet and "something is playing" are checked every few seconds.
+     */
+    private static final long MEDIA_MS = 5000, AUDIO_MS = 2000, ONLINE_MS = 5000;
+    private boolean mediaDirty = true;
+    private long mediaAt, audioAt, onlineAt;
+    private MediaSessionManager.OnActiveSessionsChangedListener sessionsChanged;
+    private final List<MediaController> watched = new ArrayList<>();
+
+    private final MediaController.Callback mediaChanged = new MediaController.Callback() {
+        @Override
+        public void onPlaybackStateChanged(PlaybackState state) {
+            mediaSoon();
         }
+
+        @Override
+        public void onMetadataChanged(MediaMetadata metadata) {
+            mediaSoon();
+        }
+
+        @Override
+        public void onSessionDestroyed() {
+            mediaSoon();
+        }
+    };
+
+    private final Runnable mediaNow = new Runnable() {
+        @Override
+        public void run() {
+            readMedia();
+            notifyIfChanged(false);
+        }
+    };
+
+    /** A burst of changes is read once, a moment later. */
+    private void mediaSoon() {
+        mediaDirty = true;
+        handler.removeCallbacks(mediaNow);
+        handler.postDelayed(mediaNow, 100);
+    }
+
+    private void watchSessions() {
+        if (sessionsChanged != null) return;
+        try {
+            MediaSessionManager m = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
+            sessionsChanged = new MediaSessionManager.OnActiveSessionsChangedListener() {
+                @Override
+                public void onActiveSessionsChanged(List<MediaController> controllers) {
+                    mediaSoon();
+                }
+            };
+            m.addOnActiveSessionsChangedListener(sessionsChanged, new ComponentName(ctx, MediaListener.class), handler);
+        } catch (Throwable e) {
+            sessionsChanged = null;   // no notification access yet: the 5-second check finds the sessions
+        }
+    }
+
+    private void unwatchSessions() {
+        if (sessionsChanged != null) {
+            try {
+                ((MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE)).removeOnActiveSessionsChangedListener(sessionsChanged);
+            } catch (Throwable ignored) {
+            }
+            sessionsChanged = null;
+        }
+        for (MediaController c : watched) {
+            try {
+                c.unregisterCallback(mediaChanged);
+            } catch (Throwable ignored) {
+            }
+        }
+        watched.clear();
+    }
+
+    /** Follow the changes of these sessions (and stop following the ones that ended). */
+    private void watch(List<MediaController> sessions) {
+        boolean same = sessions.size() == watched.size();
+        for (int i = 0; same && i < sessions.size(); i++) same = sessions.get(i).getSessionToken().equals(watched.get(i).getSessionToken());
+        if (same) return;
+        for (MediaController c : watched) {
+            try {
+                c.unregisterCallback(mediaChanged);
+            } catch (Throwable ignored) {
+            }
+        }
+        watched.clear();
+        for (MediaController c : sessions) {
+            try {
+                c.registerCallback(mediaChanged, handler);
+                watched.add(c);
+            } catch (Throwable ignored) {
+            }
+        }
+    }
+
+    private void readMedia() {
+        long now = System.currentTimeMillis();
+        if (now - onlineAt >= ONLINE_MS || onlineAt > now) {
+            onlineAt = now;
+            online = Player.online(ctx);
+        }
+        if (now - audioAt >= AUDIO_MS || audioAt > now) {
+            audioAt = now;
+            try {
+                audioActive = ((android.media.AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE)).isMusicActive();
+            } catch (Exception ignored) {
+            }
+        }
+        if (!mediaDirty && now - mediaAt < MEDIA_MS && mediaAt <= now) return;
+        mediaDirty = false;
+        mediaAt = now;
         List<MediaController> sessions;
         try {
             MediaSessionManager m = (MediaSessionManager) ctx.getSystemService(Context.MEDIA_SESSION_SERVICE);
@@ -408,6 +545,8 @@ final class Hub implements LocationListener {
             music = radio = null;
             return;
         }
+        if (sessionsChanged == null) watchSessions();   // notification access was just given
+        watch(sessions);
         String radioPkg = prefs.app("media:radio");
         String musicPkg = prefs.app("media:music");
         MediaController r = null, mu = null;
@@ -497,14 +636,23 @@ final class Hub implements LocationListener {
 
     private static String get(String url) throws java.io.IOException {
         HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
-        c.setConnectTimeout(10000);
-        c.setReadTimeout(10000);
-        BufferedReader r = new BufferedReader(new InputStreamReader(c.getInputStream(), "UTF-8"));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = r.readLine()) != null) sb.append(line);
-        r.close();
-        return sb.toString();
+        try {
+            c.setConnectTimeout(10000);
+            c.setReadTimeout(10000);
+            int code = c.getResponseCode();
+            if (code < 200 || code >= 300) throw new java.io.IOException("HTTP " + code);
+            BufferedReader r = new BufferedReader(new InputStreamReader(c.getInputStream(), "UTF-8"));
+            try {
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = r.readLine()) != null) sb.append(line);
+                return sb.toString();
+            } finally {
+                r.close();
+            }
+        } finally {
+            c.disconnect();
+        }
     }
 
     /** One weather reading, from the live answer or picked out of the saved forecast. */
@@ -625,6 +773,10 @@ final class Hub implements LocationListener {
         weatherAt = 0;
     }
 
+    /** The saved forecast, read once rather than every minute while offline. */
+    private String savedBody;
+    private JSONObject savedJson;
+
     private void showSavedWeather() {
         long now = System.currentTimeMillis();
         if (weatherSaved == 0 && weatherLive > 0 && now - weatherLive < WEATHER_MS * 2) return;   // live is still fresh
@@ -633,7 +785,11 @@ final class Hub implements LocationListener {
         String body = prefs.str("wxSaved", "");
         if (body.isEmpty()) return;
         try {
-            Wx w = readWeather(new JSONObject(body), now, true);
+            if (!body.equals(savedBody)) {
+                savedJson = new JSONObject(body);
+                savedBody = body;
+            }
+            Wx w = readWeather(savedJson, now, true);
             if (w == null) return;
             showWeather(w);
             weatherSaved = prefs.longNum("wxSavedAt", now);
@@ -645,7 +801,7 @@ final class Hub implements LocationListener {
     private long weatherLive;
 
     private void fetchWeather(final double lat, final double lon) {
-        new Thread(new Runnable() {
+        Bg.run(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -695,10 +851,28 @@ final class Hub implements LocationListener {
                     weatherAt = System.currentTimeMillis() - WEATHER_MS + 60000;   // retry in a minute
                 }
             }
-        }).start();
+        });
     }
 
+    /** The last place name found, for about a kilometre around where it was asked. */
+    private static String placeKey, placeKept;
+
     private String placeName(double lat, double lon) {
+        String key = Math.round(lat * 100) + "," + Math.round(lon * 100);
+        synchronized (Hub.class) {
+            if (key.equals(placeKey)) return placeKept;
+        }
+        String p = findPlace(lat, lon);
+        if (p != null) {
+            synchronized (Hub.class) {
+                placeKey = key;
+                placeKept = p;
+            }
+        }
+        return p;
+    }
+
+    private String findPlace(double lat, double lon) {
         try {
             List<Address> a = new Geocoder(ctx, Locale.getDefault()).getFromLocation(lat, lon, 1);
             if (a != null && !a.isEmpty()) {
@@ -712,15 +886,7 @@ final class Hub implements LocationListener {
             URL u = new URL(String.format(Locale.US,
                     "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=%.4f&longitude=%.4f&localityLanguage=en",
                     lat, lon));
-            HttpURLConnection c = (HttpURLConnection) u.openConnection();
-            c.setConnectTimeout(10000);
-            c.setReadTimeout(10000);
-            BufferedReader r = new BufferedReader(new InputStreamReader(c.getInputStream(), "UTF-8"));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = r.readLine()) != null) sb.append(line);
-            r.close();
-            JSONObject j = new JSONObject(sb.toString());
+            JSONObject j = new JSONObject(get(u.toString()));
             String p = j.optString("city", "");
             if (p.isEmpty()) p = j.optString("locality", "");
             if (!p.isEmpty()) return p;

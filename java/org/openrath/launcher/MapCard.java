@@ -313,4 +313,83 @@ final class MapCard extends Cards.Card {
                 lastLat, lastLon, f.hasBearing() && f.getSpeed() > 1 ? f.getBearing() : -1f,
                 f.hasSpeed() ? f.getSpeed() : 0f), null);
     }
+
+    // ------------------------------------------------------------------ kept between rebuilds
+
+    /*
+     * A WebView costs tens of megabytes and seconds to load the map page, so the dashboard keeps one
+     * map box while any page shows the map, and moves it into each rebuilt dashboard (see
+     * HomeActivity.build); it is destroyed once no page has the map, or the dashboard closes.
+     */
+
+    /** The page still runs: its renderer hasn't died and it hasn't been destroyed. */
+    boolean alive() {
+        return !gone && web.getParent() == this;
+    }
+
+    private boolean gone, paused;
+
+    /** Into a rebuilt dashboard: out of the old one, in the look of the (maybe new) theme. */
+    void reuse() {
+        android.view.ViewParent p = getParent();
+        if (p instanceof android.view.ViewGroup) ((android.view.ViewGroup) p).removeView(this);
+        animate().cancel();
+        setTranslationX(0);
+        setTranslationY(0);
+        setScaleX(1);
+        setScaleY(1);
+        setAlpha(1);
+        setElevation(0);
+        setBackground(Ui.panel());
+        View ring = getChildCount() > 1 ? getChildAt(getChildCount() - 1) : null;
+        if (ring != null && ring != web) {
+            android.graphics.drawable.GradientDrawable g = Ui.panel();
+            g.setColors(new int[]{0, 0});
+            ring.setBackground(g);
+        }
+        final float r = Ui.RADIUS * Ui.k;
+        setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View v, Outline o) {
+                o.setRoundRect(0, 0, v.getWidth(), v.getHeight(), r);
+            }
+        });
+        resumeMap();
+    }
+
+    /** Off screen but kept (another page): the page stops drawing and animating. */
+    void pauseMap() {
+        if (gone || paused) return;
+        paused = true;
+        try {
+            web.onPause();
+        } catch (Throwable ignored) {
+        }
+    }
+
+    void resumeMap() {
+        if (gone || !paused) return;
+        paused = false;
+        try {
+            web.onResume();
+        } catch (Throwable ignored) {
+        }
+    }
+
+    /** Let the page go for good. */
+    void destroy() {
+        if (gone) return;
+        gone = true;
+        ready = false;
+        android.view.ViewParent p = getParent();
+        if (p instanceof android.view.ViewGroup) ((android.view.ViewGroup) p).removeView(this);
+        try {
+            web.onPause();
+            web.stopLoading();
+            removeView(web);
+            web.removeAllViews();
+            web.destroy();
+        } catch (Throwable ignored) {
+        }
+    }
 }

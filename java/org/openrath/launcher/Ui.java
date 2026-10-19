@@ -157,7 +157,7 @@ final class Ui {
 
     private static Bitmap custom(Context c, String name) {
         java.io.File f = customFile(c, name);
-        return f.exists() ? BitmapFactory.decodeFile(f.getPath()) : null;
+        return f.exists() ? Pics.file(c, f) : null;   // no bigger than the screen needs
     }
 
     /** The picture's shape in one flat colour. */
