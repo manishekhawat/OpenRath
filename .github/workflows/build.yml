@@ -49,21 +49,30 @@ jobs:
       - name: Lint
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" > /dev/null
-          cat > $RUNNER_TEMP/project.xml <<XML
+          # the compiled classes (for the manifest's class names), and the manifest with the SDK levels
+          # build.py gives apktool, so Lint knows the oldest Android the app runs on
+          L=$RUNNER_TEMP/lint && mkdir -p $L/classes
+          javac -nowarn --release 8 -encoding UTF-8 -cp $ANDROID_HOME/platforms/android-34/android.jar -d $L/classes $(find java -name '*.java')
+          LEVELS=$(python3 -c "import re; print(*re.search(r'MIN_SDK, TARGET_SDK = (\d+), (\d+)', open('build.py').read()).groups())")
+          set -- $LEVELS
+          sed "s|<application|<uses-sdk android:minSdkVersion=\"$1\" android:targetSdkVersion=\"$2\"/>\n    <application|" AndroidManifest.xml > $L/AndroidManifest.xml
+          cat > $L/project.xml <<XML
           <?xml version="1.0" encoding="UTF-8"?>
           <project>
             <module name="openrath" android="true" library="false" compile-sdk-version="34">
-              <manifest file="$GITHUB_WORKSPACE/AndroidManifest.xml"/>
+              <manifest file="$L/AndroidManifest.xml"/>
               <src file="$GITHUB_WORKSPACE/java"/>
               <resource file="$GITHUB_WORKSPACE/res"/>
+              <classes file="$L/classes"/>
             </module>
           </project>
           XML
-          $ANDROID_HOME/cmdline-tools/latest/bin/lint --project $RUNNER_TEMP/project.xml --sdk-home $ANDROID_HOME \
-            --html lint.html --xml lint.xml
+          # reports outside the checkout: Lint would read a lint.xml in it as its settings
+          $ANDROID_HOME/cmdline-tools/latest/bin/lint --project $L/project.xml --sdk-home $ANDROID_HOME \
+            --html $L/report.html --xml $L/report.xml
           # then the errors on their own, readable in this log; any error fails the check
-          $ANDROID_HOME/cmdline-tools/latest/bin/lint --project $RUNNER_TEMP/project.xml --sdk-home $ANDROID_HOME \
+          $ANDROID_HOME/cmdline-tools/latest/bin/lint --project $L/project.xml --sdk-home $ANDROID_HOME \
             --nowarn --text stdout --exitcode
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # v4
         if: always()
-        with: { name: lint, path: "lint.*" }
+        with: { name: lint, path: "${{ runner.temp }}/lint/report.*" }
