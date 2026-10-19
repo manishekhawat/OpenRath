@@ -40,7 +40,6 @@ jobs:
     # Android Lint over the code, manifest and resources. Errors fail the check and are listed in the log;
     # warnings are only reported (the lint artifact's lint.html).
     runs-on: ubuntu-24.04
-    continue-on-error: true   # until the first baseline is in
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09   # v5
         with: { persist-credentials: false }
@@ -49,8 +48,8 @@ jobs:
       - name: Lint
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" > /dev/null
-          # the compiled classes (for the manifest's class names), and the manifest with the SDK levels
-          # build.py gives apktool, so Lint knows the oldest Android the app runs on
+          # the compiled classes, and the manifest with the SDK levels build.py gives apktool, so Lint
+          # knows the oldest Android the app runs on
           L=$RUNNER_TEMP/lint && mkdir -p $L/classes
           javac -nowarn --release 8 -encoding UTF-8 -cp $ANDROID_HOME/platforms/android-34/android.jar -d $L/classes $(find java -name '*.java')
           LEVELS=$(python3 -c "import re; print(*re.search(r'MIN_SDK, TARGET_SDK = (\d+), (\d+)', open('build.py').read()).groups())")
@@ -67,11 +66,15 @@ jobs:
             </module>
           </project>
           XML
+          # Two checks are off: MissingClass can't see compiled classes in a project without Gradle (the
+          # emulator runs start every class the manifest names), and a home screen has to list every app,
+          # which is what QUERY_ALL_PACKAGES is for
+          OFF="--disable MissingClass,QueryAllPackagesPermission"
           # reports outside the checkout: Lint would read a lint.xml in it as its settings
-          $ANDROID_HOME/cmdline-tools/latest/bin/lint --project $L/project.xml --sdk-home $ANDROID_HOME \
+          $ANDROID_HOME/cmdline-tools/latest/bin/lint --project $L/project.xml --sdk-home $ANDROID_HOME $OFF \
             --html $L/report.html --xml $L/report.xml
           # then the errors on their own, readable in this log; any error fails the check
-          $ANDROID_HOME/cmdline-tools/latest/bin/lint --project $L/project.xml --sdk-home $ANDROID_HOME \
+          $ANDROID_HOME/cmdline-tools/latest/bin/lint --project $L/project.xml --sdk-home $ANDROID_HOME $OFF \
             --nowarn --text stdout --exitcode
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # v4
         if: always()
