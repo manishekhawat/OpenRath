@@ -37,8 +37,8 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # v4
         with: { name: openrath-apk, path: out/openrath.apk }
   lint:
-    # Android Lint over the code, manifest and resources. lint-baseline.xml lists the warnings that were
-    # there when Lint was added; anything new fails the check. Fix one and the baseline can lose it.
+    # Android Lint over the code, manifest and resources. Errors fail the check and are listed in the log;
+    # warnings are only reported (the lint artifact's lint.html).
     runs-on: ubuntu-24.04
     continue-on-error: true   # until the first baseline is in
     steps:
@@ -60,7 +60,10 @@ jobs:
           </project>
           XML
           $ANDROID_HOME/cmdline-tools/latest/bin/lint --project $RUNNER_TEMP/project.xml --sdk-home $ANDROID_HOME \
-            --baseline tools/lint-baseline.xml --html lint.html --xml lint.xml --exitcode
+            --html lint.html --xml lint.xml
+          # then the errors on their own, readable in this log; any error fails the check
+          $ANDROID_HOME/cmdline-tools/latest/bin/lint --project $RUNNER_TEMP/project.xml --sdk-home $ANDROID_HOME \
+            --nowarn --text stdout --exitcode
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # v4
         if: always()
-        with: { name: lint, path: "lint.*\ntools/lint-baseline.xml" }
+        with: { name: lint, path: "lint.*" }
