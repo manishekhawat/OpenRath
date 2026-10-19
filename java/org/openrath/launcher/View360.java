@@ -178,6 +178,7 @@ final class View360 {
         FrameLayout.LayoutParams bl = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
         bl.bottomMargin = Ui.px(18);
         root.addView(sc, bl);
+        Edge.fit(root);
         d.setContentView(root);
         d.show();
     }

@@ -143,6 +143,8 @@ final class HomeSettings {
                 .append(Drive.cameraM >= 0 ? ", camera " + Drive.cameraM + " m" : "")
                 .append(Drive.alertError.isEmpty() ? "" : " (" + Drive.alertError + ")").append("\n");
         if (Crash.last() != null) b.append("Last problem: ").append(Crash.last()).append("\n");
+        String caught = Diag.recent();
+        if (!caught.isEmpty()) b.append("Errors caught since the app started (newest first):\n").append(caught);
         String exit = Crash.lastExit(a);
         if (exit != null) b.append("Last closed because ").append(exit).append("\n");
         b.append("Weather: ").append(a.hub.temp).append(" ").append(a.hub.weather).append(" ").append(a.hub.place);

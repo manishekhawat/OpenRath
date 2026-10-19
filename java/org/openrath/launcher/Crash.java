@@ -21,13 +21,16 @@ final class Crash {
     private static SharedPreferences sp;
     private static File logs;
 
-    static void install(Context c) {
+    /** Once per process, from App: later calls do nothing, so the handler isn't chained twice. */
+    static synchronized void install(Context c) {
+        if (sp != null) return;
         sp = c.getApplicationContext().getSharedPreferences("crash", Context.MODE_PRIVATE);
         logs = new File(c.getApplicationContext().getFilesDir(), "logs");
         moveOld();
         try {
             version = c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Diag.note("version", e);
         }
         String step = sp.getString("running", null);
         if (step != null) {   // the app died in the middle of this step last time
