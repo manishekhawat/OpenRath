@@ -61,6 +61,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         f.addAction(android.content.Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
         Compat.ownOnly(this, events, f);
         build();
+        if (Intro.show(Features.on(prefs, "intro"), Motion.pick(prefs.str("motion", "standard")), b == null)) Intro.play(this, root);
         handleIntent(getIntent());
     }
 
