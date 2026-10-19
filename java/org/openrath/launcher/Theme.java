@@ -149,8 +149,12 @@ final class Theme {
         return out;
     }
 
+    /** A theme picked by ThemeAuto (night, or a driver's phone) instead of the owner's own, or null. */
+    static volatile String override;
+
     /** The chosen theme's id; the old built-in name from 1.10 means Magma Grey. */
     static String chosen(Prefs p) {
+        if (override != null) return override;
         String want = p.str("themePack", DEFAULT);
         return want.isEmpty() || "Built-in Dzire chrome".equals(want) ? DEFAULT : want;
     }

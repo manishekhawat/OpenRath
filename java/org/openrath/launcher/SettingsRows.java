@@ -403,6 +403,12 @@ final class SettingsRows {
                                 }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
         }));
+        r.add(new SettingsView.Row(g, "Theme changes by itself", Features.on(a.prefs, "autoTheme") ? "on" : "off", new Runnable() {
+            @Override
+            public void run() {
+                ThemeAuto.menu(a);
+            }
+        }));
         if (Features.on(a.prefs, "bootArt")) r.add(new SettingsView.Row(g, "Boot logo and animation", "make them with your car's badge and name", new Runnable() {
             @Override
             public void run() {
@@ -710,6 +716,12 @@ final class SettingsRows {
 
         // ---- Driving
         g = "Driving";
+        if (Features.on(a.prefs, "achievements")) r.add(new SettingsView.Row(g, "Badges", Hindi.f("%1$s of %2$s earned", Achievements.count(a), Achievements.BADGES.length), new Runnable() {
+            @Override
+            public void run() {
+                Achievements.show(a);
+            }
+        }));
         r.add(new SettingsView.Row(g, "Warn above a speed anywhere", a.prefs.warnSpeed() == 0 ? "off" : Hindi.f("%1$s km/h", String.valueOf(a.prefs.warnSpeed())), new Runnable() {
             @Override
             public void run() {

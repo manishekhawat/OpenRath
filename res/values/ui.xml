@@ -572,6 +572,245 @@
     <string name="ui_show_0_below_this_speed_for_gps_that_dri" formatted="false">Show 0 below this speed, for GPS that drifts when parked</string>
     <string name="ui_units" formatted="false">Units</string>
     <string name="ui_units_for_speed_and_temperature" formatted="false">Units for speed and temperature</string>
+    <string name="ui_fuel_1_s" formatted="false">Fuel %1$s%%</string>
+    <string name="ui_intake_1_s_c" formatted="false">Intake %1$s°C</string>
+    <string name="ui_what_kind_of_obd_ii_adapter" formatted="false">What kind of OBD-II adapter?</string>
+    <string name="ui_wi_fi_adapter_address" formatted="false">Wi-Fi adapter address</string>
+    <string name="ui_first_join_the_adapter_s_wi_fi_in_the_un" formatted="false">First join the adapter\'s Wi-Fi in the unit\'s Wi-Fi settings. Most adapters are at 192.168.0.10, port 35000.</string>
+    <string name="ui_connect" formatted="false">Connect</string>
+    <string name="ui_that_address_doesn_t_look_right_for_exam" formatted="false">That address doesn\'t look right, for example 192.168.0.10:35000</string>
+    <string name="ui_wi_fi_adapter" formatted="false">Wi-Fi adapter</string>
+    <string name="ui_connecting_to_the_wi_fi_adapter_keep_the" formatted="false">Connecting to the Wi-Fi adapter; keep the ignition on</string>
+    <string name="ui_wi_fi_settings" formatted="false">Wi-Fi settings</string>
+    <string name="ui_led_light_strip" formatted="false">LED light strip</string>
+    <string name="ui_theme_changes_by_itself" formatted="false">Theme changes by itself</string>
+    <string name="ui_a_theme_for_the_night_and_one_for_when_a" formatted="false">A theme for the night, and one for when a chosen phone connects</string>
+    <string name="ui_badges_for_good_driving" formatted="false">Badges for good driving</string>
+    <string name="ui_smooth_driving_streaks_weeks_within_the_" formatted="false">Smooth-driving streaks, weeks within the limit and distance milestones</string>
+    <string name="ui_needs_a_bluetooth_or_wi_fi_elm327_adapte" formatted="false">Needs a Bluetooth or Wi-Fi ELM327 adapter</string>
+    <string name="ui_fault_codes_in_plain_words" formatted="false">Fault codes in plain words</string>
+    <string name="ui_each_fault_code_with_what_it_means_what_" formatted="false">Each fault code with what it means, what to check and how urgent it is, from a table kept on the unit</string>
+    <string name="ui_ask_the_car_by_voice" formatted="false">Ask the car by voice</string>
+    <string name="ui_how_s_the_engine_how_much_fuel_any_fault" formatted="false">\"How\'s the engine?\", \"how much fuel?\", \"any faults?\" answered from the engine data</string>
+    <string name="ui_a_bluetooth_elk_bledom_strip_takes_the_t" formatted="false">A Bluetooth ELK-BLEDOM strip takes the theme\'s colour, dims at night and turns red for a warning</string>
+    <string name="ui_turn_on_ask_the_car_in_settings_car" formatted="false">Turn on Ask the car in Settings, Car</string>
+    <string name="ui_badges" formatted="false">Badges</string>
+    <string name="ui_1_s_of_2_s_earned" formatted="false">%1$s of %2$s earned</string>
+    <string name="ui_engine_running_lean_too_much_air" formatted="false">Engine running lean (too much air)</string>
+    <string name="ui_safe_to_drive_get_it_checked_at_the_next" formatted="false">Safe to drive; get it checked at the next service</string>
+    <string name="ui_get_it_checked_this_week" formatted="false">Get it checked this week</string>
+    <string name="ui_stop_when_it_is_safe_driving_on_can_dama" formatted="false">Stop when it is safe: driving on can damage the engine</string>
+    <string name="ui_camshaft_timing_actuator_circuit" formatted="false">Camshaft timing actuator circuit</string>
+    <string name="ui_oil_level_and_the_cam_timing_solenoid" formatted="false">Oil level and the cam timing solenoid</string>
+    <string name="ui_camshaft_timing_too_far_ahead" formatted="false">Camshaft timing too far ahead</string>
+    <string name="ui_oil_level_and_grade_the_cam_timing_solen" formatted="false">Oil level and grade; the cam timing solenoid</string>
+    <string name="ui_crankshaft_and_camshaft_out_of_step" formatted="false">Crankshaft and camshaft out of step</string>
+    <string name="ui_timing_chain_or_belt" formatted="false">Timing chain or belt</string>
+    <string name="ui_fuel_pressure_too_low_diesel_rail" formatted="false">Fuel pressure too low (diesel rail)</string>
+    <string name="ui_fuel_filter_and_pump" formatted="false">Fuel filter and pump</string>
+    <string name="ui_fuel_pressure_too_high_diesel_rail" formatted="false">Fuel pressure too high (diesel rail)</string>
+    <string name="ui_fuel_pressure_regulator" formatted="false">Fuel pressure regulator</string>
+    <string name="ui_air_flow_sensor_circuit" formatted="false">Air flow sensor circuit</string>
+    <string name="ui_air_flow_sensor_plug_and_wiring" formatted="false">Air flow sensor plug and wiring</string>
+    <string name="ui_air_filter_air_flow_sensor_leaks_after_i" formatted="false">Air filter, air flow sensor, leaks after it</string>
+    <string name="ui_air_flow_sensor_reading_low" formatted="false">Air flow sensor reading low</string>
+    <string name="ui_air_flow_sensor_plug_clean_or_replace_th" formatted="false">Air flow sensor plug; clean or replace the sensor</string>
+    <string name="ui_manifold_pressure_sensor_reading_out_of_" formatted="false">Manifold pressure sensor reading out of range</string>
+    <string name="ui_map_sensor_and_its_vacuum_pipe" formatted="false">MAP sensor and its vacuum pipe</string>
+    <string name="ui_intake_air_temperature_sensor_circuit" formatted="false">Intake air temperature sensor circuit</string>
+    <string name="ui_sensor_plug_and_wiring" formatted="false">Sensor plug and wiring</string>
+    <string name="ui_coolant_temperature_sensor_circuit" formatted="false">Coolant temperature sensor circuit</string>
+    <string name="ui_coolant_temperature_sensor_reading_low" formatted="false">Coolant temperature sensor reading low</string>
+    <string name="ui_sensor_and_wiring" formatted="false">Sensor and wiring</string>
+    <string name="ui_coolant_temperature_sensor_reading_high" formatted="false">Coolant temperature sensor reading high</string>
+    <string name="ui_sensor_and_wiring_check_the_coolant_leve" formatted="false">Sensor and wiring; check the coolant level</string>
+    <string name="ui_throttle_position_sensor_circuit" formatted="false">Throttle position sensor circuit</string>
+    <string name="ui_throttle_body_and_its_plug" formatted="false">Throttle body and its plug</string>
+    <string name="ui_throttle_position_sensor_out_of_range" formatted="false">Throttle position sensor out of range</string>
+    <string name="ui_throttle_body_clean_it" formatted="false">Throttle body; clean it</string>
+    <string name="ui_engine_warms_up_too_slowly" formatted="false">Engine warms up too slowly</string>
+    <string name="ui_thermostat_stuck_open" formatted="false">Thermostat stuck open</string>
+    <string name="ui_oxygen_sensor_circuit_front" formatted="false">Oxygen sensor circuit (front)</string>
+    <string name="ui_front_oxygen_sensor_and_wiring" formatted="false">Front oxygen sensor and wiring</string>
+    <string name="ui_front_oxygen_sensor" formatted="false">Front oxygen sensor</string>
+    <string name="ui_no_signal_from_the_front_oxygen_sensor" formatted="false">No signal from the front oxygen sensor</string>
+    <string name="ui_sensor_heater_fuse_and_wiring" formatted="false">Sensor heater fuse and wiring</string>
+    <string name="ui_oxygen_sensor_heater_front" formatted="false">Oxygen sensor heater (front)</string>
+    <string name="ui_sensor_heater_fuse_replace_the_sensor" formatted="false">Sensor heater fuse; replace the sensor</string>
+    <string name="ui_oxygen_sensor_heater_rear" formatted="false">Oxygen sensor heater (rear)</string>
+    <string name="ui_rear_oxygen_sensor" formatted="false">Rear oxygen sensor</string>
+    <string name="ui_air_leaks_dirty_air_flow_sensor_weak_fue" formatted="false">Air leaks, dirty air flow sensor, weak fuel pump</string>
+    <string name="ui_engine_running_rich_too_much_fuel" formatted="false">Engine running rich (too much fuel)</string>
+    <string name="ui_air_filter_leaking_injector_oxygen_senso" formatted="false">Air filter, leaking injector, oxygen sensor</string>
+    <string name="ui_fuel_rail_pressure_sensor_circuit" formatted="false">Fuel rail pressure sensor circuit</string>
+    <string name="ui_rail_pressure_sensor_and_plug" formatted="false">Rail pressure sensor and plug</string>
+    <string name="ui_injector_circuit_cylinder_1" formatted="false">Injector circuit, cylinder 1</string>
+    <string name="ui_injector_1_plug_and_wiring" formatted="false">Injector 1 plug and wiring</string>
+    <string name="ui_injector_circuit_cylinder_2" formatted="false">Injector circuit, cylinder 2</string>
+    <string name="ui_injector_2_plug_and_wiring" formatted="false">Injector 2 plug and wiring</string>
+    <string name="ui_injector_circuit_cylinder_3" formatted="false">Injector circuit, cylinder 3</string>
+    <string name="ui_injector_3_plug_and_wiring" formatted="false">Injector 3 plug and wiring</string>
+    <string name="ui_injector_circuit_cylinder_4" formatted="false">Injector circuit, cylinder 4</string>
+    <string name="ui_injector_4_plug_and_wiring" formatted="false">Injector 4 plug and wiring</string>
+    <string name="ui_engine_overheating" formatted="false">Engine overheating</string>
+    <string name="ui_coolant_level_radiator_fan_water_pump" formatted="false">Coolant level, radiator fan, water pump</string>
+    <string name="ui_gearbox_overheating" formatted="false">Gearbox overheating</string>
+    <string name="ui_gearbox_oil_level_and_cooler" formatted="false">Gearbox oil level and cooler</string>
+    <string name="ui_engine_over_revved" formatted="false">Engine over-revved</string>
+    <string name="ui_shift_earlier" formatted="false">Shift earlier</string>
+    <string name="ui_turbo_boost_too_high" formatted="false">Turbo boost too high</string>
+    <string name="ui_turbo_wastegate_and_boost_sensor" formatted="false">Turbo wastegate and boost sensor</string>
+    <string name="ui_turbo_boost_too_low" formatted="false">Turbo boost too low</string>
+    <string name="ui_turbo_hoses_for_leaks_the_intercooler" formatted="false">Turbo hoses for leaks, the intercooler</string>
+    <string name="ui_spark_plugs_coils_fuel_quality" formatted="false">Spark plugs, coils, fuel quality</string>
+    <string name="ui_spark_plug_and_coil_on_cylinder_1" formatted="false">Spark plug and coil on cylinder 1</string>
+    <string name="ui_spark_plug_and_coil_on_cylinder_2" formatted="false">Spark plug and coil on cylinder 2</string>
+    <string name="ui_spark_plug_and_coil_on_cylinder_3" formatted="false">Spark plug and coil on cylinder 3</string>
+    <string name="ui_spark_plug_and_coil_on_cylinder_4" formatted="false">Spark plug and coil on cylinder 4</string>
+    <string name="ui_knock_sensor_circuit" formatted="false">Knock sensor circuit</string>
+    <string name="ui_knock_sensor_plug_and_wiring" formatted="false">Knock sensor plug and wiring</string>
+    <string name="ui_knock_sensor_signal_low" formatted="false">Knock sensor signal low</string>
+    <string name="ui_knock_sensor_and_wiring" formatted="false">Knock sensor and wiring</string>
+    <string name="ui_crank_sensor_the_engine_may_cut_out" formatted="false">Crank sensor; the engine may cut out</string>
+    <string name="ui_cam_sensor_and_wiring" formatted="false">Cam sensor and wiring</string>
+    <string name="ui_ignition_coil_circuit_cylinder_1" formatted="false">Ignition coil circuit, cylinder 1</string>
+    <string name="ui_coil_1_and_its_plug" formatted="false">Coil 1 and its plug</string>
+    <string name="ui_ignition_coil_circuit_cylinder_2" formatted="false">Ignition coil circuit, cylinder 2</string>
+    <string name="ui_coil_2_and_its_plug" formatted="false">Coil 2 and its plug</string>
+    <string name="ui_glow_plug_circuit_diesel" formatted="false">Glow plug circuit (diesel)</string>
+    <string name="ui_glow_plugs_and_relay" formatted="false">Glow plugs and relay</string>
+    <string name="ui_exhaust_gas_recirculation_egr_flow" formatted="false">Exhaust gas recirculation (EGR) flow</string>
+    <string name="ui_clean_the_egr_valve" formatted="false">Clean the EGR valve</string>
+    <string name="ui_egr_flow_too_low" formatted="false">EGR flow too low</string>
+    <string name="ui_blocked_egr_valve_or_pipe" formatted="false">Blocked EGR valve or pipe</string>
+    <string name="ui_egr_flow_too_high" formatted="false">EGR flow too high</string>
+    <string name="ui_egr_valve_stuck_open" formatted="false">EGR valve stuck open</string>
+    <string name="ui_catalytic_converter_oxygen_sensors" formatted="false">Catalytic converter; oxygen sensors</string>
+    <string name="ui_catalytic_converter_warm_up_efficiency_l" formatted="false">Catalytic converter warm-up efficiency low</string>
+    <string name="ui_catalytic_converter" formatted="false">Catalytic converter</string>
+    <string name="ui_fuel_vapour_evap_system" formatted="false">Fuel vapour (EVAP) system</string>
+    <string name="ui_fuel_cap_evap_pipes" formatted="false">Fuel cap, EVAP pipes</string>
+    <string name="ui_fuel_vapour_purge_flow" formatted="false">Fuel vapour purge flow</string>
+    <string name="ui_purge_valve" formatted="false">Purge valve</string>
+    <string name="ui_fuel_cap_seal_evap_pipes" formatted="false">Fuel cap seal, EVAP pipes</string>
+    <string name="ui_fuel_vapour_purge_valve_circuit" formatted="false">Fuel vapour purge valve circuit</string>
+    <string name="ui_purge_valve_and_plug" formatted="false">Purge valve and plug</string>
+    <string name="ui_fuel_vapour_vent_control" formatted="false">Fuel vapour vent control</string>
+    <string name="ui_vent_valve_and_canister" formatted="false">Vent valve and canister</string>
+    <string name="ui_large_fuel_vapour_evap_leak" formatted="false">Large fuel vapour (EVAP) leak</string>
+    <string name="ui_check_the_fuel_cap_is_tight" formatted="false">Check the fuel cap is tight</string>
+    <string name="ui_very_small_fuel_vapour_evap_leak" formatted="false">Very small fuel vapour (EVAP) leak</string>
+    <string name="ui_fuel_cap_seal" formatted="false">Fuel cap seal</string>
+    <string name="ui_radiator_fan_circuit" formatted="false">Radiator fan circuit</string>
+    <string name="ui_fan_fuse_and_relay_watch_the_temperature" formatted="false">Fan fuse and relay; watch the temperature</string>
+    <string name="ui_speed_sensor_the_speedometer_may_be_wron" formatted="false">Speed sensor; the speedometer may be wrong</string>
+    <string name="ui_idle_speed_control" formatted="false">Idle speed control</string>
+    <string name="ui_clean_the_throttle_body" formatted="false">Clean the throttle body</string>
+    <string name="ui_idle_speed_too_low" formatted="false">Idle speed too low</string>
+    <string name="ui_throttle_body_air_leaks" formatted="false">Throttle body, air leaks</string>
+    <string name="ui_idle_speed_too_high" formatted="false">Idle speed too high</string>
+    <string name="ui_air_leaks_throttle_body" formatted="false">Air leaks, throttle body</string>
+    <string name="ui_oil_pressure_sensor_circuit" formatted="false">Oil pressure sensor circuit</string>
+    <string name="ui_check_the_oil_level_now" formatted="false">Check the oil level now</string>
+    <string name="ui_oil_pressure_too_low" formatted="false">Oil pressure too low</string>
+    <string name="ui_system_voltage" formatted="false">System voltage</string>
+    <string name="ui_battery_and_alternator" formatted="false">Battery and alternator</string>
+    <string name="ui_battery_alternator_belt" formatted="false">Battery, alternator belt</string>
+    <string name="ui_alternator_regulator" formatted="false">Alternator regulator</string>
+    <string name="ui_engine_computer_memory_error" formatted="false">Engine computer memory error</string>
+    <string name="ui_engine_computer" formatted="false">Engine computer</string>
+    <string name="ui_engine_computer_processor_fault" formatted="false">Engine computer processor fault</string>
+    <string name="ui_read_the_gearbox_computer_s_own_codes" formatted="false">Read the gearbox computer\'s own codes</string>
+    <string name="ui_gear_selector_sensor" formatted="false">Gear selector sensor</string>
+    <string name="ui_gear_position_switch" formatted="false">Gear position switch</string>
+    <string name="ui_gearbox_input_speed_sensor" formatted="false">Gearbox input speed sensor</string>
+    <string name="ui_gearbox_speed_sensor" formatted="false">Gearbox speed sensor</string>
+    <string name="ui_gearbox_output_speed_sensor" formatted="false">Gearbox output speed sensor</string>
+    <string name="ui_torque_converter_clutch" formatted="false">Torque converter clutch</string>
+    <string name="ui_gearbox_oil_and_solenoid" formatted="false">Gearbox oil and solenoid</string>
+    <string name="ui_torque_converter_clutch_stuck_off" formatted="false">Torque converter clutch stuck off</string>
+    <string name="ui_diesel_particulate_filter_efficiency_low" formatted="false">Diesel particulate filter efficiency low</string>
+    <string name="ui_dpf_a_long_highway_drive_may_clean_it" formatted="false">DPF; a long highway drive may clean it</string>
+    <string name="ui_throttle_sensors_disagree" formatted="false">Throttle sensors disagree</string>
+    <string name="ui_throttle_body_and_accelerator_pedal" formatted="false">Throttle body and accelerator pedal</string>
+    <string name="ui_accelerator_pedal_sensors_disagree" formatted="false">Accelerator pedal sensors disagree</string>
+    <string name="ui_accelerator_pedal_sensor" formatted="false">Accelerator pedal sensor</string>
+    <string name="ui_diesel_particulate_filter_blocked_with_a" formatted="false">Diesel particulate filter blocked with ash</string>
+    <string name="ui_dpf_service" formatted="false">DPF service</string>
+    <string name="ui_diesel_particulate_filter_soot_build_up" formatted="false">Diesel particulate filter soot build-up</string>
+    <string name="ui_a_long_highway_drive_or_a_forced_regener" formatted="false">A long highway drive, or a forced regeneration</string>
+    <string name="ui_lost_contact_with_the_engine_computer" formatted="false">Lost contact with the engine computer</string>
+    <string name="ui_wiring_and_the_engine_computer" formatted="false">Wiring and the engine computer</string>
+    <string name="ui_lost_contact_with_the_gearbox_computer" formatted="false">Lost contact with the gearbox computer</string>
+    <string name="ui_wiring_and_the_gearbox_computer" formatted="false">Wiring and the gearbox computer</string>
+    <string name="ui_lost_contact_with_the_abs_computer" formatted="false">Lost contact with the ABS computer</string>
+    <string name="ui_abs_fuse_and_wiring" formatted="false">ABS fuse and wiring</string>
+    <string name="ui_lost_contact_with_the_body_computer" formatted="false">Lost contact with the body computer</string>
+    <string name="ui_body_computer_fuse_and_wiring" formatted="false">Body computer fuse and wiring</string>
+    <string name="ui_front_left_wheel_speed_sensor" formatted="false">Front left wheel speed sensor</string>
+    <string name="ui_abs_sensor_abs_may_be_off" formatted="false">ABS sensor; ABS may be off</string>
+    <string name="ui_front_right_wheel_speed_sensor" formatted="false">Front right wheel speed sensor</string>
+    <string name="ui_rear_left_wheel_speed_sensor" formatted="false">Rear left wheel speed sensor</string>
+    <string name="ui_rear_right_wheel_speed_sensor" formatted="false">Rear right wheel speed sensor</string>
+    <string name="ui_driver_airbag_circuit" formatted="false">Driver airbag circuit</string>
+    <string name="ui_airbag_system_it_may_not_open_in_a_crash" formatted="false">Airbag system; it may not open in a crash</string>
+    <string name="ui_passenger_airbag_circuit" formatted="false">Passenger airbag circuit</string>
+    <string name="ui_ask_a_mechanic_to_read_this_code_for_you" formatted="false">Ask a mechanic to read this code for your car</string>
+    <string name="ui_unknown_code" formatted="false">Unknown code</string>
+    <string name="ui_chassis_brakes_abs_or_steering" formatted="false">Chassis: brakes, ABS or steering</string>
+    <string name="ui_body_airbags_seats_lights_or_locks" formatted="false">Body: airbags, seats, lights or locks</string>
+    <string name="ui_network_the_car_s_computers_can_t_talk_t" formatted="false">Network: the car\'s computers can\'t talk to each other</string>
+    <string name="ui_maker_s_own_engine_or_gearbox_code" formatted="false">Maker\'s own engine or gearbox code</string>
+    <string name="ui_fuel_and_air_mixture" formatted="false">Fuel and air mixture</string>
+    <string name="ui_ignition_or_misfire" formatted="false">Ignition or misfire</string>
+    <string name="ui_emissions_control" formatted="false">Emissions control</string>
+    <string name="ui_speed_idle_or_battery" formatted="false">Speed, idle or battery</string>
+    <string name="ui_gearbox" formatted="false">Gearbox</string>
+    <string name="ui_engine" formatted="false">Engine</string>
+    <string name="ui_check_1_s" formatted="false">Check: %1$s</string>
+    <string name="ui_today_you_have_driven_1_s_km_in_2_s_minu" formatted="false">Today you have driven %1$s km in %2$s minutes.</string>
+    <string name="ui_the_engine_adapter_isn_t_connected_so_i_" formatted="false">The engine adapter isn\'t connected, so I can\'t see the engine.</string>
+    <string name="ui_this_car_doesn_t_report_its_fuel_level" formatted="false">This car doesn\'t report its fuel level.</string>
+    <string name="ui_fuel_is_low_1_s_percent_time_to_fill_up" formatted="false">Fuel is low, %1$s percent. Time to fill up.</string>
+    <string name="ui_fuel_is_at_1_s_percent" formatted="false">Fuel is at %1$s percent.</string>
+    <string name="ui_i_can_t_read_the_battery_voltage" formatted="false">I can\'t read the battery voltage.</string>
+    <string name="ui_the_battery_is_weak_1_s_volts_get_it_che" formatted="false">The battery is weak, %1$s volts. Get it checked.</string>
+    <string name="ui_the_battery_is_1_s_volts_with_the_engine" formatted="false">The battery is %1$s volts with the engine running, which is low; the alternator may not be charging.</string>
+    <string name="ui_the_battery_is_fine_1_s_volts" formatted="false">The battery is fine, %1$s volts.</string>
+    <string name="ui_i_haven_t_read_the_fault_codes_yet_open_" formatted="false">I haven\'t read the fault codes yet. Open the engine box and tap Read fault codes.</string>
+    <string name="ui_no_fault_codes_are_stored" formatted="false">No fault codes are stored.</string>
+    <string name="ui_1_s_fault_codes_are_stored_2_s" formatted="false">%1$s fault codes are stored. %2$s</string>
+    <string name="ui_the_engine_is_hot_1_s_degrees_stop_when_" formatted="false">The engine is hot, %1$s degrees. Stop when it is safe and let it cool.</string>
+    <string name="ui_coolant_is_at_1_s_degrees" formatted="false">Coolant is at %1$s degrees.</string>
+    <string name="ui_1_s_fault_codes_are_stored" formatted="false">%1$s fault codes are stored.</string>
+    <string name="ui_the_engine_looks_fine" formatted="false">The engine looks fine.</string>
+    <string name="ui_none_keep_my_theme" formatted="false">None (keep my theme)</string>
+    <string name="ui_at_night_1_s" formatted="false">At night: %1$s</string>
+    <string name="ui_when_1_s_connects_2_s" formatted="false">When %1$s connects: %2$s</string>
+    <string name="ui_a_phone" formatted="false">a phone</string>
+    <string name="ui_which_theme" formatted="false">Which theme?</string>
+    <string name="ui_pair_the_phone_with_the_unit_first" formatted="false">Pair the phone with the unit first</string>
+    <string name="ui_which_phone" formatted="false">Which phone?</string>
+    <string name="ui_turn_on_bluetooth_first" formatted="false">Turn on Bluetooth first</string>
+    <string name="ui_looking_for_light_strips_keep_the_strip_" formatted="false">Looking for light strips; keep the strip switched on</string>
+    <string name="ui_no_light_strip_found_nearby" formatted="false">No light strip found nearby</string>
+    <string name="ui_which_light_strip" formatted="false">Which light strip?</string>
+    <string name="ui_smooth_three" formatted="false">Smooth three</string>
+    <string name="ui_three_driving_days_in_a_row_with_a_score" formatted="false">Three driving days in a row with a score of 90 or more</string>
+    <string name="ui_smooth_week" formatted="false">Smooth week</string>
+    <string name="ui_seven_driving_days_in_a_row_with_a_score" formatted="false">Seven driving days in a row with a score of 90 or more</string>
+    <string name="ui_smooth_month" formatted="false">Smooth month</string>
+    <string name="ui_thirty_driving_days_in_a_row_with_a_scor" formatted="false">Thirty driving days in a row with a score of 90 or more</string>
+    <string name="ui_a_week_within_the_limit" formatted="false">A week within the limit</string>
+    <string name="ui_seven_driving_days_in_a_row_without_spee" formatted="false">Seven driving days in a row without speeding</string>
+    <string name="ui_perfect_day" formatted="false">Perfect day</string>
+    <string name="ui_a_day_of_20_km_or_more_with_a_score_of_1" formatted="false">A day of 20 km or more with a score of 100</string>
+    <string name="ui_calm_long_drive" formatted="false">Calm long drive</string>
+    <string name="ui_a_day_of_100_km_or_more_with_no_harsh_br" formatted="false">A day of 100 km or more with no harsh braking or hard starts</string>
+    <string name="ui_1_000_km_driven_with_openrath" formatted="false">1,000 km driven with OpenRath</string>
+    <string name="ui_10_000_km_driven_with_openrath" formatted="false">10,000 km driven with OpenRath</string>
+    <string name="ui_new_badge_1_s" formatted="false">New badge: %1$s</string>
+    <string name="ui_badges_1_s_of_2_s" formatted="false">Badges: %1$s of %2$s</string>
     <string-array name="ui_strings">
         <item>@string/ui_back_to_the_dashboard</item>
         <item>@string/ui_search_settings</item>
@@ -1143,5 +1382,244 @@
         <item>@string/ui_show_0_below_this_speed_for_gps_that_dri</item>
         <item>@string/ui_units</item>
         <item>@string/ui_units_for_speed_and_temperature</item>
+        <item>@string/ui_fuel_1_s</item>
+        <item>@string/ui_intake_1_s_c</item>
+        <item>@string/ui_what_kind_of_obd_ii_adapter</item>
+        <item>@string/ui_wi_fi_adapter_address</item>
+        <item>@string/ui_first_join_the_adapter_s_wi_fi_in_the_un</item>
+        <item>@string/ui_connect</item>
+        <item>@string/ui_that_address_doesn_t_look_right_for_exam</item>
+        <item>@string/ui_wi_fi_adapter</item>
+        <item>@string/ui_connecting_to_the_wi_fi_adapter_keep_the</item>
+        <item>@string/ui_wi_fi_settings</item>
+        <item>@string/ui_led_light_strip</item>
+        <item>@string/ui_theme_changes_by_itself</item>
+        <item>@string/ui_a_theme_for_the_night_and_one_for_when_a</item>
+        <item>@string/ui_badges_for_good_driving</item>
+        <item>@string/ui_smooth_driving_streaks_weeks_within_the_</item>
+        <item>@string/ui_needs_a_bluetooth_or_wi_fi_elm327_adapte</item>
+        <item>@string/ui_fault_codes_in_plain_words</item>
+        <item>@string/ui_each_fault_code_with_what_it_means_what_</item>
+        <item>@string/ui_ask_the_car_by_voice</item>
+        <item>@string/ui_how_s_the_engine_how_much_fuel_any_fault</item>
+        <item>@string/ui_a_bluetooth_elk_bledom_strip_takes_the_t</item>
+        <item>@string/ui_turn_on_ask_the_car_in_settings_car</item>
+        <item>@string/ui_badges</item>
+        <item>@string/ui_1_s_of_2_s_earned</item>
+        <item>@string/ui_engine_running_lean_too_much_air</item>
+        <item>@string/ui_safe_to_drive_get_it_checked_at_the_next</item>
+        <item>@string/ui_get_it_checked_this_week</item>
+        <item>@string/ui_stop_when_it_is_safe_driving_on_can_dama</item>
+        <item>@string/ui_camshaft_timing_actuator_circuit</item>
+        <item>@string/ui_oil_level_and_the_cam_timing_solenoid</item>
+        <item>@string/ui_camshaft_timing_too_far_ahead</item>
+        <item>@string/ui_oil_level_and_grade_the_cam_timing_solen</item>
+        <item>@string/ui_crankshaft_and_camshaft_out_of_step</item>
+        <item>@string/ui_timing_chain_or_belt</item>
+        <item>@string/ui_fuel_pressure_too_low_diesel_rail</item>
+        <item>@string/ui_fuel_filter_and_pump</item>
+        <item>@string/ui_fuel_pressure_too_high_diesel_rail</item>
+        <item>@string/ui_fuel_pressure_regulator</item>
+        <item>@string/ui_air_flow_sensor_circuit</item>
+        <item>@string/ui_air_flow_sensor_plug_and_wiring</item>
+        <item>@string/ui_air_filter_air_flow_sensor_leaks_after_i</item>
+        <item>@string/ui_air_flow_sensor_reading_low</item>
+        <item>@string/ui_air_flow_sensor_plug_clean_or_replace_th</item>
+        <item>@string/ui_manifold_pressure_sensor_reading_out_of_</item>
+        <item>@string/ui_map_sensor_and_its_vacuum_pipe</item>
+        <item>@string/ui_intake_air_temperature_sensor_circuit</item>
+        <item>@string/ui_sensor_plug_and_wiring</item>
+        <item>@string/ui_coolant_temperature_sensor_circuit</item>
+        <item>@string/ui_coolant_temperature_sensor_reading_low</item>
+        <item>@string/ui_sensor_and_wiring</item>
+        <item>@string/ui_coolant_temperature_sensor_reading_high</item>
+        <item>@string/ui_sensor_and_wiring_check_the_coolant_leve</item>
+        <item>@string/ui_throttle_position_sensor_circuit</item>
+        <item>@string/ui_throttle_body_and_its_plug</item>
+        <item>@string/ui_throttle_position_sensor_out_of_range</item>
+        <item>@string/ui_throttle_body_clean_it</item>
+        <item>@string/ui_engine_warms_up_too_slowly</item>
+        <item>@string/ui_thermostat_stuck_open</item>
+        <item>@string/ui_oxygen_sensor_circuit_front</item>
+        <item>@string/ui_front_oxygen_sensor_and_wiring</item>
+        <item>@string/ui_front_oxygen_sensor</item>
+        <item>@string/ui_no_signal_from_the_front_oxygen_sensor</item>
+        <item>@string/ui_sensor_heater_fuse_and_wiring</item>
+        <item>@string/ui_oxygen_sensor_heater_front</item>
+        <item>@string/ui_sensor_heater_fuse_replace_the_sensor</item>
+        <item>@string/ui_oxygen_sensor_heater_rear</item>
+        <item>@string/ui_rear_oxygen_sensor</item>
+        <item>@string/ui_air_leaks_dirty_air_flow_sensor_weak_fue</item>
+        <item>@string/ui_engine_running_rich_too_much_fuel</item>
+        <item>@string/ui_air_filter_leaking_injector_oxygen_senso</item>
+        <item>@string/ui_fuel_rail_pressure_sensor_circuit</item>
+        <item>@string/ui_rail_pressure_sensor_and_plug</item>
+        <item>@string/ui_injector_circuit_cylinder_1</item>
+        <item>@string/ui_injector_1_plug_and_wiring</item>
+        <item>@string/ui_injector_circuit_cylinder_2</item>
+        <item>@string/ui_injector_2_plug_and_wiring</item>
+        <item>@string/ui_injector_circuit_cylinder_3</item>
+        <item>@string/ui_injector_3_plug_and_wiring</item>
+        <item>@string/ui_injector_circuit_cylinder_4</item>
+        <item>@string/ui_injector_4_plug_and_wiring</item>
+        <item>@string/ui_engine_overheating</item>
+        <item>@string/ui_coolant_level_radiator_fan_water_pump</item>
+        <item>@string/ui_gearbox_overheating</item>
+        <item>@string/ui_gearbox_oil_level_and_cooler</item>
+        <item>@string/ui_engine_over_revved</item>
+        <item>@string/ui_shift_earlier</item>
+        <item>@string/ui_turbo_boost_too_high</item>
+        <item>@string/ui_turbo_wastegate_and_boost_sensor</item>
+        <item>@string/ui_turbo_boost_too_low</item>
+        <item>@string/ui_turbo_hoses_for_leaks_the_intercooler</item>
+        <item>@string/ui_spark_plugs_coils_fuel_quality</item>
+        <item>@string/ui_spark_plug_and_coil_on_cylinder_1</item>
+        <item>@string/ui_spark_plug_and_coil_on_cylinder_2</item>
+        <item>@string/ui_spark_plug_and_coil_on_cylinder_3</item>
+        <item>@string/ui_spark_plug_and_coil_on_cylinder_4</item>
+        <item>@string/ui_knock_sensor_circuit</item>
+        <item>@string/ui_knock_sensor_plug_and_wiring</item>
+        <item>@string/ui_knock_sensor_signal_low</item>
+        <item>@string/ui_knock_sensor_and_wiring</item>
+        <item>@string/ui_crank_sensor_the_engine_may_cut_out</item>
+        <item>@string/ui_cam_sensor_and_wiring</item>
+        <item>@string/ui_ignition_coil_circuit_cylinder_1</item>
+        <item>@string/ui_coil_1_and_its_plug</item>
+        <item>@string/ui_ignition_coil_circuit_cylinder_2</item>
+        <item>@string/ui_coil_2_and_its_plug</item>
+        <item>@string/ui_glow_plug_circuit_diesel</item>
+        <item>@string/ui_glow_plugs_and_relay</item>
+        <item>@string/ui_exhaust_gas_recirculation_egr_flow</item>
+        <item>@string/ui_clean_the_egr_valve</item>
+        <item>@string/ui_egr_flow_too_low</item>
+        <item>@string/ui_blocked_egr_valve_or_pipe</item>
+        <item>@string/ui_egr_flow_too_high</item>
+        <item>@string/ui_egr_valve_stuck_open</item>
+        <item>@string/ui_catalytic_converter_oxygen_sensors</item>
+        <item>@string/ui_catalytic_converter_warm_up_efficiency_l</item>
+        <item>@string/ui_catalytic_converter</item>
+        <item>@string/ui_fuel_vapour_evap_system</item>
+        <item>@string/ui_fuel_cap_evap_pipes</item>
+        <item>@string/ui_fuel_vapour_purge_flow</item>
+        <item>@string/ui_purge_valve</item>
+        <item>@string/ui_fuel_cap_seal_evap_pipes</item>
+        <item>@string/ui_fuel_vapour_purge_valve_circuit</item>
+        <item>@string/ui_purge_valve_and_plug</item>
+        <item>@string/ui_fuel_vapour_vent_control</item>
+        <item>@string/ui_vent_valve_and_canister</item>
+        <item>@string/ui_large_fuel_vapour_evap_leak</item>
+        <item>@string/ui_check_the_fuel_cap_is_tight</item>
+        <item>@string/ui_very_small_fuel_vapour_evap_leak</item>
+        <item>@string/ui_fuel_cap_seal</item>
+        <item>@string/ui_radiator_fan_circuit</item>
+        <item>@string/ui_fan_fuse_and_relay_watch_the_temperature</item>
+        <item>@string/ui_speed_sensor_the_speedometer_may_be_wron</item>
+        <item>@string/ui_idle_speed_control</item>
+        <item>@string/ui_clean_the_throttle_body</item>
+        <item>@string/ui_idle_speed_too_low</item>
+        <item>@string/ui_throttle_body_air_leaks</item>
+        <item>@string/ui_idle_speed_too_high</item>
+        <item>@string/ui_air_leaks_throttle_body</item>
+        <item>@string/ui_oil_pressure_sensor_circuit</item>
+        <item>@string/ui_check_the_oil_level_now</item>
+        <item>@string/ui_oil_pressure_too_low</item>
+        <item>@string/ui_system_voltage</item>
+        <item>@string/ui_battery_and_alternator</item>
+        <item>@string/ui_battery_alternator_belt</item>
+        <item>@string/ui_alternator_regulator</item>
+        <item>@string/ui_engine_computer_memory_error</item>
+        <item>@string/ui_engine_computer</item>
+        <item>@string/ui_engine_computer_processor_fault</item>
+        <item>@string/ui_read_the_gearbox_computer_s_own_codes</item>
+        <item>@string/ui_gear_selector_sensor</item>
+        <item>@string/ui_gear_position_switch</item>
+        <item>@string/ui_gearbox_input_speed_sensor</item>
+        <item>@string/ui_gearbox_speed_sensor</item>
+        <item>@string/ui_gearbox_output_speed_sensor</item>
+        <item>@string/ui_torque_converter_clutch</item>
+        <item>@string/ui_gearbox_oil_and_solenoid</item>
+        <item>@string/ui_torque_converter_clutch_stuck_off</item>
+        <item>@string/ui_diesel_particulate_filter_efficiency_low</item>
+        <item>@string/ui_dpf_a_long_highway_drive_may_clean_it</item>
+        <item>@string/ui_throttle_sensors_disagree</item>
+        <item>@string/ui_throttle_body_and_accelerator_pedal</item>
+        <item>@string/ui_accelerator_pedal_sensors_disagree</item>
+        <item>@string/ui_accelerator_pedal_sensor</item>
+        <item>@string/ui_diesel_particulate_filter_blocked_with_a</item>
+        <item>@string/ui_dpf_service</item>
+        <item>@string/ui_diesel_particulate_filter_soot_build_up</item>
+        <item>@string/ui_a_long_highway_drive_or_a_forced_regener</item>
+        <item>@string/ui_lost_contact_with_the_engine_computer</item>
+        <item>@string/ui_wiring_and_the_engine_computer</item>
+        <item>@string/ui_lost_contact_with_the_gearbox_computer</item>
+        <item>@string/ui_wiring_and_the_gearbox_computer</item>
+        <item>@string/ui_lost_contact_with_the_abs_computer</item>
+        <item>@string/ui_abs_fuse_and_wiring</item>
+        <item>@string/ui_lost_contact_with_the_body_computer</item>
+        <item>@string/ui_body_computer_fuse_and_wiring</item>
+        <item>@string/ui_front_left_wheel_speed_sensor</item>
+        <item>@string/ui_abs_sensor_abs_may_be_off</item>
+        <item>@string/ui_front_right_wheel_speed_sensor</item>
+        <item>@string/ui_rear_left_wheel_speed_sensor</item>
+        <item>@string/ui_rear_right_wheel_speed_sensor</item>
+        <item>@string/ui_driver_airbag_circuit</item>
+        <item>@string/ui_airbag_system_it_may_not_open_in_a_crash</item>
+        <item>@string/ui_passenger_airbag_circuit</item>
+        <item>@string/ui_ask_a_mechanic_to_read_this_code_for_you</item>
+        <item>@string/ui_unknown_code</item>
+        <item>@string/ui_chassis_brakes_abs_or_steering</item>
+        <item>@string/ui_body_airbags_seats_lights_or_locks</item>
+        <item>@string/ui_network_the_car_s_computers_can_t_talk_t</item>
+        <item>@string/ui_maker_s_own_engine_or_gearbox_code</item>
+        <item>@string/ui_fuel_and_air_mixture</item>
+        <item>@string/ui_ignition_or_misfire</item>
+        <item>@string/ui_emissions_control</item>
+        <item>@string/ui_speed_idle_or_battery</item>
+        <item>@string/ui_gearbox</item>
+        <item>@string/ui_engine</item>
+        <item>@string/ui_check_1_s</item>
+        <item>@string/ui_today_you_have_driven_1_s_km_in_2_s_minu</item>
+        <item>@string/ui_the_engine_adapter_isn_t_connected_so_i_</item>
+        <item>@string/ui_this_car_doesn_t_report_its_fuel_level</item>
+        <item>@string/ui_fuel_is_low_1_s_percent_time_to_fill_up</item>
+        <item>@string/ui_fuel_is_at_1_s_percent</item>
+        <item>@string/ui_i_can_t_read_the_battery_voltage</item>
+        <item>@string/ui_the_battery_is_weak_1_s_volts_get_it_che</item>
+        <item>@string/ui_the_battery_is_1_s_volts_with_the_engine</item>
+        <item>@string/ui_the_battery_is_fine_1_s_volts</item>
+        <item>@string/ui_i_haven_t_read_the_fault_codes_yet_open_</item>
+        <item>@string/ui_no_fault_codes_are_stored</item>
+        <item>@string/ui_1_s_fault_codes_are_stored_2_s</item>
+        <item>@string/ui_the_engine_is_hot_1_s_degrees_stop_when_</item>
+        <item>@string/ui_coolant_is_at_1_s_degrees</item>
+        <item>@string/ui_1_s_fault_codes_are_stored</item>
+        <item>@string/ui_the_engine_looks_fine</item>
+        <item>@string/ui_none_keep_my_theme</item>
+        <item>@string/ui_at_night_1_s</item>
+        <item>@string/ui_when_1_s_connects_2_s</item>
+        <item>@string/ui_a_phone</item>
+        <item>@string/ui_which_theme</item>
+        <item>@string/ui_pair_the_phone_with_the_unit_first</item>
+        <item>@string/ui_which_phone</item>
+        <item>@string/ui_turn_on_bluetooth_first</item>
+        <item>@string/ui_looking_for_light_strips_keep_the_strip_</item>
+        <item>@string/ui_no_light_strip_found_nearby</item>
+        <item>@string/ui_which_light_strip</item>
+        <item>@string/ui_smooth_three</item>
+        <item>@string/ui_three_driving_days_in_a_row_with_a_score</item>
+        <item>@string/ui_smooth_week</item>
+        <item>@string/ui_seven_driving_days_in_a_row_with_a_score</item>
+        <item>@string/ui_smooth_month</item>
+        <item>@string/ui_thirty_driving_days_in_a_row_with_a_scor</item>
+        <item>@string/ui_a_week_within_the_limit</item>
+        <item>@string/ui_seven_driving_days_in_a_row_without_spee</item>
+        <item>@string/ui_perfect_day</item>
+        <item>@string/ui_a_day_of_20_km_or_more_with_a_score_of_1</item>
+        <item>@string/ui_calm_long_drive</item>
+        <item>@string/ui_a_day_of_100_km_or_more_with_no_harsh_br</item>
+        <item>@string/ui_1_000_km_driven_with_openrath</item>
+        <item>@string/ui_10_000_km_driven_with_openrath</item>
+        <item>@string/ui_new_badge_1_s</item>
+        <item>@string/ui_badges_1_s_of_2_s</item>
     </string-array>
 </resources>

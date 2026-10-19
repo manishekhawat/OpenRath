@@ -1074,7 +1074,9 @@ final class Cards {
             }
             if (p.str("obdMac", "").isEmpty()) foot.setText(Hindi.t("Tap to choose your OBD-II Bluetooth adapter"));
             else if (!live) foot.setText(Hindi.t(Obd.status));
-            else foot.setText((Obd.load >= 0 ? Hindi.f("Load %1$s%%", Obd.load) : "") + (n > 0 ? "  ·  " + (n == 1 ? Hindi.t("1 fault code") : Hindi.f("%1$s fault codes", n)) : Obd.codesAt > 0 ? "  ·  " + Hindi.t("no fault codes") : ""));
+            else foot.setText((Obd.load >= 0 ? Hindi.f("Load %1$s%%", Obd.load) : "")
+                    + (Obd.fuel >= 0 ? "  ·  " + Hindi.f("Fuel %1$s%%", Obd.fuel) : "")
+                    + (Obd.intake > -999 ? "  ·  " + Hindi.f("Intake %1$s°C", Obd.intake) : "") + (n > 0 ? "  ·  " + (n == 1 ? Hindi.t("1 fault code") : Hindi.f("%1$s fault codes", n)) : Obd.codesAt > 0 ? "  ·  " + Hindi.t("no fault codes") : ""));
         }
     }
 
