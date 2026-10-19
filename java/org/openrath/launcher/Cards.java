@@ -90,8 +90,20 @@ final class Cards {
             }, 5 * 60000 + 1000);
             return note;
         }
+        // the dashboard keeps its map page between rebuilds (a page swipe, a new theme)
+        HomeActivity home = c instanceof HomeActivity ? (HomeActivity) c : null;
+        if (home != null && home.keptMap != null) {
+            if (home.keptMap.alive()) {
+                home.keptMap.reuse();
+                return home.keptMap;
+            }
+            home.keptMap.destroy();
+            home.keptMap = null;
+        }
         try {
-            return new MapCard(c);
+            MapCard m = new MapCard(c);
+            if (home != null) home.keptMap = m;
+            return m;
         } catch (Throwable e) {
             return new NoMapCard(c, "The map needs Android System WebView. Install or turn it on in Android's settings.");
         }
@@ -680,18 +692,35 @@ final class Cards {
             super(c, "PERFORMANCE", "FPS", "CPU %", "TEMP °C", "FRAME MS");
         }
 
+        private boolean measuring;
+
         @Override
         protected void onAttachedToWindow() {
             super.onAttachedToWindow();
-            m.start();
-            post(tick);
+            measure(getWindowVisibility() == VISIBLE);
         }
 
         @Override
         protected void onDetachedFromWindow() {
-            removeCallbacks(tick);
-            m.stop();
+            measure(false);
             super.onDetachedFromWindow();
+        }
+
+        // counting frames every frame only while the box can be seen
+        @Override
+        protected void onWindowVisibilityChanged(int v) {
+            super.onWindowVisibilityChanged(v);
+            measure(v == VISIBLE && isAttachedToWindow());
+        }
+
+        private void measure(boolean on) {
+            if (on == measuring) return;
+            measuring = on;
+            removeCallbacks(tick);
+            if (on) {
+                m.start();
+                post(tick);
+            } else m.stop();
         }
 
         @Override
@@ -895,7 +924,7 @@ final class Cards {
             if (reading || now - readAt < 5 * 60000) return;
             reading = true;
             readAt = now;
-            new Thread(new Runnable() {
+            Bg.run(new Runnable() {
                 @Override
                 public void run() {
                     final java.util.List<Agenda.Event> ev = Agenda.read(c, System.currentTimeMillis());
@@ -907,7 +936,7 @@ final class Cards {
                         }
                     });
                 }
-            }).start();
+            });
         }
 
         private void show(java.util.List<Agenda.Event> ev, String foot) {
@@ -980,7 +1009,7 @@ final class Cards {
                 return;
             }
             cover.setText(Hindi.t("Looking for videos…"));
-            new Thread(new Runnable() {
+            Bg.run(new Runnable() {
                 @Override
                 public void run() {
                     final java.util.List<String> found = Videos.find(getContext());
@@ -992,7 +1021,7 @@ final class Cards {
                         }
                     });
                 }
-            }).start();
+            });
         }
 
         private void choose(final java.util.List<String> found) {

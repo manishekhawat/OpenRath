@@ -411,6 +411,7 @@ public final class Tests {
         intro();
         setupScreens();
         bootArt();
+        performanceFixes();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
     }
@@ -521,7 +522,7 @@ public final class Tests {
             else if (x.level == Features.CUSTOM) c++;
             else d++;
         }
-        eq("levels: simple count", 15, s);
+        eq("levels: simple count", 16, s);   // "longKeys" registered beside "keys"
         eq("levels: custom count", 8, c);
         eq("levels: dev count", 2, d);
         check("levels: full has the most", f > s && f > c);
@@ -1257,5 +1258,177 @@ public final class Tests {
         eq("door steps", 3, Lights.steps("door").length);
         eq("voice hotspot", "hotspot", Voice.parse("turn on hotspot").kind);
         eq("voice weekly", "weekly", Voice.parse("weekly report").kind);
+    }
+
+    /** 1.43: lighter on weak units: cached clock text, Overpass manners, picture sizes, change stamps, feature ids. */
+    static void performanceFixes() {
+        // clock text: one formatter per pattern, worked out once a second
+        long t0 = 1760000000000L;
+        String a = Times.at("HH:mm:ss", t0), b = Times.at("HH:mm:ss", t0 + 400);
+        check("times: same second, same text", a == b);
+        eq("times: matches a fresh formatter", new java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.US).format(new java.util.Date(t0 + 1000)),
+                Times.at("HH:mm:ss", t0 + 1000));
+        eq("times: day", new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(new java.util.Date()), Times.today());
+        eq("times: before 1970 too", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.US).format(new java.util.Date(-1500)),
+                Times.at("yyyy-MM-dd HH:mm:ss", -1500));
+
+        // Overpass: a gap between questions, waits that double after failures, up to five minutes
+        OverpassGate g = new OverpassGate();
+        check("overpass: first question goes", g.take(0));
+        check("overpass: not again within 8 s", !g.take(5000) && !g.may(7999));
+        check("overpass: after the gap", g.take(8000));
+        g.failed(8000, 0);
+        eq("overpass: first wait", OverpassGate.FIRST_WAIT_MS, g.waiting());
+        check("overpass: waits after a failure", !g.may(8000 + 9999) && g.may(18000));
+        g.failed(18000, 0);
+        eq("overpass: wait doubles", 2 * OverpassGate.FIRST_WAIT_MS, g.waiting());
+        g.failed(40000, 429);
+        eq("overpass: too many requests waits a minute at least", OverpassGate.BUSY_WAIT_MS, g.waiting());
+        check("overpass: busy server blocks for the wait", !g.may(40000 + 59999) && g.may(100000));
+        for (int i = 0; i < 10; i++) g.failed(100000, 0);
+        eq("overpass: wait capped at 5 minutes", OverpassGate.MAX_WAIT_MS, g.waiting());
+        g.worked();
+        eq("overpass: an answer resets the wait", 0L, g.waiting());
+        eq("overpass: http code", 429, OverpassGate.code(new OverpassGate.HttpError(429)));
+        eq("overpass: no code", 0, OverpassGate.code(new java.io.IOException("x")));
+
+        // cameras by square of about 5 km
+        String cell = OverpassGate.cell(28.6139, 77.2090);
+        eq("cell: same square nearby", cell, OverpassGate.cell(28.6239, 77.2190));
+        check("cell: another square further on", !cell.equals(OverpassGate.cell(28.6639, 77.2090)));
+        double[] box = OverpassGate.box(cell);
+        check("cell: box holds the place with a margin", box[0] < 28.6139 && box[2] > 28.6139 && box[1] < 77.2090 && box[3] > 77.2090
+                && box[2] - box[0] > OverpassGate.CELL);
+        check("cell: south of the equator", OverpassGate.box(OverpassGate.cell(-12.34, -45.67))[0] < -12.34);
+        java.util.List<double[]> cams = new java.util.ArrayList<>();
+        cams.add(new double[]{28.61, 77.21, 50});
+        cams.add(new double[]{28.62, 77.22, 0});
+        java.util.List<double[]> back = OverpassGate.read(OverpassGate.write(cams, 1000), 2000);
+        check("cameras: saved and read", back != null && back.size() == 2 && back.get(0)[2] == 50 && Math.abs(back.get(1)[1] - 77.22) < 1e-6);
+        check("cameras: a week old is dropped", OverpassGate.read(OverpassGate.write(cams, 1000), 1000 + OverpassGate.KEEP_MS + 1) == null);
+        check("cameras: none is a list too", OverpassGate.read(OverpassGate.write(new java.util.ArrayList<double[]>(), 5), 6).isEmpty());
+        check("cameras: junk is nothing", OverpassGate.read("hello", 1) == null);
+        try {
+            java.io.File dir = java.nio.file.Files.createTempDirectory("openrath-cams").toFile();
+            OverpassGate.Cameras store = new OverpassGate.Cameras();
+            long now = System.currentTimeMillis();
+            store.keep(cell, cams, dir, now);
+            check("cameras: remembered", store.remembered(cell, now) != null);
+            OverpassGate.Cameras fresh = new OverpassGate.Cameras();
+            check("cameras: not in a new memory", fresh.remembered(cell, now) == null);
+            java.util.List<double[]> disk = fresh.kept(cell, dir, now);
+            check("cameras: read from the folder", disk != null && disk.size() == 2);
+            check("cameras: then from memory", fresh.remembered(cell, now) != null);
+            check("cameras: other square unknown", fresh.kept("1_1", dir, now) == null);
+            for (java.io.File f : dir.listFiles()) f.delete();
+            dir.delete();
+        } catch (java.io.IOException e) {
+            check("cameras: temp folder", false);
+        }
+
+        // speed limits from the roads kept around the car
+        Drive.Way main = new Drive.Way(), side = new Drive.Way();
+        main.kmh = 60;
+        main.pts.add(new double[]{28.6000, 77.2000});
+        main.pts.add(new double[]{28.6000, 77.2100});
+        side.kmh = 30;
+        side.pts.add(new double[]{28.6100, 77.2000});
+        side.pts.add(new double[]{28.6100, 77.2100});
+        java.util.List<Drive.Way> ways = java.util.Arrays.asList(main, side);
+        eq("limit: on the main road", 60, Drive.limitAt(ways, 28.60005, 77.2050, 25));
+        eq("limit: away from both", 0, Drive.limitAt(ways, 28.6050, 77.2050, 25));
+        side.pts.add(0, new double[]{28.60001, 77.2040});   // the side road joins here
+        eq("limit: the lower one at a junction", 30, Drive.limitAt(ways, 28.60001, 77.2040, 25));
+        check("limit: on a known road", Drive.onWay(ways, 28.60005, 77.2050, 25) && !Drive.onWay(ways, 28.6050, 77.2050, 25));
+        check("limits: ask the first time", Drive.limitsStale(false, false, 0, false));
+        check("limits: ask again after a failure", Drive.limitsStale(true, true, 10, true));
+        check("limits: near where asked", !Drive.limitsStale(true, false, 400, false));
+        check("limits: still on a known road", !Drive.limitsStale(true, false, 900, true));
+        check("limits: off the known roads", Drive.limitsStale(true, false, 900, false));
+        check("limits: far on anyway", Drive.limitsStale(true, false, 6000, true));
+        eq("maxspeed plain", 50, Drive.speed("50"));
+        eq("maxspeed mph", 48, Drive.speed("30 mph"));
+        eq("maxspeed none", 0, Drive.speed("IN:urban"));
+
+        // GPS every 15 s after 5 minutes parked, every second as soon as the car moves
+        check("gps: moving stays fast", !Drive.parkedGps(false, 20, 0, -1, 1000000));
+        check("gps: just stopped stays fast", !Drive.parkedGps(false, 0, 0, 1000000, 1000000 + 60000));
+        check("gps: parked goes slow", Drive.parkedGps(false, 0, 0, 1000000, 1000000 + Drive.PARKED_MS));
+        check("gps: moving again goes fast", !Drive.parkedGps(true, 12, 0, 1000000, 1000000 + Drive.PARKED_MS * 2));
+        check("gps: moved without a speed goes fast", !Drive.parkedGps(true, 0, 40, 1000000, 1000000 + Drive.PARKED_MS * 2));
+        check("gps: drift while parked stays slow", Drive.parkedGps(true, 0, 8, 1000000, 1000000 + Drive.PARKED_MS * 2));
+
+        // pictures read at about the screen's size
+        eq("sample: phone photo on a 1024 x 600 unit", 2, Pics.sampleSize(4000, 3000, 1024, 600));
+        eq("sample: screen-sized stays", 1, Pics.sampleSize(1024, 600, 1024, 600));
+        eq("sample: twice the screen halves", 2, Pics.sampleSize(2048, 1200, 1024, 600));
+        eq("sample: four times", 4, Pics.sampleSize(4096, 2400, 1024, 600));
+        eq("sample: never below the screen", 1, Pics.sampleSize(2000, 1100, 1024, 600));
+        eq("sample: unknown size", 1, Pics.sampleSize(0, 0, 1024, 600));
+        eq("cache: an eighth of the app's memory", 32 * 1024 * 1024, Pics.cacheBytes(256));
+        eq("cache: at least 16 MB", 16 * 1024 * 1024, Pics.cacheBytes(48));
+
+        // change stamps: equal values, equal stamps; any change shows
+        long s1 = new Stamp().add("Kesariya").add(true).add(42).add(28.6).add((Object) null).value();
+        long s2 = new Stamp().add("Kesariya").add(true).add(42).add(28.6).add((Object) null).value();
+        check("stamp: same values", s1 == s2);
+        check("stamp: a word changed", s1 != new Stamp().add("Kesariya.").add(true).add(42).add(28.6).add((Object) null).value());
+        check("stamp: a flag changed", s1 != new Stamp().add("Kesariya").add(false).add(42).add(28.6).add((Object) null).value());
+        check("stamp: a number changed", s1 != new Stamp().add("Kesariya").add(true).add(43).add(28.6).add((Object) null).value());
+        check("stamp: order matters", new Stamp().add(1).add(2).value() != new Stamp().add(2).add(1).value());
+        Stamp reused = new Stamp().add(7);
+        check("stamp: reset starts again", reused.reset().add("x").value() == new Stamp().add("x").value());
+
+        // jobs one after another, even when one fails
+        final java.util.List<Integer> order = new java.util.ArrayList<>();
+        Bg.Serial q = new Bg.Serial(new java.util.concurrent.Executor() {
+            @Override
+            public void execute(Runnable r) {
+                r.run();
+            }
+        });
+        for (int i = 0; i < 3; i++) {
+            final int n = i;
+            q.execute(new Runnable() {
+                @Override
+                public void run() {
+                    order.add(n);
+                    if (n == 1) throw new IllegalStateException("one bad write");
+                }
+            });
+        }
+        eq("serial: in order, past a failure", "[0, 1, 2]", order.toString());
+
+        // every feature the code asks about is a real switch (an unknown id now counts as off)
+        check("feature: unknown id has no switch", Features.get("noSuchFeature") == null);
+        check("feature: longKeys registered", Features.get("longKeys") != null && Features.get("longKeys").def);
+        java.io.File src = new java.io.File("java");
+        if (src.isDirectory()) {
+            java.util.regex.Pattern use = java.util.regex.Pattern.compile("(?:Features|Cab)\\.on\\(\\s*[^,;\"]+?,\\s*\"([^\"]+)\"\\s*\\)");
+            java.util.List<java.io.File> files = new java.util.ArrayList<>();
+            java.util.ArrayDeque<java.io.File> dirs = new java.util.ArrayDeque<>();
+            dirs.add(src);
+            while (!dirs.isEmpty()) {
+                java.io.File[] l = dirs.poll().listFiles();
+                if (l == null) continue;
+                for (java.io.File f : l) {
+                    if (f.isDirectory()) dirs.add(f);
+                    else if (f.getName().endsWith(".java")) files.add(f);
+                }
+            }
+            int seen = 0;
+            try {
+                for (java.io.File f : files) {
+                    java.util.regex.Matcher m = use.matcher(new String(java.nio.file.Files.readAllBytes(f.toPath()), "UTF-8"));
+                    while (m.find()) {
+                        seen++;
+                        check("feature id \"" + m.group(1) + "\" in " + f.getName() + " is registered", Features.get(m.group(1)) != null);
+                    }
+                }
+            } catch (java.io.IOException e) {
+                check("feature ids: files read", false);
+            }
+            check("feature ids: found the uses", seen > 100);
+        }
     }
 }

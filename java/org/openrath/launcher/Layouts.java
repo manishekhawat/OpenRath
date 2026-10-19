@@ -2,7 +2,6 @@ package org.openrath.launcher;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -160,8 +159,22 @@ final class Layouts {
     static final String[] STAT_NAMES = {"Temperature", "Altitude", "Direction", "Air pressure", "Latitude and longitude",
             "Tyre pressures"};
 
+    /** The parts switched off, read once for each change of the setting (it is asked for every frame). */
+    private static final Map<String, Object[]> HIDDEN = new HashMap<>();
+
+    /** The parts switched off; don't change the set (setShown copies it). */
     static Set<String> hidden(Prefs p, String id) {
-        return new HashSet<>(Arrays.asList(p.str("lay:" + id + ":off", "").split(",")));
+        String raw = p.str("lay:" + id + ":off", "");
+        synchronized (HIDDEN) {
+            Object[] kept = HIDDEN.get(id);
+            if (kept != null && raw.equals(kept[0])) {
+                @SuppressWarnings("unchecked") Set<String> h = (Set<String>) kept[1];
+                return h;
+            }
+            Set<String> h = java.util.Collections.unmodifiableSet(new HashSet<>(Arrays.asList(raw.split(","))));
+            HIDDEN.put(id, new Object[]{raw, h});
+            return h;
+        }
     }
 
     static boolean shown(Prefs p, String id, String opt) {
@@ -169,7 +182,7 @@ final class Layouts {
     }
 
     static void setShown(Prefs p, String id, String opt, boolean on) {
-        Set<String> h = hidden(p, id);
+        Set<String> h = new HashSet<>(hidden(p, id));
         h.remove("");
         if (on) h.remove(opt);
         else h.add(opt);
@@ -181,10 +194,10 @@ final class Layouts {
     /** The items a stats part shows: its own by default, the extra ones once switched on. */
     static List<String> statItems(Prefs p, String id, Part part) {
         List<String> out = new ArrayList<>();
+        Set<String> h = hidden(p, id);
         for (String it : statOrder(p, id, part)) {
             String key = "stat-" + it;
             boolean def = part.items.contains(it);
-            Set<String> h = hidden(p, id);
             boolean on = def ? !h.contains(key) : h.contains("+" + key);
             if (on) out.add(it);
         }
@@ -272,22 +285,19 @@ final class Layouts {
 
     // ------------------------------------------------------------------ pictures
 
-    private static final Map<String, Bitmap> pics = new HashMap<>();
-
-    /** A picture from assets/layouts (".jpg" scenes, ".png" cars), cached. */
+    /**
+     * A picture from assets/layouts (".jpg" scenes, ".png" cars), read at about the screen's size and
+     * kept in the shared picture cache, which lets the least used go when it is full.
+     */
     static Bitmap asset(Context c, String name) {
-        Bitmap b = pics.get(name);
+        android.util.LruCache<String, Bitmap> pics = Pics.cache(c);
+        Bitmap b = pics.get("layouts/" + name);
         if (b != null) return b;
         for (String ext : new String[]{".jpg", ".png"}) {
-            try {
-                InputStream in = c.getAssets().open("layouts/" + name + ext);
-                b = BitmapFactory.decodeStream(in);
-                in.close();
-                if (b != null) break;
-            } catch (Exception ignored) {
-            }
+            b = Pics.asset(c, "layouts/" + name + ext);
+            if (b != null) break;
         }
-        if (b != null) pics.put(name, b);
+        if (b != null) pics.put("layouts/" + name, b);
         return b;
     }
 
@@ -304,14 +314,15 @@ final class Layouts {
             }
             if (pick >= 0) {
                 File f = mine.get(pick);
-                Bitmap b = pics.get(f.getPath());
+                android.util.LruCache<String, Bitmap> pics = Pics.cache(c);
+                String key = "wall:" + f.getPath();
+                Bitmap b = pics.get(key);
                 if (b == null) {
-                    BitmapFactory.Options o = new BitmapFactory.Options();
-                    o.inSampleSize = 2;
-                    b = BitmapFactory.decodeFile(f.getPath(), o);
+                    b = Pics.file(c, f);
                     if (b != null) {
-                        pics.clear();   // keep one of the owner's pictures in memory at a time
-                        pics.put(f.getPath(), b);
+                        // keep one of the owner's pictures in memory at a time (the layouts' own stay)
+                        for (String k : pics.snapshot().keySet()) if (k.startsWith("wall:")) pics.remove(k);
+                        pics.put(key, b);
                     }
                 }
                 if (b != null) return b;

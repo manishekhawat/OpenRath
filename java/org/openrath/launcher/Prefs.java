@@ -28,6 +28,18 @@ final class Prefs {
         return page == 0 ? "slot" + i : "p" + page + "slot" + i;
     }
 
+    /** What box i shows on page pg (any page, not only the one on screen). */
+    String slotOn(int pg, int i) {
+        return p.getString(pg == 0 ? "slot" + i : "p" + pg + "slot" + i, DEFAULT_SLOTS[Math.min(pg, MAX_PAGES - 1)][i]);
+    }
+
+    /** Whether any dashboard page has the map. */
+    boolean mapOnAnyPage() {
+        for (int pg = 0; pg < pages(); pg++)
+            for (int i = 0; i < SLOTS; i++) if (MAP.equals(slotOn(pg, i))) return true;
+        return false;
+    }
+
     /** How many pages: 1 unless extra pages are switched on. */
     int pages() {
         return Features.on(this, "pages") ? Math.max(1, Math.min(MAX_PAGES, num("pages", 2))) : 1;

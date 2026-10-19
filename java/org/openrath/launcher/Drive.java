@@ -27,9 +27,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,6 +49,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     static final Coach.Tracker drives = new Coach.Tracker();
     private long restAt;
 
+    // The trip computer's figures below are written and read on the main thread: the service's GPS
+    // updates arrive there and the boxes draw there. Only what other threads read is volatile.
     // trip computer
     static double todayKm, driveKm, odoKm;
     static long todaySec, driveSec;
@@ -65,8 +65,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     static boolean over;              // above the limit (or the warning speed)
     static String alertError = "";
     // the latest speed, for the dashboard (some units' GPS gives no speed, so it's worked out)
-    static float kmhNow;
-    static long fixAt;
+    static volatile float kmhNow;
+    static volatile long fixAt;
     // where the car is, and which way it's heading (-1 = not known)
     static volatile double latNow, lonNow, headingNow = -1;
     /** Height above sea level from GPS in metres, NaN until a fix has one; the last heading while moving. */
@@ -183,12 +183,12 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         if (Features.on(prefs, "tpms")) Tpms.start(this, prefs);
         else Tpms.stop();
         if (Features.on(prefs, "backup")) {
-            new Thread(new Runnable() {
+            Bg.run(new Runnable() {
                 @Override
                 public void run() {
                     Backup.daily(Drive.this, prefs);
                 }
-            }).start();
+            });
         }
         if (Features.on(prefs, "gpx")) Tracks.prune(this);
         Eq.apply(this, prefs, 0);
@@ -261,14 +261,35 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     public int onStartCommand(Intent i, int flags, int id) {
         foreground();
         features();
+        gps(false);
+        return START_STICKY;
+    }
+
+    /** Parked for this long: GPS fixes every 15 seconds instead of every second. */
+    static final long PARKED_MS = 5 * 60000;
+    static final long SLOW_GPS_MS = 15000;
+    private boolean slowGps;
+    private long stillFrom = -1;
+
+    /** Ask for a GPS fix every second, or every 15 seconds while parked. */
+    private void gps(boolean slow) {
+        slowGps = slow;
         try {
             LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
             lm.removeUpdates(this);
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, slow ? SLOW_GPS_MS : 1000, 0, this);
         } catch (Throwable ignored) {
             // no location permission yet: HomeActivity starts us again once it's granted
         }
-        return START_STICKY;
+    }
+
+    /**
+     * Whether to ask for fixes slowly: standing still (under 3 km/h, or not moved 25 m since the
+     * last slow fix) for 5 minutes. stillFrom is when the car stopped, or -1 while it moves.
+     */
+    static boolean parkedGps(boolean slow, float kmh, float movedM, long stillFrom, long now) {
+        if (kmh >= 3 || slow && movedM > 25) return false;
+        return stillFrom >= 0 && now - stillFrom >= PARKED_MS;
     }
 
     private void foreground() {
@@ -288,7 +309,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     // ------------------------------------------------------------------ trip computer
 
     private static String today() {
-        return new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
+        return Times.today();
     }
 
     private void loadToday() {
@@ -307,25 +328,62 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         }
     }
 
+    /** Writes to the "drive" settings, one after another off the main thread. */
+    private final Bg.Serial writer = Bg.serial();
+    /** The day-by-day history, kept read in memory (only the writer touches it). */
+    private JSONObject hist;
+    private String savedTrip = "";
+    private long histAt;
+
+    /** Save today's figures when they changed, and the history at most once a minute. */
     private void save() {
-        JSONObject hist = history(this);
-        try {
-            hist.put(day, new JSONArray().put(Math.round(todayKm * 10) / 10.0).put(todaySec).put(todayBrakes)
-                    .put(todayAccels).put(todaySpeedSec).put(score()));
-            // keep about 14 months
-            if (hist.length() > 430) {
-                List<String> keys = new ArrayList<>();
-                java.util.Iterator<String> it = hist.keys();
-                while (it.hasNext()) keys.add(it.next());
-                java.util.Collections.sort(keys);
-                for (int i = 0; i < keys.size() - 430; i++) hist.remove(keys.get(i));
-            }
-        } catch (Exception ignored) {
-        }
-        sp.edit().putString("day", day).putFloat("dayKm", (float) todayKm).putLong("daySec", todaySec)
-                .putInt("dayBrakes", todayBrakes).putInt("dayAccels", todayAccels).putLong("daySpeed", todaySpeedSec)
-                .putString("hist", hist.toString()).putFloat("odo", (float) odoKm).apply();
+        save(false);
     }
+
+    /** now: also write the history this moment (a new day, or the service stopping). */
+    private void save(boolean now) {
+        final String d = day;
+        final float km = (float) todayKm, odo = (float) odoKm;
+        final long sec = todaySec, speedSec = todaySpeedSec;
+        final int brakes = todayBrakes, accels = todayAccels, sc = score();
+        String trip = d + "|" + km + "|" + sec + "|" + brakes + "|" + accels + "|" + speedSec + "|" + odo;
+        long t = System.currentTimeMillis();
+        final boolean figures = !trip.equals(savedTrip);
+        final boolean history = now || t - histAt >= 60000 && !trip.equals(histTrip);
+        if (!figures && !history) return;
+        savedTrip = trip;
+        if (history) {
+            histAt = t;
+            histTrip = trip;
+        }
+        writer.execute(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences.Editor e = sp.edit();
+                if (figures) e.putString("day", d).putFloat("dayKm", km).putLong("daySec", sec).putInt("dayBrakes", brakes)
+                        .putInt("dayAccels", accels).putLong("daySpeed", speedSec).putFloat("odo", odo);
+                if (history) {
+                    if (hist == null) hist = history(Drive.this);
+                    try {
+                        hist.put(d, new JSONArray().put(Math.round(km * 10) / 10.0).put(sec).put(brakes).put(accels).put(speedSec).put(sc));
+                        // keep about 14 months
+                        if (hist.length() > 430) {
+                            List<String> keys = new ArrayList<>();
+                            java.util.Iterator<String> it = hist.keys();
+                            while (it.hasNext()) keys.add(it.next());
+                            java.util.Collections.sort(keys);
+                            for (int i = 0; i < keys.size() - 430; i++) hist.remove(keys.get(i));
+                        }
+                    } catch (Exception ignored) {
+                    }
+                    e.putString("hist", hist.toString());
+                }
+                e.apply();
+            }
+        });
+    }
+
+    private String histTrip = "";
 
     @Override
     public void onLocationChanged(Location l) {
@@ -336,7 +394,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         // the network just after the first fix, right when a drive (and a 0–100 run) starts
         long tick = android.os.SystemClock.elapsedRealtime();
         if (!today().equals(day)) {   // past midnight: close yesterday, start today
-            save();
+            save(true);
             day = today();
             todayKm = 0;
             todaySec = 0;
@@ -417,6 +475,11 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
                 }
             }
         }
+        float movedM = last == null ? 0 : last.distanceTo(l);
+        if (kmh >= 3 || slowGps && movedM > 25) stillFrom = -1;
+        else if (stillFrom < 0) stillFrom = now;
+        boolean slow = parkedGps(slowGps, kmh, movedM, stillFrom, now);
+        if (slow != slowGps) gps(slow);
         last = l;
         lastAt = tick;
         Coach.Trip done = drives.feed(now, kmh, movedKm, hardStart, hardBrake, l.getLatitude(), l.getLongitude());
@@ -478,11 +541,20 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
             savedAt = now;
             save();
             if (volSet < 0 || volAdded == 0) Resume.saveVolume(this, prefs);
-            sp.edit().putFloat("lastLat", (float) l.getLatitude()).putFloat("lastLon", (float) l.getLongitude())
-                    .putLong("lastAt", now).apply();
+            // where the car is, for the parking spot after a power cut: when it moved, or every 5 minutes
+            if (spotSaved == null || spotSaved.distanceTo(l) > 10 || now - spotSavedAt > 5 * 60000) {
+                spotSaved = l;
+                spotSavedAt = now;
+                sp.edit().putFloat("lastLat", (float) l.getLatitude()).putFloat("lastLon", (float) l.getLongitude())
+                        .putLong("lastAt", now).apply();
+            }
             if (spotsLoaded) {
-                prefs.put("bumps", bumps.save());
-                prefs.put("waits", waits.save());
+                // the big settings file is written again only when something new was learnt
+                String b = bumps.save(), w = waits.save();
+                if (!b.equals(bumpsSaved)) prefs.put("bumps", b);
+                if (!w.equals(waitsSaved)) prefs.put("waits", w);
+                bumpsSaved = b;
+                waitsSaved = w;
             }
         }
         changed();
@@ -528,31 +600,79 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
 
     // ------------------------------------------------------------------ speed limit and cameras
 
+    /** A road with a speed limit on the map: its points, and the limit in km/h. */
+    static final class Way {
+        final List<double[]> pts = new ArrayList<>();
+        int kmh;
+    }
+
+    /** The lowest limit of the mapped roads within maxM metres of a place, or 0 when none is that close. */
+    static int limitAt(List<Way> ways, double lat, double lon, double maxM) {
+        int lim = 0;
+        for (Way w : ways) {
+            double[] n = Ahead.nearest(w.pts, lat, lon);
+            if (n != null && n[0] <= maxM && w.kmh > 0 && (lim == 0 || w.kmh < lim)) lim = w.kmh;
+        }
+        return lim;
+    }
+
+    /** Whether any mapped road is within maxM metres. */
+    static boolean onWay(List<Way> ways, double lat, double lon, double maxM) {
+        for (Way w : ways) {
+            double[] n = Ahead.nearest(w.pts, lat, lon);
+            if (n != null && n[0] <= maxM) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Whether to ask the map for the speed limits again: never asked, the last answer failed, or
+     * more than 500 m from where it was asked (the answer covers 600 m around it) and no longer on a
+     * road from that answer, or 5 km on.
+     */
+    static boolean limitsStale(boolean asked, boolean failed, double metresFromAsked, boolean onKnownRoad) {
+        if (!asked || failed) return true;
+        if (metresFromAsked > 5000) return true;
+        return metresFromAsked > 500 && !onKnownRoad;
+    }
+
+    /** Speed cameras are kept by square, shared with nothing else. */
+    static final OverpassGate.Cameras CAMERAS = new OverpassGate.Cameras();
     private Location queriedAt;
-    private long queriedTime;
-    private boolean querying;
-    private final List<double[]> cameras = new ArrayList<>();
-    private final List<String> announced = new ArrayList<>();
+    private boolean querying, limitFailed;
+    private List<Way> ways = new ArrayList<>();
+    private String camCell;
+    private List<double[]> cameras = new ArrayList<>();
+    private final java.util.Set<String> announced = new java.util.HashSet<>();
+    private final float[] camDist = new float[2];
     private boolean warned;
 
     private void speedAlerts(Location l, float kmh) {
         long now = System.currentTimeMillis();
-        boolean far = queriedAt == null || queriedAt.distanceTo(l) > 250;
-        if (!querying && now - queriedTime > 8000 && (far || now - queriedTime > 120000 && queriedAt.distanceTo(l) > 30)) {
-            query(l);
+        double lat = l.getLatitude(), lon = l.getLongitude();
+        // the cameras of the square the car is in: from memory when they were fetched before
+        String cell = OverpassGate.cell(lat, lon);
+        if (!cell.equals(camCell)) {
+            List<double[]> kept = CAMERAS.remembered(cell, now);
+            if (kept != null) {
+                camCell = cell;
+                cameras = kept;
+            }
         }
+        boolean needCams = !cell.equals(camCell);
+        boolean needLimit = limitsStale(queriedAt != null, limitFailed, queriedAt == null ? 0 : queriedAt.distanceTo(l), onWay(ways, lat, lon, 25));
+        if (!querying && (needCams || needLimit) && OverpassGate.SHARED.may(now)) query(l, needCams ? cell : null, needLimit);
+        limit = limitAt(ways, lat, lon, 25);
         // cameras ahead within 600 m
         int nearest = -1;
         for (double[] cam : cameras) {
-            float[] r = new float[2];
-            Location.distanceBetween(l.getLatitude(), l.getLongitude(), cam[0], cam[1], r);
-            float d = r[0];
-            float diff = Math.abs(((r[1] - l.getBearing()) % 360 + 540) % 360 - 180);
+            Location.distanceBetween(lat, lon, cam[0], cam[1], camDist);
+            float d = camDist[0];
+            if (d >= 600) continue;
+            float diff = Math.abs(((camDist[1] - l.getBearing()) % 360 + 540) % 360 - 180);
             boolean ahead = !l.hasBearing() || kmh < 5 || diff < 50;
-            if (d < 600 && ahead && (nearest < 0 || d < nearest)) nearest = Math.round(d);
-            String id = cam[0] + "," + cam[1];
-            if (d < 600 && ahead && kmh > 10 && !announced.contains(id)) {
-                announced.add(id);
+            if (ahead && (nearest < 0 || d < nearest)) nearest = Math.round(d);
+            if (ahead && kmh > 10 && announced.add(cam[0] + "," + cam[1])) {
                 beep();
                 say("Speed camera ahead" + (cam[2] > 0 ? ", limit " + (int) cam[2] : ""));
             }
@@ -569,62 +689,101 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         over = o;
     }
 
-    private void query(final Location l) {
+    /**
+     * Ask OpenStreetMap (Overpass) in the background for the roads with a speed limit around the car,
+     * when wanted, and for the speed cameras of a square (cell) when it has none kept for that square.
+     * The cameras of a square are kept a week, so most drives ask only for the limits.
+     */
+    private void query(final Location l, final String cell, final boolean wantLimit) {
         querying = true;
-        queriedAt = l;
-        queriedTime = System.currentTimeMillis();
+        if (wantLimit) queriedAt = l;
         final double lat = l.getLatitude(), lon = l.getLongitude();
-        new Thread(new Runnable() {
+        final java.io.File dir = new java.io.File(getCacheDir(), "overpass");
+        Bg.run(new Runnable() {
             @Override
             public void run() {
-                String q = String.format(Locale.US, "[out:json][timeout:10];("
-                        + "way(around:25,%1$.6f,%2$.6f)[highway][maxspeed];"
-                        + "node(around:3000,%1$.6f,%2$.6f)[highway=speed_camera];"
-                        + "node(around:3000,%1$.6f,%2$.6f)[enforcement=maxspeed];"
-                        + ");out tags center;", lat, lon);
-                int lim = 0;
-                List<double[]> cams = new ArrayList<>();
+                long now = System.currentTimeMillis();
+                List<double[]> cams = cell == null ? null : CAMERAS.kept(cell, dir, now);
+                boolean askCams = cell != null && cams == null;
+                List<Way> found = null;
                 String err = "";
-                try {
-                    JSONArray els = new JSONObject(post("https://overpass-api.de/api/interpreter", "data=" + URLEncoder.encode(q, "UTF-8")))
-                            .getJSONArray("elements");
-                    for (int i = 0; i < els.length(); i++) {
-                        JSONObject e = els.getJSONObject(i);
-                        JSONObject tags = e.optJSONObject("tags");
-                        if (tags == null) continue;
-                        if ("way".equals(e.optString("type"))) {
-                            int v = speed(tags.optString("maxspeed"));
-                            if (v > 0 && (lim == 0 || v < lim)) lim = v;
-                        } else {
-                            cams.add(new double[]{e.optDouble("lat"), e.optDouble("lon"), speed(tags.optString("maxspeed"))});
+                int code = -1;   // -1: nothing asked
+                if ((askCams || wantLimit) && OverpassGate.SHARED.take(now)) {
+                    String q = "[out:json][timeout:15];"
+                            + (wantLimit ? String.format(Locale.US, "way(around:600,%1$.6f,%2$.6f)[highway][maxspeed];out tags geom qt;", lat, lon) : "")
+                            + (askCams ? "(node" + OverpassGate.bbox(cell) + "[highway=speed_camera];node" + OverpassGate.bbox(cell)
+                            + "[enforcement=maxspeed];);out tags center qt;" : "");
+                    try {
+                        JSONArray els = new JSONObject(post("https://overpass-api.de/api/interpreter", "data=" + URLEncoder.encode(q, "UTF-8")))
+                                .getJSONArray("elements");
+                        List<Way> w = new ArrayList<>();
+                        List<double[]> c = new ArrayList<>();
+                        for (int i = 0; i < els.length(); i++) {
+                            JSONObject e = els.getJSONObject(i);
+                            JSONObject tags = e.optJSONObject("tags");
+                            if (tags == null) continue;
+                            if ("way".equals(e.optString("type"))) {
+                                Way way = new Way();
+                                way.kmh = speed(tags.optString("maxspeed"));
+                                JSONArray g = e.optJSONArray("geometry");
+                                for (int k = 0; g != null && k < g.length(); k++)
+                                    way.pts.add(new double[]{g.getJSONObject(k).optDouble("lat"), g.getJSONObject(k).optDouble("lon")});
+                                if (way.kmh > 0 && way.pts.size() > 1) w.add(way);
+                            } else {
+                                c.add(new double[]{e.optDouble("lat"), e.optDouble("lon"), speed(tags.optString("maxspeed"))});
+                            }
                         }
+                        if (wantLimit) found = w;
+                        if (askCams) {
+                            cams = c;
+                            CAMERAS.keep(cell, c, dir, now);
+                        }
+                        OverpassGate.SHARED.worked();
+                        code = 200;
+                    } catch (Throwable t) {
+                        code = OverpassGate.code(t);
+                        OverpassGate.SHARED.failed(System.currentTimeMillis(), code);
+                        err = Hindi.t("speed data unreachable");
                     }
-                } catch (Throwable t) {
-                    err = Hindi.t("speed data unreachable");
                 }
-                final int fl = lim;
+                final List<Way> fw = found;
                 final List<double[]> fc = cams;
                 final String fe = err;
+                final boolean asked = code != -1;
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         querying = false;
+                        if (fc != null && cell != null) {
+                            camCell = cell;
+                            cameras = fc;
+                        }
+                        if (!asked) {
+                            if (wantLimit && fw == null) limitFailed = true;   // the gate said wait: ask again later
+                            return;
+                        }
                         alertError = fe;
-                        if (!fe.isEmpty()) return;
-                        limit = fl;
-                        cameras.clear();
-                        cameras.addAll(fc);
+                        if (!fe.isEmpty()) {
+                            limitFailed = wantLimit || limitFailed;
+                            return;
+                        }
+                        if (fw != null) {
+                            ways = fw;
+                            limitFailed = false;
+                        }
                         changed();
                     }
                 });
             }
-        }).start();
+        });
     }
 
     /** A maxspeed tag in km/h ("50", "30 mph", "IN:urban" gives 0). */
+    private static final java.util.regex.Pattern NUMBER = java.util.regex.Pattern.compile("(\\d+)");
+
     static int speed(String s) {
         if (s == null) return 0;
-        java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+)").matcher(s);
+        java.util.regex.Matcher m = NUMBER.matcher(s);
         if (!m.find()) return 0;
         int v = Integer.parseInt(m.group(1));
         return s.contains("mph") ? Math.round(v * 1.609f) : v;
@@ -632,27 +791,48 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
 
     private static String post(String u, String body) throws Exception {
         HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
-        c.setConnectTimeout(8000);
-        c.setReadTimeout(12000);
-        c.setDoOutput(true);
-        c.setRequestProperty("User-Agent", "OpenRath (car head unit)");
-        c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        OutputStream o = c.getOutputStream();
-        o.write(body.getBytes("UTF-8"));
-        o.close();
-        BufferedReader r = new BufferedReader(new InputStreamReader(c.getInputStream(), "UTF-8"));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = r.readLine()) != null) sb.append(line);
-        r.close();
-        return sb.toString();
+        try {
+            c.setConnectTimeout(8000);
+            c.setReadTimeout(12000);
+            c.setDoOutput(true);
+            c.setRequestProperty("User-Agent", "OpenRath (car head unit)");
+            c.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            OutputStream o = c.getOutputStream();
+            try {
+                o.write(body.getBytes("UTF-8"));
+            } finally {
+                o.close();
+            }
+            int code = c.getResponseCode();
+            if (code < 200 || code >= 300) throw new OverpassGate.HttpError(code);   // e.g. 429: too many requests
+            BufferedReader r = new BufferedReader(new InputStreamReader(c.getInputStream(), "UTF-8"));
+            try {
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = r.readLine()) != null) sb.append(line);
+                return sb.toString();
+            } finally {
+                r.close();
+            }
+        } finally {
+            c.disconnect();
+        }
     }
+
+    private Location spotSaved;
+    private long spotSavedAt;
+    private String bumpsSaved, waitsSaved;
 
     private void loadSpots() {
         if (spotsLoaded) return;
         spotsLoaded = true;
-        bumps.load(prefs.str("bumps", ""));
-        waits.load(prefs.str("waits", ""));
+        bumpsSaved = prefs.str("bumps", "");
+        waitsSaved = prefs.str("waits", "");
+        bumps.load(bumpsSaved);
+        waits.load(waitsSaved);
+        // as they are saved, so an unchanged list isn't written again
+        bumpsSaved = bumps.save();
+        waitsSaved = waits.save();
     }
 
     /** Speed breakers and stops learnt from earlier drives: learn more, and warn about the ones ahead. */
@@ -831,7 +1011,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
 
     @Override
     public void onDestroy() {
-        save();
+        save(true);
         if (Features.on(prefs, "coach")) Coach.save(prefs, drives.close(System.currentTimeMillis()));
         Dashcam.stop();
         try {

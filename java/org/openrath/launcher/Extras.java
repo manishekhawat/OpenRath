@@ -139,6 +139,19 @@ final class Extras {
         return saverCheck;
     }
 
+    /** The dashboard was closed for good: let go of its views, so the old screen can be freed. */
+    static void closed(HomeActivity a) {
+        if (saverOwner == a) {
+            saverOwner = null;
+            saverCheck = null;
+        }
+        if (cover != null && cover.getContext() == a) {
+            cover = null;
+            dark = false;
+        }
+        if (strip != null && strip.getContext() == a) strip = null;
+    }
+
     /** Remove the screensaver or screen-off cover; true if one was showing. */
     static boolean wake(HomeActivity a) {
         lastTouch = System.currentTimeMillis();

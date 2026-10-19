@@ -77,7 +77,7 @@ final class LedStrip {
     private static Runnable tick;
 
     /** From the dashboard's regular check: start or stop following, as the switch says. */
-    static void check(final HomeActivity a) {
+    static void check(HomeActivity a) {
         String want = a.prefs.str("ledMac", "");
         if (!Features.on(a.prefs, "ledStrip") || want.isEmpty()) {
             stop();
@@ -85,21 +85,43 @@ final class LedStrip {
         }
         if (!want.equals(mac)) stop();
         mac = want;
+        // the newest dashboard, without keeping an old one alive after Android recreates it
+        dash = new java.lang.ref.WeakReference<>(a);
         if (tick != null) return;
         final Context app = a.getApplicationContext();
+        final Prefs prefs = new Prefs(app);
         if (main == null) main = new Handler(Looper.getMainLooper());
         tick = new Runnable() {
             @Override
             public void run() {
                 if (tick != this) return;
-                follow(a, app);
+                follow(prefs, app);
                 main.postDelayed(this, TICK_MS);
             }
         };
         main.post(tick);
     }
 
-    private static void follow(HomeActivity a, Context app) {
+    private static java.lang.ref.WeakReference<HomeActivity> dash;
+
+    /** The dashboard was closed for good: stop following until the next one checks again. */
+    static void closed(HomeActivity a) {
+        HomeActivity d = dash == null ? null : dash.get();
+        if (d == null || d == a) {
+            tick = null;
+            dash = null;
+        }
+    }
+
+    /** Night here: from the dashboard's position while it is open, else the trip service's. */
+    private static boolean night(long now) {
+        HomeActivity a = dash == null ? null : dash.get();
+        if (a != null && a.hub != null && a.hub.fix != null) return ThemeAuto.night(a, now);
+        if (Drive.fixAt > 0) return Care.dark(Drive.latNow, Drive.lonNow, now);
+        return a != null ? ThemeAuto.night(a, now) : ThemeAuto.night(null, now);
+    }
+
+    private static void follow(Prefs prefs, Context app) {
         if (out == null) {
             long now = System.currentTimeMillis();
             if (now - triedAt > 30000) {
@@ -108,9 +130,9 @@ final class LedStrip {
             }
             return;
         }
-        boolean warn = (Obd.connected && Obd.coolant >= a.prefs.num("obdHot", 105))
+        boolean warn = (Obd.connected && Obd.coolant >= prefs.num("obdHot", 105))
                 || (Drive.limit > 0 && Drive.kmhNow > Drive.limit + 5);
-        int c = colour(Ui.ACCENT, ThemeAuto.night(a, System.currentTimeMillis()), warn);
+        int c = colour(Ui.ACCENT, night(System.currentTimeMillis()), warn);
         if (c != shown && send(rgb(c))) shown = c;
     }
 
