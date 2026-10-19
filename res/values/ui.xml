@@ -892,6 +892,11 @@
     <string name="ui_this_stereo_has_no_voice_so_openrath_can" formatted="false">This stereo has no voice, so OpenRath can\'t speak alerts or turns. Speech Services by Google is free.</string>
     <string name="ui_get_it" formatted="false">Get it</string>
     <string name="ui_tip_long_press_any_box_to_change_what_it" formatted="false">Tip: long-press any box to change what it shows. Settings is the gear in the buttons bar.</string>
+    <string name="ui_mission_control" formatted="false">Mission control</string>
+    <string name="ui_roadster" formatted="false">Roadster</string>
+    <string name="ui_black_like_space_white_type_and_a_cool_b" formatted="false">Black like space, white type and a cool blue, like a launch console</string>
+    <string name="ui_clean_white_cards_on_light_grey_with_one" formatted="false">Clean white cards on light grey with one blue, like an electric car\'s screen</string>
+    <string name="ui_carbon_black_and_racing_red_for_a_sports" formatted="false">Carbon black and racing red for a sports car</string>
     <string-array name="ui_strings">
         <item>@string/ui_back_to_the_dashboard</item>
         <item>@string/ui_search_settings</item>
@@ -1783,5 +1788,10 @@
         <item>@string/ui_this_stereo_has_no_voice_so_openrath_can</item>
         <item>@string/ui_get_it</item>
         <item>@string/ui_tip_long_press_any_box_to_change_what_it</item>
+        <item>@string/ui_mission_control</item>
+        <item>@string/ui_roadster</item>
+        <item>@string/ui_black_like_space_white_type_and_a_cool_b</item>
+        <item>@string/ui_clean_white_cards_on_light_grey_with_one</item>
+        <item>@string/ui_carbon_black_and_racing_red_for_a_sports</item>
     </string-array>
 </resources>

@@ -340,6 +340,57 @@ def cards(out):
     save(a, out, 'cards')
 
 
+def mission(out):
+    """Night sky over the curve of the Earth, like a launch console's screens."""
+    a = grad((0, 0, 2), (4, 10, 24), power=1.6)
+    r = np.random.default_rng(11)
+    for _ in range(420):
+        x, y = int(r.integers(0, W)), int(r.integers(0, 560))
+        v = float(r.uniform(60, 230))
+        a[y, x] = (v, v, min(255, v * 1.08))
+        if v > 200 and x + 1 < W:
+            a[y, x + 1] = a[y, x] * 0.6
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    d = np.sqrt((xx - 640) ** 2 + (yy - 2350) ** 2)
+    R = 1760
+    # the planet, night side with a little blue towards the edge, then the thin glowing air
+    put(a, np.clip(R - d + 0.5, 0, 1), (4, 10, 22))
+    put(a, np.clip(R - d + 0.5, 0, 1) * np.exp(-(R - d) / 60), (20, 60, 130), 0.8)
+    put(a, np.exp(-((d - R) / 5) ** 2), (120, 190, 255), 0.95)
+    put(a, np.exp(-((d - R - 6) / 22) ** 2) * (d > R), (40, 110, 220), 0.45)
+    blob(a, 640, 600, 600, 90, (30, 80, 170), 0.25)
+    noise(a, 1.0)
+    save(a, out, 'mission')
+
+
+def electric(out):
+    """Soft light grey, with a lighter panel on the left where the car drives."""
+    a = grad((226, 228, 231), (214, 216, 220))
+    a[:, :500] = grad((246, 246, 247), (234, 235, 237), w=500)
+    a[:, 498:501] = (210, 212, 216)
+    road(a, 312, 250, 212, 6, (222, 224, 228), (255, 255, 255))
+    blob(a, 250, 312, 220, 30, (250, 250, 251), 0.5)
+    noise(a, 1.0)
+    save(a, out, 'electric')
+
+
+def roadster(out):
+    """A dark road to a red dusk horizon, with mountains."""
+    a = grad((10, 10, 12), (64, 14, 16), power=1.8)
+    hz = 375
+    a[hz:] = grad((22, 22, 24), (8, 8, 9), H - hz)
+    blob(a, 640, hz, 700, 70, (200, 40, 36), 0.55)
+    x = np.arange(W, dtype=np.float32)
+    for i, (base, amp, col) in enumerate([(330, 60, (34, 12, 14)), (350, 36, (14, 8, 9))]):
+        top = ridge(x, base, amp, 31 + i, octaves=4, rough=0.5)
+        m = layer_mask(H, W, top) * (np.arange(H)[:, None] < hz)
+        put(a, m, col)
+    road(a, hz, 640, 412, 5, (16, 16, 18), (232, 33, 39))
+    blob(a, 640, 700, 420, 80, (232, 33, 39), 0.12)
+    noise(a, 1.2)
+    save(a, out, 'roadster')
+
+
 def main(out):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
@@ -348,6 +399,9 @@ def main(out):
     car_rear(420, 300, (0.62, 0.64, 0.67)).save(out / 'car_rear_silver.png', optimize=True)
     car_rear(420, 300, (0.86, 0.87, 0.89)).save(out / 'car_rear_white.png', optimize=True)
     car_rear(420, 300, (0.30, 0.32, 0.35)).save(out / 'car_rear_grey.png', optimize=True)
+    for f in (mission, electric, roadster):
+        f(out)
+    car_rear(420, 300, (0.78, 0.08, 0.10)).save(out / 'car_rear_red.png', optimize=True)
 
 
 if __name__ == '__main__':
