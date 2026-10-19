@@ -27,6 +27,7 @@ final class Wake {
         lastElapsed = SystemClock.elapsedRealtime();
         lastUptime = SystemClock.uptimeMillis();
         if (check != null) a.dash.removeCallbacks(check);
+        watching = new java.lang.ref.WeakReference<>(a);
         check = new Runnable() {
             @Override
             public void run() {
@@ -45,12 +46,23 @@ final class Wake {
         a.dash.postDelayed(check, CHECK_MS);
     }
 
+    /** The dashboard was closed for good: stop checking with it. */
+    static void stop(HomeActivity a) {
+        if (watching == null || watching.get() != a) return;   // a newer dashboard's check: leave it
+        if (check != null) a.dash.removeCallbacks(check);
+        check = null;
+        watching = null;
+    }
+
+    private static java.lang.ref.WeakReference<HomeActivity> watching;
+
     /** Everything that goes stale in deep sleep, started again. */
     static void woke(HomeActivity a) {
         a.prefs.put("sleptAt", String.valueOf(System.currentTimeMillis() - 2 * SLEPT_MS));   // so Resume carries on the music
         Drive.start(a);
         a.hub.stop();
         a.hub.start();
+        a.freshMap();
         a.build();
         Extras.resumed(a);
     }

@@ -66,6 +66,12 @@ public class HomeActivity extends Activity implements Cards.Host {
         // managed settings changed: sent by the system, which needs no permission of OpenRath's
         Compat.fromSystem(this, events, new android.content.IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED));
         build();
+        root.post(new Runnable() {
+            @Override
+            public void run() {
+                firstFrame = true;   // drawn once: the map's web page can load now (see build)
+            }
+        });
         if (setup) Setup.show(this);
         if (Intro.show(Features.on(prefs, "intro"), Motion.pick(prefs.str("motion", "standard")), b == null)) Intro.play(this, root);
         handleIntent(getIntent());
@@ -290,6 +296,14 @@ public class HomeActivity extends Activity implements Cards.Host {
             unregisterReceiver(events);
         } catch (Throwable ignored) {
         }
+        // let go of everything that would keep this screen alive after Android drops it
+        dash.removeCallbacks(chores);
+        dash.removeCallbacks(questions);
+        Wake.stop(this);
+        Extras.closed(this);
+        LedStrip.closed(this);
+        if (keptMap != null) keptMap.destroy();
+        keptMap = null;
         super.onDestroy();
     }
 
@@ -345,6 +359,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         Layouts.Layout lay = Layouts.get(this, Layouts.current(prefs));
         dash.setVisibility(lay == null ? View.VISIBLE : View.GONE);
         if (lay != null) {
+            keepMap(false);
             layoutView = new LayoutView(this, lay);
             root.addView(layoutView, root.indexOfChild(dash) + 1, new android.widget.FrameLayout.LayoutParams(-1, -1));
             hub.add(layoutView);
@@ -381,11 +396,14 @@ public class HomeActivity extends Activity implements Cards.Host {
         dash.dock = dash.wide ? HomeDock.wideBar(this) : HomeDock.dock(this);
         dash.addView(dash.dock);
         for (int i = 0; i < Prefs.SLOTS; i++) {
-            Cards.Card c = Cards.make(prefs.slot(i), this, this, i);
+            String content = prefs.slot(i);
+            // a new map page waits until the dashboard has been drawn once, so the first screen comes up sooner
+            Cards.Card c = Prefs.MAP.equals(content) && !firstFrame && keptMap == null ? mapLater(i) : Cards.make(content, this, this, i);
             dash.slots[i] = c;
             dash.addView(c);
             hub.add(c);
         }
+        keepMap(true);
         dash.requestLayout();
         hub.add(overlays);
         dash.mover = new Dashboard.Mover() {
@@ -412,6 +430,60 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     /** The Wide map arrangement's id in the layout setting. */
     static final String WIDE = "wide";
+
+    /** The map box, kept between rebuilds while a page shows the map (see Cards.map). */
+    MapCard keptMap;
+    private boolean firstFrame;
+
+    /** An empty box where the map goes, swapped for the map once the first screen is drawn. */
+    private Cards.Card mapLater(int slot) {
+        final Cards.Card wait = new Cards.NoMapCard(this, "");
+        wait.host = this;
+        wait.slot = slot;
+        wait.setOnLongClickListener(wait.edit);
+        root.post(new Runnable() {
+            @Override
+            public void run() {
+                firstFrame = true;
+                int i = java.util.Arrays.asList(dash.slots).indexOf(wait);
+                if (i < 0) return;   // rebuilt since: that build made its own
+                Cards.Card m = Cards.make(Prefs.MAP, HomeActivity.this, HomeActivity.this, i);
+                dash.removeView(wait);
+                dash.slots[i] = m;
+                dash.addView(m);
+                hub.add(m);
+                dash.requestLayout();
+            }
+        });
+        return wait;
+    }
+
+    /** The next build starts the map page afresh (after deep sleep it can be stale). */
+    void freshMap() {
+        if (keptMap != null) keptMap.destroy();
+        keptMap = null;
+    }
+
+    /**
+     * After a rebuild: the kept map is on screen, paused for another page that has it, or let go
+     * for good when no page shows it (or a picture layout replaced the boxes).
+     */
+    private void keepMap(boolean boxes) {
+        MapCard m = keptMap;
+        if (m == null) return;
+        for (View v : dash.slots) {
+            if (v == m) {
+                m.resumeMap();
+                return;
+            }
+        }
+        if (boxes && m.alive() && prefs.mapOnAnyPage()) {
+            m.pauseMap();
+            return;
+        }
+        m.destroy();
+        keptMap = null;
+    }
 
     private View micView, perfView;
 
@@ -1033,6 +1105,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     void restyle() {
         boolean open = settingsView != null;
         closeSettings();
+        Theme.reload();   // a new look: read the theme and its pictures again
         build();
         if (open) openSettings();
     }
@@ -1040,6 +1113,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     /** A wallpaper scaled to fill the screen without stretching. */
     static final class CenterCrop extends android.graphics.drawable.Drawable {
         private final android.graphics.drawable.BitmapDrawable b;
+        private final android.graphics.RectF to = new android.graphics.RectF();
 
         CenterCrop(android.graphics.drawable.BitmapDrawable b) {
             this.b = b;
@@ -1052,7 +1126,8 @@ public class HomeActivity extends Activity implements Cards.Host {
             float sc = Math.max(r.width() / (float) bm.getWidth(), r.height() / (float) bm.getHeight());
             float w = bm.getWidth() * sc, h = bm.getHeight() * sc;
             c.drawColor(Ui.BACKGROUND);
-            c.drawBitmap(bm, null, new android.graphics.RectF(r.centerX() - w / 2, r.centerY() - h / 2, r.centerX() + w / 2, r.centerY() + h / 2), null);
+            to.set(r.centerX() - w / 2, r.centerY() - h / 2, r.centerX() + w / 2, r.centerY() + h / 2);
+            c.drawBitmap(bm, null, to, null);
         }
 
         @Override public void setAlpha(int a) {}
@@ -1072,29 +1147,36 @@ public class HomeActivity extends Activity implements Cards.Host {
         Wake.watch(this);
         highwayStrip();
         if (Setup.showing != null) Setup.showing.render();   // back from Android's settings: show what changed
-        dash.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (visible) Chores.summary(HomeActivity.this);   // after the weather has had time to arrive
-            }
-        }, 15000);
-        dash.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!visible || Setup.showing != null || Car.firstRun(HomeActivity.this)) return;   // the car setup first; the rest next time
-                if (!Features.levelPicked(prefs)) {
-                    HomeSettings.askLevel(HomeActivity.this, true);
-                    return;   // one question at a time
-                }
-                if (HomeDialogs.askVoice(HomeActivity.this)) return;
-                if (HomeDialogs.askAllFiles(HomeActivity.this)) return;
-                HomeDialogs.askForTrackInfo(HomeActivity.this);
-                HomeDialogs.serviceBooking(HomeActivity.this);
-                HomeDialogs.askOverlay(HomeActivity.this);
-                Chores.weekly(HomeActivity.this, false);
-            }
-        }, 3000);
+        // once per return to the dashboard: a quick back-and-forth doesn't queue them up again
+        dash.removeCallbacks(chores);
+        dash.removeCallbacks(questions);
+        dash.postDelayed(chores, 15000);
+        dash.postDelayed(questions, 3000);
     }
+
+    private final Runnable chores = new Runnable() {
+        @Override
+        public void run() {
+            if (visible) Chores.summary(HomeActivity.this);   // after the weather has had time to arrive
+        }
+    };
+
+    private final Runnable questions = new Runnable() {
+        @Override
+        public void run() {
+            if (!visible || Setup.showing != null || Car.firstRun(HomeActivity.this)) return;   // the car setup first; the rest next time
+            if (!Features.levelPicked(prefs)) {
+                HomeSettings.askLevel(HomeActivity.this, true);
+                return;   // one question at a time
+            }
+            if (HomeDialogs.askVoice(HomeActivity.this)) return;
+            if (HomeDialogs.askAllFiles(HomeActivity.this)) return;
+            HomeDialogs.askForTrackInfo(HomeActivity.this);
+            HomeDialogs.serviceBooking(HomeActivity.this);
+            HomeDialogs.askOverlay(HomeActivity.this);
+            Chores.weekly(HomeActivity.this, false);
+        }
+    };
 
     @Override
     protected void onPause() {

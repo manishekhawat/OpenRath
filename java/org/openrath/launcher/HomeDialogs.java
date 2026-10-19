@@ -81,6 +81,9 @@ final class HomeDialogs {
     /** First start: pick the unit's own radio app, so the radio box and dock button just work. */
     static void findRadio(final HomeActivity a) {
         if (a.prefs.app("media:radio") != null) return;
+        // none found today: listing every app again on each start is slow on these units; try again tomorrow
+        String today = Times.today();
+        if (today.equals(a.prefs.str("radioNotFound", ""))) return;
         PackageManager pm = a.getPackageManager();
         String[] known = {"com.tw.radio", "com.tw.radioapp", "com.tw.fmradio", "com.ts.radio", "com.syu.radio",
                 "com.qf.radio", "com.microntek.radio", "com.hct.radio", "com.android.fmradio",
@@ -101,6 +104,7 @@ final class HomeDialogs {
                 return;
             }
         }
+        a.prefs.put("radioNotFound", today);
     }
 
     /** When a service is near and the car is parked: offer to call the saved service centre (once a day). */

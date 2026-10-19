@@ -32,7 +32,7 @@ final class Features {
     /** Off whatever the level until the owner turns them on: they need hardware, or change the home screen. */
     private static final java.util.Set<String> ASK_FIRST = new java.util.HashSet<>(java.util.Arrays.asList("cab", "obd", "dashcam", "tpms", "reports"));
 
-    private static final String[] SIMPLE_IDS = {"arrows", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "resume", "offlineMap", "backup", "reports"};
+    private static final String[] SIMPLE_IDS = {"arrows", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "longKeys", "resume", "offlineMap", "backup", "reports"};
     private static final String[] CUSTOM_IDS = {"pages", "widgets", "saver", "perf", "bootArt", "soundProfiles", "speedVolume", "eq", "profiles"};
     private static final String[] DEV_IDS = {"maker", "perf"};
 
@@ -163,6 +163,7 @@ final class Features {
             new F("ledStrip", "LED light strip", "Car", false, "A Bluetooth ELK-BLEDOM strip takes the theme's colour, dims at night and turns red for a warning"),
             new F("tpms", "Tyre pressure sensors (TPMS)", "Car", false, "Bluetooth valve-cap sensors"),
             new F("keys", "Steering-wheel buttons", "Car", true, "Your own action for each button"),
+            new F("longKeys", "Hold a steering-wheel button", "Car", true, "Each button can do a second action when held down"),
             new F("wallet", "Car documents wallet", "Car", true, "Photos of the RC, insurance, PUC and licence, shown offline"),
             // family
             new F("childLock", "Child-lock for apps", "Family", false, "Chosen apps can't be opened while moving"),
@@ -195,6 +196,16 @@ final class Features {
             new F("cabPhrases", "Phrases for passengers", "Cab", true, "Seat belt, OTP, AC, payment: spoken in Hindi, English or your language"),
     };
 
+    /** Each id, and each old id in PARTS, to its switch; looked up many times a second, so indexed once. */
+    private static final java.util.Map<String, F> BY_ID = new java.util.HashMap<>();
+    private static final java.util.Map<String, String> PARENT = new java.util.HashMap<>();
+
+    static {
+        for (String[] pp : PARTS) PARENT.put(pp[0], pp[1]);
+        for (F f : ALL) BY_ID.put(f.id, f);
+        for (String[] pp : PARTS) BY_ID.put(pp[0], BY_ID.get(pp[1]));
+    }
+
     static {
         for (String id : SIMPLE_IDS) get(id).level = SIMPLE;
         for (String id : CUSTOM_IDS) get(id).level = CUSTOM;
@@ -203,14 +214,12 @@ final class Features {
 
     /** The switch that decides `id`: itself, or the bigger switch it became part of. */
     static String parent(String id) {
-        for (String[] pp : PARTS) if (pp[0].equals(id)) return pp[1];
-        return id;
+        String p = PARENT.get(id);
+        return p == null ? id : p;
     }
 
     static F get(String id) {
-        id = parent(id);
-        for (F f : ALL) if (f.id.equals(id)) return f;
-        return null;
+        return id == null ? null : BY_ID.get(id);
     }
 
     /** Where the voice mic sits: "map" (only the map's), "float" (a floating button) or "apps" (floating, also over other apps). */
@@ -230,7 +239,8 @@ final class Features {
         if (locked != null) return "on".equals(locked);
         if ("speedAlerts".equals(id)) return p.alertsOn();   // kept in the older switch
         F f = get(id);
-        return "on".equals(p.str("feat:" + id, f == null || f.def ? "on" : "off"));
+        if (f == null) return false;   // a misspelt or retired id is off, never quietly on
+        return "on".equals(p.str("feat:" + id, f.def ? "on" : "off"));
     }
 
     static void set(Prefs p, String id, boolean on) {

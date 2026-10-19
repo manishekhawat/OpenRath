@@ -28,7 +28,7 @@ final class Tiles {
 
     static final long FRESH_MS = 30L * 24 * 3600 * 1000;
     static final long CAP_BYTES = 400L * 1024 * 1024;
-    private static int written;
+    private static volatile int written;
 
     /** True for a map tile address this keeps. */
     static boolean isTile(String url) {
