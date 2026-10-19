@@ -19,10 +19,13 @@ final class About {
         // the licence notice and the credits stay in English, as they are written; the rest is translated
         text(a, "OpenRath " + a.versionName(),
                 Hindi.t("A free and open-source home screen for Android car stereos.") + "\n\n"
-                        + "Copyright (C) 2026 the OpenRath authors. This program is free software: you can redistribute it and/or "
+                        + "OpenRath by Manish Shekhawat, https://github.com/manishekhawat/OpenRath\n\n"
+                        + "Copyright (C) 2026 Manish Shekhawat and the OpenRath contributors. This program is free software: you can redistribute it and/or "
                         + "modify it under the terms of the GNU General Public License as published by the Free Software Foundation, "
                         + "either version 3 of the License, or (at your option) any later version. It comes with ABSOLUTELY NO WARRANTY. "
-                        + "The full licence is in the LICENSE file of the source code.\n\n"
+                        + "The full licence is in the LICENSE file of the source code. Additional term under GPLv3 section 7(b): "
+                        + "anyone who conveys OpenRath or a modified version must keep the credit \"Based on OpenRath by Manish Shekhawat\", "
+                        + "with a link to https://github.com/manishekhawat/OpenRath, in its About or credits screen.\n\n"
                         + Hindi.t("Not affiliated with or endorsed by any car or stereo maker; brand names belong to their owners. "
                         + "Car names and logos are trademarks of their owners and are shown only to identify the owner's own car.") + "\n\n"
                         + Hindi.t("THIRD-PARTY PARTS") + "\n"

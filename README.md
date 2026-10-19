@@ -80,4 +80,4 @@ Settings > Apps > Default apps > Home app, and pick the original launcher. It is
 
 ## Licence
 
-GPL-3.0-or-later (see LICENSE). Not affiliated with or endorsed by any car or stereo maker; brand names belong to their owners.
+GPL-3.0-or-later (see LICENSE), with one additional term under GPLv3 section 7(b): copies and modified versions must keep the credit "Based on OpenRath by Manish Shekhawat" with a link to this project, in their About or credits screen (see [NOTICE.md](NOTICE.md)). Not affiliated with or endorsed by any car or stereo maker; brand names belong to their owners.
