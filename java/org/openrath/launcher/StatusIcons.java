@@ -31,6 +31,20 @@ final class StatusIcons extends View {
         return Math.max(0, Math.min(100, Math.round(level * 100f / scale)));
     }
 
+    /** "4G", "5G", "H+"… for TelephonyManager's network type, or "" when unknown. */
+    static String label(int type) {
+        switch (type) {
+            case 20: return "5G";
+            case 13: case 19: return "4G";
+            case 15: return "H+";
+            case 8: case 9: case 10: return "H";
+            case 3: case 5: case 6: case 12: case 14: case 17: return "3G";
+            case 2: return "E";
+            case 1: case 16: return "G";
+            default: return "";
+        }
+    }
+
     /** Signal bars, 0 to 4, from a Wi-Fi strength in dBm. */
     static int wifiBars(int rssi) {
         if (rssi <= -100 || rssi == Integer.MAX_VALUE) return 0;
@@ -47,6 +61,7 @@ final class StatusIcons extends View {
     private final RectF r = new RectF();
     // -1 = hide this icon
     private int wifi = -1, mobile = -1, bt = -1, gps = -1, battery = -1;
+    private String net = "";
     private boolean wifiOn, charging;
     private final Runnable tick = new Runnable() {
         @Override
@@ -94,7 +109,10 @@ final class StatusIcons extends View {
         try {
             android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
             if (tm == null || tm.getSimState() != android.telephony.TelephonyManager.SIM_STATE_READY) mobile = -1;
-            else mobile = level(tm);
+            else {
+                mobile = level(tm);
+                net = label(tm.getNetworkType());
+            }
         } catch (Exception e) {
             mobile = -1;
         }
@@ -187,6 +205,15 @@ final class StatusIcons extends View {
 
     private void bars(Canvas c, float x, float y, float s) {
         ink.setStyle(Paint.Style.FILL);
+        if (!net.isEmpty()) {
+            // the network type, small over the left of the bars, dim when there's no data link
+            colour(mobile > 0);
+            ink.setTextSize(s * 0.42f);
+            ink.setTextAlign(Paint.Align.LEFT);
+            ink.setFakeBoldText(true);
+            c.drawText(net, x, y + s * 0.38f, ink);
+            ink.setFakeBoldText(false);
+        }
         float w = s / 5.5f;
         for (int i = 0; i < 4; i++) {
             colour(mobile > i);

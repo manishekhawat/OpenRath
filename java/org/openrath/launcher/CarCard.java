@@ -25,6 +25,10 @@ final class CarCard extends Cards.Card {
     final Arrow left = new Arrow(getContext(), true), right = new Arrow(getContext(), false);
     final TextView limit = Ui.text(getContext(), 14, 0xFF111111, "sans-serif-medium", Gravity.CENTER);
     final TextView camera = Ui.label(getContext(), "");
+    /** This drive so far, shown while stopped. */
+    final TextView summary = Ui.text(getContext(), 11, Ui.SILVER_DIM, "sans-serif", Gravity.CENTER);
+    long stoppedAt;
+    boolean summaryDue;
     final Road road = new Road(getContext());
     Boolean lastOn;
     boolean leftOn, rightOn, lit;
@@ -36,7 +40,7 @@ final class CarCard extends Cards.Card {
         brandRow.setGravity(Gravity.CENTER_VERTICAL);
         car.setScaleType(ImageView.ScaleType.FIT_CENTER);
         speed.setText("--");
-        unit.setText("km/h");
+        unit.setText(Units.speedLabel());
         addView(road, new LayoutParams(-1, -1));
         road.setVisibility(Ui.ROAD ? VISIBLE : GONE);
         addView(car);
@@ -61,6 +65,9 @@ final class CarCard extends Cards.Card {
         camera.setTextColor(0xFFFF5A4E);
         camera.setVisibility(GONE);
         addView(camera);
+        summary.setSingleLine(true);
+        summary.setVisibility(GONE);
+        addView(summary);
         clickable(lights, new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +116,16 @@ final class CarCard extends Cards.Card {
         limit.setLayoutParams(at(ls, ls, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(60 * s), m, 0));
         camera.setTextSize(0, 10 * Ui.k * s);
         camera.setLayoutParams(at(-2, -2, Gravity.BOTTOM | Gravity.RIGHT, 0, 0, m, Ui.px(12 * s)));
+        summary.setTextSize(0, 11 * Ui.k * s);
+        summary.setLayoutParams(at(-2, -2, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0, 0, Ui.px(12 * s)));
+    }
+
+    /** "12.4 km · 34 min · avg 22 · top 68 km/h", in the owner's speed unit (distance stays in km). */
+    static String summary(double km, long sec, float top, boolean mph) {
+        long min = sec / 60;
+        int avg = sec > 0 ? Units.speed((float) (km * 3600 / sec), mph) : 0;
+        String time = min >= 60 ? String.format(Locale.US, "%d h %02d min", min / 60, min % 60) : min + " min";
+        return String.format(Locale.US, "%.1f km · %s · avg %d · top %d %s", km, time, avg, Units.speed(top, mph), mph ? "mph" : "km/h");
     }
 
     private final Runnable blink = new Runnable() {
@@ -132,12 +149,30 @@ final class CarCard extends Cards.Card {
         boolean learnt = p.lightSignal() != null || !"auto".equals(p.lights());
         lights.setText(Hindi.t(!learnt ? "LIGHTS: TAP TO SET UP" : on ? "LIGHTS ON" : "LIGHTS OFF"));
         lights.setTextColor(on ? Ui.SILVER : Ui.ACCENT);
-        speed.setText(h.speed());
+        speed.setText(h.speedShown());
         String sp = h.speed();
         road.setSpeed(sp.equals("--") ? 0 : Integer.parseInt(sp));
         speed.setTextColor(Drive.over ? 0xFFFF5A4E : Ui.SILVER);
         limit.setText(String.valueOf(Drive.limit));
         limit.setVisibility(Drive.limit > 0 ? VISIBLE : GONE);
+        // stopped for 5 seconds after some driving: how the drive went
+        long now = System.currentTimeMillis();
+        boolean still = sp.equals("0");
+        if (!still) stoppedAt = 0;
+        else if (stoppedAt == 0) stoppedAt = now;
+        boolean show = still && now - stoppedAt >= 5000 && Drive.driveKm >= 0.5 && Features.on(p, "stopSummary");
+        if (show) summary.setText(summary(Drive.driveKm, Drive.driveSec, Drive.driveTop, Units.mph));
+        summary.setVisibility(show ? VISIBLE : GONE);
+        if (still && !show && !summaryDue && Drive.driveKm >= 0.5 && getContext() instanceof HomeActivity) {
+            summaryDue = true;
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    summaryDue = false;
+                    if (getParent() != null) changed(((HomeActivity) getContext()).hub);
+                }
+            }, 5200);
+        }
         String care = Features.on(p, "care") ? Hindi.t(Care.alert(p)) : "";
         // engine and tyre warnings come before service reminders
         if (Features.on(p, "tpms")) for (int w = 0; w < 4; w++) {

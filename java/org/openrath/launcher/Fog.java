@@ -79,7 +79,7 @@ final class Fog extends View {
         paint.setTypeface(android.graphics.Typeface.create("sans-serif-medium", 0));
         paint.setTextSize(26 * k);
         paint.setColor(0xFF9AA4B0);
-        c.drawText("km/h", cx, h * 0.52f + 40 * k, paint);
+        c.drawText(Units.speedLabel(), cx, h * 0.52f + 40 * k, paint);
         paint.setTextSize(30 * k);
         paint.setColor(over ? 0xFFFFB02E : 0xFFCFE3FF);
         c.drawText(over ? Hindi.f("Fog: slow down to %1$s", g) : Hindi.f("Fog: keep below %1$s km/h", g), cx, h * 0.72f, paint);
