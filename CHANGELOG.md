@@ -2,6 +2,16 @@
 
 Newest first.
 
+## 1.43: Safer and lighter
+
+- **Safer:** other apps can no longer run code inside OpenRath, send it steering-wheel actions (SOS, answering or ending calls) or use its own messages; only the unit's own system apps are trusted. The map only runs its own page and asks before calling a number from it. Updates must be OpenRath, newer, and signed with the same key. Backups never carry or overwrite the valet PIN, the hotspot password or a fleet's settings. Crash logs stay in OpenRath's private storage with places and links removed. OpenRath's own web traffic uses https only; radio streams can still use http.
+- **Valet PIN:** five wrong tries lock it for a minute.
+- **Lighter on slow units:** the map is kept when you swipe between pages instead of being rebuilt, the picture layouts draw without creating new objects every frame, big pictures are read at screen size, and music details come from Android instead of being checked several times a second.
+- **Fewer downloads:** speed limits and cameras come from roads already fetched, and are asked for again only after about 5 km or when you leave the known roads. GPS slows down after five minutes parked, and the drive history is saved once a minute.
+- **Android 15:** OpenRath now targets Android 15 and keeps its screens clear of the status and navigation bars there.
+- **Diagnostics** in Settings > Help now list the errors OpenRath caught and carried on from since it started, and crashes are recorded from the moment the app starts.
+- **Hold a steering-wheel button** now has its own switch in Settings.
+
 ## 1.42: Setup screens
 
 - **Setup screens on first open:** after the logo, a new install goes step by step through the language, permissions (each one explained, or a backup to bring back), your car, the colour and screen layout, how much OpenRath shows, the radio, music, navigation and phone apps, and pairing your phone and making OpenRath the home app. Every step can be skipped, Back goes a step back, and Settings > Help > Run setup again goes through it later. It replaces the string of questions that popped up one after another.
