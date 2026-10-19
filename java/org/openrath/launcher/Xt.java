@@ -106,6 +106,9 @@ final class Xt {
 
     private void connect(IBinder b) throws Exception {
         descriptor = b.getInterfaceDescriptor();
+        // its code is loaded into OpenRath: only when it came with the firmware, never an app
+        // someone installed under the same name
+        if (!Compat.isSystemApp(ctx.getPackageManager(), PKG)) throw new SecurityException(PKG + " is not part of the firmware");
         loader = ctx.createPackageContext(PKG, Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY).getClassLoader();
         iface = Class.forName(descriptor, false, loader);
         Class<?> stub = Class.forName(descriptor + "$Stub", true, loader);

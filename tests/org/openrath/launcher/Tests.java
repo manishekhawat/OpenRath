@@ -412,8 +412,110 @@ public final class Tests {
         setupScreens();
         bootArt();
         performanceFixes();
+        securityFixes();
+        buildFixes();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
+    }
+
+    /** Vendor code loading, key-action tokens, the map page, backups, downloads and file names. */
+    private static void securityFixes() {
+        // only the firmware's own apps have their code loaded
+        check("system app", Compat.systemFlags(android.content.pm.ApplicationInfo.FLAG_SYSTEM));
+        check("updated system app", Compat.systemFlags(android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP | 0x10));
+        check("installed app is not system", !Compat.systemFlags(0) && !Compat.systemFlags(0x10));
+        // key actions need this install's token
+        String tok = "0123456789abcdef0123456789abcdef";
+        check("key token matches", Keys.tokenOk(tok, tok));
+        check("key token missing", !Keys.tokenOk(tok, null) && !Keys.tokenOk(tok, ""));
+        check("key token wrong", !Keys.tokenOk(tok, tok.replace('0', '1')));
+        check("key token too short to trust", !Keys.tokenOk("", "") && !Keys.tokenOk("abc", "abc") && !Keys.tokenOk(null, null));
+        // the map page's own origin
+        check("map origin", MapCard.ownOrigin("https://openrath.local/map.html") && MapCard.ownOrigin("https://openrath.local/leaflet.js?v=1"));
+        check("map origin: other host", !MapCard.ownOrigin("https://openrath.local.evil.example/map.html")
+                && !MapCard.ownOrigin("https://evil.example/?u=https://openrath.local/"));
+        check("map origin: http, port, user", !MapCard.ownOrigin("http://openrath.local/map.html")
+                && !MapCard.ownOrigin("https://openrath.local:8443/map.html") && !MapCard.ownOrigin("https://x@openrath.local/"));
+        check("map origin: others", !MapCard.ownOrigin(null) && !MapCard.ownOrigin("file:///android_asset/map/map.html")
+                && !MapCard.ownOrigin("javascript:alert(1)") && !MapCard.ownOrigin("about:blank"));
+        // backups: secrets left out, and some settings never restored
+        check("backup leaves out the valet PIN", !Backup.backedUp("x:valetPin") && !Backup.backedUp("x:apPass") && !Backup.backedUp("x:keyToken"));
+        check("backup keeps settings and SOS contacts", Backup.backedUp("x:cabSos1") && Backup.backedUp("slot0") && Backup.backedUp("x:updateUrl"));
+        check("restore keeps SOS contacts", Backup.restorable("x:cabSos1") && Backup.restorable("x:cabSos2") && Backup.restorable("slot0"));
+        check("restore skips addresses", !Backup.restorable("x:updateUrl") && !Backup.restorable("x:reportUrl"));
+        check("restore skips secrets", !Backup.restorable("x:valetPin") && !Backup.restorable("x:apPass")
+                && !Backup.restorable("x:keyToken") && !Backup.restorable("x:valet"));
+        check("restore skips managed settings", !Backup.restorable("x:m:feat:radio") && !Backup.restorable("x:m:noDev") && !Backup.restorable(null));
+        try {
+            java.io.ByteArrayOutputStream o = new java.io.ByteArrayOutputStream();
+            eq("backup copy within the cap", 10L, Backup.copy(new java.io.ByteArrayInputStream(new byte[10]), o, 10));
+            eq("backup copy over the cap", -1L, Backup.copy(new java.io.ByteArrayInputStream(new byte[11]), new java.io.ByteArrayOutputStream(), 10));
+        } catch (Exception e) {
+            check("backup copy: " + e, false);
+        }
+        // online radio: web streams only
+        check("stream http", Player.streamable("http://stream.example:8000/live.mp3") && Player.streamable("HTTPS://s.example/a"));
+        check("stream not files", !Player.streamable("file:///sdcard/x.mp3") && !Player.streamable("content://media/1")
+                && !Player.streamable("rtsp://s.example/a") && !Player.streamable("") && !Player.streamable(null) && !Player.streamable("http://"));
+        check("own downloads https only", Compat.httpsOnly("https://api.open-meteo.com/v1") && Compat.httpsOnly("HTTPS://x.example")
+                && !Compat.httpsOnly("http://x.example") && !Compat.httpsOnly("https://") && !Compat.httpsOnly(null));
+        // updates: OpenRath, newer, same key
+        java.util.Set<String> key = new java.util.HashSet<>(java.util.Arrays.asList("3082aa")), other = new java.util.HashSet<>(java.util.Arrays.asList("3082bb"));
+        eq("update accepted", null, Updates.refusal("org.openrath.launcher", "org.openrath.launcher", 144, 143, key, key));
+        check("update other app", Updates.refusal("org.evil", "org.openrath.launcher", 144, 143, key, key) != null);
+        check("update not newer", Updates.refusal("org.openrath.launcher", "org.openrath.launcher", 143, 143, key, key) != null);
+        check("update other key", Updates.refusal("org.openrath.launcher", "org.openrath.launcher", 144, 143, other, key) != null);
+        check("update unsigned", Updates.refusal("org.openrath.launcher", "org.openrath.launcher", 144, 143, new java.util.HashSet<String>(), key) != null);
+        // theme zips and fonts: names, never paths
+        eq("theme folder", "My theme", Storage.folderFor("My theme.zip"));
+        eq("theme folder odd letters", "a_b", Storage.folderFor("a/b.ZIP"));
+        check("theme folder dots", Storage.folderFor("..zip") == null && Storage.folderFor("...zip") == null
+                && Storage.folderFor(".zip") == null && Storage.folderFor(" .zip") == null);
+        eq("theme font", "f.ttf", Storage.bareName("../../x/f.ttf", "font.otf"));
+        eq("theme font dots", "font.otf", Storage.bareName("..", "font.otf"));
+        eq("theme font empty", "font.otf", Storage.bareName("", "font.otf"));
+        // crash reports: no addresses or positions
+        String trace = "java.io.IOException: https://api.example/x?lat=28.613900&lon=77.209000 failed\n"
+                + "\tat org.openrath.launcher.Hub.get(Hub.java:499)\n at 28.6139, -77.2090 content://media/1";
+        String clean = Crash.scrub(trace);
+        check("scrub address", !clean.contains("api.example") && !clean.contains("content://"));
+        check("scrub position", !clean.contains("28.6139") && !clean.contains("77.2090"));
+        check("scrub keeps line numbers", clean.contains("Hub.java:499") && clean.contains("IOException"));
+        eq("scrub keeps versions", "OpenRath 1.43", Crash.scrub("OpenRath 1.43"));
+        // report address
+        check("reports address well formed", !Reports.sendable("https://user:pw@fleet.example/r") && !Reports.sendable("https:// bad")
+                && Reports.sendable(" https://fleet.example/r "));
+        // boot receiver and others
+        check("boot action", Resume.bootAction("android.intent.action.BOOT_COMPLETED") && Resume.bootAction("android.intent.action.QUICKBOOT_POWERON"));
+        check("not a boot action", !Resume.bootAction("org.evil.X") && !Resume.bootAction(null));
+        Valet.Tries t = new Valet.Tries();
+        for (int i = 0; i < 4; i++) t.failed(1000);
+        eq("valet: four wrong PINs", 0L, t.waitMs(1000));
+        t.failed(1000);
+        check("valet: fifth locks", t.waitMs(1000) == Valet.Tries.LOCK_MS);
+        eq("valet: lock ends", 0L, t.waitMs(1000 + Valet.Tries.LOCK_MS));
+        t.failed(70000);
+        t.passed();
+        eq("valet: right PIN clears", 0L, t.waitMs(70000));
+        String[] led = LedStrip.nameAndMac("ELK|BLE|AA:BB:CC:DD:EE:FF");
+        check("led strip name with a bar", "ELK|BLE".equals(led[0]) && "AA:BB:CC:DD:EE:FF".equals(led[1]));
+        check("art: content only", Hub.artUriOk("content://media/external/audio/albumart/1") && !Hub.artUriOk("file:///data/data/x/a.png")
+                && !Hub.artUriOk("android.resource://x/1") && !Hub.artUriOk(null));
+        // the map page's content security policy covers what the page loads
+        try {
+            String html = new String(java.nio.file.Files.readAllBytes(new java.io.File("assets/map/map.html").toPath()), "UTF-8");
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile("Content-Security-Policy\" content=\"([^\"]+)\"").matcher(html);
+            check("map CSP present", m.find());
+            String csp = m.group(1);
+            check("map CSP no eval", !csp.contains("unsafe-eval"));
+            java.util.regex.Matcher u = java.util.regex.Pattern.compile("'(https://[a-z0-9.-]+)/").matcher(html);
+            while (u.find()) {
+                if (u.group(1).equals("https://maps.google.com")) continue;   // inside a QR code, never loaded
+                check("map CSP allows " + u.group(1), csp.contains(u.group(1)));
+            }
+        } catch (Exception e) {
+            check("map CSP read: " + e, false);
+        }
     }
 
     private static void hindi() {
@@ -474,6 +576,116 @@ public final class Tests {
                 check("hindi: files read", false);
             }
         }
+    }
+
+    /** The build, CI and translation checks from the 1.43 audit. */
+    private static void buildFixes() {
+        try {
+            // every English text the code passes to Hindi.t or Hindi.f, literals joined with + included, has Hindi
+            java.util.Map<String, String> e = new java.util.HashMap<>(), h = new java.util.HashMap<>();
+            for (String name : Hindi.ARRAYS) {
+                String file = name.equals("ui_strings") ? "ui" : name;
+                java.io.File ef = new java.io.File("res/values/" + file + ".xml"), hf = new java.io.File("res/values-hi/" + file + ".xml");
+                check("hindi: list " + name + " has its file", ef.exists() && hf.exists());
+                if (ef.exists()) e.putAll(strings(ef));
+                if (hf.exists()) h.putAll(strings(hf));
+            }
+            java.util.Set<String> known = new java.util.HashSet<>();
+            for (java.util.Map.Entry<String, String> x : e.entrySet()) if (h.containsKey(x.getKey()) && !h.get(x.getKey()).isEmpty()) known.add(x.getValue());
+            java.util.regex.Pattern call = java.util.regex.Pattern.compile("Hindi\\.[tf]\\(\\s*(\"(?:[^\"\\\\]|\\\\.)*\"(?:\\s*\\+\\s*\"(?:[^\"\\\\]|\\\\.)*\")*)\\s*[,)]");
+            java.util.regex.Pattern part = java.util.regex.Pattern.compile("\"((?:[^\"\\\\]|\\\\.)*)\"");
+            int texts = 0;
+            java.util.List<java.nio.file.Path> srcs = new java.util.ArrayList<>();
+            try (java.util.stream.Stream<java.nio.file.Path> w = java.nio.file.Files.walk(java.nio.file.Paths.get("java"))) {
+                java.util.Iterator<java.nio.file.Path> it = w.iterator();
+                while (it.hasNext()) {
+                    java.nio.file.Path p = it.next();
+                    if (p.toString().endsWith(".java")) srcs.add(p);
+                }
+            }
+            for (java.nio.file.Path p : srcs) {
+                java.util.regex.Matcher m = call.matcher(new String(java.nio.file.Files.readAllBytes(p), "UTF-8"));
+                while (m.find()) {
+                    StringBuilder s = new StringBuilder();
+                    java.util.regex.Matcher q = part.matcher(m.group(1));
+                    while (q.find()) s.append(javaString(q.group(1)));
+                    texts++;
+                    if (!known.contains(s.toString())) check("hindi: " + p.getFileName() + " \"" + s + "\" has a translation", false);
+                }
+            }
+            check("hindi: the code's texts found", texts > 1000);
+
+            // org.json is real in the tests now: the built-in themes and the layouts parse
+            for (String id : new java.io.File("assets/themes").list()) {
+                org.json.JSONObject t = new org.json.JSONObject(new String(java.nio.file.Files.readAllBytes(
+                        java.nio.file.Paths.get("assets/themes", id, "theme.json")), "UTF-8"));
+                Theme.Look l = Theme.Look.of(t, 0, 0);
+                check("json: theme " + id + " has a name and description", !t.optString("name").isEmpty() && !t.optString("description").isEmpty());
+                near("json: theme " + id + " corner radius", t.optDouble("cornerRadius", 14), l.radius, 0.001);
+                check("json: theme " + id + " road", l.road == t.optBoolean("road", true));
+            }
+            org.json.JSONArray lays = new org.json.JSONObject(new String(java.nio.file.Files.readAllBytes(
+                    java.nio.file.Paths.get("assets/layouts/layouts.json")), "UTF-8")).getJSONArray("layouts");
+            eq("json: layouts", 13, lays.length());
+
+            // the diagnostics keep only the last errors, newest first
+            Diag.clear();
+            for (int i = 0; i < Diag.KEEP + 5; i++) Diag.note("step" + i, new IllegalStateException("x" + i));
+            String[] lines = Diag.recent().split("\n");
+            eq("diag: kept", Diag.KEEP, lines.length);
+            check("diag: newest first", lines[0].contains("step" + (Diag.KEEP + 4)) && lines[0].contains("IllegalStateException: x"));
+            check("diag: oldest dropped", !Diag.recent().contains("step4 "));
+            Diag.clear();
+            eq("diag: cleared", "", Diag.recent());
+
+            // build and CI: tools checked by SHA-256, passwords not on a command line, actions pinned, read-only by default
+            String fetch = read("tools/fetch_tools.sh"), build = read("build.py");
+            java.util.regex.Matcher f = java.util.regex.Pattern.compile("fetch (\\S+) (https://\\S+) \\\\\\s+([0-9a-f]{64})").matcher(fetch);
+            int pinned = 0;
+            while (f.find()) pinned++;
+            eq("tools: each download has its SHA-256", 4, pinned);
+            check("tools: no unchecked download", fetch.split("curl ", -1).length == 2);
+            check("signing: no password on the command line", !build.contains("--ksPass") && !build.contains("--ksKeyPass"));
+            check("build: no dx", !build.contains("dx.jar"));
+            check("build: targets Android 15", build.contains("MIN_SDK, TARGET_SDK = 26, 35"));
+            for (String wf : new java.io.File(".github/workflows").list()) {
+                String y = read(".github/workflows/" + wf);
+                java.util.regex.Matcher u = java.util.regex.Pattern.compile("uses: (\\S+)").matcher(y);
+                while (u.find()) check(wf + ": " + u.group(1) + " pinned to a commit", u.group(1).matches("[\\w.-]+/[\\w.-]+@[0-9a-f]{40}"));
+                check(wf + ": says what it may change", y.contains("\npermissions:"));
+                // values reach scripts through env:, never pasted into the shell text, where a branch name could run as code
+                int script = -1;
+                for (String line : y.split("\n")) {
+                    int ind = line.length() - line.replaceAll("^[ -]+", "").length();
+                    String t = line.trim().replaceFirst("^- ", "");
+                    if (script >= 0 && !t.isEmpty() && ind <= script) script = -1;
+                    if (t.startsWith("run:") || t.startsWith("script:")) script = ind;
+                    if (script >= 0) check(wf + ": no ${{ }} in a script: " + t, !t.contains("${{"));
+                }
+            }
+            String rel = read(".github/workflows/release.yml");
+            check("release: signs in the protected environment", rel.contains("environment: release"));
+            check("release: published certificate", read("RELEASING.md").contains("88:E2:18:0C:76:5C:A0:77"));
+        } catch (Exception x) {
+            check("build fixes: " + x, false);
+        }
+    }
+
+    private static String read(String path) throws java.io.IOException {
+        return new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(path)), "UTF-8");
+    }
+
+    /** A Java string literal's text: \n, \", \\ and \' unescaped. */
+    private static String javaString(String s) {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '\\' && i + 1 < s.length()) {
+                char n = s.charAt(++i);
+                b.append(n == 'n' ? '\n' : n == 't' ? '\t' : n);
+            } else b.append(c);
+        }
+        return b.toString();
     }
 
     /** name to text from an Android strings file, unescaped the way aapt2 does it. */

@@ -99,8 +99,7 @@ final class OverMic {
                             p.put("micY", String.format(java.util.Locale.US, "%.3f", (lp.y + size / 2f) / sh));
                         } else {
                             playSoundEffect(android.view.SoundEffectConstants.CLICK);
-                            app.startActivity(new Intent(app, HomeActivity.class).setAction(Keys.ACTION)
-                                    .putExtra("action", "voice").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            app.startActivity(Keys.intent(app, "voice").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                         }
                         return true;
                 }

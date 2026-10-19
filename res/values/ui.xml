@@ -900,6 +900,11 @@
     <string name="ui_thanks_to" formatted="false">THANKS TO</string>
     <string name="ui_hold_a_steering_wheel_button" formatted="false">Hold a steering-wheel button</string>
     <string name="ui_each_button_can_do_a_second_action_when_" formatted="false">Each button can do a second action when held down</string>
+    <string name="ui_call_1_s" formatted="false">Call %1$s?</string>
+    <string name="ui_it_is_not_openrath" formatted="false">it is not OpenRath</string>
+    <string name="ui_it_is_not_newer_than_this_version" formatted="false">it is not newer than this version</string>
+    <string name="ui_it_is_signed_with_a_different_key" formatted="false">it is signed with a different key</string>
+    <string name="ui_too_many_wrong_pins_try_again_in_1_s_s" formatted="false">Too many wrong PINs. Try again in %1$s s</string>
     <string-array name="ui_strings">
         <item>@string/ui_back_to_the_dashboard</item>
         <item>@string/ui_search_settings</item>
@@ -1799,5 +1804,10 @@
         <item>@string/ui_thanks_to</item>
         <item>@string/ui_hold_a_steering_wheel_button</item>
         <item>@string/ui_each_button_can_do_a_second_action_when_</item>
+        <item>@string/ui_call_1_s</item>
+        <item>@string/ui_it_is_not_openrath</item>
+        <item>@string/ui_it_is_not_newer_than_this_version</item>
+        <item>@string/ui_it_is_signed_with_a_different_key</item>
+        <item>@string/ui_too_many_wrong_pins_try_again_in_1_s_s</item>
     </string-array>
 </resources>

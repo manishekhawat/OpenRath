@@ -664,7 +664,7 @@ final class SettingsRows {
         // ---- Map and navigation
         g = "Map and navigation";
         if (Features.on(a.prefs, "offlineMap")) r.add(new SettingsView.Row(g, "Map kept for no internet", Hindi.f("about %1$s MB of places you've seen; tap to clear",
-                String.valueOf(Tiles.sizeMb())), new Runnable() {
+                String.valueOf(Tiles.sizeMb(a))), new Runnable() {
             @Override
             public void run() {
                 new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
@@ -672,7 +672,7 @@ final class SettingsRows {
                         .setPositiveButton(Hindi.t("Delete"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
-                                Tiles.clear();
+                                Tiles.clear(a);
                             }
                         }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }

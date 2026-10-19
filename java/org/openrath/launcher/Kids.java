@@ -114,6 +114,7 @@ final class Kids {
         page.addView(body, new LinearLayout.LayoutParams(-1, 0, 1f));
         tint(tab[0], 0xFF3E7BD8);
         body.addView(colours(a, p));
+        Edge.fit(page);
         d.setContentView(page);
         d.show();
     }

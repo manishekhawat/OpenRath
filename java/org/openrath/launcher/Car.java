@@ -192,7 +192,8 @@ final class Car {
                 String when = new java.text.SimpleDateFormat("d MMM yyyy", Locale.getDefault()).format(new java.util.Date(f.lastModified()));
                 new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Welcome to OpenRath"))
                         .setMessage(Hindi.f(f.getName().startsWith("dzire-home-") ? "There's a backup here from %1$s, made by Dzire Home. Bring back those settings, the fuel log and trips?"
-                                : "There's a backup here from %1$s. Bring back those settings, the fuel log and trips?", when))
+                                : "There's a backup here from %1$s. Bring back those settings, the fuel log and trips?", when)
+                                + "\n\n" + Backup.label(f))
                         .setPositiveButton(Hindi.t("Bring them back"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {

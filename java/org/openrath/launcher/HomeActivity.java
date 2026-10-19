@@ -24,7 +24,6 @@ public class HomeActivity extends Activity implements Cards.Host {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         Fm.app = getApplicationContext();
-        Crash.install(this);
         prefs = new Prefs(this);
         Managed.apply(this, prefs);   // a fleet's managed settings, if the unit has any
         Reports.install(this, prefs);
@@ -43,6 +42,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         dash = new Dashboard(this);
         root = new android.widget.FrameLayout(this);
         root.addView(dash, new android.widget.FrameLayout.LayoutParams(-1, -1));
+        Edge.fit(root);
         setContentView(root);
         // location, storage, Bluetooth, notifications and the plain Android phone (Bluetooth hands-free
         // through the system phone), as this Android version names them
@@ -62,8 +62,9 @@ public class HomeActivity extends Activity implements Cards.Host {
         f.addAction(Drive.REST);
         f.addAction(Drive.FUEL_LOW);
         f.addAction(Drive.HIGHWAY);
-        f.addAction(android.content.Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
         Compat.ownOnly(this, events, f);
+        // managed settings changed: sent by the system, which needs no permission of OpenRath's
+        Compat.fromSystem(this, events, new android.content.IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED));
         build();
         root.post(new Runnable() {
             @Override
@@ -83,8 +84,9 @@ public class HomeActivity extends Activity implements Cards.Host {
     private final android.content.BroadcastReceiver events = new android.content.BroadcastReceiver() {
         @Override
         public void onReceive(android.content.Context c, Intent i) {
-            if (Keys.ACTION.equals(i.getAction())) keyAction(i.getStringExtra("action"));
-            else if (Ticker.CHANGED.equals(i.getAction())) Extras.ticker(HomeActivity.this);
+            if (Keys.ACTION.equals(i.getAction())) {
+                if (ownKey(i)) keyAction(i.getStringExtra("action"));
+            } else if (Ticker.CHANGED.equals(i.getAction())) Extras.ticker(HomeActivity.this);
             else if (Drive.REST.equals(i.getAction())) restStop();
             else if (Drive.HIGHWAY.equals(i.getAction())) highwayStrip();
             else if (Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED.equals(i.getAction())) {
@@ -119,7 +121,18 @@ public class HomeActivity extends Activity implements Cards.Host {
     }
 
     private void handleIntent(Intent i) {
-        if (i != null && Keys.ACTION.equals(i.getAction())) keyAction(i.getStringExtra("action"));
+        if (i != null && Keys.ACTION.equals(i.getAction()) && ownKey(i)) keyAction(i.getStringExtra("action"));
+    }
+
+    /** A key action from OpenRath itself (it carries this install's token); other apps' are ignored. */
+    private boolean ownKey(Intent i) {
+        String got;
+        try {
+            got = i.getStringExtra(Keys.TOKEN);
+        } catch (Throwable e) {   // extras another app made unreadable
+            return false;
+        }
+        return Keys.tokenOk(Keys.token(this), got);
     }
 
     @Override

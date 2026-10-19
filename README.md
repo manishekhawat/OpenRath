@@ -76,7 +76,7 @@ Settings > Apps > Default apps > Home app, and pick the original launcher. It is
 
 ## Rebuilding
 
-`python3 build.py package` (tools and signing as described at the top of `build.py`; `sh tools/fetch_tools.sh` fetches apktool and the signer). The map uses Leaflet 1.9.4 (BSD-2-Clause, licence in `assets/map`). QR codes on the unit use Project Nayuki's QR Code generator library (MIT, licence at the top of each file in `java/org/openrath/qr`; moved to its own package name so a copy built into the unit's firmware can't be used in its place).
+`python3 build.py package` (tools and signing as described at the top of `build.py`; `sh tools/fetch_tools.sh` fetches apktool, the signer, d8 and org.json for the tests, and checks their SHA-256). The map uses Leaflet 1.9.4 (BSD-2-Clause, licence in `assets/map`). QR codes on the unit use Project Nayuki's QR Code generator library (MIT, licence at the top of each file in `java/org/openrath/qr`; moved to its own package name so a copy built into the unit's firmware can't be used in its place).
 
 ## Licence
 

@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import java.io.File;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -81,9 +80,17 @@ final class Reports {
         return b.toString();
     }
 
-    /** Whether `url` is somewhere reports may go: https only. */
+    /** Whether `url` is somewhere reports may go: a well-formed https address with a host, and no name or password in it. */
     static boolean sendable(String url) {
-        return url != null && url.trim().toLowerCase(java.util.Locale.US).startsWith("https://") && url.trim().length() > 8;
+        if (url == null) return false;
+        try {
+            // URI, not URL: URL takes "https:// bad" with a host of " bad" on some Java versions
+            java.net.URI u = new java.net.URI(url.trim());
+            return "https".equalsIgnoreCase(u.getScheme()) && u.getHost() != null && !u.getHost().isEmpty()
+                    && u.getRawUserInfo() == null;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /** Once a day, when reports are on and a fleet gave an address: send the report there. */
@@ -95,7 +102,7 @@ final class Reports {
             @Override
             public void run() {
                 try {
-                    HttpURLConnection c = (HttpURLConnection) new URL(url.trim()).openConnection();
+                    HttpURLConnection c = Compat.https(url.trim());
                     c.setConnectTimeout(15000);
                     c.setReadTimeout(15000);
                     c.setDoOutput(true);

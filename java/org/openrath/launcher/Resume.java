@@ -64,10 +64,16 @@ final class Resume {
         }
     }
 
+    /** The boot broadcasts the manifest lists for Boot; anything else sent to it is ignored. */
+    static boolean bootAction(String action) {
+        return Intent.ACTION_BOOT_COMPLETED.equals(action) || "android.intent.action.QUICKBOOT_POWERON".equals(action);
+    }
+
     /** Starts the trip service when the unit boots, before anyone opens the dashboard. */
     public static final class Boot extends BroadcastReceiver {
         @Override
         public void onReceive(Context c, Intent i) {
+            if (i == null || !bootAction(i.getAction())) return;
             Drive.start(c);
         }
     }

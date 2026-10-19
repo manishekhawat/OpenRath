@@ -17,8 +17,10 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Keeps the map pictures (tiles) the map has shown in OpenRath/maps/tiles, so the places you have
- * looked at or driven through still show without internet. With internet, tiles come from the map
+ * Keeps the map pictures (tiles) the map has shown, so the places you have looked at or driven
+ * through still show without internet. They are kept in OpenRath's private storage, where other
+ * apps can't see which places were looked at; tiles earlier versions kept in OpenRath/maps/tiles on
+ * shared storage are still read until cleared. With internet, tiles come from the map
  * service as before (and a kept copy is refreshed after 30 days); without it, the kept copy is used.
  * Only tiles the map asks for are kept: nothing is bulk-downloaded, as the map services require.
  */
@@ -44,22 +46,36 @@ final class Tiles {
         return b.toString().replace("..", "_");
     }
 
-    static File dir() {
+    /** Where new tiles are kept: the app's private storage. */
+    static File dir(Context c) {
+        return new File(c.getApplicationContext().getFilesDir(), "tiles");
+    }
+
+    /** Where earlier versions kept tiles, on shared storage: read, never written. */
+    static File oldDir() {
         return Storage.dir("maps/tiles");
     }
 
     /** The tile for the map: kept, fetched and kept, or null to let the map show its blank square. */
-    static WebResourceResponse serve(Context c, String url) {
-        File f = new File(dir(), key(url));
+    static WebResourceResponse serve(final Context c, String url) {
+        final File f = new File(dir(c), key(url));
+        File kept = f;
+        if (!f.isFile()) {
+            File old = new File(oldDir(), key(url));
+            try {
+                if (old.isFile()) kept = old;
+            } catch (SecurityException ignored) {   // no storage permission
+            }
+        }
         boolean online = Player.online(c);
-        if (f.isFile() && (!online || System.currentTimeMillis() - f.lastModified() < FRESH_MS)) return file(f);
+        if (kept.isFile() && (!online || System.currentTimeMillis() - kept.lastModified() < FRESH_MS)) return file(kept);
         if (!online) return null;
         try {
-            HttpURLConnection h = (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection h = Compat.https(url);
             h.setConnectTimeout(8000);
             h.setReadTimeout(10000);
             h.setRequestProperty("User-Agent", "OpenRath (car head unit; open source home screen)");
-            if (h.getResponseCode() != 200) return f.isFile() ? file(f) : null;
+            if (h.getResponseCode() != 200) return kept.isFile() ? file(kept) : null;
             InputStream in = h.getInputStream();
             ByteArrayOutputStream o = new ByteArrayOutputStream();
             byte[] buf = new byte[16384];
@@ -75,7 +91,7 @@ final class Tiles {
                     if (++written % 300 == 0) new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            prune();
+                            prune(c);
                         }
                     }).start();
                 }
@@ -84,7 +100,7 @@ final class Tiles {
             }
             return new WebResourceResponse(type(h.getContentType()), null, new ByteArrayInputStream(data));
         } catch (Exception e) {
-            return f.isFile() ? file(f) : null;
+            return kept.isFile() ? file(kept) : null;
         }
     }
 
@@ -101,17 +117,19 @@ final class Tiles {
     }
 
     /** Megabytes kept, for Settings. */
-    static long sizeMb() {
+    static long sizeMb(Context c) {
         long[] t = {0};
-        walk(dir(), null, t);
+        walk(dir(c), null, t);
+        walk(oldDir(), null, t);
         return t[0] / (1024 * 1024);
     }
 
     /** Over the cap: delete the longest-unused tiles until well under it. */
-    static synchronized void prune() {
+    static synchronized void prune(Context c) {
         List<File> all = new ArrayList<>();
         long[] total = {0};
-        walk(dir(), all, total);
+        walk(dir(c), all, total);
+        walk(oldDir(), all, total);
         if (total[0] <= CAP_BYTES) return;
         Collections.sort(all, new Comparator<File>() {
             @Override
@@ -126,14 +144,20 @@ final class Tiles {
         }
     }
 
-    static void clear() {
+    static void clear(Context c) {
         List<File> all = new ArrayList<>();
-        walk(dir(), all, new long[1]);
+        walk(dir(c), all, new long[1]);
+        walk(oldDir(), all, new long[1]);
         for (File f : all) f.delete();
     }
 
     private static void walk(File d, List<File> out, long[] total) {
-        File[] l = d.listFiles();
+        File[] l;
+        try {
+            l = d.listFiles();
+        } catch (SecurityException e) {
+            return;
+        }
         if (l == null) return;
         for (File f : l) {
             if (f.isDirectory()) walk(f, out, total);

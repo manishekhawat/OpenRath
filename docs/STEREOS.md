@@ -6,7 +6,7 @@ Checked on 14 Oct 2026 against the OpenRath 1.21 code, not on the real units. On
 
 - **Size:** OpenRath scales everything by `min(height/600, width/1024)`, and the user can adjust it from 80% to 130% with the "Size of text and boxes" setting.
 - **Tall screens:** when the screen is taller than it is wide, the dashboard boxes stack.
-- **Android versions:** the app installs on Android 8.0 and newer (minSdk 26, targetSdk 34).
+- **Android versions:** the app installs on Android 8.0 and newer (minSdk 26, targetSdk 35).
 - **Works on every Android stereo:** dashboard, map with offline tiles, music, voice (with Google speech services installed), car setup for any brand, backups, trip QR and boot logo files.
 - **Topway only:** FM tuner box, reverse camera hook and steering keys through `com.tw.service.xt`. On other stereos these rows are hidden and the stereo's own radio app is used.
 
