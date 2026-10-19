@@ -412,6 +412,7 @@ public final class Tests {
         setupScreens();
         bootArt();
         securityFixes();
+        buildFixes();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
     }
@@ -574,6 +575,116 @@ public final class Tests {
                 check("hindi: files read", false);
             }
         }
+    }
+
+    /** The build, CI and translation checks from the 1.43 audit. */
+    private static void buildFixes() {
+        try {
+            // every English text the code passes to Hindi.t or Hindi.f, literals joined with + included, has Hindi
+            java.util.Map<String, String> e = new java.util.HashMap<>(), h = new java.util.HashMap<>();
+            for (String name : Hindi.ARRAYS) {
+                String file = name.equals("ui_strings") ? "ui" : name;
+                java.io.File ef = new java.io.File("res/values/" + file + ".xml"), hf = new java.io.File("res/values-hi/" + file + ".xml");
+                check("hindi: list " + name + " has its file", ef.exists() && hf.exists());
+                if (ef.exists()) e.putAll(strings(ef));
+                if (hf.exists()) h.putAll(strings(hf));
+            }
+            java.util.Set<String> known = new java.util.HashSet<>();
+            for (java.util.Map.Entry<String, String> x : e.entrySet()) if (h.containsKey(x.getKey()) && !h.get(x.getKey()).isEmpty()) known.add(x.getValue());
+            java.util.regex.Pattern call = java.util.regex.Pattern.compile("Hindi\\.[tf]\\(\\s*(\"(?:[^\"\\\\]|\\\\.)*\"(?:\\s*\\+\\s*\"(?:[^\"\\\\]|\\\\.)*\")*)\\s*[,)]");
+            java.util.regex.Pattern part = java.util.regex.Pattern.compile("\"((?:[^\"\\\\]|\\\\.)*)\"");
+            int texts = 0;
+            java.util.List<java.nio.file.Path> srcs = new java.util.ArrayList<>();
+            try (java.util.stream.Stream<java.nio.file.Path> w = java.nio.file.Files.walk(java.nio.file.Paths.get("java"))) {
+                java.util.Iterator<java.nio.file.Path> it = w.iterator();
+                while (it.hasNext()) {
+                    java.nio.file.Path p = it.next();
+                    if (p.toString().endsWith(".java")) srcs.add(p);
+                }
+            }
+            for (java.nio.file.Path p : srcs) {
+                java.util.regex.Matcher m = call.matcher(new String(java.nio.file.Files.readAllBytes(p), "UTF-8"));
+                while (m.find()) {
+                    StringBuilder s = new StringBuilder();
+                    java.util.regex.Matcher q = part.matcher(m.group(1));
+                    while (q.find()) s.append(javaString(q.group(1)));
+                    texts++;
+                    if (!known.contains(s.toString())) check("hindi: " + p.getFileName() + " \"" + s + "\" has a translation", false);
+                }
+            }
+            check("hindi: the code's texts found", texts > 1000);
+
+            // org.json is real in the tests now: the built-in themes and the layouts parse
+            for (String id : new java.io.File("assets/themes").list()) {
+                org.json.JSONObject t = new org.json.JSONObject(new String(java.nio.file.Files.readAllBytes(
+                        java.nio.file.Paths.get("assets/themes", id, "theme.json")), "UTF-8"));
+                Theme.Look l = Theme.Look.of(t, 0, 0);
+                check("json: theme " + id + " has a name and description", !t.optString("name").isEmpty() && !t.optString("description").isEmpty());
+                near("json: theme " + id + " corner radius", t.optDouble("cornerRadius", 14), l.radius, 0.001);
+                check("json: theme " + id + " road", l.road == t.optBoolean("road", true));
+            }
+            org.json.JSONArray lays = new org.json.JSONObject(new String(java.nio.file.Files.readAllBytes(
+                    java.nio.file.Paths.get("assets/layouts/layouts.json")), "UTF-8")).getJSONArray("layouts");
+            eq("json: layouts", 13, lays.length());
+
+            // the diagnostics keep only the last errors, newest first
+            Diag.clear();
+            for (int i = 0; i < Diag.KEEP + 5; i++) Diag.note("step" + i, new IllegalStateException("x" + i));
+            String[] lines = Diag.recent().split("\n");
+            eq("diag: kept", Diag.KEEP, lines.length);
+            check("diag: newest first", lines[0].contains("step" + (Diag.KEEP + 4)) && lines[0].contains("IllegalStateException: x"));
+            check("diag: oldest dropped", !Diag.recent().contains("step4 "));
+            Diag.clear();
+            eq("diag: cleared", "", Diag.recent());
+
+            // build and CI: tools checked by SHA-256, passwords not on a command line, actions pinned, read-only by default
+            String fetch = read("tools/fetch_tools.sh"), build = read("build.py");
+            java.util.regex.Matcher f = java.util.regex.Pattern.compile("fetch (\\S+) (https://\\S+) \\\\\\s+([0-9a-f]{64})").matcher(fetch);
+            int pinned = 0;
+            while (f.find()) pinned++;
+            eq("tools: each download has its SHA-256", 4, pinned);
+            check("tools: no unchecked download", fetch.split("curl ", -1).length == 2);
+            check("signing: no password on the command line", !build.contains("--ksPass") && !build.contains("--ksKeyPass"));
+            check("build: no dx", !build.contains("dx.jar"));
+            check("build: targets Android 15", build.contains("MIN_SDK, TARGET_SDK = 26, 35"));
+            for (String wf : new java.io.File(".github/workflows").list()) {
+                String y = read(".github/workflows/" + wf);
+                java.util.regex.Matcher u = java.util.regex.Pattern.compile("uses: (\\S+)").matcher(y);
+                while (u.find()) check(wf + ": " + u.group(1) + " pinned to a commit", u.group(1).matches("[\\w.-]+/[\\w.-]+@[0-9a-f]{40}"));
+                check(wf + ": says what it may change", y.contains("\npermissions:"));
+                // values reach scripts through env:, never pasted into the shell text, where a branch name could run as code
+                int script = -1;
+                for (String line : y.split("\n")) {
+                    int ind = line.length() - line.replaceAll("^[ -]+", "").length();
+                    String t = line.trim().replaceFirst("^- ", "");
+                    if (script >= 0 && !t.isEmpty() && ind <= script) script = -1;
+                    if (t.startsWith("run:") || t.startsWith("script:")) script = ind;
+                    if (script >= 0) check(wf + ": no ${{ }} in a script: " + t, !t.contains("${{"));
+                }
+            }
+            String rel = read(".github/workflows/release.yml");
+            check("release: signs in the protected environment", rel.contains("environment: release"));
+            check("release: published certificate", read("RELEASING.md").contains("88:E2:18:0C:76:5C:A0:77"));
+        } catch (Exception x) {
+            check("build fixes: " + x, false);
+        }
+    }
+
+    private static String read(String path) throws java.io.IOException {
+        return new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(path)), "UTF-8");
+    }
+
+    /** A Java string literal's text: \n, \", \\ and \' unescaped. */
+    private static String javaString(String s) {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '\\' && i + 1 < s.length()) {
+                char n = s.charAt(++i);
+                b.append(n == 'n' ? '\n' : n == 't' ? '\t' : n);
+            } else b.append(c);
+        }
+        return b.toString();
     }
 
     /** name to text from an Android strings file, unescaped the way aapt2 does it. */

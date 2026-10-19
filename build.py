@@ -6,16 +6,19 @@ usage: python3 build.py OUTDIR     build the signed APK into OUTDIR
                                    build the on-device tests (androidTest/) into OUTDIR/openrath-test.apk
                                    and OUTDIR/openrath-fleet.apk; run them with adb (.github/workflows/device-tests.yml)
 
-Artwork is drawn by art/lib. Tools: $THEME_TOOLS (or tools/.tools) holding apktool.jar, signer.jar
-(tools/fetch_tools.sh), android.jar (API 34) and d8.jar (build-tools 34; dx.jar still works) from the
-Android SDK.
+Artwork is drawn by art/lib. Tools: $THEME_TOOLS (or tools/.tools) holding apktool.jar, signer.jar,
+d8.jar and json.jar (tools/fetch_tools.sh checks each one's SHA-256), and android.jar (API 34) from the
+Android SDK. d8.jar may also be the SDK's own, from build-tools 34 or newer.
 
 OPENRATH_PUBLIC=1 leaves out brand packs; OPENRATH_UNSIGNED=1 stops before signing
 (OUTDIR/openrath-unsigned.apk); AAPT2=path uses that aapt2 instead of apktool's own.
 
 Signing: signing.json beside this file, {"keystore": path, "alias", "storePass", "keyPass"}, kept
-out of the repository; without it a debug key is made in ~/.openrath-debug.keystore. Keep using the
-same key, or Android won't install an update over the installed app.
+out of the repository; the passwords can be left out of it and set in OPENRATH_STORE_PASS and
+OPENRATH_KEY_PASS instead. They reach the signer on its standard input, never on its command line,
+where other programs on the computer could read them. Without signing.json a debug key is made in
+~/.openrath-debug.keystore. Keep using the same key, or Android won't install an update over the
+installed app.
 
 Brand packs (brands/<id>/badge.py, not published) add car makers' badges; see brands/README.md.
 """
@@ -34,13 +37,18 @@ TOOLS = Path(os.environ.get('THEME_TOOLS', HERE / 'tools' / '.tools'))
 
 
 def signing():
-    """(keystore, alias, store password, key password): signing.json, else a debug key made once."""
+    """(keystore, alias, store password, key password): signing.json (passwords from it or from
+    OPENRATH_STORE_PASS and OPENRATH_KEY_PASS), else a debug key made once."""
     import json
     f = HERE / 'signing.json'
     if f.exists():
         j = json.loads(f.read_text())
         ks = Path(j['keystore'])
-        return (ks if ks.is_absolute() else HERE / ks), j['alias'], j['storePass'], j['keyPass']
+        sp = os.environ.get('OPENRATH_STORE_PASS') or j.get('storePass')
+        kp = os.environ.get('OPENRATH_KEY_PASS') or j.get('keyPass') or sp
+        if not sp:
+            sys.exit('signing.json has no storePass, and OPENRATH_STORE_PASS is not set')
+        return (ks if ks.is_absolute() else HERE / ks), j['alias'], sp, kp
     ks = Path.home() / '.openrath-debug.keystore'
     if not ks.exists():
         subprocess.run(['keytool', '-genkeypair', '-keystore', str(ks), '-alias', 'debug', '-keyalg', 'RSA',
@@ -84,8 +92,8 @@ def white(polys, size):
     return im
 X = 2.4   # images are drawn for a 600 px tall screen times X, then scaled down on the unit
 VERSION_CODE, VERSION_NAME = 50, '1.42'
-# Oldest Android the APK installs on (26 = Android 8.0). It targets Android 14.
-MIN_SDK = 26
+# Oldest Android the APK installs on (26 = Android 8.0), and the one it targets (35 = Android 15).
+MIN_SDK, TARGET_SDK = 26, 35
 
 
 def wheel_mask(height):
@@ -182,7 +190,7 @@ packageInfo:
   renameManifestPackage: null
 sdkInfo:
   minSdkVersion: '{MIN_SDK}'
-  targetSdkVersion: '34'
+  targetSdkVersion: '{TARGET_SDK}'
 sharedLibrary: false
 sparseResources: false
 usesFramework:
@@ -222,20 +230,19 @@ def dex(work, out):
     srcs = [str(p) for p in (HERE / 'java').rglob('*.java')]
     subprocess.run(['javac', '-nowarn', '--release', '8', '-encoding', 'UTF-8', '-cp', str(TOOLS / 'android.jar'),
                     '-d', str(classes)] + srcs, check=True)
-    if (TOOLS / 'd8.jar').exists():
-        # d8 (Android build-tools 30+), as the SDK uses today
-        d8out = work / 'd8'
-        d8out.mkdir()
-        subprocess.run(['java', '-cp', str(TOOLS / 'd8.jar'), 'com.android.tools.r8.D8', '--release', '--min-api', str(MIN_SDK),
-                        '--lib', str(TOOLS / 'android.jar'), '--output', str(d8out)]
-                       + [str(p) for p in sorted(classes.rglob('*.class'))], check=True)
-        shutil.move(str(d8out / 'classes.dex'), str(out))
-        return
-    # else dx: dx 1.7 only reads older class files; the code uses no Java 8 language features
-    for p in classes.rglob('*.class'):
-        b = bytearray(p.read_bytes()); b[7] = 50; p.write_bytes(bytes(b))
-    subprocess.run(['java', '-cp', str(TOOLS / 'dx.jar'), 'com.android.dx.command.Main', '--dex',
-                    f'--output={out}', str(classes)], check=True)
+    d8(work / 'd8', classes, None, out)
+
+
+def d8(work, classes, app, out):
+    """classes.dex from the compiled classes, with d8 (it also turns lambdas into plain classes for
+    older Android); with `app`, those classes are on the class path but not in the dex."""
+    if not (TOOLS / 'd8.jar').exists():
+        sys.exit(f'No d8.jar in {TOOLS}: run tools/fetch_tools.sh, or copy lib/d8.jar from the Android SDK build-tools')
+    work.mkdir()
+    subprocess.run(['java', '-cp', str(TOOLS / 'd8.jar'), 'com.android.tools.r8.D8', '--release', '--min-api', str(MIN_SDK),
+                    '--lib', str(TOOLS / 'android.jar'), '--output', str(work)] + (['--classpath', str(app)] if app else [])
+                   + [str(p) for p in sorted(classes.rglob('*.class'))], check=True)
+    shutil.move(str(work / 'classes.dex'), str(out))
 
 
 def previews(lay):
@@ -295,14 +302,20 @@ def build(outdir):
         shutil.move(str(unsigned), final)
         shutil.rmtree(work)
         return final
-    ks, alias, sp, kp = signing()
-    subprocess.run(['java', '-jar', str(TOOLS / 'signer.jar'), '-a', str(unsigned), '-o', str(work / 'signed'),
-                    '--ks', str(ks), '--ksAlias', alias, '--ksPass', sp,
-                    '--ksKeyPass', kp, '--allowResign'], check=True)
+    sign(unsigned, work / 'signed')
     final = Path(outdir) / 'openrath.apk'
     shutil.move(next((work / 'signed').glob('*.apk')), final)
     shutil.rmtree(work)
     return final
+
+
+def sign(unsigned, outdir):
+    """Align and sign an APK into outdir. The signer asks for the keystore's password, then the key's;
+    both are typed into its standard input, so they never appear in the list of running programs."""
+    ks, alias, sp, kp = signing()
+    subprocess.run(['java', '-jar', str(TOOLS / 'signer.jar'), '-a', str(unsigned), '-o', str(outdir),
+                    '--ks', str(ks), '--ksAlias', alias, '--allowResign'],
+                   input=f'{sp}\n{kp}\n', text=True, check=True)
 
 
 def androidtest(outdir):
@@ -326,22 +339,13 @@ def test_apk(work, src, app, package_id, final):
     """One test APK from src/AndroidManifest.xml, src/java and src/res; with `app`, OpenRath's classes
     are on the class path but not in the APK (they come from the installed app)."""
     jar = str(TOOLS / 'android.jar')
-    classes, d8out, apk = work / 'classes', work / 'd8', work / 'apk'
-    for d in (classes, d8out, apk / 'res' / 'values'):
+    classes, apk = work / 'classes', work / 'apk'
+    for d in (classes, apk / 'res' / 'values'):
         d.mkdir(parents=True)
     cp = f'{jar}:{app}' if app else jar
     subprocess.run(['javac', '-nowarn', '--release', '8', '-encoding', 'UTF-8', '-cp', cp, '-d', str(classes)]
                    + [str(p) for p in (src / 'java').rglob('*.java')], check=True)
-    if (TOOLS / 'd8.jar').exists():
-        subprocess.run(['java', '-cp', str(TOOLS / 'd8.jar'), 'com.android.tools.r8.D8', '--release', '--min-api', str(MIN_SDK),
-                        '--lib', jar, '--output', str(d8out)] + (['--classpath', str(app)] if app else [])
-                       + [str(p) for p in sorted(classes.rglob('*.class'))], check=True)
-        shutil.move(str(d8out / 'classes.dex'), str(apk / 'classes.dex'))
-    else:
-        for p in classes.rglob('*.class'):
-            c = bytearray(p.read_bytes()); c[7] = 50; p.write_bytes(bytes(c))
-        subprocess.run(['java', '-cp', str(TOOLS / 'dx.jar'), 'com.android.dx.command.Main', '--dex',
-                        f'--output={apk / "classes.dex"}', str(classes)], check=True)
+    d8(work / 'd8', classes, app, apk / 'classes.dex')
     shutil.copy(src / 'AndroidManifest.xml', apk)
     if (src / 'res').is_dir():
         shutil.copytree(src / 'res', apk / 'res', dirs_exist_ok=True)
@@ -350,9 +354,7 @@ def test_apk(work, src, app, package_id, final):
     unsigned = work / 'unsigned.apk'
     subprocess.run(['java', '-jar', str(TOOLS / 'apktool.jar'), 'b', str(apk), '-o', str(unsigned),
                     '--use-aapt2', '-p', str(TOOLS / 'framework')], check=True)
-    ks, alias, sp, kp = signing()
-    subprocess.run(['java', '-jar', str(TOOLS / 'signer.jar'), '-a', str(unsigned), '-o', str(work / 'signed'),
-                    '--ks', str(ks), '--ksAlias', alias, '--ksPass', sp, '--ksKeyPass', kp, '--allowResign'], check=True)
+    sign(unsigned, work / 'signed')
     shutil.move(next((work / 'signed').glob('*.apk')), final)
     return final
 
@@ -362,9 +364,12 @@ def test():
     import tempfile
     out = Path(tempfile.mkdtemp(prefix='openrath-test-'))
     srcs = [str(p) for p in (HERE / 'java').rglob('*.java')] + [str(p) for p in (HERE / 'tests').rglob('*.java')]
-    subprocess.run(['javac', '-nowarn', '--release', '8', '-encoding', 'UTF-8', '-cp', str(TOOLS / 'android.jar'),
-                    '-d', str(out)] + srcs, check=True)
-    r = subprocess.run(['java', '-cp', f"{out}:{TOOLS / 'android.jar'}", 'org.openrath.launcher.Tests'], cwd=HERE)   # the tests read res/ and assets/
+    # the real org.json (tools/fetch_tools.sh) ahead of android.jar, whose org.json only throws
+    if not (TOOLS / 'json.jar').exists():
+        sys.exit(f'No json.jar in {TOOLS}: run tools/fetch_tools.sh')
+    cp = f"{TOOLS / 'json.jar'}:{TOOLS / 'android.jar'}"
+    subprocess.run(['javac', '-nowarn', '--release', '8', '-encoding', 'UTF-8', '-cp', cp, '-d', str(out)] + srcs, check=True)
+    r = subprocess.run(['java', '-cp', f"{out}:{cp}", 'org.openrath.launcher.Tests'], cwd=HERE)   # the tests read res/ and assets/
     shutil.rmtree(out, ignore_errors=True)
     return r.returncode
 

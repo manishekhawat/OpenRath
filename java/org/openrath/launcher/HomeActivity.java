@@ -24,7 +24,6 @@ public class HomeActivity extends Activity implements Cards.Host {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         Fm.app = getApplicationContext();
-        Crash.install(this);
         prefs = new Prefs(this);
         Managed.apply(this, prefs);   // a fleet's managed settings, if the unit has any
         Reports.install(this, prefs);
@@ -43,6 +42,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         dash = new Dashboard(this);
         root = new android.widget.FrameLayout(this);
         root.addView(dash, new android.widget.FrameLayout.LayoutParams(-1, -1));
+        Edge.fit(root);
         setContentView(root);
         // location, storage, Bluetooth, notifications and the plain Android phone (Bluetooth hands-free
         // through the system phone), as this Android version names them

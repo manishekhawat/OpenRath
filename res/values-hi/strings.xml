@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hindi for the names Android itself shows: the steering-wheel service in Accessibility settings. -->
+<resources>
+    <string name="keys_service_name">OpenRath स्टीयरिंग-व्हील बटन</string>
+    <string name="keys_service_about">OpenRath में सेट किए स्टीयरिंग-व्हील बटन तब भी काम करते हैं जब स्क्रीन पर कोई दूसरा ऐप हो। यह सिर्फ़ बटन दबाना देखता है, और सिर्फ़ उन्हीं बटनों को इस्तेमाल करता है जिन्हें आपने कोई काम दिया है।</string>
+</resources>

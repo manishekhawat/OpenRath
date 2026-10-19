@@ -130,6 +130,7 @@ public class AppsActivity extends Activity {
             body.addView(ls, new LinearLayout.LayoutParams(Math.round(44 * k), -1));
         }
         root.addView(body, new LinearLayout.LayoutParams(-1, 0, 1));
+        Edge.fit(root);
         setContentView(root);
     }
 
