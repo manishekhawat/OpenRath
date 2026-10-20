@@ -1831,6 +1831,7 @@ final class Extras {
         Features.set(p, "eq", true);
         Eq.apply(a, p, 0);
         new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Equalizer")).setView(col)
+                .setMessage(Hindi.t(Eq.status.startsWith("This unit") ? Eq.status : Eq.REACH))
                 .setPositiveButton(Hindi.t("Done"), null)
                 .setNeutralButton(Hindi.t("Turn off"), new DialogInterface.OnClickListener() {
                     @Override
@@ -1839,7 +1840,6 @@ final class Extras {
                         Eq.apply(a, p, 0);
                     }
                 }).show();
-        if (Eq.status.startsWith("This unit")) Toast.makeText(a, Hindi.t(Eq.status), Toast.LENGTH_LONG).show();
     }
 
     private static void exportGpx(final HomeActivity a) {

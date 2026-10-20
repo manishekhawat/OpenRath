@@ -86,4 +86,5 @@
     <string name="ui_more_fuel_trim_learnt_1_s" formatted="false">फ़्यूल ट्रिम सीखा हुआ: %1$s%%</string>
     <string name="ui_more_fuel_tank_1_s" formatted="false">फ़्यूल टैंक: %1$s%%</string>
     <string name="ui_more_battery_1_s_v" formatted="false">बैटरी: %1$s V</string>
+    <string name="ui_more_always_works_on_openrath_s_own_music_other_m" formatted="false">OpenRath के अपने म्यूज़िक पर हमेशा चलता है। दूसरे म्यूज़िक ऐप पर तभी असर होता है जब यूनिट इसकी अनुमति दे; अगर आवाज़ वैसी ही लगे तो यूनिट का अपना EQ ऐप इस्तेमाल करें।</string>
 </resources>
