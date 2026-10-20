@@ -17,6 +17,19 @@
     <string name="ui_more_listening" formatted="false">Listening…</string>
     <string name="ui_more_didn_t_catch_that" formatted="false">Didn\'t catch that</string>
     <string name="ui_more_voice_isn_t_available_right_now" formatted="false">Voice isn\'t available right now</string>
+    <string name="ui_more_call_screen_over_other_apps" formatted="false">Call screen over other apps</string>
+    <string name="ui_more_who_is_calling_with_big_answer_and_end_butto" formatted="false">Who is calling, with big Answer and End buttons, on top of whatever app is open</string>
+    <string name="ui_more_calling_you" formatted="false">Calling you</string>
+    <string name="ui_more_on_a_call" formatted="false">On a call</string>
+    <string name="ui_more_contacts" formatted="false">Contacts</string>
+    <string name="ui_more_no_contacts_on_the_unit_yet_pair_your_phone_" formatted="false">No contacts on the unit yet. Pair your phone and allow it to share contacts.</string>
+    <string name="ui_more_the_stereo_isn_t_ready" formatted="false">the stereo isn\'t ready</string>
+    <string name="ui_more_there_s_no_message_to_reply_to" formatted="false">There\'s no message to reply to</string>
+    <string name="ui_more_reply_to_1_s" formatted="false">Reply to %1$s</string>
+    <string name="ui_more_send" formatted="false">Send</string>
+    <string name="ui_more_reply_sent" formatted="false">Reply sent</string>
+    <string name="ui_more_the_reply_couldn_t_be_sent" formatted="false">The reply couldn\'t be sent</string>
+    <string name="ui_more_reply" formatted="false">Reply</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -33,5 +46,18 @@
         <item>@string/ui_more_listening</item>
         <item>@string/ui_more_didn_t_catch_that</item>
         <item>@string/ui_more_voice_isn_t_available_right_now</item>
+        <item>@string/ui_more_call_screen_over_other_apps</item>
+        <item>@string/ui_more_who_is_calling_with_big_answer_and_end_butto</item>
+        <item>@string/ui_more_calling_you</item>
+        <item>@string/ui_more_on_a_call</item>
+        <item>@string/ui_more_contacts</item>
+        <item>@string/ui_more_no_contacts_on_the_unit_yet_pair_your_phone_</item>
+        <item>@string/ui_more_the_stereo_isn_t_ready</item>
+        <item>@string/ui_more_there_s_no_message_to_reply_to</item>
+        <item>@string/ui_more_reply_to_1_s</item>
+        <item>@string/ui_more_send</item>
+        <item>@string/ui_more_reply_sent</item>
+        <item>@string/ui_more_the_reply_couldn_t_be_sent</item>
+        <item>@string/ui_more_reply</item>
     </string-array>
 </resources>

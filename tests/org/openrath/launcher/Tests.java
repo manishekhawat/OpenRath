@@ -758,6 +758,17 @@ public final class Tests {
         check("moving: GPS lost in a tunnel stays locked", ChildLock.moving(40, now - 60000, -1, now, now - 60000));
         check("moving: GPS lost long after", !ChildLock.moving(40, now - ChildLock.LOST_MS - 5000, -1, now, now - ChildLock.LOST_MS - 5000));
         check("moving: never seen moving", !ChildLock.moving(0, 0, -1, now, 0));
+
+        Voice.Command r = Voice.parse("reply");
+        eq("voice: reply", "reply", r == null ? null : r.kind);
+        r = Voice.parse("जवाब दो");
+        eq("voice: reply in Hindi", "reply", r == null ? null : r.kind);
+        r = Voice.parse("reply to the message");
+        eq("voice: reply to the message", "reply", r == null ? null : r.kind);
+        eq("contacts: same name", 4, Contacts.match("Priya Sharma", "priya sharma"));
+        eq("contacts: first name", 3, Contacts.match("Priya Sharma", "priya"));
+        eq("contacts: no match", 0, Contacts.match("Priya Sharma", "rahul"));
+        eq("contacts: nothing said", 0, Contacts.match("Priya", ""));
     }
 
     private static void levels() {

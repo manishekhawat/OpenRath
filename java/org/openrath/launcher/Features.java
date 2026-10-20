@@ -148,6 +148,7 @@ final class Features {
             new F("lightsReminder", "Car-signal reminders", "Driving", true, "Headlights after sunset, doors and seat belts, by voice (needs the setup in Car signals)"),
             new F("bumps", "Road learning", "Driving", true, "Learns speed-breakers and how long you wait at signals and tolls, and tells you next time"),
             new F("duck", "Music dips for voice prompts", "Driving", true, "Music lowers while the car speaks a turn or a warning"),
+            new F("callScreen", "Call screen over other apps", "Phone", true, "Who is calling, with big Answer and End buttons, on top of whatever app is open"),
             new F("hotspot", "Guest Wi-Fi", "Phone", true, "A QR code passengers scan to join the unit's hotspot"),
             new F("maker", "Stereo maker's services", "Radio and music", true, "Topway, FYT, MTCD/Joying and szchoiceway units: FM in the radio box, Bluetooth calls, reverse gear and lights through the maker's own services. Off, or on other stereos: plain Android only (the radio app's controls, the system phone)"),
             new F("projection", "Phone projection app", "Radio and music", true, "A button in the music box opens your wireless CarPlay or Android Auto app (ZLink, AutoKit and others)"),

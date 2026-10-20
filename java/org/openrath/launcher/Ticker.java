@@ -15,6 +15,52 @@ final class Ticker {
 
     static volatile String app = "", title = "", text = "";
     static volatile long at;
+    /** The message's own reply button (from its app), when it has one that takes typed text. */
+    static volatile android.app.Notification.Action reply;
+    static volatile android.app.RemoteInput replyInput;
+
+    /** Keep the message's reply button, if it has one that takes words (WhatsApp, Messages, Telegram and most others). */
+    static void replyFrom(android.app.Notification n) {
+        reply = null;
+        replyInput = null;
+        if (n == null || n.actions == null) return;
+        for (android.app.Notification.Action a : n.actions) {
+            android.app.RemoteInput[] in = a.getRemoteInputs();
+            if (in == null) continue;
+            for (android.app.RemoteInput r : in) {
+                if (r.getAllowFreeFormInput()) {
+                    reply = a;
+                    replyInput = r;
+                    return;
+                }
+            }
+        }
+    }
+
+    /** Whether the last message can be answered (within 10 minutes of it). */
+    static boolean canReply() {
+        return reply != null && replyInput != null && System.currentTimeMillis() - at < 10 * 60000;
+    }
+
+    /** Send `words` through the message's own reply button; false when it couldn't. */
+    static boolean send(android.content.Context c, String words) {
+        android.app.Notification.Action a = reply;
+        android.app.RemoteInput r = replyInput;
+        if (a == null || r == null || words == null || words.trim().isEmpty()) return false;
+        android.content.Intent i = new android.content.Intent();
+        android.os.Bundle b = new android.os.Bundle();
+        b.putCharSequence(r.getResultKey(), words.trim());
+        android.app.RemoteInput.addResultsToIntent(new android.app.RemoteInput[]{r}, i, b);
+        try {
+            a.actionIntent.send(c, 0, i);
+            reply = null;
+            replyInput = null;
+            return true;
+        } catch (Exception e) {
+            Diag.note("message reply", e);
+            return false;
+        }
+    }
 
     static List<String> apps(Prefs p) {
         List<String> out = new ArrayList<>();

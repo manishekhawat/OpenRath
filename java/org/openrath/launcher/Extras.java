@@ -280,6 +280,23 @@ final class Extras {
         LinearLayout.LayoutParams mp = new LinearLayout.LayoutParams(0, -2, 1f);
         mp.leftMargin = Ui.px(14);
         s.addView(msg, mp);
+        if (Features.on(p, "voice") && Ticker.canReply()) {   // answer by voice, sent after one tap
+            TextView reply = Ui.text(a, 18, Ui.SILVER, "sans-serif-medium", Gravity.CENTER);
+            reply.setText(Hindi.t("Reply"));
+            GradientDrawable rg = new GradientDrawable();
+            rg.setCornerRadius(999);
+            rg.setStroke(Math.max(1, Ui.px(1.5f)), Ui.ACCENT);
+            reply.setBackground(rg);
+            reply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HomeVoice.reply(a);
+                }
+            });
+            LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(Ui.px(130), Ui.px(HomeDock.TARGET) - Ui.px(20));
+            rp.leftMargin = Ui.px(12);
+            s.addView(reply, rp);
+        }
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(-1, -2, Gravity.TOP);
         lp.setMargins(Ui.px(140), Ui.px(10), Ui.px(140), 0);
         a.root.addView(s, lp);
@@ -1546,7 +1563,7 @@ final class Extras {
     /** Just switched on: if the feature needs setting up, offer to do it now instead of only saying so. */
     static void offerSetup(final HomeActivity a, final String id) {
         Prefs p = a.prefs;
-        if ("overStrip".equals(id) && !OverMic.allowed(a)) {
+        if (("overStrip".equals(id) || "callScreen".equals(id)) && !OverMic.allowed(a)) {
             new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Features.get(id).name))
                     .setMessage(Hindi.t("This needs \"Display over other apps\" for OpenRath. Allow it now?"))
                     .setPositiveButton(Hindi.t("Allow"), new DialogInterface.OnClickListener() {
