@@ -961,6 +961,12 @@ final class SettingsRows {
 
         // ---- Help
         g = "Help";
+        r.add(new SettingsView.Row(g, "Hidden shortcuts", "what holding a box or a button does", new Runnable() {
+            @Override
+            public void run() {
+                Hints.list(a);
+            }
+        }));
         r.add(new SettingsView.Row(g, "Reset GPS", "if it takes long to find where you are", new Runnable() {
             @Override
             public void run() {

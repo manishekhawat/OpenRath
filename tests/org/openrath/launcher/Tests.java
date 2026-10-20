@@ -804,6 +804,13 @@ public final class Tests {
         eq("toll text abroad", "Toll plaza in 2 kilometres, about 3 pounds.", Ahead.tollText(2050, 3, ""));
         check("no Indian holidays abroad", Holidays.upcoming(day(2026, 10, 13, 9, 0), 3).isEmpty());
         Money.country = was;
+        boolean[] tipsOn = new boolean[Hints.ALL.length];
+        java.util.Arrays.fill(tipsOn, true);
+        eq("tips: first", 0, Hints.pick(0, tipsOn));
+        tipsOn[1] = false;
+        eq("tips: skip a switched-off feature", 2, Hints.pick(1, tipsOn));
+        eq("tips: all shown", -1, Hints.pick(Hints.ALL.length, tipsOn));
+        for (String[] tip : Hints.ALL) check("tips: feature exists " + tip[1], tip[1].isEmpty() || Features.get(tip[1]) != null);
         check("phone: removed driver", !PhoneLink.switchDriver("Meera", "Asha", drivers));
         eq("browse: short list", 3, Browse.trim(many.subList(0, 3), true, Browse.MOVING_ROWS).size());
     }
