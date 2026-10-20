@@ -66,7 +66,9 @@ public class HomeActivity extends Activity implements Cards.Host {
         f.addAction(Drive.HIGHWAY);
         Compat.ownOnly(this, events, f);
         // managed settings changed: sent by the system, which needs no permission of OpenRath's
-        Compat.fromSystem(this, events, new android.content.IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED));
+        android.content.IntentFilter sys = new android.content.IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
+        sys.addAction(Intent.ACTION_SCREEN_ON);   // back from the stereo's sleep: check at once (Wake)
+        Compat.fromSystem(this, events, sys);
         build();
         root.post(new Runnable() {
             @Override
@@ -90,6 +92,9 @@ public class HomeActivity extends Activity implements Cards.Host {
                 if (ownKey(i)) keyAction(i.getStringExtra("action"));
             } else if (Ticker.CHANGED.equals(i.getAction())) Extras.ticker(HomeActivity.this);
             else if (NavTurn.CHANGED.equals(i.getAction())) NavCard.update(HomeActivity.this);
+            else if (Intent.ACTION_SCREEN_ON.equals(i.getAction())) {
+                if (visible) Wake.sleptNow(HomeActivity.this);
+            }
             else if (Drive.REST.equals(i.getAction())) restStop();
             else if (Drive.HIGHWAY.equals(i.getAction())) highwayStrip();
             else if (Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED.equals(i.getAction())) {
