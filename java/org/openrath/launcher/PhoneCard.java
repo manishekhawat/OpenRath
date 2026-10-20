@@ -134,7 +134,7 @@ final class PhoneCard extends Cards.Card {
     void fit(int w, int h) {
         float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
         int m = Ui.px(18 * s);
-        head.setTextSize(0, 11 * Ui.k * s);
+        head.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
         head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(12 * s), 0, 0));
         title.setTextSize(0, 24 * Ui.k * s);
         title.setMaxWidth(w - 2 * m);

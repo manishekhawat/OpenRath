@@ -210,16 +210,21 @@ final class MediaCard extends Cards.Card {
         float s = Math.min(h / (138f * Ui.k), w / (420f * Ui.k));
         int m = Ui.px(22 * s);
         int bs = Ui.px(52 * s);
-        head.setTextSize(0, 11 * Ui.k * s);
+        head.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
         head.setPadding(0, Ui.px(6 * s), Ui.px(12 * s), Ui.px(6 * s));
         head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(10 * s), 0, 0));
         title.setTextSize(0, (radio ? 30 : 24) * Ui.k * s);
-        sub.setTextSize(0, 13 * Ui.k * s);
-        int bw = 3 * bs + 2 * Ui.px(14 * s);
+        sub.setTextSize(0, Math.max(Ui.MIN_TEXT, 15 * s) * Ui.k);
+        // each button takes touches across at least 76 (Android's size for use while driving), however
+        // small the box; the picture keeps its size and the rest is padding, eating into the gap first
+        int touch = Math.max(bs, Math.min(Ui.px(HomeDock.TARGET), Math.round(w * 0.55f / 3)));
+        int pad = (touch - bs) / 2, between = Math.max(0, Ui.px(14 * s) - (touch - bs));
+        int bw = 3 * touch + 2 * between;
         text.setLayoutParams(at(Math.max(w - 3 * m - bw, Ui.px(60)), -2, Gravity.CENTER_VERTICAL | Gravity.LEFT, m, Ui.px(14 * s), 0, 0));
         for (ImageView b : new ImageView[]{prev, play, next}) {
-            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(bs, bs);
-            p.leftMargin = b == prev ? 0 : Ui.px(14 * s);
+            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(touch, touch);
+            p.leftMargin = b == prev ? 0 : between;
+            b.setPadding(pad, pad, pad, pad);
             b.setLayoutParams(p);
         }
         buttons.setLayoutParams(at(-2, -2, Gravity.CENTER_VERTICAL | Gravity.RIGHT, 0, Ui.px(8 * s), m, 0));
@@ -230,7 +235,7 @@ final class MediaCard extends Cards.Card {
         phone.setPadding(Ui.px(16 * s), Ui.px(6 * s), Ui.px(16 * s), Ui.px(6 * s));
         phone.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(8 * s), m, 0));
         progress.setLayoutParams(at(-1, Ui.px(30 * s), Gravity.BOTTOM, m, 0, m, Ui.px(4 * s)));
-        progress.text = 10 * Ui.k * s;
+        progress.text = Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k;
     }
 
     @Override
