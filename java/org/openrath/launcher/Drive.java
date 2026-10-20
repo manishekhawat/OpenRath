@@ -316,8 +316,15 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
      * last slow fix) for 5 minutes. stillFrom is when the car stopped, or -1 while it moves.
      */
     static boolean parkedGps(boolean slow, float kmh, float movedM, long stillFrom, long now) {
+        return parkedGps(slow, kmh, movedM, stillFrom, now, false);
+    }
+
+    /** With the screen off (the stereo asleep with the ignition), standing still slows the GPS after 30 seconds. */
+    static final long PARKED_DARK_MS = 30000;
+
+    static boolean parkedGps(boolean slow, float kmh, float movedM, long stillFrom, long now, boolean screenOff) {
         if (kmh >= 3 || slow && movedM > 25) return false;
-        return stillFrom >= 0 && now - stillFrom >= PARKED_MS;
+        return stillFrom >= 0 && now - stillFrom >= (screenOff ? PARKED_DARK_MS : PARKED_MS);
     }
 
     private void foreground() {
@@ -507,7 +514,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         float movedM = last == null ? 0 : last.distanceTo(l);
         if (kmh >= 3 || slowGps && movedM > 25) stillFrom = -1;
         else if (stillFrom < 0) stillFrom = now;
-        boolean slow = parkedGps(slowGps, kmh, movedM, stillFrom, now);
+        boolean slow = parkedGps(slowGps, kmh, movedM, stillFrom, now, !screenOn());
         if (slow != slowGps) gps(slow);
         last = l;
         lastAt = tick;

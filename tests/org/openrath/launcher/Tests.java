@@ -1634,6 +1634,9 @@ public final class Tests {
         check("gps: moving again goes fast", !Drive.parkedGps(true, 12, 0, 1000000, 1000000 + Drive.PARKED_MS * 2));
         check("gps: moved without a speed goes fast", !Drive.parkedGps(true, 0, 40, 1000000, 1000000 + Drive.PARKED_MS * 2));
         check("gps: drift while parked stays slow", Drive.parkedGps(true, 0, 8, 1000000, 1000000 + Drive.PARKED_MS * 2));
+        check("gps: screen off and still goes slow sooner", Drive.parkedGps(false, 0, 0, 1000000, 1000000 + Drive.PARKED_DARK_MS, true));
+        check("gps: screen on and still for 30 s stays fast", !Drive.parkedGps(false, 0, 0, 1000000, 1000000 + Drive.PARKED_DARK_MS, false));
+        check("gps: screen off but moving stays fast", !Drive.parkedGps(false, 30, 0, -1, 1000000, true));
 
         // pictures read at about the screen's size
         eq("sample: phone photo on a 1024 x 600 unit", 2, Pics.sampleSize(4000, 3000, 1024, 600));
