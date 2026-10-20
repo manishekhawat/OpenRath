@@ -1248,7 +1248,9 @@ public class HomeActivity extends Activity implements Cards.Host {
     private final Runnable chores = new Runnable() {
         @Override
         public void run() {
-            if (visible) Chores.summary(HomeActivity.this);   // after the weather has had time to arrive
+            if (!visible) return;
+            Chores.summary(HomeActivity.this);   // after the weather has had time to arrive
+            Hints.maybe(HomeActivity.this);
         }
     };
 

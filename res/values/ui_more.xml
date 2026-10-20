@@ -62,6 +62,17 @@
     <string name="ui_more_plug_the_obd_adapter_often_sold_as_elm327_in" formatted="false">Plug the OBD adapter (often sold as ELM327) into the socket under the steering wheel, switch the ignition on, and pair it in the unit\'s Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here.</string>
     <string name="ui_more_country_for_money_and_holidays" formatted="false">Country, for money and holidays</string>
     <string name="ui_more_country" formatted="false">Country</string>
+    <string name="ui_more_tip" formatted="false">Tip</string>
+    <string name="ui_more_hidden_shortcuts" formatted="false">Hidden shortcuts</string>
+    <string name="ui_more_what_holding_a_box_or_a_button_does" formatted="false">what holding a box or a button does</string>
+    <string name="ui_more_hold_any_box_to_change_what_it_shows_or_to_m" formatted="false">Hold any box to change what it shows, or to move it</string>
+    <string name="ui_more_hold_a_button_in_the_bar_to_choose_which_app" formatted="false">Hold a button in the bar to choose which app it opens</string>
+    <string name="ui_more_hold_the_apps_button_to_open_settings" formatted="false">Hold the Apps button to open Settings</string>
+    <string name="ui_more_hold_the_navigation_button_for_your_saved_pl" formatted="false">Hold the Navigation button for your saved places</string>
+    <string name="ui_more_tap_the_music_or_radio_box_s_name_for_source" formatted="false">Tap the music or radio box\'s name for sources, playlists and what\'s up next</string>
+    <string name="ui_more_hold_an_app_in_the_app_list_to_pin_it_to_the" formatted="false">Hold an app in the app list to pin it to the top or hide it</string>
+    <string name="ui_more_hold_the_next_turn_card_to_hide_it_for_this_" formatted="false">Hold the next-turn card to hide it for this trip</string>
+    <string name="ui_more_say_reply_after_a_message_is_read_out_to_ans" formatted="false">Say \"reply\" after a message is read out to answer it by voice</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -123,5 +134,16 @@
         <item>@string/ui_more_plug_the_obd_adapter_often_sold_as_elm327_in</item>
         <item>@string/ui_more_country_for_money_and_holidays</item>
         <item>@string/ui_more_country</item>
+        <item>@string/ui_more_tip</item>
+        <item>@string/ui_more_hidden_shortcuts</item>
+        <item>@string/ui_more_what_holding_a_box_or_a_button_does</item>
+        <item>@string/ui_more_hold_any_box_to_change_what_it_shows_or_to_m</item>
+        <item>@string/ui_more_hold_a_button_in_the_bar_to_choose_which_app</item>
+        <item>@string/ui_more_hold_the_apps_button_to_open_settings</item>
+        <item>@string/ui_more_hold_the_navigation_button_for_your_saved_pl</item>
+        <item>@string/ui_more_tap_the_music_or_radio_box_s_name_for_source</item>
+        <item>@string/ui_more_hold_an_app_in_the_app_list_to_pin_it_to_the</item>
+        <item>@string/ui_more_hold_the_next_turn_card_to_hide_it_for_this_</item>
+        <item>@string/ui_more_say_reply_after_a_message_is_read_out_to_ans</item>
     </string-array>
 </resources>
