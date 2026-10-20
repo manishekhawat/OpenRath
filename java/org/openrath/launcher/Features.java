@@ -32,7 +32,7 @@ final class Features {
     /** Off whatever the level until the owner turns them on: they need hardware, or change the home screen. */
     private static final java.util.Set<String> ASK_FIRST = new java.util.HashSet<>(java.util.Arrays.asList("cab", "obd", "dashcam", "tpms", "reports"));
 
-    private static final String[] SIMPLE_IDS = {"arrows", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "longKeys", "resume", "offlineMap", "backup", "reports"};
+    private static final String[] SIMPLE_IDS = {"arrows", "navTurns", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "longKeys", "resume", "offlineMap", "backup", "reports"};
     private static final String[] CUSTOM_IDS = {"pages", "widgets", "saver", "perf", "bootArt", "soundProfiles", "speedVolume", "eq", "profiles"};
     private static final String[] DEV_IDS = {"maker", "perf"};
 
@@ -107,6 +107,8 @@ final class Features {
             new F("widgets", "Widgets from other apps", "Dashboard", true, "Put another app's widget in a box"),
             new F("saver", "Clock screensaver", "Dashboard", false, "Big clock after a few idle minutes while parked"),
             new F("ticker", "Notification ticker", "Dashboard", true, "Messages slide in along the top"),
+            new F("navTurns", "Next turn from your navigation app", "Driving", true, "Google Maps, Waze, OsmAnd and others: the next turn, its distance and arrow in a card on the dashboard"),
+            new F("overStrip", "Mini strip over other apps", "Driving", false, "The next turn and what's playing, with play, pause and skip, along the bottom while another app is open"),
             new F("readAloud", "Read messages aloud", "Dashboard", false, "Says who sent a message, or the whole message"),
             new F("nightDrive", "Night-drive mode", "Dashboard", true, "After sunset while driving: big red speed, dim red map, nothing else"),
             new F("voice", "Voice commands (Hindi and English)", "Dashboard", true, "\"FM 91.1\", \"call Mom\", \"घर ले चलो\" from the mic; choose where the mic sits in Home screen"),

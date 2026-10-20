@@ -413,6 +413,7 @@ public final class Tests {
         bootArt();
         performanceFixes();
         securityFixes();
+        launcherReview();
         buildFixes();
         finishFixes();
         System.out.println(run + " checks, " + failed + " failed");
@@ -727,6 +728,29 @@ public final class Tests {
         check("reports: no level turns it on", !Features.onAt(r, Features.SIMPLE, false) && !Features.onAt(r, Features.CUSTOM, false));
     }
 
+    /** The fixes from the car launcher review: next turn, safety floor, calls, resume and the rest. */
+    private static void launcherReview() {
+        String[] d = NavTurn.split("300 m", "Turn left onto MG Road");
+        eq("nav: maps distance", "300 m", d[0]);
+        eq("nav: maps instruction", "Turn left onto MG Road", d[1]);
+        d = NavTurn.split("Turn right", "1.2 km");
+        eq("nav: distance second", "1.2 km", d[0]);
+        eq("nav: instruction first", "Turn right", d[1]);
+        d = NavTurn.split("In 200 m, keep left", null);
+        eq("nav: leading distance", "200 m", d[0]);
+        eq("nav: after the distance", "keep left", d[1]);
+        d = NavTurn.split("Head north", "toward Ring Road");
+        eq("nav: no distance", "", d[0]);
+        eq("nav: both lines", "Head north  ·  toward Ring Road", d[1]);
+        check("nav: 500 ft", NavTurn.looksLikeDistance("500 ft"));
+        check("nav: not a road number", !NavTurn.looksLikeDistance("12th Main Road towards the airport"));
+        check("nav: maps is navigation", NavTurn.guidance("com.google.android.apps.maps", null, true));
+        check("nav: waze is navigation", NavTurn.guidance("com.waze", null, true));
+        check("nav: maps' other notices are not", !NavTurn.guidance("com.google.android.apps.maps", null, false));
+        check("nav: music is not", !NavTurn.guidance("com.spotify.music", "transport", true));
+        check("nav: any app saying navigation", NavTurn.guidance("org.example.nav", "navigation", false));
+    }
+
     private static void levels() {
         int s = 0, f = 0, c = 0, d = 0;
         for (Features.F x : Features.ALL) {
@@ -735,7 +759,7 @@ public final class Tests {
             else if (x.level == Features.CUSTOM) c++;
             else d++;
         }
-        eq("levels: simple count", 16, s);   // "longKeys" registered beside "keys"
+        eq("levels: simple count", 17, s);   // "longKeys" registered beside "keys", "navTurns" beside "arrows"
         eq("levels: custom count", 8, c);
         eq("levels: dev count", 2, d);
         check("levels: full has the most", f > s && f > c);
