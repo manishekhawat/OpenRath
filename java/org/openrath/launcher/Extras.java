@@ -45,23 +45,49 @@ final class Extras {
         a.dash.removeCallbacks(saverCheck(a));
         a.dash.postDelayed(saverCheck(a), 20000);
         if (Resume.due(a, a.prefs)) {
+            resumeNav(a);
+            // tried after 2 seconds, then every 2 seconds while the music app or radio isn't ready yet
             a.dash.postDelayed(new Runnable() {
+                int tries;
+
                 @Override
                 public void run() {
-                    resumeAudio(a);
+                    if (!resumeAudio(a, ++tries) && tries < Resume.TRIES) a.dash.postDelayed(this, 2000);
                 }
-            }, 6000);   // the radio service and the audio system need a moment after boot
+            }, 2000);
         }
     }
 
-    static void resumeAudio(HomeActivity a) {
+    /**
+     * The stereo switched off mid-trip (the navigation app was still guiding a short while before):
+     * open the navigation app again so the route carries on.
+     */
+    static void resumeNav(HomeActivity a) {
+        String pkg = a.prefs.str("navApp", "");
+        long at = a.prefs.longNum("navAt", 0L);
+        if (!Resume.navDue(pkg, at, System.currentTimeMillis())) return;
+        a.prefs.putLong("navAt", 0L);   // once
+        android.content.Intent i = a.getPackageManager().getLaunchIntentForPackage(pkg);
+        if (i == null) return;
+        try {
+            a.startActivity(i.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
+        } catch (Exception e) {
+            Diag.note("resume navigation", e);
+        }
+    }
+
+    /** Carry on playing (try is 1, 2, ...); false while what played isn't ready yet (try again), true when done. */
+    static boolean resumeAudio(HomeActivity a, int attempt) {
+        boolean last = attempt >= Resume.TRIES;
         Prefs p = a.prefs;
         String what = p.str("resume", "");
         Resume.restoreVolume(a, p);
-        if (what.isEmpty()) return;
+        if (what.isEmpty()) return true;
         try {
             AudioManager am = (AudioManager) a.getSystemService(android.content.Context.AUDIO_SERVICE);
-            if (am.isMusicActive()) return;   // the unit already carried on by itself
+            if (am.isMusicActive()) return true;   // the unit already carried on by itself
+            if (what.startsWith("app:") && !Resume.playApp(a, what.substring(4), last)) return false;
+            if (!what.startsWith("app:") && attempt < 2) return false;   // FM and the player's services need a moment after boot
             if ("fm".equals(what)) {
                 MediaCard.owner = "radio";
                 String err = Fm.play(p, a.hub.xt, a.hub.fm, true);
@@ -72,7 +98,6 @@ final class Extras {
                 Player.send(a, Player.PLAY, what);
             } else if (what.startsWith("app:")) {
                 MediaCard.owner = "music";
-                key(a, KeyEvent.KEYCODE_MEDIA_PLAY);
             }
             Toast.makeText(a, Hindi.t("Carrying on where you left off"), Toast.LENGTH_SHORT).show();
             if (!"text".equals(a.prefs.str("summaryHow", "voice"))) Speak.say(a, "Welcome back. Carrying on where you left off.", false);
@@ -80,6 +105,7 @@ final class Extras {
             Diag.note("resume playback", e);
         }
         a.hub.notifyIfChanged(true);
+        return true;
     }
 
     static void key(android.content.Context c, int code) {

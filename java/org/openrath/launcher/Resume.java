@@ -46,6 +46,44 @@ final class Resume {
         return false;
     }
 
+    /** Tries at carrying on: 2 seconds apart, so up to 10 seconds for a slow music app or radio. */
+    static final int TRIES = 5;
+
+    /** Navigation is opened again when it was guiding up to this long before the switch-off. */
+    static final long NAV_MS = 30 * 60 * 1000;
+
+    /** Whether to open the navigation app again: it guided within NAV_MS. Pure, for the tests. */
+    static boolean navDue(String pkg, long guidedAt, long now) {
+        return pkg != null && !pkg.isEmpty() && guidedAt > 0 && now - guidedAt >= 0 && now - guidedAt < NAV_MS;
+    }
+
+    /**
+     * Play the music app that was playing: through its media session when it has one up, else with
+     * a play button press sent to that app alone. False while it has no session yet (try again),
+     * unless this is the last try.
+     */
+    static boolean playApp(Context c, String pkg, boolean last) {
+        try {
+            android.media.session.MediaSessionManager m = (android.media.session.MediaSessionManager) c.getSystemService(Context.MEDIA_SESSION_SERVICE);
+            for (android.media.session.MediaController mc : m.getActiveSessions(new android.content.ComponentName(c, MediaListener.class))) {
+                if (pkg.equals(mc.getPackageName())) {
+                    mc.getTransportControls().play();
+                    return true;
+                }
+            }
+        } catch (Throwable e) {
+            // no notification access: the button press below
+        }
+        if (!last) return false;
+        long t = SystemClock.uptimeMillis();
+        for (int action : new int[]{android.view.KeyEvent.ACTION_DOWN, android.view.KeyEvent.ACTION_UP}) {
+            Intent i = new Intent(Intent.ACTION_MEDIA_BUTTON).setPackage(pkg)
+                    .putExtra(Intent.EXTRA_KEY_EVENT, new android.view.KeyEvent(t, t, action, android.view.KeyEvent.KEYCODE_MEDIA_PLAY, 0));
+            c.sendBroadcast(i);
+        }
+        return true;
+    }
+
     static void restoreVolume(Context c, Prefs p) {
         int v = p.num("resumeVol", -1);
         if (v < 0) return;

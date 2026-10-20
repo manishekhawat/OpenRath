@@ -769,6 +769,11 @@ public final class Tests {
         eq("contacts: first name", 3, Contacts.match("Priya Sharma", "priya"));
         eq("contacts: no match", 0, Contacts.match("Priya Sharma", "rahul"));
         eq("contacts: nothing said", 0, Contacts.match("Priya", ""));
+
+        check("resume nav: guided 5 min ago", Resume.navDue("com.waze", now - 5 * 60000, now));
+        check("resume nav: an hour ago", !Resume.navDue("com.waze", now - 60 * 60000, now));
+        check("resume nav: arrived", !Resume.navDue("com.waze", 0, now));
+        check("resume nav: no app", !Resume.navDue("", now - 60000, now));
     }
 
     private static void levels() {

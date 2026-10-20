@@ -32,11 +32,7 @@ final class Wake {
             @Override
             public void run() {
                 if (!HomeActivity.visible || check != this) return;
-                long e = SystemClock.elapsedRealtime(), u = SystemClock.uptimeMillis();
-                long s = slept(lastElapsed, lastUptime, e, u);
-                lastElapsed = e;
-                lastUptime = u;
-                if (s > SLEPT_MS && Features.on(a.prefs, "wake")) woke(a);
+                sleptNow(a);
                 ThemeAuto.check(a);
                 LedStrip.check(a);
                 Achievements.check(a);
@@ -44,6 +40,19 @@ final class Wake {
             }
         };
         a.dash.postDelayed(check, CHECK_MS);
+    }
+
+    /**
+     * Whether the unit slept since the last look, and if so start everything again. Run every 15
+     * seconds, and at once when the screen comes back on, so the first seconds after the ignition
+     * aren't spent with a stale GPS and music link.
+     */
+    static void sleptNow(HomeActivity a) {
+        long e = SystemClock.elapsedRealtime(), u = SystemClock.uptimeMillis();
+        long s = slept(lastElapsed, lastUptime, e, u);
+        lastElapsed = e;
+        lastUptime = u;
+        if (s > SLEPT_MS && Features.on(a.prefs, "wake")) woke(a);
     }
 
     /** The dashboard was closed for good: stop checking with it. */
@@ -63,7 +72,7 @@ final class Wake {
         a.hub.stop();
         a.hub.start();
         a.freshMap();
-        a.build();
+        a.build();   // the map's page is made again with the boxes
         Extras.resumed(a);
     }
 
