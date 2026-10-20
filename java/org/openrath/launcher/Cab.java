@@ -112,7 +112,7 @@ final class Cab {
     }
 
     static String rs(double v) {
-        return "₹" + java.text.NumberFormat.getIntegerInstance(new Locale("en", "IN")).format(Math.round(v));
+        return Money.shown("₹") + java.text.NumberFormat.getIntegerInstance(new Locale("en", "IN")).format(Math.round(v));
     }
 
     static String hm(long ms) {
@@ -354,7 +354,7 @@ final class Cab {
         if (on(p, "cabTarget") && target > 0 && before.net() < target && before.net() + rs >= target) {
             String t = "Target reached: " + rs(before.net() + rs) + " today. Well done!";
             Toast.makeText(a, Hindi.f("Target reached: %1$s today. Well done!", rs(before.net() + rs)), Toast.LENGTH_LONG).show();
-            if (!quiet) a.speak(t.replace("₹", "rupees "));
+            if (!quiet) a.speak(Money.say(t));
         }
     }
 

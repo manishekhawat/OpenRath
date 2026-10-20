@@ -215,7 +215,7 @@ final class Fuel {
         SimpleDateFormat f = new SimpleDateFormat("d MMM yyyy", Locale.getDefault());
         for (int i = 0; i < rows.length; i++) {
             JSONObject e = l.optJSONObject(l.length() - 1 - i);
-            rows[i] = f.format(new Date(e.optLong("t"))) + "   " + fmt(e.optDouble("l")) + " L   ₹" + Math.round(e.optDouble("rs"))
+            rows[i] = f.format(new Date(e.optLong("t"))) + "   " + fmt(e.optDouble("l")) + " L   " + Money.shown("₹") + Math.round(e.optDouble("rs"))
                     + "   " + Math.round(e.optDouble("odo")) + " km" + (e.optBoolean("full", true) ? "" : "   " + Hindi.t("(part fill)"));
         }
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)

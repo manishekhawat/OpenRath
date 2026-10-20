@@ -533,7 +533,7 @@ final class Extras {
         final List<String> devs = Obd.paired();
         if (devs.isEmpty()) {
             new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("No paired Bluetooth devices"))
-                    .setMessage(Hindi.t("Plug the ELM327 adapter into the OBD socket under the steering wheel, switch the ignition on, "
+                    .setMessage(Hindi.t("Plug the OBD adapter (often sold as ELM327) into the socket under the steering wheel, switch the ignition on, "
                             + "and pair it in the unit's Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here."))
                     .setPositiveButton(Hindi.t("Bluetooth settings"), new DialogInterface.OnClickListener() {
                         @Override
@@ -1255,7 +1255,7 @@ final class Extras {
                 p.put("fogSpeed", String.valueOf(s[(i + 1) % s.length]));
             }
         }));
-        r.add(new SettingsView.Row(g, "Holidays ahead", android.text.TextUtils.join(";  ", Holidays.upcoming(java.util.Calendar.getInstance(), 3)), new Runnable() {
+        if (Money.india()) r.add(new SettingsView.Row(g, "Holidays ahead", android.text.TextUtils.join(";  ", Holidays.upcoming(java.util.Calendar.getInstance(), 3)), new Runnable() {
             @Override
             public void run() {
                 new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Holidays with heavy traffic"))

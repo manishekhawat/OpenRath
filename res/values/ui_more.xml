@@ -55,6 +55,13 @@
     <string name="ui_more_hide_from_the_list" formatted="false">Hide from the list</string>
     <string name="ui_more_show_in_the_list" formatted="false">Show in the list</string>
     <string name="ui_more_hidden_search_for_it_to_find_it_again" formatted="false">Hidden. Search for it to find it again.</string>
+    <string name="ui_more_straight_to_the_radio_chip_no_radio_service" formatted="false">Straight to the radio chip (no radio service)</string>
+    <string name="ui_more_topway_s_radio_service_isn_t_connected_only_" formatted="false">Topway\'s radio service isn\'t connected; only the straight link to the radio chip can be tried</string>
+    <string name="ui_more_needs_a_small_plug_in_obd_adapter_bluetooth_" formatted="false">Needs a small plug-in OBD adapter (Bluetooth or Wi-Fi, often sold as ELM327)</string>
+    <string name="ui_more_checks_once_a_day_for_a_new_openrath_makes_s" formatted="false">Checks once a day for a new OpenRath, makes sure the download is genuine and offers it only when parked</string>
+    <string name="ui_more_plug_the_obd_adapter_often_sold_as_elm327_in" formatted="false">Plug the OBD adapter (often sold as ELM327) into the socket under the steering wheel, switch the ignition on, and pair it in the unit\'s Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here.</string>
+    <string name="ui_more_country_for_money_and_holidays" formatted="false">Country, for money and holidays</string>
+    <string name="ui_more_country" formatted="false">Country</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -109,5 +116,12 @@
         <item>@string/ui_more_hide_from_the_list</item>
         <item>@string/ui_more_show_in_the_list</item>
         <item>@string/ui_more_hidden_search_for_it_to_find_it_again</item>
+        <item>@string/ui_more_straight_to_the_radio_chip_no_radio_service</item>
+        <item>@string/ui_more_topway_s_radio_service_isn_t_connected_only_</item>
+        <item>@string/ui_more_needs_a_small_plug_in_obd_adapter_bluetooth_</item>
+        <item>@string/ui_more_checks_once_a_day_for_a_new_openrath_makes_s</item>
+        <item>@string/ui_more_plug_the_obd_adapter_often_sold_as_elm327_in</item>
+        <item>@string/ui_more_country_for_money_and_holidays</item>
+        <item>@string/ui_more_country</item>
     </string-array>
 </resources>
