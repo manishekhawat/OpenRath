@@ -42,6 +42,14 @@
     <string name="ui_more_nothing_here" formatted="false">Nothing here</string>
     <string name="ui_more_the_music_app_didn_t_answer" formatted="false">The music app didn\'t answer</string>
     <string name="ui_more_close" formatted="false">Close</string>
+    <string name="ui_more_1_s_s_phone" formatted="false">%1$s\'s phone…</string>
+    <string name="ui_more_1_s_s_phone2" formatted="false">%1$s\'s phone</string>
+    <string name="ui_more_no_paired_phones_yet_pair_your_phone_in_the_" formatted="false">No paired phones yet. Pair your phone in the Bluetooth app.</string>
+    <string name="ui_more_1_s_s_settings_load_when_this_phone_connects" formatted="false">%1$s\'s settings load when this phone connects</string>
+    <string name="ui_more_open_the_projection_app_when_the_phone_conne" formatted="false">Open the projection app when the phone connects</string>
+    <string name="ui_more_your_carplay_or_android_auto_app_opens_by_it" formatted="false">Your CarPlay or Android Auto app opens by itself when a phone connects by Bluetooth</string>
+    <string name="ui_more_volume_for_each_music_app" formatted="false">Volume for each music app</string>
+    <string name="ui_more_each_music_app_fm_and_online_radio_come_back" formatted="false">Each music app, FM and online radio come back at the volume they last played at</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -83,5 +91,13 @@
         <item>@string/ui_more_nothing_here</item>
         <item>@string/ui_more_the_music_app_didn_t_answer</item>
         <item>@string/ui_more_close</item>
+        <item>@string/ui_more_1_s_s_phone</item>
+        <item>@string/ui_more_1_s_s_phone2</item>
+        <item>@string/ui_more_no_paired_phones_yet_pair_your_phone_in_the_</item>
+        <item>@string/ui_more_1_s_s_settings_load_when_this_phone_connects</item>
+        <item>@string/ui_more_open_the_projection_app_when_the_phone_conne</item>
+        <item>@string/ui_more_your_carplay_or_android_auto_app_opens_by_it</item>
+        <item>@string/ui_more_volume_for_each_music_app</item>
+        <item>@string/ui_more_each_music_app_fm_and_online_radio_come_back</item>
     </string-array>
 </resources>

@@ -69,6 +69,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         android.content.IntentFilter sys = new android.content.IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
         sys.addAction(Intent.ACTION_SCREEN_ON);   // back from the stereo's sleep: check at once (Wake)
         Compat.fromSystem(this, events, sys);
+        PhoneLink.listen(this);
         build();
         root.post(new Runnable() {
             @Override
@@ -304,6 +305,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     @Override
     protected void onDestroy() {
         Setup.forget();
+        PhoneLink.stop(this);
         try {
             unregisterReceiver(events);
         } catch (Throwable ignored) {

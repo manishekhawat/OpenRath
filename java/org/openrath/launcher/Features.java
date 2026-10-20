@@ -152,6 +152,7 @@ final class Features {
             new F("hotspot", "Guest Wi-Fi", "Phone", true, "A QR code passengers scan to join the unit's hotspot"),
             new F("maker", "Stereo maker's services", "Radio and music", true, "Topway, FYT, MTCD/Joying and szchoiceway units: FM in the radio box, Bluetooth calls, reverse gear and lights through the maker's own services. Off, or on other stereos: plain Android only (the radio app's controls, the system phone)"),
             new F("projection", "Phone projection app", "Radio and music", true, "A button in the music box opens your wireless CarPlay or Android Auto app (ZLink, AutoKit and others)"),
+            new F("projectionAuto", "Open the projection app when the phone connects", "Radio and music", false, "Your CarPlay or Android Auto app opens by itself when a phone connects by Bluetooth"),
             new F("radioText", "Big frequency from any radio app", "Radio and music", true, "Shows \"FM 98.3\" and the station name from the radio app's text"),
             new F("soundboard", "Soundboard", "Radio and music", false, "A box of fun sounds (horn, fart, applause and more) that plays only when the car is stopped"),
             new F("video", "Video window", "Radio and music", false, "Plays a video from the unit or a USB stick in a box; the picture shows only when the car is stopped"),
@@ -176,6 +177,7 @@ final class Features {
             // sound
             new F("wake", "Recover after deep sleep", "Sound", true, "When the stereo wakes from sleep with the ignition, the GPS, music link and map start again"),
             new F("resume", "Resume after switch-on", "Sound", true, "Plays what was on, at the same volume"),
+            new F("sourceVolume", "Volume for each music app", "Sound", false, "Each music app, FM and online radio come back at the volume they last played at"),
             new F("speedVolume", "Volume rises with speed", "Sound", false, "Louder on the highway, back down in town"),
             new F("eq", "Equalizer", "Sound", false, "Bass, treble and presets for the app's own sound"),
             new F("quiet", "Quiet hours", "Sound", false, "Late at night: music turned down, no alert beeps"),

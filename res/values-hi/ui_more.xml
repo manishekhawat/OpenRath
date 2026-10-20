@@ -41,4 +41,12 @@
     <string name="ui_more_nothing_here" formatted="false">यहाँ कुछ नहीं</string>
     <string name="ui_more_the_music_app_didn_t_answer" formatted="false">म्यूज़िक ऐप ने जवाब नहीं दिया</string>
     <string name="ui_more_close" formatted="false">बंद करें</string>
+    <string name="ui_more_1_s_s_phone" formatted="false">%1$s का फ़ोन…</string>
+    <string name="ui_more_1_s_s_phone2" formatted="false">%1$s का फ़ोन</string>
+    <string name="ui_more_no_paired_phones_yet_pair_your_phone_in_the_" formatted="false">अभी कोई जुड़ा फ़ोन नहीं। ब्लूटूथ ऐप में फ़ोन जोड़ें।</string>
+    <string name="ui_more_1_s_s_settings_load_when_this_phone_connects" formatted="false">यह फ़ोन जुड़ने पर %1$s की सेटिंग्स लगेंगी</string>
+    <string name="ui_more_open_the_projection_app_when_the_phone_conne" formatted="false">फ़ोन जुड़ने पर प्रोजेक्शन ऐप खोलें</string>
+    <string name="ui_more_your_carplay_or_android_auto_app_opens_by_it" formatted="false">ब्लूटूथ से फ़ोन जुड़ते ही आपका CarPlay या Android Auto ऐप अपने-आप खुलता है</string>
+    <string name="ui_more_volume_for_each_music_app" formatted="false">हर म्यूज़िक ऐप की अपनी आवाज़</string>
+    <string name="ui_more_each_music_app_fm_and_online_radio_come_back" formatted="false">हर म्यूज़िक ऐप, FM और ऑनलाइन रेडियो उसी आवाज़ पर लौटते हैं जिस पर पिछली बार चले थे</string>
 </resources>

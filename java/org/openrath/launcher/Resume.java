@@ -84,6 +84,52 @@ final class Resume {
         return true;
     }
 
+    /**
+     * Volume per source: each music app (and OpenRath's own player) keeps the volume it was last
+     * played at, since apps and FM play at very different loudness. Checked every few seconds by the
+     * trip service while switched on.
+     */
+    static void sourceVolume(Context c, Prefs p) {
+        String src = playing(c);
+        if (src.isEmpty()) return;
+        try {
+            AudioManager am = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
+            int now = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+            String last = p.str("volSrc", "");
+            int set = volumeFor(src, last, now, p.num("vol:" + src, -1));
+            if (!src.equals(last)) p.put("volSrc", src);
+            if (set >= 0) am.setStreamVolume(AudioManager.STREAM_MUSIC, Math.min(set, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)), 0);
+            else if (p.num("vol:" + src, -1) != now) p.put("vol:" + src, String.valueOf(now));
+        } catch (Throwable e) {
+            Diag.note("volume per source", e);
+        }
+    }
+
+    /**
+     * The volume to set when the source is `src` (it was `last` a moment ago, at volume `now`), or -1
+     * to leave it: only on a change of source, to the volume the new source last had. Pure, for the tests.
+     */
+    static int volumeFor(String src, String last, int now, int saved) {
+        if (src.equals(last) || saved < 0 || saved == now) return -1;
+        return saved;
+    }
+
+    /** What plays now: the music app's package, OpenRath's own "web" or "files", or "" for nothing. */
+    static String playing(Context c) {
+        if (Player.playing && Player.mode != null) return Player.mode;
+        try {
+            android.media.session.MediaSessionManager m = (android.media.session.MediaSessionManager) c.getSystemService(Context.MEDIA_SESSION_SERVICE);
+            for (android.media.session.MediaController mc : m.getActiveSessions(new android.content.ComponentName(c, MediaListener.class))) {
+                android.media.session.PlaybackState st = mc.getPlaybackState();
+                if (st != null && st.getState() == android.media.session.PlaybackState.STATE_PLAYING && !mc.getPackageName().equals(c.getPackageName()))
+                    return mc.getPackageName();
+            }
+        } catch (Throwable ignored) {
+            // no notification access: nothing known
+        }
+        return "";
+    }
+
     static void restoreVolume(Context c, Prefs p) {
         int v = p.num("resumeVol", -1);
         if (v < 0) return;
