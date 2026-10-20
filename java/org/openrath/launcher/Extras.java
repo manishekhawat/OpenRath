@@ -1582,7 +1582,7 @@ final class Extras {
         if ("lightsReminder".equals(id) && !lightsOrDoors) return "This needs the headlight, door or seat-belt setup. Set up the headlights now?";
         if ("obd".equals(id) && !obdChosen) return "Choose your OBD-II Bluetooth adapter now?";
         if ("tpms".equals(id) && !tyresChosen) return "Find your tyre sensors now?";
-        if ("projection".equals(id) && !projectionFound) return "No CarPlay or Android Auto app was found. Choose it now?";
+        if (("projection".equals(id) || "projectionAuto".equals(id)) && !projectionFound) return "No CarPlay or Android Auto app was found. Choose it now?";
         return null;
     }
 
@@ -1604,7 +1604,7 @@ final class Extras {
         boolean lights = p.lightSignal() != null || p.signal("door") != null || p.signal("belt") != null;
         boolean tyres = false;
         for (int i = 0; i < 4; i++) tyres |= !p.str("tpms" + i, "").isEmpty();
-        boolean proj = !"projection".equals(id) || Projection.app(a, p) != null;
+        boolean proj = !("projection".equals(id) || "projectionAuto".equals(id)) || Projection.app(a, p) != null;
         String q = needs(id, ind, lights, !p.str("obdMac", "").isEmpty(), tyres, proj);
         if (q == null) return;
         new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Features.get(id).name)).setMessage(Hindi.t(q))
@@ -1626,7 +1626,7 @@ final class Extras {
                             a.setupLights();
                         } else if ("obd".equals(id)) a.obdMenu();
                         else if ("tpms".equals(id)) a.tyresMenu();
-                        else if ("projection".equals(id)) {
+                        else if ("projection".equals(id) || "projectionAuto".equals(id)) {
                             AppPicker.show(a, Hindi.t("Your CarPlay or Android Auto app"), new AppPicker.Picked() {
                                 @Override
                                 public void picked(String pkg) {

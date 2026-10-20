@@ -170,7 +170,28 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         android.content.IntentFilter sf = new android.content.IntentFilter(Intent.ACTION_SCREEN_OFF);
         Compat.fromSystem(this, screen, sf);
         Compat.fromSystem(this, ringing, new android.content.IntentFilter(android.telephony.TelephonyManager.ACTION_PHONE_STATE_CHANGED));
+        handler.postDelayed(volumes, VOLUMES_MS);
     }
+
+    private static final long VOLUMES_MS = 3000;
+
+    /** Whether the screen is on (the stereo awake and in use). */
+    private boolean screenOn() {
+        try {
+            return ((android.os.PowerManager) getSystemService(POWER_SERVICE)).isInteractive();
+        } catch (Throwable e) {
+            return true;
+        }
+    }
+
+    /** Each source's own volume (Resume.sourceVolume), while the screen is on and the feature is. */
+    private final Runnable volumes = new Runnable() {
+        @Override
+        public void run() {
+            if (Features.on(prefs, "sourceVolume") && screenOn()) Resume.sourceVolume(Drive.this, prefs);
+            handler.postDelayed(this, VOLUMES_MS);
+        }
+    };
 
     /** Calls ringing and ending, for the call screen over other apps. */
     private final CallScreen.Watch ringing = new CallScreen.Watch();
@@ -1020,6 +1041,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
 
     @Override
     public void onDestroy() {
+        handler.removeCallbacks(volumes);
         save(true);
         if (Features.on(prefs, "coach")) Coach.save(prefs, drives.close(System.currentTimeMillis()));
         Dashcam.stop();

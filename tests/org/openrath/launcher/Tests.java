@@ -779,6 +779,15 @@ public final class Tests {
         for (int i = 0; i < 30; i++) many.add(i);
         eq("browse: moving keeps 12", 12, Browse.trim(many, true, Browse.MOVING_ROWS).size());
         eq("browse: stopped keeps all", 30, Browse.trim(many, false, Browse.MOVING_ROWS).size());
+        eq("volume: same source left alone", -1, Resume.volumeFor("com.spotify.music", "com.spotify.music", 8, 12));
+        eq("volume: new source gets its own", 12, Resume.volumeFor("com.spotify.music", "web", 8, 12));
+        eq("volume: never played before", -1, Resume.volumeFor("com.spotify.music", "web", 8, -1));
+        eq("volume: already right", -1, Resume.volumeFor("files", "web", 8, 8));
+        java.util.List<String> drivers = Arrays.asList("Asha", "Ravi");
+        check("phone: switch to the phone's driver", PhoneLink.switchDriver("Ravi", "Asha", drivers));
+        check("phone: already driving", !PhoneLink.switchDriver("Asha", "Asha", drivers));
+        check("phone: unknown phone", !PhoneLink.switchDriver("", "Asha", drivers));
+        check("phone: removed driver", !PhoneLink.switchDriver("Meera", "Asha", drivers));
         eq("browse: short list", 3, Browse.trim(many.subList(0, 3), true, Browse.MOVING_ROWS).size());
     }
 
