@@ -611,7 +611,7 @@ final class Cards {
 
     static final class FuelCard extends FiguresCard {
         FuelCard(Context c) {
-            super(c, "FUEL", "LAST TANK", "AVERAGE", "₹ / KM");
+            super(c, "FUEL", "LAST TANK", "AVERAGE", Money.shown("₹") + " / KM");
         }
 
         @Override

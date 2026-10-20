@@ -54,4 +54,11 @@
     <string name="ui_more_hide_from_the_list" formatted="false">सूची से छिपाएँ</string>
     <string name="ui_more_show_in_the_list" formatted="false">सूची में दिखाएँ</string>
     <string name="ui_more_hidden_search_for_it_to_find_it_again" formatted="false">छिपा दिया। फिर से पाने के लिए खोजें।</string>
+    <string name="ui_more_straight_to_the_radio_chip_no_radio_service" formatted="false">सीधे रेडियो चिप से (रेडियो सर्विस नहीं)</string>
+    <string name="ui_more_topway_s_radio_service_isn_t_connected_only_" formatted="false">Topway की रेडियो सर्विस नहीं जुड़ी; सिर्फ़ रेडियो चिप से सीधा जुड़ाव आज़माया जा सकता है</string>
+    <string name="ui_more_needs_a_small_plug_in_obd_adapter_bluetooth_" formatted="false">एक छोटा OBD अडैप्टर चाहिए (Bluetooth या Wi-Fi, अक्सर ELM327 नाम से बिकता है)</string>
+    <string name="ui_more_checks_once_a_day_for_a_new_openrath_makes_s" formatted="false">दिन में एक बार नया OpenRath देखता है, पक्का करता है कि डाउनलोड असली है और सिर्फ़ पार्क होने पर पेश करता है</string>
+    <string name="ui_more_plug_the_obd_adapter_often_sold_as_elm327_in" formatted="false">OBD अडैप्टर (अक्सर ELM327 नाम से बिकता है) को स्टीयरिंग के नीचे वाले सॉकेट में लगाएँ, इग्निशन चालू करें, और यूनिट की Bluetooth सेटिंग्स में पेयर करें (PIN अक्सर 1234 या 0000 होता है)। फिर यहाँ लौटें।</string>
+    <string name="ui_more_country_for_money_and_holidays" formatted="false">देश, पैसे और छुट्टियों के लिए</string>
+    <string name="ui_more_country" formatted="false">देश</string>
 </resources>

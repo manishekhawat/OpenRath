@@ -127,12 +127,12 @@ final class Ahead {
         return m >= 7 * 60 && m <= 9 * 60 + 30 || m >= 12 * 60 + 30 && m <= 15 * 60 + 30;
     }
 
-    /** "Toll plaza in 2 kilometres, about ₹65. Keep to the FASTag lane." */
+    /** "Toll plaza in 2 kilometres, about 65 rupees. Keep to the FASTag lane." (the FASTag lane only in India) */
     static String tollText(double m, int rupees, String name) {
         String where = m >= 950 ? String.format(Locale.US, "%d kilometre%s", Math.round(m / 1000), Math.round(m / 1000) == 1 ? "" : "s")
                 : (Math.round(m / 100) * 100) + " metres";
         return "Toll plaza" + (name.isEmpty() ? "" : ", " + name + ",") + " in " + where
-                + (rupees > 0 ? ", about " + rupees + " rupees" : "") + ". Keep to the FASTag lane.";
+                + (rupees > 0 ? ", about " + rupees + " " + Money.spoken() : "") + (Money.india() ? ". Keep to the FASTag lane." : ".");
     }
 
     // ------------------------------------------------------------------ the fetched map data

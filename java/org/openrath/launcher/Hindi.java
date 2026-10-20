@@ -35,6 +35,7 @@ final class Hindi {
 
     /** Called when Settings opens: reads the words once, when Hindi is chosen. */
     static void load(Context c, Prefs p) {
+        Money.load(p);
         on = "hi".equals(lang(p));
         if (!on || words != null) return;
         words = new HashMap<>();
@@ -56,15 +57,15 @@ final class Hindi {
     }
 
     static String t(String s) {
-        return t(words, on, s);
+        return Money.shown(t(words, on, s));
     }
 
     /** Text with numbers or names in it: the English format ("Toll in %1$s km") is what gets translated. */
     static String f(String format, Object... args) {
         try {
-            return String.format(Locale.US, t(format), args);
+            return Money.shown(String.format(Locale.US, t(words, on, format), args));
         } catch (Exception e) {
-            return String.format(Locale.US, format, args);
+            return Money.shown(String.format(Locale.US, format, args));
         }
     }
 

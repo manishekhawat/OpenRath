@@ -794,6 +794,16 @@ public final class Tests {
         String lots = "";
         for (int i = 0; i < 70; i++) lots = AppsActivity.bump(lots, "p" + i);
         check("apps: keeps 60", AppsActivity.counts(lots).size() == 60);
+        eq("money: india", "₹100", Money.shown("₹100", "IN"));
+        eq("money: uk", "£100", Money.shown("₹100", "GB"));
+        eq("money: euro", "€5 a km", Money.shown("₹5 a km", "DE"));
+        eq("money: pakistan", "Rs 100", Money.shown("₹100", "PK"));
+        eq("money: spoken", "dollars", Money.spoken("US"));
+        String was = Money.country;
+        Money.country = "GB";
+        eq("toll text abroad", "Toll plaza in 2 kilometres, about 3 pounds.", Ahead.tollText(2050, 3, ""));
+        check("no Indian holidays abroad", Holidays.upcoming(day(2026, 10, 13, 9, 0), 3).isEmpty());
+        Money.country = was;
         check("phone: removed driver", !PhoneLink.switchDriver("Meera", "Asha", drivers));
         eq("browse: short list", 3, Browse.trim(many.subList(0, 3), true, Browse.MOVING_ROWS).size());
     }
