@@ -169,7 +169,11 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         screen = new Resume.Screen();
         android.content.IntentFilter sf = new android.content.IntentFilter(Intent.ACTION_SCREEN_OFF);
         Compat.fromSystem(this, screen, sf);
+        Compat.fromSystem(this, ringing, new android.content.IntentFilter(android.telephony.TelephonyManager.ACTION_PHONE_STATE_CHANGED));
     }
+
+    /** Calls ringing and ending, for the call screen over other apps. */
+    private final CallScreen.Watch ringing = new CallScreen.Watch();
 
     private Resume.Screen screen;
     private boolean hotWarned;
@@ -1021,6 +1025,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         Dashcam.stop();
         try {
             unregisterReceiver(screen);
+            unregisterReceiver(ringing);
         } catch (Throwable ignored) {
             // was not registered
         }

@@ -11,6 +11,11 @@ final class HomeVoice {
 
     /** Act on what was heard: a command (FM, call, music, volume, places), else a map search. */
     static void heard(final HomeActivity a, java.util.List<String> said, MapCard map) {
+        if (a.replying) {   // the words of a reply to the last message, not a command
+            a.replying = false;
+            if (said != null && !said.isEmpty()) confirmReply(a, said.get(0));
+            return;
+        }
         if (said == null || said.isEmpty()) {
             if (map != null) map.voiceResult(null);
             return;
@@ -35,6 +40,32 @@ final class HomeVoice {
         }
         if (map != null) map.voiceResult(null);
         run(a, cmd);
+    }
+
+    /** Answer the last message by voice: listen for the words, then send them after one tap. */
+    static void reply(HomeActivity a) {
+        if (!Ticker.canReply()) {
+            a.speak("There's no message to reply to");
+            Toast.makeText(a, Hindi.t("There's no message to reply to"), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        a.replying = true;
+        a.voiceSearch(null);
+    }
+
+    /** The words are read back and sent with one tap, so a misheard reply never goes out by itself. */
+    static void confirmReply(final HomeActivity a, final String words) {
+        final String to = Ticker.title.isEmpty() ? Ticker.app : Ticker.title;
+        a.speak("Send to " + to + ": " + words + "?");
+        new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                .setTitle(Hindi.f("Reply to %1$s", to)).setMessage(words)
+                .setPositiveButton(Hindi.t("Send"), new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface d, int w) {
+                        boolean ok = Ticker.send(a, words);
+                        Toast.makeText(a, ok ? Hindi.t("Reply sent") : Hindi.t("The reply couldn't be sent"), Toast.LENGTH_SHORT).show();
+                    }
+                }).setNegativeButton(Hindi.t("Cancel"), null).show();
     }
 
     /** Read the top headlines aloud; if there are none yet, fetch them and read them when they come. */
@@ -105,12 +136,18 @@ final class HomeVoice {
                 }
             }
             if (num.isEmpty()) {
-                a.speak("I couldn't find " + cmd.arg + " in your favourites");
+                num = Contacts.find(a, cmd.arg);   // then the unit's contacts
+                if (!num.isEmpty()) who = Contacts.nameFor(a, num).isEmpty() ? cmd.arg : Contacts.nameFor(a, num);
+            }
+            if (num.isEmpty()) {
+                a.speak("I couldn't find " + cmd.arg + " in your favourites or contacts");
                 Toast.makeText(a, Hindi.f("No favourite called \"%1$s\". Add one in Settings > Phone and messages.", cmd.arg), Toast.LENGTH_LONG).show();
             } else {
                 String err = unit.call(a, num);
                 Toast.makeText(a, err == null ? Hindi.f("Calling %1$s…", who) : Hindi.f("Couldn't call: %1$s", err), Toast.LENGTH_SHORT).show();
             }
+        } else if ("reply".equals(k)) {
+            reply(a);
         } else if ("park".equals(k)) {
             a.parkQr();
         } else if ("clip".equals(k)) {

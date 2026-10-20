@@ -38,6 +38,7 @@ public class MediaListener extends NotificationListenerService {
                 app = pkg;
             }
             if (!Ticker.post(app, title == null ? "" : title.toString(), text == null ? "" : text.toString())) return;
+            Ticker.replyFrom(n);
             Compat.send(this, new Intent(Ticker.CHANGED));
         } catch (Throwable e) {
             Diag.note("media notification", e);

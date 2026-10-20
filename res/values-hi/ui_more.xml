@@ -16,4 +16,17 @@
     <string name="ui_more_listening" formatted="false">सुन रहा है…</string>
     <string name="ui_more_didn_t_catch_that" formatted="false">समझ नहीं आया</string>
     <string name="ui_more_voice_isn_t_available_right_now" formatted="false">आवाज़ अभी उपलब्ध नहीं है</string>
+    <string name="ui_more_call_screen_over_other_apps" formatted="false">दूसरे ऐप्स के ऊपर कॉल स्क्रीन</string>
+    <string name="ui_more_who_is_calling_with_big_answer_and_end_butto" formatted="false">कौन कॉल कर रहा है, बड़े उठाएँ और काटें बटन के साथ, जो भी ऐप खुला हो उसके ऊपर</string>
+    <string name="ui_more_calling_you" formatted="false">आपको कॉल आ रही है</string>
+    <string name="ui_more_on_a_call" formatted="false">कॉल पर</string>
+    <string name="ui_more_contacts" formatted="false">संपर्क</string>
+    <string name="ui_more_no_contacts_on_the_unit_yet_pair_your_phone_" formatted="false">यूनिट पर अभी कोई संपर्क नहीं। फ़ोन जोड़ें और संपर्क शेयर करने दें।</string>
+    <string name="ui_more_the_stereo_isn_t_ready" formatted="false">स्टीरियो अभी तैयार नहीं</string>
+    <string name="ui_more_there_s_no_message_to_reply_to" formatted="false">जवाब देने को कोई संदेश नहीं</string>
+    <string name="ui_more_reply_to_1_s" formatted="false">%1$s को जवाब</string>
+    <string name="ui_more_send" formatted="false">भेजें</string>
+    <string name="ui_more_reply_sent" formatted="false">जवाब भेजा गया</string>
+    <string name="ui_more_the_reply_couldn_t_be_sent" formatted="false">जवाब नहीं भेजा जा सका</string>
+    <string name="ui_more_reply" formatted="false">जवाब</string>
 </resources>

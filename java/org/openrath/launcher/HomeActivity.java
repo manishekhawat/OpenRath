@@ -872,6 +872,8 @@ public class HomeActivity extends Activity implements Cards.Host {
     }
 
     private boolean listeningAny;
+    /** The next words heard are a reply to the last message (HomeVoice.reply). */
+    boolean replying;
     private static final int MIC_ASK = 5;
     /** Voice was asked for while Android asked about the microphone: listen once it answers. */
     private MapCard micFor;
