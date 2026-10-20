@@ -50,6 +50,11 @@
     <string name="ui_more_your_carplay_or_android_auto_app_opens_by_it" formatted="false">Your CarPlay or Android Auto app opens by itself when a phone connects by Bluetooth</string>
     <string name="ui_more_volume_for_each_music_app" formatted="false">Volume for each music app</string>
     <string name="ui_more_each_music_app_fm_and_online_radio_come_back" formatted="false">Each music app, FM and online radio come back at the volume they last played at</string>
+    <string name="ui_more_most_used" formatted="false">Most used</string>
+    <string name="ui_more_a_to_z" formatted="false">A to Z</string>
+    <string name="ui_more_hide_from_the_list" formatted="false">Hide from the list</string>
+    <string name="ui_more_show_in_the_list" formatted="false">Show in the list</string>
+    <string name="ui_more_hidden_search_for_it_to_find_it_again" formatted="false">Hidden. Search for it to find it again.</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -99,5 +104,10 @@
         <item>@string/ui_more_your_carplay_or_android_auto_app_opens_by_it</item>
         <item>@string/ui_more_volume_for_each_music_app</item>
         <item>@string/ui_more_each_music_app_fm_and_online_radio_come_back</item>
+        <item>@string/ui_more_most_used</item>
+        <item>@string/ui_more_a_to_z</item>
+        <item>@string/ui_more_hide_from_the_list</item>
+        <item>@string/ui_more_show_in_the_list</item>
+        <item>@string/ui_more_hidden_search_for_it_to_find_it_again</item>
     </string-array>
 </resources>

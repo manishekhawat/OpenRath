@@ -787,6 +787,13 @@ public final class Tests {
         check("phone: switch to the phone's driver", PhoneLink.switchDriver("Ravi", "Asha", drivers));
         check("phone: already driving", !PhoneLink.switchDriver("Asha", "Asha", drivers));
         check("phone: unknown phone", !PhoneLink.switchDriver("", "Asha", drivers));
+        String uses = AppsActivity.bump(AppsActivity.bump(AppsActivity.bump("", "maps"), "music"), "maps");
+        check("apps: counted", AppsActivity.counts(uses).get("maps") == 2 && AppsActivity.counts(uses).get("music") == 1);
+        check("apps: most used first", uses.startsWith("maps=2"));
+        check("apps: damaged entry skipped", AppsActivity.counts("a=x,b=3,=4").size() == 1);
+        String lots = "";
+        for (int i = 0; i < 70; i++) lots = AppsActivity.bump(lots, "p" + i);
+        check("apps: keeps 60", AppsActivity.counts(lots).size() == 60);
         check("phone: removed driver", !PhoneLink.switchDriver("Meera", "Asha", drivers));
         eq("browse: short list", 3, Browse.trim(many.subList(0, 3), true, Browse.MOVING_ROWS).size());
     }

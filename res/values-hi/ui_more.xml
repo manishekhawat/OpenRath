@@ -49,4 +49,9 @@
     <string name="ui_more_your_carplay_or_android_auto_app_opens_by_it" formatted="false">ब्लूटूथ से फ़ोन जुड़ते ही आपका CarPlay या Android Auto ऐप अपने-आप खुलता है</string>
     <string name="ui_more_volume_for_each_music_app" formatted="false">हर म्यूज़िक ऐप की अपनी आवाज़</string>
     <string name="ui_more_each_music_app_fm_and_online_radio_come_back" formatted="false">हर म्यूज़िक ऐप, FM और ऑनलाइन रेडियो उसी आवाज़ पर लौटते हैं जिस पर पिछली बार चले थे</string>
+    <string name="ui_more_most_used" formatted="false">सबसे ज़्यादा खोले गए</string>
+    <string name="ui_more_a_to_z" formatted="false">A से Z</string>
+    <string name="ui_more_hide_from_the_list" formatted="false">सूची से छिपाएँ</string>
+    <string name="ui_more_show_in_the_list" formatted="false">सूची में दिखाएँ</string>
+    <string name="ui_more_hidden_search_for_it_to_find_it_again" formatted="false">छिपा दिया। फिर से पाने के लिए खोजें।</string>
 </resources>
