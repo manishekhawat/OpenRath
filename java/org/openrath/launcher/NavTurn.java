@@ -45,7 +45,7 @@ final class NavTurn {
      * app, or any app's that says it is navigation.
      */
     static boolean guidance(String p, String category, boolean ongoing) {
-        if (Notification.CATEGORY_NAVIGATION.equals(category)) return true;
+        if ("navigation".equals(category)) return true;   // Notification.CATEGORY_NAVIGATION, Android 9
         return ongoing && isNavApp(p) && !Notification.CATEGORY_TRANSPORT.equals(category);
     }
 
