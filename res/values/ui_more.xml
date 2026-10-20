@@ -87,6 +87,7 @@
     <string name="ui_more_fuel_trim_learnt_1_s" formatted="false">Fuel trim learnt: %1$s%%</string>
     <string name="ui_more_fuel_tank_1_s" formatted="false">Fuel tank: %1$s%%</string>
     <string name="ui_more_battery_1_s_v" formatted="false">Battery: %1$s V</string>
+    <string name="ui_more_always_works_on_openrath_s_own_music_other_m" formatted="false">Always works on OpenRath\'s own music. Other music apps hear it only when this unit allows that; if they sound the same, use the unit\'s own EQ app.</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -173,5 +174,6 @@
         <item>@string/ui_more_fuel_trim_learnt_1_s</item>
         <item>@string/ui_more_fuel_tank_1_s</item>
         <item>@string/ui_more_battery_1_s_v</item>
+        <item>@string/ui_more_always_works_on_openrath_s_own_music_other_m</item>
     </string-array>
 </resources>
