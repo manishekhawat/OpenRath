@@ -30,6 +30,18 @@
     <string name="ui_more_reply_sent" formatted="false">Reply sent</string>
     <string name="ui_more_the_reply_couldn_t_be_sent" formatted="false">The reply couldn\'t be sent</string>
     <string name="ui_more_reply" formatted="false">Reply</string>
+    <string name="ui_more_browse_1_s" formatted="false">Browse %1$s</string>
+    <string name="ui_more_up_next" formatted="false">Up next</string>
+    <string name="ui_more_auto_online_radio_with_internet_else_the_rad" formatted="false">Auto: online radio with internet, else the radio app</string>
+    <string name="ui_more_auto_the_music_app_with_internet_else_music_" formatted="false">Auto: the music app with internet, else music files</string>
+    <string name="ui_more_online_radio" formatted="false">Online radio</string>
+    <string name="ui_more_music_files" formatted="false">Music files</string>
+    <string name="ui_more_radio_app" formatted="false">Radio app</string>
+    <string name="ui_more_music_app" formatted="false">Music app</string>
+    <string name="ui_more_1_s_doesn_t_share_its_library_with_other_app" formatted="false">%1$s doesn\'t share its library with other apps. Opening it instead.</string>
+    <string name="ui_more_nothing_here" formatted="false">Nothing here</string>
+    <string name="ui_more_the_music_app_didn_t_answer" formatted="false">The music app didn\'t answer</string>
+    <string name="ui_more_close" formatted="false">Close</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -59,5 +71,17 @@
         <item>@string/ui_more_reply_sent</item>
         <item>@string/ui_more_the_reply_couldn_t_be_sent</item>
         <item>@string/ui_more_reply</item>
+        <item>@string/ui_more_browse_1_s</item>
+        <item>@string/ui_more_up_next</item>
+        <item>@string/ui_more_auto_online_radio_with_internet_else_the_rad</item>
+        <item>@string/ui_more_auto_the_music_app_with_internet_else_music_</item>
+        <item>@string/ui_more_online_radio</item>
+        <item>@string/ui_more_music_files</item>
+        <item>@string/ui_more_radio_app</item>
+        <item>@string/ui_more_music_app</item>
+        <item>@string/ui_more_1_s_doesn_t_share_its_library_with_other_app</item>
+        <item>@string/ui_more_nothing_here</item>
+        <item>@string/ui_more_the_music_app_didn_t_answer</item>
+        <item>@string/ui_more_close</item>
     </string-array>
 </resources>

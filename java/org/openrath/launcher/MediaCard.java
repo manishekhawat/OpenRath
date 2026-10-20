@@ -105,10 +105,22 @@ final class MediaCard extends Cards.Card {
         }
         final String key = radio ? "media:radio" : "media:music";
         final String name = radio ? "Radio" : "Music";
-        // the header is the source switch: auto, online / app / files
+        // the header opens the box's menu: where the sound comes from, the music apps, the app's
+        // library and its queue (Browse); without the dashboard, it steps through the sources
         clickable(head, new OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Runnable changed = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Player.playing && isMine()) Player.send(getContext(), Player.STOP, null);
+                        host.refresh();
+                    }
+                };
+                if (getContext() instanceof HomeActivity) {
+                    Browse.menu((HomeActivity) getContext(), radio, media, changed);
+                    return;
+                }
                 Prefs p = host.prefs();
                 String what = radio ? "radio" : "music";
                 String[] all = radio ? Prefs.RADIO_SRC : Prefs.MUSIC_SRC;
@@ -116,8 +128,7 @@ final class MediaCard extends Cards.Card {
                 int i = 0;
                 while (i < all.length && !all[i].equals(cur)) i++;
                 p.setSource(what, all[(i + 1) % all.length]);
-                if (Player.playing && isMine()) Player.send(getContext(), Player.STOP, null);
-                host.refresh();
+                changed.run();
             }
         });
         clickable(text, new OnClickListener() {
