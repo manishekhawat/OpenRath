@@ -8,4 +8,12 @@
     <string name="ui_more_mini_strip_over_other_apps" formatted="false">दूसरे ऐप्स के ऊपर छोटी पट्टी</string>
     <string name="ui_more_google_maps_waze_osmand_and_others_the_next_" formatted="false">Google Maps, Waze, OsmAnd और दूसरे: अगला मोड़, उसकी दूरी और तीर डैशबोर्ड पर एक कार्ड में</string>
     <string name="ui_more_the_next_turn_and_what_s_playing_with_play_p" formatted="false">दूसरा ऐप खुला हो तब नीचे अगला मोड़ और जो चल रहा है, चलाएँ, रोकें और आगे बढ़ाएँ के साथ</string>
+    <string name="ui_more_settings_only_when_stopped" formatted="false">सेटिंग्स सिर्फ़ रुकने पर</string>
+    <string name="ui_more_settings_and_their_keyboard_open_when_the_ca" formatted="false">सेटिंग्स और उनका कीबोर्ड कार रुकने पर खुलते हैं; सवारी फिर भी खोल सकती है</string>
+    <string name="ui_more_settings_open_when_the_car_is_stopped" formatted="false">सेटिंग्स कार रुकने पर खुलती हैं</string>
+    <string name="ui_more_changing_settings_while_driving_takes_your_e" formatted="false">चलाते समय सेटिंग्स बदलने से नज़र सड़क से हटती है।</string>
+    <string name="ui_more_i_m_a_passenger" formatted="false">मैं सवारी हूँ</string>
+    <string name="ui_more_listening" formatted="false">सुन रहा है…</string>
+    <string name="ui_more_didn_t_catch_that" formatted="false">समझ नहीं आया</string>
+    <string name="ui_more_voice_isn_t_available_right_now" formatted="false">आवाज़ अभी उपलब्ध नहीं है</string>
 </resources>

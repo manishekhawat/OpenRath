@@ -164,6 +164,11 @@ final class Extras {
         if (s != null && s.getContext() == a) strip = new WeakReference<>(null);
     }
 
+    /** Whether the screen-off cover has the backlight down (night dimming leaves it alone then). */
+    static boolean darkScreen() {
+        return dark;
+    }
+
     /** Remove the screensaver or screen-off cover; true if one was showing. */
     static boolean wake(HomeActivity a) {
         lastTouch = System.currentTimeMillis();

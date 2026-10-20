@@ -92,7 +92,7 @@ final class CarCard extends Cards.Card {
         unit.setTextSize(0, 13 * Ui.k * s);
         unit.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(30 * s), m, 0));
         speed.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(10 * s), m + Ui.px(42 * s), 0));
-        lights.setTextSize(0, 10 * Ui.k * s);
+        lights.setTextSize(0, Math.max(Ui.MIN_TEXT, 10 * s) * Ui.k);
         lights.setLayoutParams(at(-2, -2, Gravity.BOTTOM | Gravity.LEFT, m, 0, 0, Ui.px(12 * s)));
         int side = Ui.px(34 * s);
         int bottom = Ui.px(34 * s), top = Ui.px(98 * s);
@@ -108,15 +108,15 @@ final class CarCard extends Cards.Card {
         welcome.setTextSize(0, 18 * Ui.k * s);
         welcome.setMaxWidth(w - 2 * (m + Ui.px(40 * s)));
         welcome.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, Ui.px(68 * s), 0, 0));
-        hello.setTextSize(0, 11 * Ui.k * s);
+        hello.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
         hello.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, Ui.px(52 * s), 0, 0));
         int ls = Ui.px(34 * s);
         limit.setTextSize(0, 14 * Ui.k * s);
         ((android.graphics.drawable.GradientDrawable) limit.getBackground()).setStroke(Math.max(2, Ui.px(4 * s)), 0xFFD42A2A);
         limit.setLayoutParams(at(ls, ls, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(60 * s), m, 0));
-        camera.setTextSize(0, 10 * Ui.k * s);
+        camera.setTextSize(0, Math.max(Ui.MIN_TEXT, 10 * s) * Ui.k);
         camera.setLayoutParams(at(-2, -2, Gravity.BOTTOM | Gravity.RIGHT, 0, 0, m, Ui.px(12 * s)));
-        summary.setTextSize(0, 11 * Ui.k * s);
+        summary.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
         summary.setLayoutParams(at(-2, -2, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0, 0, Ui.px(12 * s)));
     }
 

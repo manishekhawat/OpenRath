@@ -73,13 +73,15 @@ Android asks the owner for most of these. Saying no turns off only the features 
 | Call logs | The last calls in the phone box |
 | SMS | Cab SOS, only when you trigger it |
 | Camera | The dashcam, and photos of items left in the car |
+| Microphone (optional) | Listening for a voice command in a small bar on the dashboard. The speech service on the unit turns it into words; OpenRath keeps no recording. Without it, voice uses the speech app's own screen. |
+| Contacts (optional) | Finding someone to call by name in the phone box, and saying who is calling. Read on the unit and never stored or sent. |
 | Calendar (optional) | The calendar box: today's and the next few days' events, read on the unit and never stored |
 | Videos (Android 13 and newer) | The video box |
 | Wi-Fi state | The Wi-Fi icon in the dock |
 | Install and remove apps | Installing a downloaded OpenRath update after you confirm, and Uninstall in the all-apps screen. Android asks you each time. |
-| Display over other apps (optional) | The floating mic button on top of other apps |
+| Display over other apps (optional) | The floating mic button, the mini strip with the next turn and music, and the call screen, on top of other apps |
 | See all apps | The app drawer and picking apps for buttons, which is what a home screen needs |
 | Internet | The services above |
-| Notification access (optional) | What's playing in other apps, and the message ticker |
+| Notification access (optional) | What's playing in other apps, the message ticker and replies to messages, and the next turn from your navigation app |
 | Accessibility (optional) | Steering-wheel buttons while another app is on screen. Only key presses are read. |
 | Start at boot | Resuming the radio or music after switch-on |

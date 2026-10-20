@@ -749,6 +749,15 @@ public final class Tests {
         check("nav: maps' other notices are not", !NavTurn.guidance("com.google.android.apps.maps", null, false));
         check("nav: music is not", !NavTurn.guidance("com.spotify.music", "transport", true));
         check("nav: any app saying navigation", NavTurn.guidance("org.example.nav", "navigation", false));
+
+        long now = 1_000_000_000L;
+        check("moving: fresh GPS", ChildLock.moving(40, now - 2000, -1, now, 0));
+        check("moving: fresh GPS stopped", !ChildLock.moving(3, now - 2000, -1, now, now - 60000));
+        check("moving: OBD beats GPS", !ChildLock.moving(40, now - 2000, 0, now, now));
+        check("moving: OBD alone", ChildLock.moving(0, 0, 30, now, 0));
+        check("moving: GPS lost in a tunnel stays locked", ChildLock.moving(40, now - 60000, -1, now, now - 60000));
+        check("moving: GPS lost long after", !ChildLock.moving(40, now - ChildLock.LOST_MS - 5000, -1, now, now - ChildLock.LOST_MS - 5000));
+        check("moving: never seen moving", !ChildLock.moving(0, 0, -1, now, 0));
     }
 
     private static void levels() {
@@ -759,7 +768,7 @@ public final class Tests {
             else if (x.level == Features.CUSTOM) c++;
             else d++;
         }
-        eq("levels: simple count", 17, s);   // "longKeys" registered beside "keys", "navTurns" beside "arrows"
+        eq("levels: simple count", 18, s);   // "longKeys" registered beside "keys"; "navTurns" and "parkedSettings" from the launcher review
         eq("levels: custom count", 8, c);
         eq("levels: dev count", 2, d);
         check("levels: full has the most", f > s && f > c);

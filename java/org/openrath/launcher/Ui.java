@@ -101,9 +101,12 @@ final class Ui {
         return g;
     }
 
+    /** The smallest text OpenRath draws (design px): smaller is hard to read at a glance in a moving car. */
+    static final float MIN_TEXT = 12;
+
     static TextView text(Context c, float size, int colour, String family, int gravity) {
         TextView t = new TextView(c);
-        t.setTextSize(TypedValue.COMPLEX_UNIT_PX, size * k);
+        t.setTextSize(TypedValue.COMPLEX_UNIT_PX, Math.max(MIN_TEXT, size) * k);
         t.setTextColor(colour);
         t.setTypeface(Typeface.create(family, Typeface.NORMAL));
         t.setGravity(gravity);
@@ -113,8 +116,8 @@ final class Ui {
     }
 
     static TextView label(Context c, String s) {
-        TextView t = text(c, 11, ACCENT, "sans-serif-medium", Gravity.LEFT);
-        t.setLetterSpacing(0.18f);
+        TextView t = text(c, 12, ACCENT, "sans-serif-medium", Gravity.LEFT);
+        t.setLetterSpacing(0.16f);
         t.setText(s);
         return t;
     }
