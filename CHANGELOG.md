@@ -15,7 +15,7 @@ Newest first.
 - **Safer while driving:** buttons you use while driving are at least 76 px, small text is larger, Settings opens only when stopped (with "I'm a passenger"), the child and valet locks hold for 10 minutes when the GPS drops out, and night-drive mode needs a hold to leave. The theme and screen brightness can follow the headlights.
 - **App list:** A to Z or most used first, and hide apps you never open (search still finds them).
 - **Every box can hold its own widget**, instead of two at most.
-- **Your country:** prices show in your currency, holidays and the FASTag lane reminder are India-only, and Settings > Units has the country.
+- **Your country:** prices show in your currency, holidays and the FASTag lane reminder are India-only, and the country is in Settings > Dashboard.
 - **Plain words** in place of MCU link, ELM327 and SHA-256 in everyday settings, and a list of the hidden shortcuts (holding a box or a button) in Settings > Help, with one tip a day on the dashboard.
 - **More from the engine:** air flow and petrol used an hour, manifold pressure, throttle and fuel trims under Live engine readings, and codes seen once but not confirmed yet as an early warning with the fault codes.
 - **Routes keep working** when the main route server is busy: a second one answers.

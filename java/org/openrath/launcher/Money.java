@@ -6,7 +6,7 @@ import java.util.Locale;
  * The owner's country, for money and the India-only parts (FASTag, India's holidays, UPI). The app
  * writes prices with ₹; outside India every ₹ shown on screen becomes the local currency's sign
  * (done in Hindi.t and Hindi.f, which all text on screen goes through) and spoken prices use its name.
- * The country is the unit's own unless chosen in Settings > Units.
+ * The country is the unit's own unless chosen in Settings > Dashboard.
  */
 final class Money {
 
