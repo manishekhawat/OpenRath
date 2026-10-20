@@ -774,6 +774,12 @@ public final class Tests {
         check("resume nav: an hour ago", !Resume.navDue("com.waze", now - 60 * 60000, now));
         check("resume nav: arrived", !Resume.navDue("com.waze", 0, now));
         check("resume nav: no app", !Resume.navDue("", now - 60000, now));
+
+        List<Integer> many = new java.util.ArrayList<>();
+        for (int i = 0; i < 30; i++) many.add(i);
+        eq("browse: moving keeps 12", 12, Browse.trim(many, true, Browse.MOVING_ROWS).size());
+        eq("browse: stopped keeps all", 30, Browse.trim(many, false, Browse.MOVING_ROWS).size());
+        eq("browse: short list", 3, Browse.trim(many.subList(0, 3), true, Browse.MOVING_ROWS).size());
     }
 
     private static void levels() {

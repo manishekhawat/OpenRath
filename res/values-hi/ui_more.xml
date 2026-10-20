@@ -29,4 +29,16 @@
     <string name="ui_more_reply_sent" formatted="false">जवाब भेजा गया</string>
     <string name="ui_more_the_reply_couldn_t_be_sent" formatted="false">जवाब नहीं भेजा जा सका</string>
     <string name="ui_more_reply" formatted="false">जवाब</string>
+    <string name="ui_more_browse_1_s" formatted="false">%1$s में खोजें</string>
+    <string name="ui_more_up_next" formatted="false">आगे क्या है</string>
+    <string name="ui_more_auto_online_radio_with_internet_else_the_rad" formatted="false">ऑटो: इंटरनेट हो तो ऑनलाइन रेडियो, नहीं तो रेडियो ऐप</string>
+    <string name="ui_more_auto_the_music_app_with_internet_else_music_" formatted="false">ऑटो: इंटरनेट हो तो म्यूज़िक ऐप, नहीं तो म्यूज़िक फ़ाइलें</string>
+    <string name="ui_more_online_radio" formatted="false">ऑनलाइन रेडियो</string>
+    <string name="ui_more_music_files" formatted="false">म्यूज़िक फ़ाइलें</string>
+    <string name="ui_more_radio_app" formatted="false">रेडियो ऐप</string>
+    <string name="ui_more_music_app" formatted="false">म्यूज़िक ऐप</string>
+    <string name="ui_more_1_s_doesn_t_share_its_library_with_other_app" formatted="false">%1$s अपनी लाइब्रेरी दूसरे ऐप्स से शेयर नहीं करता। उसे खोल रहे हैं।</string>
+    <string name="ui_more_nothing_here" formatted="false">यहाँ कुछ नहीं</string>
+    <string name="ui_more_the_music_app_didn_t_answer" formatted="false">म्यूज़िक ऐप ने जवाब नहीं दिया</string>
+    <string name="ui_more_close" formatted="false">बंद करें</string>
 </resources>
