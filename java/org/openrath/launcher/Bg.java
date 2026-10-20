@@ -7,8 +7,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 /**
- * The app's background threads: two, at low priority, shared by the network fetches and the file
- * writes that must stay off the screen's thread. Long-running loops (OBD-II, the tuner) keep their
+ * The app's background threads: three, at low priority, shared by the network fetches and the file
+ * writes that must stay off the screen's thread (three, so two slow downloads can't hold up a save). Long-running loops (OBD-II, the tuner) keep their
  * own threads. serial() gives a queue whose jobs run one after another, in order, on these threads.
  */
 final class Bg {
@@ -17,7 +17,7 @@ final class Bg {
 
     static synchronized ExecutorService pool() {
         if (pool == null) {
-            pool = Executors.newFixedThreadPool(2, new ThreadFactory() {
+            pool = Executors.newFixedThreadPool(3, new ThreadFactory() {
                 private int n;
 
                 @Override

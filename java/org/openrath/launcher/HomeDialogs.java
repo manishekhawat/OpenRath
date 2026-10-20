@@ -81,6 +81,15 @@ final class HomeDialogs {
     /** First start: pick the unit's own radio app, so the radio box and dock button just work. */
     static void findRadio(final HomeActivity a) {
         if (a.prefs.app("media:radio") != null) return;
+        Bg.run(new Runnable() {   // listing every app is slow on these units: not on the screen's thread
+            @Override
+            public void run() {
+                findRadioNow(a);
+            }
+        });
+    }
+
+    private static void findRadioNow(HomeActivity a) {
         // none found today: listing every app again on each start is slow on these units; try again tomorrow
         String today = Times.today();
         if (today.equals(a.prefs.str("radioNotFound", ""))) return;

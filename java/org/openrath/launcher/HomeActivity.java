@@ -283,6 +283,8 @@ public class HomeActivity extends Activity implements Cards.Host {
     @Override
     protected void onStart() {
         super.onStart();
+        MapCard map = mapCard();
+        if (map != null) map.resumeMap();
         try {
             widgets.startListening();
         } catch (Throwable e) {
@@ -294,6 +296,9 @@ public class HomeActivity extends Activity implements Cards.Host {
     protected void onStop() {
         OverMic.show(getApplicationContext(), prefs);
         OverStrip.show(getApplicationContext(), prefs);
+        // another app is in front: the map's page stops drawing and running its timers until we're back
+        MapCard map = mapCard();
+        if (map != null) map.pauseMap();
         try {
             widgets.stopListening();
         } catch (Throwable e) {

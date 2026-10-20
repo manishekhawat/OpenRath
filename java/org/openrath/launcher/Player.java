@@ -181,6 +181,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
         sp.edit().putInt("station", station).putInt("song", song).apply();
         release();
         mp = new MediaPlayer();
+        mp.setWakeMode(getApplicationContext(), android.os.PowerManager.PARTIAL_WAKE_LOCK);   // online radio keeps playing if the CPU would sleep
         mp.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build());
         mp.setOnPreparedListener(this);

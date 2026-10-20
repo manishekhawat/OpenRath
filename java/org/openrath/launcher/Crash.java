@@ -26,7 +26,12 @@ final class Crash {
         if (sp != null) return;
         sp = c.getApplicationContext().getSharedPreferences("crash", Context.MODE_PRIVATE);
         logs = new File(c.getApplicationContext().getFilesDir(), "logs");
-        moveOld();
+        Bg.run(new Runnable() {   // shared storage is slow on these units: off the start-up path
+            @Override
+            public void run() {
+                moveOld();
+            }
+        });
         try {
             version = c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName;
         } catch (Exception e) {
