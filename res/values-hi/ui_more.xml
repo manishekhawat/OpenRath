@@ -72,4 +72,18 @@
     <string name="ui_more_hold_an_app_in_the_app_list_to_pin_it_to_the" formatted="false">ऐप सूची में किसी ऐप को दबाए रखें: ऊपर पिन करें या छिपाएँ</string>
     <string name="ui_more_hold_the_next_turn_card_to_hide_it_for_this_" formatted="false">इस सफ़र के लिए छिपाने को अगले मोड़ वाला कार्ड दबाए रखें</string>
     <string name="ui_more_say_reply_after_a_message_is_read_out_to_ans" formatted="false">संदेश पढ़े जाने के बाद बोलकर जवाब देने के लिए \"reply\" कहें</string>
+    <string name="ui_more_seen_once_not_confirmed_yet_an_early_warning" formatted="false">एक बार दिखे, अभी पक्के नहीं (शुरुआती चेतावनी):</string>
+    <string name="ui_more_live_engine_readings" formatted="false">इंजन की लाइव रीडिंग</string>
+    <string name="ui_more_when_the_adapter_is_connected" formatted="false">जब अडैप्टर जुड़ा हो</string>
+    <string name="ui_more_engine_speed_1_s_rpm" formatted="false">इंजन की रफ़्तार: %1$s rpm</string>
+    <string name="ui_more_coolant_1_s_c" formatted="false">कूलेंट: %1$s°C</string>
+    <string name="ui_more_intake_air_1_s_c" formatted="false">अंदर आती हवा: %1$s°C</string>
+    <string name="ui_more_engine_load_1_s" formatted="false">इंजन पर भार: %1$s%%</string>
+    <string name="ui_more_throttle_1_s" formatted="false">थ्रॉटल: %1$s%%</string>
+    <string name="ui_more_manifold_pressure_1_s_kpa" formatted="false">मैनिफ़ोल्ड दबाव: %1$s kPa</string>
+    <string name="ui_more_air_flow_1_s_g_s_about_2_s_litres_an_hour" formatted="false">हवा का बहाव: %1$s g/s (लगभग %2$s लीटर प्रति घंटा)</string>
+    <string name="ui_more_fuel_trim_now_1_s" formatted="false">फ़्यूल ट्रिम अभी: %1$s%%</string>
+    <string name="ui_more_fuel_trim_learnt_1_s" formatted="false">फ़्यूल ट्रिम सीखा हुआ: %1$s%%</string>
+    <string name="ui_more_fuel_tank_1_s" formatted="false">फ़्यूल टैंक: %1$s%%</string>
+    <string name="ui_more_battery_1_s_v" formatted="false">बैटरी: %1$s V</string>
 </resources>

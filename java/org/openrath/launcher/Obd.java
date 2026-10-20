@@ -29,6 +29,11 @@ final class Obd {
     /** The address most Wi-Fi ELM327 adapters use. */
     static final String WIFI_DEFAULT = "192.168.0.10:35000";
     static volatile float volts = -1;
+    /** Air flow (g/s), manifold pressure (kPa), throttle (%) and fuel trims (%), read when the car answers them. */
+    static volatile float maf = -1;
+    static volatile int manifold = -1, throttle = -1, shortTrim = -999, longTrim = -999;
+    /** Codes the engine computer has seen once but not confirmed yet (mode 07): the early warning. */
+    static final List<String> pendingCodes = new ArrayList<>();
     static volatile long readAt;
     static volatile String status = Hindi.t("Not set up"), protocol = "";
     static volatile boolean connected;
@@ -216,21 +221,27 @@ final class Obd {
                 backoff = 5000;
                 changed(c);
                 int round = 0;
+                int[] misses = new int[EXTRA.length];
                 while (!stop.get()) {
                     String job = pending;
                     if (job != null) {
                         pending = null;
                         String r = ask(in, out, ws, job, 5000);
                         if ("03".equals(job)) {
-                            List<String> found = dtcs(r, protocol.contains("CAN") || protocol.contains("15765"));
+                            boolean can = protocol.contains("CAN") || protocol.contains("15765");
+                            List<String> found = dtcs(r, can);
+                            List<String> soon = dtcs(ask(in, out, ws, "07", 5000), can, "47");
                             synchronized (codes) {
                                 codes.clear();
                                 codes.addAll(found);
+                                pendingCodes.clear();
+                                for (String k : soon) if (!found.contains(k)) pendingCodes.add(k);
                             }
                             codesAt = System.currentTimeMillis();
                         } else {
                             synchronized (codes) {
                                 codes.clear();
+                                pendingCodes.clear();
                             }
                             codesAt = System.currentTimeMillis();
                         }
@@ -243,6 +254,14 @@ final class Obd {
                         fuel = fuel(ask(in, out, ws, "012F", 1500));
                         intake = intake(ask(in, out, ws, "010F", 1500));
                         volts = volts(ask(in, out, ws, "ATRV", 1500));
+                    }
+                    // the extra readings, each in turn, and dropped for this connection when the car never answers them
+                    int x = round % EXTRA.length;
+                    if (misses[x] < 3) {
+                        String r = ask(in, out, ws, EXTRA[x], 1500);
+                        float v = extra(EXTRA[x], r);
+                        misses[x] = v == NONE ? misses[x] + 1 : 0;
+                        if (v != NONE || misses[x] >= 3) store(EXTRA[x], v);
                     }
                     readAt = System.currentTimeMillis();
                     round++;
@@ -376,6 +395,55 @@ final class Obd {
         return b == null || b.length < 1 ? -999 : b[0] - 40;
     }
 
+    /** The extra readings, asked one per round. */
+    static final String[] EXTRA = {"0110", "010B", "0111", "0106", "0107"};
+    static final float NONE = -9999;
+
+    /** An extra reading's value, or NONE when the car didn't answer it. Pure, for the tests. */
+    static float extra(String pid, String r) {
+        int[] b = bytes(r, "41" + pid.substring(2));
+        if (b == null || b.length < 1) return NONE;
+        switch (pid) {
+            case "0110": return b.length < 2 ? NONE : (b[0] * 256 + b[1]) / 100f;
+            case "010B": return b[0];
+            case "0111": return Math.round(b[0] * 100 / 255f);
+            default: return Math.round((b[0] - 128) * 100 / 128f);   // fuel trims, 0106 and 0107
+        }
+    }
+
+    private static void store(String pid, float v) {
+        boolean none = v == NONE;
+        switch (pid) {
+            case "0110": maf = none ? -1 : v; break;
+            case "010B": manifold = none ? -1 : Math.round(v); break;
+            case "0111": throttle = none ? -1 : Math.round(v); break;
+            case "0106": shortTrim = none ? -999 : Math.round(v); break;
+            default: longTrim = none ? -999 : Math.round(v);
+        }
+    }
+
+    /** Petrol used right now, in litres an hour, from the air flow (14.7 g of air a gram of petrol, 745 g a litre); -1 without it. */
+    static float litresAnHour(float maf) {
+        return maf < 0 ? -1 : maf * 3600f / (14.7f * 745f);
+    }
+
+    /** The live readings, as lines for Settings. */
+    static String readings() {
+        StringBuilder b = new StringBuilder();
+        if (rpm >= 0) b.append(Hindi.f("Engine speed: %1$s rpm", rpm)).append('\n');
+        if (coolant > -40) b.append(Hindi.f("Coolant: %1$s°C", coolant)).append('\n');
+        if (intake > -999) b.append(Hindi.f("Intake air: %1$s°C", intake)).append('\n');
+        if (load >= 0) b.append(Hindi.f("Engine load: %1$s%%", load)).append('\n');
+        if (throttle >= 0) b.append(Hindi.f("Throttle: %1$s%%", throttle)).append('\n');
+        if (manifold >= 0) b.append(Hindi.f("Manifold pressure: %1$s kPa", manifold)).append('\n');
+        if (maf >= 0) b.append(Hindi.f("Air flow: %1$s g/s (about %2$s litres an hour)", Fuel.fmt(maf), Fuel.fmt(litresAnHour(maf)))).append('\n');
+        if (shortTrim > -999) b.append(Hindi.f("Fuel trim now: %1$s%%", shortTrim)).append('\n');
+        if (longTrim > -999) b.append(Hindi.f("Fuel trim learnt: %1$s%%", longTrim)).append('\n');
+        if (fuel >= 0) b.append(Hindi.f("Fuel tank: %1$s%%", fuel)).append('\n');
+        if (volts > 0) b.append(Hindi.f("Battery: %1$s V", Fuel.fmt(volts))).append('\n');
+        return b.toString().trim();
+    }
+
     /** ATRV answers like "12.6V". */
     static float volts(String r) {
         String s = clean(r).replace("V", "");
@@ -392,6 +460,11 @@ final class Obd {
      * long answers come as numbered frames ("0:4302...", "1:...").
      */
     static List<String> dtcs(String reply, boolean can) {
+        return dtcs(reply, can, "43");
+    }
+
+    /** Codes from a mode 03 (stored, "43") or mode 07 (pending, "47") reply. */
+    static List<String> dtcs(String reply, boolean can, String head) {
         List<String> out = new ArrayList<>();
         List<String> blocks = new ArrayList<>();
         StringBuilder cur = null;
@@ -406,7 +479,7 @@ final class Obd {
                 }
                 cur.append(m.group(2));
                 blocks.set(blocks.size() - 1, cur.toString());
-            } else if (line.startsWith("43")) {
+            } else if (line.startsWith(head)) {
                 cur = new StringBuilder(line);
                 blocks.add(line);
             } else if (line.length() <= 3) {
@@ -414,7 +487,7 @@ final class Obd {
             }
         }
         for (String block : blocks) {
-            if (block == null || !block.startsWith("43")) continue;
+            if (block == null || !block.startsWith(head)) continue;
             String hex = block.substring(2).replaceAll("[^0-9A-F]", "");
             int n = hex.length() / 2, k = 0, limit = n;
             if (can && n > 0) {

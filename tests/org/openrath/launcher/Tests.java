@@ -810,6 +810,15 @@ public final class Tests {
         tipsOn[1] = false;
         eq("tips: skip a switched-off feature", 2, Hints.pick(1, tipsOn));
         eq("tips: all shown", -1, Hints.pick(Hints.ALL.length, tipsOn));
+        check("obd: air flow", Math.abs(Obd.extra("0110", "41 10 01 F4") - 5.0f) < 0.01f);
+        check("obd: manifold", Obd.extra("010B", "41 0B 64") == 100);
+        check("obd: throttle", Obd.extra("0111", "41 11 FF") == 100);
+        check("obd: trim lean", Obd.extra("0106", "41 06 90") == 13);
+        check("obd: trim rich", Obd.extra("0107", "41 07 60") == -25);
+        check("obd: no data", Obd.extra("0110", "NO DATA") == Obd.NONE);
+        eq("obd: pending codes", java.util.Arrays.asList("P0301"), Obd.dtcs("47 03 01 00 00 00 00", false, "47"));
+        check("obd: stored parser ignores pending", Obd.dtcs("47 03 01 00 00 00 00", false).isEmpty());
+        check("obd: litres an hour", Math.abs(Obd.litresAnHour(5f) - 1.64f) < 0.01f);
         for (String[] tip : Hints.ALL) check("tips: feature exists " + tip[1], tip[1].isEmpty() || Features.get(tip[1]) != null);
         check("phone: removed driver", !PhoneLink.switchDriver("Meera", "Asha", drivers));
         eq("browse: short list", 3, Browse.trim(many.subList(0, 3), true, Browse.MOVING_ROWS).size());

@@ -73,6 +73,20 @@
     <string name="ui_more_hold_an_app_in_the_app_list_to_pin_it_to_the" formatted="false">Hold an app in the app list to pin it to the top or hide it</string>
     <string name="ui_more_hold_the_next_turn_card_to_hide_it_for_this_" formatted="false">Hold the next-turn card to hide it for this trip</string>
     <string name="ui_more_say_reply_after_a_message_is_read_out_to_ans" formatted="false">Say \"reply\" after a message is read out to answer it by voice</string>
+    <string name="ui_more_seen_once_not_confirmed_yet_an_early_warning" formatted="false">Seen once, not confirmed yet (an early warning):</string>
+    <string name="ui_more_live_engine_readings" formatted="false">Live engine readings</string>
+    <string name="ui_more_when_the_adapter_is_connected" formatted="false">when the adapter is connected</string>
+    <string name="ui_more_engine_speed_1_s_rpm" formatted="false">Engine speed: %1$s rpm</string>
+    <string name="ui_more_coolant_1_s_c" formatted="false">Coolant: %1$s°C</string>
+    <string name="ui_more_intake_air_1_s_c" formatted="false">Intake air: %1$s°C</string>
+    <string name="ui_more_engine_load_1_s" formatted="false">Engine load: %1$s%%</string>
+    <string name="ui_more_throttle_1_s" formatted="false">Throttle: %1$s%%</string>
+    <string name="ui_more_manifold_pressure_1_s_kpa" formatted="false">Manifold pressure: %1$s kPa</string>
+    <string name="ui_more_air_flow_1_s_g_s_about_2_s_litres_an_hour" formatted="false">Air flow: %1$s g/s (about %2$s litres an hour)</string>
+    <string name="ui_more_fuel_trim_now_1_s" formatted="false">Fuel trim now: %1$s%%</string>
+    <string name="ui_more_fuel_trim_learnt_1_s" formatted="false">Fuel trim learnt: %1$s%%</string>
+    <string name="ui_more_fuel_tank_1_s" formatted="false">Fuel tank: %1$s%%</string>
+    <string name="ui_more_battery_1_s_v" formatted="false">Battery: %1$s V</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -145,5 +159,19 @@
         <item>@string/ui_more_hold_an_app_in_the_app_list_to_pin_it_to_the</item>
         <item>@string/ui_more_hold_the_next_turn_card_to_hide_it_for_this_</item>
         <item>@string/ui_more_say_reply_after_a_message_is_read_out_to_ans</item>
+        <item>@string/ui_more_seen_once_not_confirmed_yet_an_early_warning</item>
+        <item>@string/ui_more_live_engine_readings</item>
+        <item>@string/ui_more_when_the_adapter_is_connected</item>
+        <item>@string/ui_more_engine_speed_1_s_rpm</item>
+        <item>@string/ui_more_coolant_1_s_c</item>
+        <item>@string/ui_more_intake_air_1_s_c</item>
+        <item>@string/ui_more_engine_load_1_s</item>
+        <item>@string/ui_more_throttle_1_s</item>
+        <item>@string/ui_more_manifold_pressure_1_s_kpa</item>
+        <item>@string/ui_more_air_flow_1_s_g_s_about_2_s_litres_an_hour</item>
+        <item>@string/ui_more_fuel_trim_now_1_s</item>
+        <item>@string/ui_more_fuel_trim_learnt_1_s</item>
+        <item>@string/ui_more_fuel_tank_1_s</item>
+        <item>@string/ui_more_battery_1_s_v</item>
     </string-array>
 </resources>
