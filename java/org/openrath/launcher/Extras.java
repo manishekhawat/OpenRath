@@ -1541,6 +1541,17 @@ final class Extras {
     /** Just switched on: if the feature needs setting up, offer to do it now instead of only saying so. */
     static void offerSetup(final HomeActivity a, final String id) {
         Prefs p = a.prefs;
+        if ("overStrip".equals(id) && !OverMic.allowed(a)) {
+            new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Features.get(id).name))
+                    .setMessage(Hindi.t("This needs \"Display over other apps\" for OpenRath. Allow it now?"))
+                    .setPositiveButton(Hindi.t("Allow"), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface d, int w) {
+                            OverMic.ask(a);
+                        }
+                    }).setNegativeButton(Hindi.t("Later"), null).show();
+            return;
+        }
         boolean ind = p.signal("left") != null || p.signal("right") != null;
         boolean lights = p.lightSignal() != null || p.signal("door") != null || p.signal("belt") != null;
         boolean tyres = false;

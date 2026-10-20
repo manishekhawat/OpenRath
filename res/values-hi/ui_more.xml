@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hindi for ui_more.xml. Machine-drafted: a native speaker should check it (docs/TRANSLATING.md). -->
+<resources>
+    <string name="ui_more_next_turn_card_hidden_until_the_next_trip" formatted="false">अगला मोड़ कार्ड अगली यात्रा तक छिपा</string>
+    <string name="ui_more_nothing_playing" formatted="false">कुछ नहीं चल रहा</string>
+    <string name="ui_more_this_needs_display_over_other_apps_for_openr" formatted="false">इसके लिए OpenRath को \"दूसरे ऐप्स के ऊपर दिखाएँ\" की अनुमति चाहिए। अभी दें?</string>
+    <string name="ui_more_next_turn_from_your_navigation_app" formatted="false">आपके नेविगेशन ऐप से अगला मोड़</string>
+    <string name="ui_more_mini_strip_over_other_apps" formatted="false">दूसरे ऐप्स के ऊपर छोटी पट्टी</string>
+    <string name="ui_more_google_maps_waze_osmand_and_others_the_next_" formatted="false">Google Maps, Waze, OsmAnd और दूसरे: अगला मोड़, उसकी दूरी और तीर डैशबोर्ड पर एक कार्ड में</string>
+    <string name="ui_more_the_next_turn_and_what_s_playing_with_play_p" formatted="false">दूसरा ऐप खुला हो तब नीचे अगला मोड़ और जो चल रहा है, चलाएँ, रोकें और आगे बढ़ाएँ के साथ</string>
+</resources>

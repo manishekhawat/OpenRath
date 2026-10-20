@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The words of the driving helpers added after 1.43: next turn from navigation apps, the call screen,
+     contacts, music browsing and the safety checks. Translations go in values-<language>/ui_more.xml. -->
+<resources>
+    <string name="ui_more_next_turn_card_hidden_until_the_next_trip" formatted="false">Next-turn card hidden until the next trip</string>
+    <string name="ui_more_nothing_playing" formatted="false">Nothing playing</string>
+    <string name="ui_more_this_needs_display_over_other_apps_for_openr" formatted="false">This needs \"Display over other apps\" for OpenRath. Allow it now?</string>
+    <string name="ui_more_next_turn_from_your_navigation_app" formatted="false">Next turn from your navigation app</string>
+    <string name="ui_more_mini_strip_over_other_apps" formatted="false">Mini strip over other apps</string>
+    <string name="ui_more_google_maps_waze_osmand_and_others_the_next_" formatted="false">Google Maps, Waze, OsmAnd and others: the next turn, its distance and arrow in a card on the dashboard</string>
+    <string name="ui_more_the_next_turn_and_what_s_playing_with_play_p" formatted="false">The next turn and what\'s playing, with play, pause and skip, along the bottom while another app is open</string>
+    <string-array name="ui_more">
+        <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
+        <item>@string/ui_more_nothing_playing</item>
+        <item>@string/ui_more_this_needs_display_over_other_apps_for_openr</item>
+        <item>@string/ui_more_next_turn_from_your_navigation_app</item>
+        <item>@string/ui_more_mini_strip_over_other_apps</item>
+        <item>@string/ui_more_google_maps_waze_osmand_and_others_the_next_</item>
+        <item>@string/ui_more_the_next_turn_and_what_s_playing_with_play_p</item>
+    </string-array>
+</resources>

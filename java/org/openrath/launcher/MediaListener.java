@@ -7,8 +7,9 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 
 /**
- * Granting it notification access lets the dashboard read what's playing, and feeds the
- * notification ticker: new messages from the apps the owner picked slide in along the top.
+ * Granting it notification access lets the dashboard read what's playing, feeds the notification
+ * ticker (new messages from the apps the owner picked slide in along the top) and reads the next
+ * turn from the navigation app that is guiding (NavTurn).
  */
 public class MediaListener extends NotificationListenerService {
 
@@ -16,8 +17,12 @@ public class MediaListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification sbn) {
         try {
             Prefs p = new Prefs(this);
-            if (!Features.on(p, "ticker") && !Features.on(p, "readAloud")) return;
             String pkg = sbn.getPackageName();
+            if (Features.on(p, "navTurns") && !pkg.equals(getPackageName()) && NavTurn.take(sbn, p)) {
+                Compat.send(this, new Intent(NavTurn.CHANGED));
+                return;
+            }
+            if (!Features.on(p, "ticker") && !Features.on(p, "readAloud")) return;
             if (pkg.equals(getPackageName()) || !Ticker.watched(p, pkg)) return;
             Notification n = sbn.getNotification();
             if (n == null || (n.flags & Notification.FLAG_ONGOING_EVENT) != 0 || (n.flags & Notification.FLAG_GROUP_SUMMARY) != 0) return;
@@ -36,6 +41,15 @@ public class MediaListener extends NotificationListenerService {
             Compat.send(this, new Intent(Ticker.CHANGED));
         } catch (Throwable e) {
             Diag.note("media notification", e);
+        }
+    }
+
+    @Override
+    public void onNotificationRemoved(StatusBarNotification sbn) {
+        try {
+            if (NavTurn.removed(sbn, new Prefs(this))) Compat.send(this, new Intent(NavTurn.CHANGED));
+        } catch (Throwable e) {
+            Diag.note("navigation notification", e);
         }
     }
 }

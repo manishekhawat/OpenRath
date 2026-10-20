@@ -16,7 +16,7 @@ import java.util.Map;
 final class Hindi {
 
     /** One list per resource file: Settings, then the dashboard and the rest of the app. */
-    static final String[] ARRAYS = {"ui_strings", "ui_home", "ui_cards", "ui_cab", "ui_driving", "ui_extras"};
+    static final String[] ARRAYS = {"ui_strings", "ui_home", "ui_cards", "ui_cab", "ui_driving", "ui_extras", "ui_more"};
 
     private static Map<String, String> words;
     static boolean on;

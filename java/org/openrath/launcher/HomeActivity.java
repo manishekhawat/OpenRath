@@ -60,6 +60,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         widgets = new android.appwidget.AppWidgetHost(this, 2041);
         android.content.IntentFilter f = new android.content.IntentFilter(Keys.ACTION);
         f.addAction(Ticker.CHANGED);
+        f.addAction(NavTurn.CHANGED);
         f.addAction(Drive.REST);
         f.addAction(Drive.FUEL_LOW);
         f.addAction(Drive.HIGHWAY);
@@ -88,6 +89,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             if (Keys.ACTION.equals(i.getAction())) {
                 if (ownKey(i)) keyAction(i.getStringExtra("action"));
             } else if (Ticker.CHANGED.equals(i.getAction())) Extras.ticker(HomeActivity.this);
+            else if (NavTurn.CHANGED.equals(i.getAction())) NavCard.update(HomeActivity.this);
             else if (Drive.REST.equals(i.getAction())) restStop();
             else if (Drive.HIGHWAY.equals(i.getAction())) highwayStrip();
             else if (Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED.equals(i.getAction())) {
@@ -285,6 +287,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     @Override
     protected void onStop() {
         OverMic.show(getApplicationContext(), prefs);
+        OverStrip.show(getApplicationContext(), prefs);
         try {
             widgets.stopListening();
         } catch (Throwable e) {
@@ -1148,6 +1151,8 @@ public class HomeActivity extends Activity implements Cards.Host {
         super.onResume();
         visible = true;
         OverMic.hide(getApplicationContext());
+        OverStrip.hide(getApplicationContext());
+        NavCard.update(this);
         hub.start();
         Extras.resumed(this);
         Reports.maybeSend(versionName());
