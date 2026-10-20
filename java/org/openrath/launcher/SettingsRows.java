@@ -16,7 +16,7 @@ final class SettingsRows {
 
     private static String contentName(String c) {
         int i = java.util.Arrays.asList(Prefs.CONTENTS).indexOf(c);
-        return i < 0 ? c : Prefs.CONTENT_NAMES[i];
+        return i >= 0 ? Prefs.CONTENT_NAMES[i] : c.startsWith("widget") ? "Widget from another app" : c;
     }
 
     /** A list's names in the owner's language, for a dialog. */

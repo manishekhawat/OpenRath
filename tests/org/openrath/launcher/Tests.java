@@ -819,6 +819,8 @@ public final class Tests {
         eq("obd: pending codes", java.util.Arrays.asList("P0301"), Obd.dtcs("47 03 01 00 00 00 00", false, "47"));
         check("obd: stored parser ignores pending", Obd.dtcs("47 03 01 00 00 00 00", false).isEmpty());
         check("obd: litres an hour", Math.abs(Obd.litresAnHour(5f) - 1.64f) < 0.01f);
+        eq("widgets: first free", "widget1", HomeDialogs.freeWidget(java.util.Arrays.asList("map", "clock")));
+        eq("widgets: third box", "widget3", HomeDialogs.freeWidget(java.util.Arrays.asList("widget1", "map", "widget2")));
         for (String[] tip : Hints.ALL) check("tips: feature exists " + tip[1], tip[1].isEmpty() || Features.get(tip[1]) != null);
         check("phone: removed driver", !PhoneLink.switchDriver("Meera", "Asha", drivers));
         eq("browse: short list", 3, Browse.trim(many.subList(0, 3), true, Browse.MOVING_ROWS).size());
