@@ -586,6 +586,10 @@ final class Extras {
                         if (Features.on(a.prefs, "faultWords")) sb.append(FaultCodes.explain(c)).append("\n\n");
                         else sb.append(c).append("  ").append(Obd.meaning(c)).append('\n');
                     }
+                    if (!Obd.pendingCodes.isEmpty()) {
+                        sb.append('\n').append(Hindi.t("Seen once, not confirmed yet (an early warning):")).append('\n');
+                        for (String c : Obd.pendingCodes) sb.append(c).append("  ").append(Obd.meaning(c)).append('\n');
+                    }
                 }
                 new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Obd.codesAt < asked ? "No answer from the engine computer"
                         : sb.length() == 0 ? "No fault codes" : "Fault codes"))
@@ -804,6 +808,15 @@ final class Extras {
             @Override
             public void run() {
                 readCodes(a);
+            }
+        }));
+        r.add(new SettingsView.Row(g, "Live engine readings", Obd.connected ? null : "when the adapter is connected", new Runnable() {
+            @Override
+            public void run() {
+                String now = Obd.connected ? Obd.readings() : "";
+                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Live engine readings"))
+                        .setMessage(now.isEmpty() ? Hindi.f("Not connected to the adapter: %1$s", Hindi.t(Obd.status)) : now)
+                        .setPositiveButton(Hindi.t("OK"), null).show();
             }
         }));
         r.add(new SettingsView.Row(g, "Clear fault codes", "after a repair", new Runnable() {
