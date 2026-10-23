@@ -60,12 +60,16 @@ public class HomeActivity extends Activity implements Cards.Host {
         widgets = new android.appwidget.AppWidgetHost(this, 2041);
         android.content.IntentFilter f = new android.content.IntentFilter(Keys.ACTION);
         f.addAction(Ticker.CHANGED);
+        f.addAction(NavTurn.CHANGED);
         f.addAction(Drive.REST);
         f.addAction(Drive.FUEL_LOW);
         f.addAction(Drive.HIGHWAY);
         Compat.ownOnly(this, events, f);
         // managed settings changed: sent by the system, which needs no permission of OpenRath's
-        Compat.fromSystem(this, events, new android.content.IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED));
+        android.content.IntentFilter sys = new android.content.IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
+        sys.addAction(Intent.ACTION_SCREEN_ON);   // back from the stereo's sleep: check at once (Wake)
+        Compat.fromSystem(this, events, sys);
+        PhoneLink.listen(this);
         build();
         root.post(new Runnable() {
             @Override
@@ -88,6 +92,10 @@ public class HomeActivity extends Activity implements Cards.Host {
             if (Keys.ACTION.equals(i.getAction())) {
                 if (ownKey(i)) keyAction(i.getStringExtra("action"));
             } else if (Ticker.CHANGED.equals(i.getAction())) Extras.ticker(HomeActivity.this);
+            else if (NavTurn.CHANGED.equals(i.getAction())) NavCard.update(HomeActivity.this);
+            else if (Intent.ACTION_SCREEN_ON.equals(i.getAction())) {
+                if (visible) Wake.sleptNow(HomeActivity.this);
+            }
             else if (Drive.REST.equals(i.getAction())) restStop();
             else if (Drive.HIGHWAY.equals(i.getAction())) highwayStrip();
             else if (Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED.equals(i.getAction())) {
@@ -275,6 +283,8 @@ public class HomeActivity extends Activity implements Cards.Host {
     @Override
     protected void onStart() {
         super.onStart();
+        MapCard map = mapCard();
+        if (map != null) map.resumeMap();
         try {
             widgets.startListening();
         } catch (Throwable e) {
@@ -285,6 +295,10 @@ public class HomeActivity extends Activity implements Cards.Host {
     @Override
     protected void onStop() {
         OverMic.show(getApplicationContext(), prefs);
+        OverStrip.show(getApplicationContext(), prefs);
+        // another app is in front: the map's page stops drawing and running its timers until we're back
+        MapCard map = mapCard();
+        if (map != null) map.pauseMap();
         try {
             widgets.stopListening();
         } catch (Throwable e) {
@@ -296,6 +310,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     @Override
     protected void onDestroy() {
         Setup.forget();
+        PhoneLink.stop(this);
         try {
             unregisterReceiver(events);
         } catch (Throwable ignored) {
@@ -545,13 +560,42 @@ public class HomeActivity extends Activity implements Cards.Host {
                 root.addView(dimmer, root.indexOfChild(layoutView != null ? layoutView : dash) + 1,
                         new android.widget.FrameLayout.LayoutParams(-1, -1));
             }
-            dimmer.setAlpha(night ? prefs.num("dimLevel", 40) / 100f : 0f);
-            dimmer.setVisibility(night ? View.VISIBLE : View.GONE);
+            // the backlight itself goes down where Android lets an app set it; else a dark layer on top
+            boolean backlit = backlight(night ? prefs.num("dimLevel", 40) : 0);
+            dimmer.setAlpha(night && !backlit ? prefs.num("dimLevel", 40) / 100f : 0f);
+            dimmer.setVisibility(night && !backlit ? View.VISIBLE : View.GONE);
             nightDrive(h);
             fogMode(h);
             valetBadge();
         }
     };
+
+    private int backlitBy = -1;
+
+    /**
+     * Turn the screen's backlight down by `percent` from the brightness set in Android (0 = back to
+     * Android's own), while the dashboard shows. False when it can't (Android's brightness unreadable).
+     * The screensaver's own dark screen is left alone.
+     */
+    private boolean backlight(int percent) {
+        if (percent <= 0 && backlitBy == 0) return true;
+        if (Extras.darkScreen()) return true;
+        android.view.WindowManager.LayoutParams lp = getWindow().getAttributes();
+        if (percent <= 0) {
+            lp.screenBrightness = android.view.WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
+        } else {
+            int sys;
+            try {
+                sys = android.provider.Settings.System.getInt(getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS);
+            } catch (Exception e) {
+                return false;
+            }
+            lp.screenBrightness = Math.max(0.02f, sys / 255f * (100 - percent) / 100f);
+        }
+        getWindow().setAttributes(lp);
+        backlitBy = Math.max(0, percent);
+        return true;
+    }
 
     // ------------------------------------------------------------------ night-drive mode and valet badge
 
@@ -814,6 +858,19 @@ public class HomeActivity extends Activity implements Cards.Host {
                 .putExtra("android.speech.extra.PREFER_OFFLINE", !Player.online(this) && Features.on(prefs, "offlineVoice"))
                 // understand both: Hindi with English words, or English with Hindi words
                 .putExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{"hi-IN".equals(lang) ? "en-IN" : "hi-IN"});
+        if (Listen.can(this)) {   // in a small pill, the dashboard staying in view
+            Listen.start(this, i, map);
+            return;
+        }
+        // the first time, ask for the microphone, then listen (in the pill if it was allowed)
+        if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) != android.content.pm.PackageManager.PERMISSION_GRANTED
+                && !"yes".equals(prefs.str("micAsked", ""))) {
+            prefs.put("micAsked", "yes");
+            micFor = map;
+            micWaiting = true;
+            requestPermissions(new String[]{android.Manifest.permission.RECORD_AUDIO}, MIC_ASK);
+            return;
+        }
         try {
             listening = map;
             listeningAny = true;
@@ -827,6 +884,12 @@ public class HomeActivity extends Activity implements Cards.Host {
     }
 
     private boolean listeningAny;
+    /** The next words heard are a reply to the last message (HomeVoice.reply). */
+    boolean replying;
+    private static final int MIC_ASK = 5;
+    /** Voice was asked for while Android asked about the microphone: listen once it answers. */
+    private MapCard micFor;
+    private boolean micWaiting;
 
     @Override
     protected void onActivityResult(int code, int result, Intent data) {
@@ -942,8 +1005,25 @@ public class HomeActivity extends Activity implements Cards.Host {
     /** The owner entered the valet PIN: Settings and box menus open until Settings is closed. */
     boolean ownerUnlocked;
 
+    /** The owner said a passenger is using the screen: Settings open while moving until it is closed. */
+    private boolean passenger;
+
     void openSettings() {
         if (settingsView != null) return;
+        if (Features.on(prefs, "parkedSettings") && !passenger && ChildLock.moving()) {
+            new android.app.AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+                    .setTitle(Hindi.t("Settings open when the car is stopped"))
+                    .setMessage(Hindi.t("Changing settings while driving takes your eyes off the road."))
+                    .setPositiveButton(Hindi.t("OK"), null)
+                    .setNegativeButton(Hindi.t("I'm a passenger"), new android.content.DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(android.content.DialogInterface d, int w) {
+                            passenger = true;
+                            openSettings();
+                        }
+                    }).show();
+            return;
+        }
         if (Valet.on(prefs) && !ownerUnlocked) {
             Valet.unlock(this, prefs, new Runnable() {
                 @Override
@@ -1000,6 +1080,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         root.removeView(settingsView);
         settingsView = null;
         ownerUnlocked = false;
+        passenger = false;
         hub.notifyIfChanged(true);
     }
 
@@ -1148,6 +1229,8 @@ public class HomeActivity extends Activity implements Cards.Host {
         super.onResume();
         visible = true;
         OverMic.hide(getApplicationContext());
+        OverStrip.hide(getApplicationContext());
+        NavCard.update(this);
         hub.start();
         Extras.resumed(this);
         Reports.maybeSend(versionName());
@@ -1165,7 +1248,9 @@ public class HomeActivity extends Activity implements Cards.Host {
     private final Runnable chores = new Runnable() {
         @Override
         public void run() {
-            if (visible) Chores.summary(HomeActivity.this);   // after the weather has had time to arrive
+            if (!visible) return;
+            Chores.summary(HomeActivity.this);   // after the weather has had time to arrive
+            Hints.maybe(HomeActivity.this);
         }
     };
 
@@ -1189,12 +1274,22 @@ public class HomeActivity extends Activity implements Cards.Host {
     @Override
     protected void onPause() {
         visible = false;
+        Listen.stop(this);
         hub.stop();
         super.onPause();
     }
 
     @Override
     public void onRequestPermissionsResult(int code, String[] perms, int[] results) {
+        if (code == MIC_ASK) {
+            if (micWaiting) {
+                micWaiting = false;
+                MapCard m = micFor;
+                micFor = null;
+                voiceSearch(m);
+            }
+            return;
+        }
         Drive.start(this);
         hub.stop();
         hub.start();

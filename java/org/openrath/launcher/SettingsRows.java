@@ -16,7 +16,7 @@ final class SettingsRows {
 
     private static String contentName(String c) {
         int i = java.util.Arrays.asList(Prefs.CONTENTS).indexOf(c);
-        return i < 0 ? c : Prefs.CONTENT_NAMES[i];
+        return i >= 0 ? Prefs.CONTENT_NAMES[i] : c.startsWith("widget") ? "Widget from another app" : c;
     }
 
     /** A list's names in the owner's language, for a dialog. */
@@ -286,6 +286,25 @@ final class SettingsRows {
                                 a.prefs.put("tempUnit", vals[w][1]);
                                 a.build();
                                 a.hub.refreshWeather();
+                            }
+                        }).setNegativeButton(Hindi.t("Cancel"), null).show();
+            }
+        }));
+        r.add(new SettingsView.Row(g, "Country, for money and holidays", Money.name(Money.country) + "  ·  " + Money.symbol(Money.country).trim(), new Runnable() {
+            @Override
+            public void run() {
+                final java.util.List<String> codes = new java.util.ArrayList<>(java.util.Arrays.asList(Money.COUNTRIES));
+                if (!codes.contains(Money.country)) codes.add(0, Money.country);
+                String[] names = new String[codes.size()];
+                for (int i = 0; i < names.length; i++)
+                    names[i] = (codes.get(i).equals(Money.country) ? "✓  " : "     ") + Money.name(codes.get(i)) + "  ·  " + Money.symbol(codes.get(i)).trim();
+                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Country"))
+                        .setItems(names, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface d, int w) {
+                                a.prefs.put("country", codes.get(w));
+                                Money.load(a.prefs);
+                                a.build();
                             }
                         }).setNegativeButton(Hindi.t("Cancel"), null).show();
             }
@@ -582,7 +601,7 @@ final class SettingsRows {
             @Override
             public void run() {
                 if (a.hub.xt == null || !a.hub.xt.ready()) {
-                    Toast.makeText(a, Hindi.t("Topway's radio service isn't connected; only the MCU link can be tried"), Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.t("Topway's radio service isn't connected; only the straight link to the radio chip can be tried"), Toast.LENGTH_LONG).show();
                 }
                 Fm.test(a, a.prefs, a.hub.xt != null && a.hub.xt.ready() ? a.hub.xt : null, a.hub.fm, false);
             }
@@ -942,6 +961,12 @@ final class SettingsRows {
 
         // ---- Help
         g = "Help";
+        r.add(new SettingsView.Row(g, "Hidden shortcuts", "what holding a box or a button does", new Runnable() {
+            @Override
+            public void run() {
+                Hints.list(a);
+            }
+        }));
         r.add(new SettingsView.Row(g, "Reset GPS", "if it takes long to find where you are", new Runnable() {
             @Override
             public void run() {

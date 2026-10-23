@@ -23,6 +23,10 @@ final class Eq {
     private static int ownSession;
     static String status = "";
 
+    /** What the equalizer reaches, said when it opens: many units and music apps keep their sound to themselves. */
+    static final String REACH = "Always works on OpenRath's own music. Other music apps hear it only when this unit allows that; "
+            + "if they sound the same, use the unit's own EQ app.";
+
     /** The five band gains in dB for the chosen preset or the custom settings. */
     static int[] gains(Prefs p) {
         String preset = p.str("eqPreset", "Flat");

@@ -27,8 +27,29 @@ final class ChildLock {
         return s;
     }
 
+    /** When a fresh reading last said the car was moving. */
+    private static volatile long movingSeen;
+
+    /** How long a car last seen moving still counts as moving with no fresh speed (a tunnel, GPS lost). */
+    static final long LOST_MS = 10 * 60 * 1000;
+
     static boolean moving() {
-        return Drive.kmhNow > 8 && System.currentTimeMillis() - Drive.fixAt < 10000;
+        long now = System.currentTimeMillis();
+        int obd = Obd.speedNow();
+        boolean m = moving(Drive.kmhNow, Drive.fixAt, obd, now, movingSeen);
+        if (m && (obd >= 0 || now - Drive.fixAt < 10000)) movingSeen = now;
+        return m;
+    }
+
+    /**
+     * Whether the car moves: the engine's own speed when an OBD-II adapter reports it, else a GPS fix
+     * under 10 seconds old. With neither, a car seen moving in the last 10 minutes still counts as
+     * moving, so losing GPS in a tunnel or a garage doesn't unlock the locks. Pure, for the tests.
+     */
+    static boolean moving(float gpsKmh, long fixAt, int obdKmh, long now, long seenMoving) {
+        if (obdKmh >= 0) return obdKmh > 8;
+        if (now - fixAt < 10000) return gpsKmh > 8;
+        return seenMoving > 0 && now - seenMoving < LOST_MS;
     }
 
     static boolean blocked(Prefs p, String pkg) {

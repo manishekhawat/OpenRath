@@ -16,7 +16,7 @@ import java.util.Map;
 final class Hindi {
 
     /** One list per resource file: Settings, then the dashboard and the rest of the app. */
-    static final String[] ARRAYS = {"ui_strings", "ui_home", "ui_cards", "ui_cab", "ui_driving", "ui_extras"};
+    static final String[] ARRAYS = {"ui_strings", "ui_home", "ui_cards", "ui_cab", "ui_driving", "ui_extras", "ui_more"};
 
     private static Map<String, String> words;
     static boolean on;
@@ -35,6 +35,7 @@ final class Hindi {
 
     /** Called when Settings opens: reads the words once, when Hindi is chosen. */
     static void load(Context c, Prefs p) {
+        Money.load(p);
         on = "hi".equals(lang(p));
         if (!on || words != null) return;
         words = new HashMap<>();
@@ -56,15 +57,15 @@ final class Hindi {
     }
 
     static String t(String s) {
-        return t(words, on, s);
+        return Money.shown(t(words, on, s));
     }
 
     /** Text with numbers or names in it: the English format ("Toll in %1$s km") is what gets translated. */
     static String f(String format, Object... args) {
         try {
-            return String.format(Locale.US, t(format), args);
+            return Money.shown(String.format(Locale.US, t(words, on, format), args));
         } catch (Exception e) {
-            return String.format(Locale.US, format, args);
+            return Money.shown(String.format(Locale.US, format, args));
         }
     }
 

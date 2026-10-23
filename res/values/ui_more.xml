@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The words of the driving helpers added after 1.43: next turn from navigation apps, the call screen,
+     contacts, music browsing and the safety checks. Translations go in values-<language>/ui_more.xml. -->
+<resources>
+    <string name="ui_more_next_turn_card_hidden_until_the_next_trip" formatted="false">Next-turn card hidden until the next trip</string>
+    <string name="ui_more_nothing_playing" formatted="false">Nothing playing</string>
+    <string name="ui_more_this_needs_display_over_other_apps_for_openr" formatted="false">This needs \"Display over other apps\" for OpenRath. Allow it now?</string>
+    <string name="ui_more_next_turn_from_your_navigation_app" formatted="false">Next turn from your navigation app</string>
+    <string name="ui_more_mini_strip_over_other_apps" formatted="false">Mini strip over other apps</string>
+    <string name="ui_more_google_maps_waze_osmand_and_others_the_next_" formatted="false">Google Maps, Waze, OsmAnd and others: the next turn, its distance and arrow in a card on the dashboard</string>
+    <string name="ui_more_the_next_turn_and_what_s_playing_with_play_p" formatted="false">The next turn and what\'s playing, with play, pause and skip, along the bottom while another app is open</string>
+    <string name="ui_more_settings_only_when_stopped" formatted="false">Settings only when stopped</string>
+    <string name="ui_more_settings_and_their_keyboard_open_when_the_ca" formatted="false">Settings and their keyboard open when the car is stopped; a passenger can still open them</string>
+    <string name="ui_more_settings_open_when_the_car_is_stopped" formatted="false">Settings open when the car is stopped</string>
+    <string name="ui_more_changing_settings_while_driving_takes_your_e" formatted="false">Changing settings while driving takes your eyes off the road.</string>
+    <string name="ui_more_i_m_a_passenger" formatted="false">I\'m a passenger</string>
+    <string name="ui_more_listening" formatted="false">Listening…</string>
+    <string name="ui_more_didn_t_catch_that" formatted="false">Didn\'t catch that</string>
+    <string name="ui_more_voice_isn_t_available_right_now" formatted="false">Voice isn\'t available right now</string>
+    <string name="ui_more_call_screen_over_other_apps" formatted="false">Call screen over other apps</string>
+    <string name="ui_more_who_is_calling_with_big_answer_and_end_butto" formatted="false">Who is calling, with big Answer and End buttons, on top of whatever app is open</string>
+    <string name="ui_more_calling_you" formatted="false">Calling you</string>
+    <string name="ui_more_on_a_call" formatted="false">On a call</string>
+    <string name="ui_more_contacts" formatted="false">Contacts</string>
+    <string name="ui_more_no_contacts_on_the_unit_yet_pair_your_phone_" formatted="false">No contacts on the unit yet. Pair your phone and allow it to share contacts.</string>
+    <string name="ui_more_the_stereo_isn_t_ready" formatted="false">the stereo isn\'t ready</string>
+    <string name="ui_more_there_s_no_message_to_reply_to" formatted="false">There\'s no message to reply to</string>
+    <string name="ui_more_reply_to_1_s" formatted="false">Reply to %1$s</string>
+    <string name="ui_more_send" formatted="false">Send</string>
+    <string name="ui_more_reply_sent" formatted="false">Reply sent</string>
+    <string name="ui_more_the_reply_couldn_t_be_sent" formatted="false">The reply couldn\'t be sent</string>
+    <string name="ui_more_reply" formatted="false">Reply</string>
+    <string name="ui_more_browse_1_s" formatted="false">Browse %1$s</string>
+    <string name="ui_more_up_next" formatted="false">Up next</string>
+    <string name="ui_more_auto_online_radio_with_internet_else_the_rad" formatted="false">Auto: online radio with internet, else the radio app</string>
+    <string name="ui_more_auto_the_music_app_with_internet_else_music_" formatted="false">Auto: the music app with internet, else music files</string>
+    <string name="ui_more_online_radio" formatted="false">Online radio</string>
+    <string name="ui_more_music_files" formatted="false">Music files</string>
+    <string name="ui_more_radio_app" formatted="false">Radio app</string>
+    <string name="ui_more_music_app" formatted="false">Music app</string>
+    <string name="ui_more_1_s_doesn_t_share_its_library_with_other_app" formatted="false">%1$s doesn\'t share its library with other apps. Opening it instead.</string>
+    <string name="ui_more_nothing_here" formatted="false">Nothing here</string>
+    <string name="ui_more_the_music_app_didn_t_answer" formatted="false">The music app didn\'t answer</string>
+    <string name="ui_more_close" formatted="false">Close</string>
+    <string name="ui_more_1_s_s_phone" formatted="false">%1$s\'s phone…</string>
+    <string name="ui_more_1_s_s_phone2" formatted="false">%1$s\'s phone</string>
+    <string name="ui_more_no_paired_phones_yet_pair_your_phone_in_the_" formatted="false">No paired phones yet. Pair your phone in the Bluetooth app.</string>
+    <string name="ui_more_1_s_s_settings_load_when_this_phone_connects" formatted="false">%1$s\'s settings load when this phone connects</string>
+    <string name="ui_more_open_the_projection_app_when_the_phone_conne" formatted="false">Open the projection app when the phone connects</string>
+    <string name="ui_more_your_carplay_or_android_auto_app_opens_by_it" formatted="false">Your CarPlay or Android Auto app opens by itself when a phone connects by Bluetooth</string>
+    <string name="ui_more_volume_for_each_music_app" formatted="false">Volume for each music app</string>
+    <string name="ui_more_each_music_app_fm_and_online_radio_come_back" formatted="false">Each music app, FM and online radio come back at the volume they last played at</string>
+    <string name="ui_more_most_used" formatted="false">Most used</string>
+    <string name="ui_more_a_to_z" formatted="false">A to Z</string>
+    <string name="ui_more_hide_from_the_list" formatted="false">Hide from the list</string>
+    <string name="ui_more_show_in_the_list" formatted="false">Show in the list</string>
+    <string name="ui_more_hidden_search_for_it_to_find_it_again" formatted="false">Hidden. Search for it to find it again.</string>
+    <string name="ui_more_straight_to_the_radio_chip_no_radio_service" formatted="false">Straight to the radio chip (no radio service)</string>
+    <string name="ui_more_topway_s_radio_service_isn_t_connected_only_" formatted="false">Topway\'s radio service isn\'t connected; only the straight link to the radio chip can be tried</string>
+    <string name="ui_more_needs_a_small_plug_in_obd_adapter_bluetooth_" formatted="false">Needs a small plug-in OBD adapter (Bluetooth or Wi-Fi, often sold as ELM327)</string>
+    <string name="ui_more_checks_once_a_day_for_a_new_openrath_makes_s" formatted="false">Checks once a day for a new OpenRath, makes sure the download is genuine and offers it only when parked</string>
+    <string name="ui_more_plug_the_obd_adapter_often_sold_as_elm327_in" formatted="false">Plug the OBD adapter (often sold as ELM327) into the socket under the steering wheel, switch the ignition on, and pair it in the unit\'s Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here.</string>
+    <string name="ui_more_country_for_money_and_holidays" formatted="false">Country, for money and holidays</string>
+    <string name="ui_more_country" formatted="false">Country</string>
+    <string name="ui_more_tip" formatted="false">Tip</string>
+    <string name="ui_more_hidden_shortcuts" formatted="false">Hidden shortcuts</string>
+    <string name="ui_more_what_holding_a_box_or_a_button_does" formatted="false">what holding a box or a button does</string>
+    <string name="ui_more_hold_any_box_to_change_what_it_shows_or_to_m" formatted="false">Hold any box to change what it shows, or to move it</string>
+    <string name="ui_more_hold_a_button_in_the_bar_to_choose_which_app" formatted="false">Hold a button in the bar to choose which app it opens</string>
+    <string name="ui_more_hold_the_apps_button_to_open_settings" formatted="false">Hold the Apps button to open Settings</string>
+    <string name="ui_more_hold_the_navigation_button_for_your_saved_pl" formatted="false">Hold the Navigation button for your saved places</string>
+    <string name="ui_more_tap_the_music_or_radio_box_s_name_for_source" formatted="false">Tap the music or radio box\'s name for sources, playlists and what\'s up next</string>
+    <string name="ui_more_hold_an_app_in_the_app_list_to_pin_it_to_the" formatted="false">Hold an app in the app list to pin it to the top or hide it</string>
+    <string name="ui_more_hold_the_next_turn_card_to_hide_it_for_this_" formatted="false">Hold the next-turn card to hide it for this trip</string>
+    <string name="ui_more_say_reply_after_a_message_is_read_out_to_ans" formatted="false">Say \"reply\" after a message is read out to answer it by voice</string>
+    <string name="ui_more_seen_once_not_confirmed_yet_an_early_warning" formatted="false">Seen once, not confirmed yet (an early warning):</string>
+    <string name="ui_more_live_engine_readings" formatted="false">Live engine readings</string>
+    <string name="ui_more_when_the_adapter_is_connected" formatted="false">when the adapter is connected</string>
+    <string name="ui_more_engine_speed_1_s_rpm" formatted="false">Engine speed: %1$s rpm</string>
+    <string name="ui_more_coolant_1_s_c" formatted="false">Coolant: %1$s°C</string>
+    <string name="ui_more_intake_air_1_s_c" formatted="false">Intake air: %1$s°C</string>
+    <string name="ui_more_engine_load_1_s" formatted="false">Engine load: %1$s%%</string>
+    <string name="ui_more_throttle_1_s" formatted="false">Throttle: %1$s%%</string>
+    <string name="ui_more_manifold_pressure_1_s_kpa" formatted="false">Manifold pressure: %1$s kPa</string>
+    <string name="ui_more_air_flow_1_s_g_s_about_2_s_litres_an_hour" formatted="false">Air flow: %1$s g/s (about %2$s litres an hour)</string>
+    <string name="ui_more_fuel_trim_now_1_s" formatted="false">Fuel trim now: %1$s%%</string>
+    <string name="ui_more_fuel_trim_learnt_1_s" formatted="false">Fuel trim learnt: %1$s%%</string>
+    <string name="ui_more_fuel_tank_1_s" formatted="false">Fuel tank: %1$s%%</string>
+    <string name="ui_more_battery_1_s_v" formatted="false">Battery: %1$s V</string>
+    <string name="ui_more_always_works_on_openrath_s_own_music_other_m" formatted="false">Always works on OpenRath\'s own music. Other music apps hear it only when this unit allows that; if they sound the same, use the unit\'s own EQ app.</string>
+    <string-array name="ui_more">
+        <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
+        <item>@string/ui_more_nothing_playing</item>
+        <item>@string/ui_more_this_needs_display_over_other_apps_for_openr</item>
+        <item>@string/ui_more_next_turn_from_your_navigation_app</item>
+        <item>@string/ui_more_mini_strip_over_other_apps</item>
+        <item>@string/ui_more_google_maps_waze_osmand_and_others_the_next_</item>
+        <item>@string/ui_more_the_next_turn_and_what_s_playing_with_play_p</item>
+        <item>@string/ui_more_settings_only_when_stopped</item>
+        <item>@string/ui_more_settings_and_their_keyboard_open_when_the_ca</item>
+        <item>@string/ui_more_settings_open_when_the_car_is_stopped</item>
+        <item>@string/ui_more_changing_settings_while_driving_takes_your_e</item>
+        <item>@string/ui_more_i_m_a_passenger</item>
+        <item>@string/ui_more_listening</item>
+        <item>@string/ui_more_didn_t_catch_that</item>
+        <item>@string/ui_more_voice_isn_t_available_right_now</item>
+        <item>@string/ui_more_call_screen_over_other_apps</item>
+        <item>@string/ui_more_who_is_calling_with_big_answer_and_end_butto</item>
+        <item>@string/ui_more_calling_you</item>
+        <item>@string/ui_more_on_a_call</item>
+        <item>@string/ui_more_contacts</item>
+        <item>@string/ui_more_no_contacts_on_the_unit_yet_pair_your_phone_</item>
+        <item>@string/ui_more_the_stereo_isn_t_ready</item>
+        <item>@string/ui_more_there_s_no_message_to_reply_to</item>
+        <item>@string/ui_more_reply_to_1_s</item>
+        <item>@string/ui_more_send</item>
+        <item>@string/ui_more_reply_sent</item>
+        <item>@string/ui_more_the_reply_couldn_t_be_sent</item>
+        <item>@string/ui_more_reply</item>
+        <item>@string/ui_more_browse_1_s</item>
+        <item>@string/ui_more_up_next</item>
+        <item>@string/ui_more_auto_online_radio_with_internet_else_the_rad</item>
+        <item>@string/ui_more_auto_the_music_app_with_internet_else_music_</item>
+        <item>@string/ui_more_online_radio</item>
+        <item>@string/ui_more_music_files</item>
+        <item>@string/ui_more_radio_app</item>
+        <item>@string/ui_more_music_app</item>
+        <item>@string/ui_more_1_s_doesn_t_share_its_library_with_other_app</item>
+        <item>@string/ui_more_nothing_here</item>
+        <item>@string/ui_more_the_music_app_didn_t_answer</item>
+        <item>@string/ui_more_close</item>
+        <item>@string/ui_more_1_s_s_phone</item>
+        <item>@string/ui_more_1_s_s_phone2</item>
+        <item>@string/ui_more_no_paired_phones_yet_pair_your_phone_in_the_</item>
+        <item>@string/ui_more_1_s_s_settings_load_when_this_phone_connects</item>
+        <item>@string/ui_more_open_the_projection_app_when_the_phone_conne</item>
+        <item>@string/ui_more_your_carplay_or_android_auto_app_opens_by_it</item>
+        <item>@string/ui_more_volume_for_each_music_app</item>
+        <item>@string/ui_more_each_music_app_fm_and_online_radio_come_back</item>
+        <item>@string/ui_more_most_used</item>
+        <item>@string/ui_more_a_to_z</item>
+        <item>@string/ui_more_hide_from_the_list</item>
+        <item>@string/ui_more_show_in_the_list</item>
+        <item>@string/ui_more_hidden_search_for_it_to_find_it_again</item>
+        <item>@string/ui_more_straight_to_the_radio_chip_no_radio_service</item>
+        <item>@string/ui_more_topway_s_radio_service_isn_t_connected_only_</item>
+        <item>@string/ui_more_needs_a_small_plug_in_obd_adapter_bluetooth_</item>
+        <item>@string/ui_more_checks_once_a_day_for_a_new_openrath_makes_s</item>
+        <item>@string/ui_more_plug_the_obd_adapter_often_sold_as_elm327_in</item>
+        <item>@string/ui_more_country_for_money_and_holidays</item>
+        <item>@string/ui_more_country</item>
+        <item>@string/ui_more_tip</item>
+        <item>@string/ui_more_hidden_shortcuts</item>
+        <item>@string/ui_more_what_holding_a_box_or_a_button_does</item>
+        <item>@string/ui_more_hold_any_box_to_change_what_it_shows_or_to_m</item>
+        <item>@string/ui_more_hold_a_button_in_the_bar_to_choose_which_app</item>
+        <item>@string/ui_more_hold_the_apps_button_to_open_settings</item>
+        <item>@string/ui_more_hold_the_navigation_button_for_your_saved_pl</item>
+        <item>@string/ui_more_tap_the_music_or_radio_box_s_name_for_source</item>
+        <item>@string/ui_more_hold_an_app_in_the_app_list_to_pin_it_to_the</item>
+        <item>@string/ui_more_hold_the_next_turn_card_to_hide_it_for_this_</item>
+        <item>@string/ui_more_say_reply_after_a_message_is_read_out_to_ans</item>
+        <item>@string/ui_more_seen_once_not_confirmed_yet_an_early_warning</item>
+        <item>@string/ui_more_live_engine_readings</item>
+        <item>@string/ui_more_when_the_adapter_is_connected</item>
+        <item>@string/ui_more_engine_speed_1_s_rpm</item>
+        <item>@string/ui_more_coolant_1_s_c</item>
+        <item>@string/ui_more_intake_air_1_s_c</item>
+        <item>@string/ui_more_engine_load_1_s</item>
+        <item>@string/ui_more_throttle_1_s</item>
+        <item>@string/ui_more_manifold_pressure_1_s_kpa</item>
+        <item>@string/ui_more_air_flow_1_s_g_s_about_2_s_litres_an_hour</item>
+        <item>@string/ui_more_fuel_trim_now_1_s</item>
+        <item>@string/ui_more_fuel_trim_learnt_1_s</item>
+        <item>@string/ui_more_fuel_tank_1_s</item>
+        <item>@string/ui_more_battery_1_s_v</item>
+        <item>@string/ui_more_always_works_on_openrath_s_own_music_other_m</item>
+    </string-array>
+</resources>

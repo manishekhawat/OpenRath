@@ -46,6 +46,90 @@ final class Resume {
         return false;
     }
 
+    /** Tries at carrying on: 2 seconds apart, so up to 10 seconds for a slow music app or radio. */
+    static final int TRIES = 5;
+
+    /** Navigation is opened again when it was guiding up to this long before the switch-off. */
+    static final long NAV_MS = 30 * 60 * 1000;
+
+    /** Whether to open the navigation app again: it guided within NAV_MS. Pure, for the tests. */
+    static boolean navDue(String pkg, long guidedAt, long now) {
+        return pkg != null && !pkg.isEmpty() && guidedAt > 0 && now - guidedAt >= 0 && now - guidedAt < NAV_MS;
+    }
+
+    /**
+     * Play the music app that was playing: through its media session when it has one up, else with
+     * a play button press sent to that app alone. False while it has no session yet (try again),
+     * unless this is the last try.
+     */
+    static boolean playApp(Context c, String pkg, boolean last) {
+        try {
+            android.media.session.MediaSessionManager m = (android.media.session.MediaSessionManager) c.getSystemService(Context.MEDIA_SESSION_SERVICE);
+            for (android.media.session.MediaController mc : m.getActiveSessions(new android.content.ComponentName(c, MediaListener.class))) {
+                if (pkg.equals(mc.getPackageName())) {
+                    mc.getTransportControls().play();
+                    return true;
+                }
+            }
+        } catch (Throwable e) {
+            // no notification access: the button press below
+        }
+        if (!last) return false;
+        long t = SystemClock.uptimeMillis();
+        for (int action : new int[]{android.view.KeyEvent.ACTION_DOWN, android.view.KeyEvent.ACTION_UP}) {
+            Intent i = new Intent(Intent.ACTION_MEDIA_BUTTON).setPackage(pkg)
+                    .putExtra(Intent.EXTRA_KEY_EVENT, new android.view.KeyEvent(t, t, action, android.view.KeyEvent.KEYCODE_MEDIA_PLAY, 0));
+            c.sendBroadcast(i);
+        }
+        return true;
+    }
+
+    /**
+     * Volume per source: each music app (and OpenRath's own player) keeps the volume it was last
+     * played at, since apps and FM play at very different loudness. Checked every few seconds by the
+     * trip service while switched on.
+     */
+    static void sourceVolume(Context c, Prefs p) {
+        String src = playing(c);
+        if (src.isEmpty()) return;
+        try {
+            AudioManager am = (AudioManager) c.getSystemService(Context.AUDIO_SERVICE);
+            int now = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+            String last = p.str("volSrc", "");
+            int set = volumeFor(src, last, now, p.num("vol:" + src, -1));
+            if (!src.equals(last)) p.put("volSrc", src);
+            if (set >= 0) am.setStreamVolume(AudioManager.STREAM_MUSIC, Math.min(set, am.getStreamMaxVolume(AudioManager.STREAM_MUSIC)), 0);
+            else if (p.num("vol:" + src, -1) != now) p.put("vol:" + src, String.valueOf(now));
+        } catch (Throwable e) {
+            Diag.note("volume per source", e);
+        }
+    }
+
+    /**
+     * The volume to set when the source is `src` (it was `last` a moment ago, at volume `now`), or -1
+     * to leave it: only on a change of source, to the volume the new source last had. Pure, for the tests.
+     */
+    static int volumeFor(String src, String last, int now, int saved) {
+        if (src.equals(last) || saved < 0 || saved == now) return -1;
+        return saved;
+    }
+
+    /** What plays now: the music app's package, OpenRath's own "web" or "files", or "" for nothing. */
+    static String playing(Context c) {
+        if (Player.playing && Player.mode != null) return Player.mode;
+        try {
+            android.media.session.MediaSessionManager m = (android.media.session.MediaSessionManager) c.getSystemService(Context.MEDIA_SESSION_SERVICE);
+            for (android.media.session.MediaController mc : m.getActiveSessions(new android.content.ComponentName(c, MediaListener.class))) {
+                android.media.session.PlaybackState st = mc.getPlaybackState();
+                if (st != null && st.getState() == android.media.session.PlaybackState.STATE_PLAYING && !mc.getPackageName().equals(c.getPackageName()))
+                    return mc.getPackageName();
+            }
+        } catch (Throwable ignored) {
+            // no notification access: nothing known
+        }
+        return "";
+    }
+
     static void restoreVolume(Context c, Prefs p) {
         int v = p.num("resumeVol", -1);
         if (v < 0) return;

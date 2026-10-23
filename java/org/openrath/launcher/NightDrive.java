@@ -93,13 +93,21 @@ final class NightDrive extends View {
         paint.setLetterSpacing(0);
         cv.drawText(Times.now("h:mm"), cx, area.top + size * 0.35f, paint);
         paint.setTextSize(Math.max(12, size * 0.09f));
-        cv.drawText(Hindi.t("Tap here to leave night-drive mode"), cx, area.bottom - size * 0.12f, paint);
+        cv.drawText(Hindi.t("Hold here to leave night-drive mode"), cx, area.bottom - size * 0.12f, paint);
     }
+
+    /** Held for this long to leave: a brush of the screen on a bump doesn't end the mode for the drive. */
+    static final long HOLD_MS = 600;
+    private long downAt;
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         if (!hole.isEmpty() && hole.contains((int) e.getX(), (int) e.getY())) return false;   // the map's
-        if (e.getAction() == MotionEvent.ACTION_UP) closed.closed();
+        if (e.getActionMasked() == MotionEvent.ACTION_DOWN) downAt = e.getEventTime();
+        else if (e.getActionMasked() == MotionEvent.ACTION_UP && downAt > 0 && e.getEventTime() - downAt >= HOLD_MS) {
+            downAt = 0;
+            closed.closed();
+        }
         return true;
     }
 }

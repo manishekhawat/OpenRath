@@ -55,6 +55,9 @@ final class Voice {
         m = Pattern.compile("(\\d{2,3}\\.\\d) ?" + RADIO).matcher(s);
         if (m.find()) return c("fm", freq(m.group(1)));
 
+        // answering the last message: "reply", "reply to the message", "जवाब दो"
+        if (has(s, "^(reply|jawab do|जवाब दो|जवाब भेजो)( to (the |that )?message)?$")) return c("reply", "");
+
         // calls: "call mom", "phone 98450 12345", "mummy ko call karo", "पापा को फोन लगाओ"
         m = Pattern.compile("^(call|phone|dial|ring)( to)? (.+)$").matcher(s);
         if (m.find()) return c("call", strip(m.group(3)));

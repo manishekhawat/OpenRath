@@ -169,7 +169,32 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         screen = new Resume.Screen();
         android.content.IntentFilter sf = new android.content.IntentFilter(Intent.ACTION_SCREEN_OFF);
         Compat.fromSystem(this, screen, sf);
+        Compat.fromSystem(this, ringing, new android.content.IntentFilter(android.telephony.TelephonyManager.ACTION_PHONE_STATE_CHANGED));
+        handler.postDelayed(volumes, VOLUMES_MS);
     }
+
+    private static final long VOLUMES_MS = 3000;
+
+    /** Whether the screen is on (the stereo awake and in use). */
+    private boolean screenOn() {
+        try {
+            return ((android.os.PowerManager) getSystemService(POWER_SERVICE)).isInteractive();
+        } catch (Throwable e) {
+            return true;
+        }
+    }
+
+    /** Each source's own volume (Resume.sourceVolume), while the screen is on and the feature is. */
+    private final Runnable volumes = new Runnable() {
+        @Override
+        public void run() {
+            if (Features.on(prefs, "sourceVolume") && screenOn()) Resume.sourceVolume(Drive.this, prefs);
+            handler.postDelayed(this, VOLUMES_MS);
+        }
+    };
+
+    /** Calls ringing and ending, for the call screen over other apps. */
+    private final CallScreen.Watch ringing = new CallScreen.Watch();
 
     private Resume.Screen screen;
     private boolean hotWarned;
@@ -291,8 +316,15 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
      * last slow fix) for 5 minutes. stillFrom is when the car stopped, or -1 while it moves.
      */
     static boolean parkedGps(boolean slow, float kmh, float movedM, long stillFrom, long now) {
+        return parkedGps(slow, kmh, movedM, stillFrom, now, false);
+    }
+
+    /** With the screen off (the stereo asleep with the ignition), standing still slows the GPS after 30 seconds. */
+    static final long PARKED_DARK_MS = 30000;
+
+    static boolean parkedGps(boolean slow, float kmh, float movedM, long stillFrom, long now, boolean screenOff) {
         if (kmh >= 3 || slow && movedM > 25) return false;
-        return stillFrom >= 0 && now - stillFrom >= PARKED_MS;
+        return stillFrom >= 0 && now - stillFrom >= (screenOff ? PARKED_DARK_MS : PARKED_MS);
     }
 
     private void foreground() {
@@ -482,7 +514,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         float movedM = last == null ? 0 : last.distanceTo(l);
         if (kmh >= 3 || slowGps && movedM > 25) stillFrom = -1;
         else if (stillFrom < 0) stillFrom = now;
-        boolean slow = parkedGps(slowGps, kmh, movedM, stillFrom, now);
+        boolean slow = parkedGps(slowGps, kmh, movedM, stillFrom, now, !screenOn());
         if (slow != slowGps) gps(slow);
         last = l;
         lastAt = tick;
@@ -1016,11 +1048,13 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
 
     @Override
     public void onDestroy() {
+        handler.removeCallbacks(volumes);
         save(true);
         if (Features.on(prefs, "coach")) Coach.save(prefs, drives.close(System.currentTimeMillis()));
         Dashcam.stop();
         try {
             unregisterReceiver(screen);
+            unregisterReceiver(ringing);
         } catch (Throwable ignored) {
             // was not registered
         }

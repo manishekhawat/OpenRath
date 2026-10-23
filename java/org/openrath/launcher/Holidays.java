@@ -64,8 +64,9 @@ final class Holidays {
         return c.get(Calendar.DAY_OF_WEEK);
     }
 
-    /** The next holidays from today, for Settings: "Diwali, Sun 8 Nov". */
+    /** The next holidays from today, for Settings: "Diwali, Sun 8 Nov". None outside India. */
     static List<String> upcoming(Calendar today, int n) {
+        if (!Money.india()) return new ArrayList<>();   // India's list: no use elsewhere
         Calendar t = day(today.get(Calendar.YEAR), today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH));
         List<Day> all = new ArrayList<>(of(t.get(Calendar.YEAR)));
         all.addAll(of(t.get(Calendar.YEAR) + 1));

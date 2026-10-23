@@ -413,6 +413,7 @@ public final class Tests {
         bootArt();
         performanceFixes();
         securityFixes();
+        launcherReview();
         buildFixes();
         finishFixes();
         System.out.println(run + " checks, " + failed + " failed");
@@ -727,6 +728,104 @@ public final class Tests {
         check("reports: no level turns it on", !Features.onAt(r, Features.SIMPLE, false) && !Features.onAt(r, Features.CUSTOM, false));
     }
 
+    /** The fixes from the car launcher review: next turn, safety floor, calls, resume and the rest. */
+    private static void launcherReview() {
+        String[] d = NavTurn.split("300 m", "Turn left onto MG Road");
+        eq("nav: maps distance", "300 m", d[0]);
+        eq("nav: maps instruction", "Turn left onto MG Road", d[1]);
+        d = NavTurn.split("Turn right", "1.2 km");
+        eq("nav: distance second", "1.2 km", d[0]);
+        eq("nav: instruction first", "Turn right", d[1]);
+        d = NavTurn.split("In 200 m, keep left", null);
+        eq("nav: leading distance", "200 m", d[0]);
+        eq("nav: after the distance", "keep left", d[1]);
+        d = NavTurn.split("Head north", "toward Ring Road");
+        eq("nav: no distance", "", d[0]);
+        eq("nav: both lines", "Head north  ·  toward Ring Road", d[1]);
+        check("nav: 500 ft", NavTurn.looksLikeDistance("500 ft"));
+        check("nav: not a road number", !NavTurn.looksLikeDistance("12th Main Road towards the airport"));
+        check("nav: maps is navigation", NavTurn.guidance("com.google.android.apps.maps", null, true));
+        check("nav: waze is navigation", NavTurn.guidance("com.waze", null, true));
+        check("nav: maps' other notices are not", !NavTurn.guidance("com.google.android.apps.maps", null, false));
+        check("nav: music is not", !NavTurn.guidance("com.spotify.music", "transport", true));
+        check("nav: any app saying navigation", NavTurn.guidance("org.example.nav", "navigation", false));
+
+        long now = 1_000_000_000L;
+        check("moving: fresh GPS", ChildLock.moving(40, now - 2000, -1, now, 0));
+        check("moving: fresh GPS stopped", !ChildLock.moving(3, now - 2000, -1, now, now - 60000));
+        check("moving: OBD beats GPS", !ChildLock.moving(40, now - 2000, 0, now, now));
+        check("moving: OBD alone", ChildLock.moving(0, 0, 30, now, 0));
+        check("moving: GPS lost in a tunnel stays locked", ChildLock.moving(40, now - 60000, -1, now, now - 60000));
+        check("moving: GPS lost long after", !ChildLock.moving(40, now - ChildLock.LOST_MS - 5000, -1, now, now - ChildLock.LOST_MS - 5000));
+        check("moving: never seen moving", !ChildLock.moving(0, 0, -1, now, 0));
+
+        Voice.Command r = Voice.parse("reply");
+        eq("voice: reply", "reply", r == null ? null : r.kind);
+        r = Voice.parse("जवाब दो");
+        eq("voice: reply in Hindi", "reply", r == null ? null : r.kind);
+        r = Voice.parse("reply to the message");
+        eq("voice: reply to the message", "reply", r == null ? null : r.kind);
+        eq("contacts: same name", 4, Contacts.match("Priya Sharma", "priya sharma"));
+        eq("contacts: first name", 3, Contacts.match("Priya Sharma", "priya"));
+        eq("contacts: no match", 0, Contacts.match("Priya Sharma", "rahul"));
+        eq("contacts: nothing said", 0, Contacts.match("Priya", ""));
+
+        check("resume nav: guided 5 min ago", Resume.navDue("com.waze", now - 5 * 60000, now));
+        check("resume nav: an hour ago", !Resume.navDue("com.waze", now - 60 * 60000, now));
+        check("resume nav: arrived", !Resume.navDue("com.waze", 0, now));
+        check("resume nav: no app", !Resume.navDue("", now - 60000, now));
+
+        List<Integer> many = new java.util.ArrayList<>();
+        for (int i = 0; i < 30; i++) many.add(i);
+        eq("browse: moving keeps 12", 12, Browse.trim(many, true, Browse.MOVING_ROWS).size());
+        eq("browse: stopped keeps all", 30, Browse.trim(many, false, Browse.MOVING_ROWS).size());
+        eq("volume: same source left alone", -1, Resume.volumeFor("com.spotify.music", "com.spotify.music", 8, 12));
+        eq("volume: new source gets its own", 12, Resume.volumeFor("com.spotify.music", "web", 8, 12));
+        eq("volume: never played before", -1, Resume.volumeFor("com.spotify.music", "web", 8, -1));
+        eq("volume: already right", -1, Resume.volumeFor("files", "web", 8, 8));
+        java.util.List<String> drivers = Arrays.asList("Asha", "Ravi");
+        check("phone: switch to the phone's driver", PhoneLink.switchDriver("Ravi", "Asha", drivers));
+        check("phone: already driving", !PhoneLink.switchDriver("Asha", "Asha", drivers));
+        check("phone: unknown phone", !PhoneLink.switchDriver("", "Asha", drivers));
+        String uses = AppsActivity.bump(AppsActivity.bump(AppsActivity.bump("", "maps"), "music"), "maps");
+        check("apps: counted", AppsActivity.counts(uses).get("maps") == 2 && AppsActivity.counts(uses).get("music") == 1);
+        check("apps: most used first", uses.startsWith("maps=2"));
+        check("apps: damaged entry skipped", AppsActivity.counts("a=x,b=3,=4").size() == 1);
+        String lots = "";
+        for (int i = 0; i < 70; i++) lots = AppsActivity.bump(lots, "p" + i);
+        check("apps: keeps 60", AppsActivity.counts(lots).size() == 60);
+        eq("money: india", "₹100", Money.shown("₹100", "IN"));
+        eq("money: uk", "£100", Money.shown("₹100", "GB"));
+        eq("money: euro", "€5 a km", Money.shown("₹5 a km", "DE"));
+        eq("money: pakistan", "Rs 100", Money.shown("₹100", "PK"));
+        eq("money: spoken", "dollars", Money.spoken("US"));
+        String was = Money.country;
+        Money.country = "GB";
+        eq("toll text abroad", "Toll plaza in 2 kilometres, about 3 pounds.", Ahead.tollText(2050, 3, ""));
+        check("no Indian holidays abroad", Holidays.upcoming(day(2026, 10, 13, 9, 0), 3).isEmpty());
+        Money.country = was;
+        boolean[] tipsOn = new boolean[Hints.ALL.length];
+        java.util.Arrays.fill(tipsOn, true);
+        eq("tips: first", 0, Hints.pick(0, tipsOn));
+        tipsOn[1] = false;
+        eq("tips: skip a switched-off feature", 2, Hints.pick(1, tipsOn));
+        eq("tips: all shown", -1, Hints.pick(Hints.ALL.length, tipsOn));
+        check("obd: air flow", Math.abs(Obd.extra("0110", "41 10 01 F4") - 5.0f) < 0.01f);
+        check("obd: manifold", Obd.extra("010B", "41 0B 64") == 100);
+        check("obd: throttle", Obd.extra("0111", "41 11 FF") == 100);
+        check("obd: trim lean", Obd.extra("0106", "41 06 90") == 13);
+        check("obd: trim rich", Obd.extra("0107", "41 07 60") == -25);
+        check("obd: no data", Obd.extra("0110", "NO DATA") == Obd.NONE);
+        eq("obd: pending codes", java.util.Arrays.asList("P0301"), Obd.dtcs("47 03 01 00 00 00 00", false, "47"));
+        check("obd: stored parser ignores pending", Obd.dtcs("47 03 01 00 00 00 00", false).isEmpty());
+        check("obd: litres an hour", Math.abs(Obd.litresAnHour(5f) - 1.64f) < 0.01f);
+        eq("widgets: first free", "widget1", HomeDialogs.freeWidget(java.util.Arrays.asList("map", "clock")));
+        eq("widgets: third box", "widget3", HomeDialogs.freeWidget(java.util.Arrays.asList("widget1", "map", "widget2")));
+        for (String[] tip : Hints.ALL) check("tips: feature exists " + tip[1], tip[1].isEmpty() || Features.get(tip[1]) != null);
+        check("phone: removed driver", !PhoneLink.switchDriver("Meera", "Asha", drivers));
+        eq("browse: short list", 3, Browse.trim(many.subList(0, 3), true, Browse.MOVING_ROWS).size());
+    }
+
     private static void levels() {
         int s = 0, f = 0, c = 0, d = 0;
         for (Features.F x : Features.ALL) {
@@ -735,7 +834,7 @@ public final class Tests {
             else if (x.level == Features.CUSTOM) c++;
             else d++;
         }
-        eq("levels: simple count", 16, s);   // "longKeys" registered beside "keys"
+        eq("levels: simple count", 18, s);   // "longKeys" registered beside "keys"; "navTurns" and "parkedSettings" from the launcher review
         eq("levels: custom count", 8, c);
         eq("levels: dev count", 2, d);
         check("levels: full has the most", f > s && f > c);
@@ -1570,6 +1669,9 @@ public final class Tests {
         check("gps: moving again goes fast", !Drive.parkedGps(true, 12, 0, 1000000, 1000000 + Drive.PARKED_MS * 2));
         check("gps: moved without a speed goes fast", !Drive.parkedGps(true, 0, 40, 1000000, 1000000 + Drive.PARKED_MS * 2));
         check("gps: drift while parked stays slow", Drive.parkedGps(true, 0, 8, 1000000, 1000000 + Drive.PARKED_MS * 2));
+        check("gps: screen off and still goes slow sooner", Drive.parkedGps(false, 0, 0, 1000000, 1000000 + Drive.PARKED_DARK_MS, true));
+        check("gps: screen on and still for 30 s stays fast", !Drive.parkedGps(false, 0, 0, 1000000, 1000000 + Drive.PARKED_DARK_MS, false));
+        check("gps: screen off but moving stays fast", !Drive.parkedGps(false, 30, 0, -1, 1000000, true));
 
         // pictures read at about the screen's size
         eq("sample: phone photo on a 1024 x 600 unit", 2, Pics.sampleSize(4000, 3000, 1024, 600));
