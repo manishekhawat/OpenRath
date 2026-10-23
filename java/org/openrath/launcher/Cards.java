@@ -518,7 +518,7 @@ final class Cards {
 
         void size(float s) {
             value.setTextSize(0, 30 * Ui.k * s);
-            label.setTextSize(0, 10 * Ui.k * s);
+            label.setTextSize(0, Math.max(Ui.MIN_TEXT, 10 * s) * Ui.k);
         }
     }
 
@@ -557,11 +557,11 @@ final class Cards {
         void fit(int w, int h) {
             float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
             int m = Ui.px(20 * s);
-            head.setTextSize(0, 11 * Ui.k * s);
+            head.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
             head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(12 * s), 0, 0));
             for (Figure f : figs) f.size(s);
             row.setLayoutParams(at(-1, -2, Gravity.CENTER_VERTICAL, m / 2, Ui.px(4 * s), m / 2, 0));
-            foot.setTextSize(0, 11 * Ui.k * s);
+            foot.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
             foot.setLayoutParams(at(-1, -2, Gravity.BOTTOM, m, 0, m, Ui.px(10 * s)));
             // in a tall box the figures get room to grow
             if (h > w * 0.6f) for (Figure f : figs) f.value.setTextSize(0, 38 * Ui.k * s);
@@ -611,7 +611,7 @@ final class Cards {
 
     static final class FuelCard extends FiguresCard {
         FuelCard(Context c) {
-            super(c, "FUEL", "LAST TANK", "AVERAGE", "₹ / KM");
+            super(c, "FUEL", "LAST TANK", "AVERAGE", Money.shown("₹") + " / KM");
         }
 
         @Override
@@ -831,7 +831,7 @@ final class Cards {
         void fit(int w, int h) {
             float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
             int m = Ui.px(16 * s), g = Ui.px(5 * s);
-            head.setTextSize(0, 11 * Ui.k * s);
+            head.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
             head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(10 * s), 0, 0));
             for (TextView p : pads) {
                 p.setTextSize(0, 13 * Ui.k * s);
@@ -840,7 +840,7 @@ final class Cards {
                 ((LinearLayout.LayoutParams) p.getLayoutParams()).setMargins(g, g, g, g);
             }
             grid.setLayoutParams(at(-1, -1, Gravity.TOP, m - g, Ui.px(30 * s), m - g, Ui.px(24 * s)));
-            note.setTextSize(0, 10 * Ui.k * s);
+            note.setTextSize(0, Math.max(Ui.MIN_TEXT, 10 * s) * Ui.k);
             note.setLayoutParams(at(-1, -2, Gravity.BOTTOM, m, 0, m, Ui.px(6 * s)));
         }
 
@@ -899,13 +899,13 @@ final class Cards {
         void fit(int w, int h) {
             float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
             int m = Ui.px(16 * s);
-            head.setTextSize(0, 11 * Ui.k * s);
+            head.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
             head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(10 * s), 0, 0));
             float line = 14 * Ui.k * Math.max(0.8f, Math.min(1.4f, s));
             for (TextView t : lines) t.setTextSize(0, line);
             fitLines = Math.max(1, Math.min(Agenda.MAX, (int) ((h - Ui.px(48 * s)) / (line * 1.35f))));
             col.setLayoutParams(at(-1, -2, Gravity.TOP, m, Ui.px(30 * s), m, 0));
-            note.setTextSize(0, 11 * Ui.k * s);
+            note.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
             note.setLayoutParams(at(-1, -2, Gravity.BOTTOM, m, 0, m, Ui.px(8 * s)));
         }
 

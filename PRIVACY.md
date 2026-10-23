@@ -33,7 +33,7 @@ Each of these can be switched off under **Turn on or off** in its Settings secti
 | Place name for the weather box | BigDataCloud (api.bigdatacloud.net), only when the unit has no built-in geocoder | Position rounded to about 10 m |
 | Speed limits, cameras, toll plazas, petrol pumps | Overpass API (overpass-api.de, OpenStreetMap) | The map area around the car or the route |
 | Map | Esri (server.arcgisonline.com) for the dark map, and tile.openstreetmap.org if Esri's tiles don't load | The map tiles on screen, which shows the area being looked at |
-| Routes | OSRM demo server (router.project-osrm.org) | Start and destination |
+| Routes | OSRM demo server (router.project-osrm.org), and when it is busy or down the OSM Germany route server (routing.openstreetmap.de) | Start and destination |
 | Place search | Photon (photon.komoot.io), and Nominatim (nominatim.openstreetmap.org) if Photon doesn't answer | What was typed or said, and the map centre (Photon only) |
 | Voice search | The unit's speech recogniser, usually Google | The spoken words |
 | Online radio | radio-browser.info, then the radio station itself | The station list request, and the stream |
@@ -73,13 +73,15 @@ Android asks the owner for most of these. Saying no turns off only the features 
 | Call logs | The last calls in the phone box |
 | SMS | Cab SOS, only when you trigger it |
 | Camera | The dashcam, and photos of items left in the car |
+| Microphone (optional) | Listening for a voice command in a small bar on the dashboard. The speech service on the unit turns it into words; OpenRath keeps no recording. Without it, voice uses the speech app's own screen. |
+| Contacts (optional) | Finding someone to call by name in the phone box, and saying who is calling. Read on the unit and never stored or sent. |
 | Calendar (optional) | The calendar box: today's and the next few days' events, read on the unit and never stored |
 | Videos (Android 13 and newer) | The video box |
 | Wi-Fi state | The Wi-Fi icon in the dock |
 | Install and remove apps | Installing a downloaded OpenRath update after you confirm, and Uninstall in the all-apps screen. Android asks you each time. |
-| Display over other apps (optional) | The floating mic button on top of other apps |
+| Display over other apps (optional) | The floating mic button, the mini strip with the next turn and music, and the call screen, on top of other apps |
 | See all apps | The app drawer and picking apps for buttons, which is what a home screen needs |
 | Internet | The services above |
-| Notification access (optional) | What's playing in other apps, and the message ticker |
+| Notification access (optional) | What's playing in other apps, the message ticker and replies to messages, and the next turn from your navigation app |
 | Accessibility (optional) | Steering-wheel buttons while another app is on screen. Only key presses are read. |
 | Start at boot | Resuming the radio or music after switch-on |

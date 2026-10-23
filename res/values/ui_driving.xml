@@ -17,7 +17,7 @@
     <string name="ui_driving_no_gps_position_yet" formatted="false">No GPS position yet</string>
     <string name="ui_driving_this_spot_is_already_marked" formatted="false">This spot is already marked</string>
     <string name="ui_driving_marked_as_a_waterlogging_spot" formatted="false">Marked as a waterlogging spot</string>
-    <string name="ui_driving_tap_here_to_leave_night_drive_mode" formatted="false">Tap here to leave night-drive mode</string>
+    <string name="ui_driving_tap_here_to_leave_night_drive_mode" formatted="false">Hold here to leave night-drive mode</string>
     <string name="ui_driving_not_enough_drives_yet_after_three_or" formatted="false">Not enough drives yet. After three or more drives between the same two places, this shows how long the drive takes depending on when you leave.</string>
     <string name="ui_driving_to_drives_about_km" formatted="false">%1$s to %2$s: %3$s drives, about %4$s km</string>
     <string name="ui_driving_leaving_min_on_average_drive" formatted="false">Leaving %1$s–%2$s: %3$s min on average (%4$s drive)</string>

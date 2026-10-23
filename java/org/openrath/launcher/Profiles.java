@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Driver profiles: each driver keeps their own boxes, theme, volume, sound, alert speed, voice
  * language and message settings. Switching saves the current driver's settings and loads the
- * other's. The fuel log, drives, car setup and service reminders are shared by everyone.
+ * other's, by hand or when the driver's phone connects (PhoneLink). The fuel log, drives, car setup and service reminders are shared by everyone.
  */
 final class Profiles {
 
@@ -120,6 +120,8 @@ final class Profiles {
         for (String s : n) rows.add((s.equals(current(p)) ? "✓  " : "     ") + s);
         rows.add(Hindi.t("Add a driver…"));
         if (!n.isEmpty()) rows.add(Hindi.t("Remove a driver…"));
+        final boolean phones = !current(p).isEmpty() && a instanceof HomeActivity;
+        if (phones) rows.add(Hindi.f("%1$s's phone…", current(p)));
         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Who's driving?"))
                 .setItems(rows.toArray(new String[0]), new DialogInterface.OnClickListener() {
                     @Override
@@ -127,7 +129,8 @@ final class Profiles {
                         if (w < n.size()) {
                             if (!n.get(w).equals(current(p))) switchTo(a, p, n.get(w));
                         } else if (w == n.size()) add(a, p);
-                        else remove(a, p);
+                        else if (w == n.size() + 1 && !n.isEmpty()) remove(a, p);
+                        else if (phones) PhoneLink.choosePhone((HomeActivity) a);
                     }
                 }).setNegativeButton(Hindi.t("Close"), null).show();
     }

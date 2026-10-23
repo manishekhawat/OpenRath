@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hindi for ui_more.xml. Machine-drafted: a native speaker should check it (docs/TRANSLATING.md). -->
+<resources>
+    <string name="ui_more_next_turn_card_hidden_until_the_next_trip" formatted="false">अगला मोड़ कार्ड अगली यात्रा तक छिपा</string>
+    <string name="ui_more_nothing_playing" formatted="false">कुछ नहीं चल रहा</string>
+    <string name="ui_more_this_needs_display_over_other_apps_for_openr" formatted="false">इसके लिए OpenRath को \"दूसरे ऐप्स के ऊपर दिखाएँ\" की अनुमति चाहिए। अभी दें?</string>
+    <string name="ui_more_next_turn_from_your_navigation_app" formatted="false">आपके नेविगेशन ऐप से अगला मोड़</string>
+    <string name="ui_more_mini_strip_over_other_apps" formatted="false">दूसरे ऐप्स के ऊपर छोटी पट्टी</string>
+    <string name="ui_more_google_maps_waze_osmand_and_others_the_next_" formatted="false">Google Maps, Waze, OsmAnd और दूसरे: अगला मोड़, उसकी दूरी और तीर डैशबोर्ड पर एक कार्ड में</string>
+    <string name="ui_more_the_next_turn_and_what_s_playing_with_play_p" formatted="false">दूसरा ऐप खुला हो तब नीचे अगला मोड़ और जो चल रहा है, चलाएँ, रोकें और आगे बढ़ाएँ के साथ</string>
+    <string name="ui_more_settings_only_when_stopped" formatted="false">सेटिंग्स सिर्फ़ रुकने पर</string>
+    <string name="ui_more_settings_and_their_keyboard_open_when_the_ca" formatted="false">सेटिंग्स और उनका कीबोर्ड कार रुकने पर खुलते हैं; सवारी फिर भी खोल सकती है</string>
+    <string name="ui_more_settings_open_when_the_car_is_stopped" formatted="false">सेटिंग्स कार रुकने पर खुलती हैं</string>
+    <string name="ui_more_changing_settings_while_driving_takes_your_e" formatted="false">चलाते समय सेटिंग्स बदलने से नज़र सड़क से हटती है।</string>
+    <string name="ui_more_i_m_a_passenger" formatted="false">मैं सवारी हूँ</string>
+    <string name="ui_more_listening" formatted="false">सुन रहा है…</string>
+    <string name="ui_more_didn_t_catch_that" formatted="false">समझ नहीं आया</string>
+    <string name="ui_more_voice_isn_t_available_right_now" formatted="false">आवाज़ अभी उपलब्ध नहीं है</string>
+    <string name="ui_more_call_screen_over_other_apps" formatted="false">दूसरे ऐप्स के ऊपर कॉल स्क्रीन</string>
+    <string name="ui_more_who_is_calling_with_big_answer_and_end_butto" formatted="false">कौन कॉल कर रहा है, बड़े उठाएँ और काटें बटन के साथ, जो भी ऐप खुला हो उसके ऊपर</string>
+    <string name="ui_more_calling_you" formatted="false">आपको कॉल आ रही है</string>
+    <string name="ui_more_on_a_call" formatted="false">कॉल पर</string>
+    <string name="ui_more_contacts" formatted="false">संपर्क</string>
+    <string name="ui_more_no_contacts_on_the_unit_yet_pair_your_phone_" formatted="false">यूनिट पर अभी कोई संपर्क नहीं। फ़ोन जोड़ें और संपर्क शेयर करने दें।</string>
+    <string name="ui_more_the_stereo_isn_t_ready" formatted="false">स्टीरियो अभी तैयार नहीं</string>
+    <string name="ui_more_there_s_no_message_to_reply_to" formatted="false">जवाब देने को कोई संदेश नहीं</string>
+    <string name="ui_more_reply_to_1_s" formatted="false">%1$s को जवाब</string>
+    <string name="ui_more_send" formatted="false">भेजें</string>
+    <string name="ui_more_reply_sent" formatted="false">जवाब भेजा गया</string>
+    <string name="ui_more_the_reply_couldn_t_be_sent" formatted="false">जवाब नहीं भेजा जा सका</string>
+    <string name="ui_more_reply" formatted="false">जवाब</string>
+    <string name="ui_more_browse_1_s" formatted="false">%1$s में खोजें</string>
+    <string name="ui_more_up_next" formatted="false">आगे क्या है</string>
+    <string name="ui_more_auto_online_radio_with_internet_else_the_rad" formatted="false">ऑटो: इंटरनेट हो तो ऑनलाइन रेडियो, नहीं तो रेडियो ऐप</string>
+    <string name="ui_more_auto_the_music_app_with_internet_else_music_" formatted="false">ऑटो: इंटरनेट हो तो म्यूज़िक ऐप, नहीं तो म्यूज़िक फ़ाइलें</string>
+    <string name="ui_more_online_radio" formatted="false">ऑनलाइन रेडियो</string>
+    <string name="ui_more_music_files" formatted="false">म्यूज़िक फ़ाइलें</string>
+    <string name="ui_more_radio_app" formatted="false">रेडियो ऐप</string>
+    <string name="ui_more_music_app" formatted="false">म्यूज़िक ऐप</string>
+    <string name="ui_more_1_s_doesn_t_share_its_library_with_other_app" formatted="false">%1$s अपनी लाइब्रेरी दूसरे ऐप्स से शेयर नहीं करता। उसे खोल रहे हैं।</string>
+    <string name="ui_more_nothing_here" formatted="false">यहाँ कुछ नहीं</string>
+    <string name="ui_more_the_music_app_didn_t_answer" formatted="false">म्यूज़िक ऐप ने जवाब नहीं दिया</string>
+    <string name="ui_more_close" formatted="false">बंद करें</string>
+    <string name="ui_more_1_s_s_phone" formatted="false">%1$s का फ़ोन…</string>
+    <string name="ui_more_1_s_s_phone2" formatted="false">%1$s का फ़ोन</string>
+    <string name="ui_more_no_paired_phones_yet_pair_your_phone_in_the_" formatted="false">अभी कोई जुड़ा फ़ोन नहीं। ब्लूटूथ ऐप में फ़ोन जोड़ें।</string>
+    <string name="ui_more_1_s_s_settings_load_when_this_phone_connects" formatted="false">यह फ़ोन जुड़ने पर %1$s की सेटिंग्स लगेंगी</string>
+    <string name="ui_more_open_the_projection_app_when_the_phone_conne" formatted="false">फ़ोन जुड़ने पर प्रोजेक्शन ऐप खोलें</string>
+    <string name="ui_more_your_carplay_or_android_auto_app_opens_by_it" formatted="false">ब्लूटूथ से फ़ोन जुड़ते ही आपका CarPlay या Android Auto ऐप अपने-आप खुलता है</string>
+    <string name="ui_more_volume_for_each_music_app" formatted="false">हर म्यूज़िक ऐप की अपनी आवाज़</string>
+    <string name="ui_more_each_music_app_fm_and_online_radio_come_back" formatted="false">हर म्यूज़िक ऐप, FM और ऑनलाइन रेडियो उसी आवाज़ पर लौटते हैं जिस पर पिछली बार चले थे</string>
+    <string name="ui_more_most_used" formatted="false">सबसे ज़्यादा खोले गए</string>
+    <string name="ui_more_a_to_z" formatted="false">A से Z</string>
+    <string name="ui_more_hide_from_the_list" formatted="false">सूची से छिपाएँ</string>
+    <string name="ui_more_show_in_the_list" formatted="false">सूची में दिखाएँ</string>
+    <string name="ui_more_hidden_search_for_it_to_find_it_again" formatted="false">छिपा दिया। फिर से पाने के लिए खोजें।</string>
+    <string name="ui_more_straight_to_the_radio_chip_no_radio_service" formatted="false">सीधे रेडियो चिप से (रेडियो सर्विस नहीं)</string>
+    <string name="ui_more_topway_s_radio_service_isn_t_connected_only_" formatted="false">Topway की रेडियो सर्विस नहीं जुड़ी; सिर्फ़ रेडियो चिप से सीधा जुड़ाव आज़माया जा सकता है</string>
+    <string name="ui_more_needs_a_small_plug_in_obd_adapter_bluetooth_" formatted="false">एक छोटा OBD अडैप्टर चाहिए (Bluetooth या Wi-Fi, अक्सर ELM327 नाम से बिकता है)</string>
+    <string name="ui_more_checks_once_a_day_for_a_new_openrath_makes_s" formatted="false">दिन में एक बार नया OpenRath देखता है, पक्का करता है कि डाउनलोड असली है और सिर्फ़ पार्क होने पर पेश करता है</string>
+    <string name="ui_more_plug_the_obd_adapter_often_sold_as_elm327_in" formatted="false">OBD अडैप्टर (अक्सर ELM327 नाम से बिकता है) को स्टीयरिंग के नीचे वाले सॉकेट में लगाएँ, इग्निशन चालू करें, और यूनिट की Bluetooth सेटिंग्स में पेयर करें (PIN अक्सर 1234 या 0000 होता है)। फिर यहाँ लौटें।</string>
+    <string name="ui_more_country_for_money_and_holidays" formatted="false">देश, पैसे और छुट्टियों के लिए</string>
+    <string name="ui_more_country" formatted="false">देश</string>
+    <string name="ui_more_tip" formatted="false">सुझाव</string>
+    <string name="ui_more_hidden_shortcuts" formatted="false">छिपे शॉर्टकट</string>
+    <string name="ui_more_what_holding_a_box_or_a_button_does" formatted="false">किसी बॉक्स या बटन को दबाए रखने से क्या होता है</string>
+    <string name="ui_more_hold_any_box_to_change_what_it_shows_or_to_m" formatted="false">कोई भी बॉक्स दबाए रखें: उसमें क्या दिखे यह बदलें, या उसे खिसकाएँ</string>
+    <string name="ui_more_hold_a_button_in_the_bar_to_choose_which_app" formatted="false">बार का कोई बटन दबाए रखें और चुनें कि वह कौन-सा ऐप खोले</string>
+    <string name="ui_more_hold_the_apps_button_to_open_settings" formatted="false">सेटिंग्स खोलने के लिए ऐप्स बटन दबाए रखें</string>
+    <string name="ui_more_hold_the_navigation_button_for_your_saved_pl" formatted="false">अपनी सहेजी जगहों के लिए नेविगेशन बटन दबाए रखें</string>
+    <string name="ui_more_tap_the_music_or_radio_box_s_name_for_source" formatted="false">स्रोत, प्लेलिस्ट और आगे क्या बजेगा, इसके लिए म्यूज़िक या रेडियो बॉक्स के नाम पर टैप करें</string>
+    <string name="ui_more_hold_an_app_in_the_app_list_to_pin_it_to_the" formatted="false">ऐप सूची में किसी ऐप को दबाए रखें: ऊपर पिन करें या छिपाएँ</string>
+    <string name="ui_more_hold_the_next_turn_card_to_hide_it_for_this_" formatted="false">इस सफ़र के लिए छिपाने को अगले मोड़ वाला कार्ड दबाए रखें</string>
+    <string name="ui_more_say_reply_after_a_message_is_read_out_to_ans" formatted="false">संदेश पढ़े जाने के बाद बोलकर जवाब देने के लिए \"reply\" कहें</string>
+    <string name="ui_more_seen_once_not_confirmed_yet_an_early_warning" formatted="false">एक बार दिखे, अभी पक्के नहीं (शुरुआती चेतावनी):</string>
+    <string name="ui_more_live_engine_readings" formatted="false">इंजन की लाइव रीडिंग</string>
+    <string name="ui_more_when_the_adapter_is_connected" formatted="false">जब अडैप्टर जुड़ा हो</string>
+    <string name="ui_more_engine_speed_1_s_rpm" formatted="false">इंजन की रफ़्तार: %1$s rpm</string>
+    <string name="ui_more_coolant_1_s_c" formatted="false">कूलेंट: %1$s°C</string>
+    <string name="ui_more_intake_air_1_s_c" formatted="false">अंदर आती हवा: %1$s°C</string>
+    <string name="ui_more_engine_load_1_s" formatted="false">इंजन पर भार: %1$s%%</string>
+    <string name="ui_more_throttle_1_s" formatted="false">थ्रॉटल: %1$s%%</string>
+    <string name="ui_more_manifold_pressure_1_s_kpa" formatted="false">मैनिफ़ोल्ड दबाव: %1$s kPa</string>
+    <string name="ui_more_air_flow_1_s_g_s_about_2_s_litres_an_hour" formatted="false">हवा का बहाव: %1$s g/s (लगभग %2$s लीटर प्रति घंटा)</string>
+    <string name="ui_more_fuel_trim_now_1_s" formatted="false">फ़्यूल ट्रिम अभी: %1$s%%</string>
+    <string name="ui_more_fuel_trim_learnt_1_s" formatted="false">फ़्यूल ट्रिम सीखा हुआ: %1$s%%</string>
+    <string name="ui_more_fuel_tank_1_s" formatted="false">फ़्यूल टैंक: %1$s%%</string>
+    <string name="ui_more_battery_1_s_v" formatted="false">बैटरी: %1$s V</string>
+    <string name="ui_more_always_works_on_openrath_s_own_music_other_m" formatted="false">OpenRath के अपने म्यूज़िक पर हमेशा चलता है। दूसरे म्यूज़िक ऐप पर तभी असर होता है जब यूनिट इसकी अनुमति दे; अगर आवाज़ वैसी ही लगे तो यूनिट का अपना EQ ऐप इस्तेमाल करें।</string>
+</resources>

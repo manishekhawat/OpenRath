@@ -27,8 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * All apps, in a grid on black. With the "appDrawer" feature on: a search box, a row of pinned and
- * recently opened apps, an A–Z column to jump with, and a long press for pin, App info or Uninstall.
+ * All apps, in a grid on black. With the "appDrawer" feature on: a search box, A to Z or most used
+ * first, a row of pinned and recently opened apps, an A–Z column to jump with, and a long press for
+ * pin, hide, App info or Uninstall (hidden apps show only when searched for).
  */
 public class AppsActivity extends Activity {
 
@@ -72,9 +73,28 @@ public class AppsActivity extends Activity {
                 @Override public void onTextChanged(CharSequence s, int a, int c, int d) { }
                 @Override public void afterTextChanged(Editable s) { filter(); }
             });
+            // the order: A to Z, or the apps opened most first
+            final TextView order = new TextView(this);
+            order.setTextColor(Ui.SILVER);
+            order.setTextSize(0, 16 * k);
+            order.setGravity(Gravity.CENTER);
+            order.setPadding(Math.round(16 * k), 0, Math.round(16 * k), 0);
+            order.setText(Hindi.t(mostUsed() ? "Most used" : "A to Z"));
+            order.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    prefs.put("appOrder", mostUsed() ? "az" : "used");
+                    order.setText(Hindi.t(mostUsed() ? "Most used" : "A to Z"));
+                    filter();
+                }
+            });
+            LinearLayout top = new LinearLayout(this);
+            top.setGravity(Gravity.CENTER_VERTICAL);
+            top.addView(search, new LinearLayout.LayoutParams(0, -2, 1f));
+            top.addView(order, new LinearLayout.LayoutParams(-2, Math.round(HomeDock.TARGET * k)));
             LinearLayout.LayoutParams sp = new LinearLayout.LayoutParams(-1, -2);
             sp.setMargins(pad, Math.round(12 * k), pad, 0);
-            root.addView(search, sp);
+            root.addView(top, sp);
 
             HorizontalScrollView hs = new HorizontalScrollView(this);
             strip = new LinearLayout(this);
@@ -164,13 +184,66 @@ public class AppsActivity extends Activity {
         return cell;
     }
 
+    private boolean mostUsed() {
+        return extras && "used".equals(prefs.str("appOrder", "az"));
+    }
+
+    /**
+     * The apps to show: what matches the search; hidden apps only when searched for (so they can be
+     * found and shown again); the most opened first when that order is chosen.
+     */
     private void filter() {
         String q = search == null ? "" : search.getText().toString();
+        List<String> hidden = split(prefs.str("hiddenApps", ""));
         shown.clear();
         for (ResolveInfo r : all) {
-            if (matches(r.loadLabel(pm).toString(), r.activityInfo.packageName, q)) shown.add(r);
+            String pkg = r.activityInfo.packageName;
+            if (hidden.contains(pkg) && q.trim().isEmpty()) continue;
+            if (matches(r.loadLabel(pm).toString(), pkg, q)) shown.add(r);
+        }
+        if (mostUsed()) {
+            final java.util.Map<String, Integer> uses = counts(prefs.str("appUses", ""));
+            java.util.Collections.sort(shown, new java.util.Comparator<ResolveInfo>() {
+                @Override
+                public int compare(ResolveInfo a, ResolveInfo b) {
+                    Integer x = uses.get(a.activityInfo.packageName), y = uses.get(b.activityInfo.packageName);
+                    return Integer.compare(y == null ? 0 : y, x == null ? 0 : x);   // stable: A to Z among equals
+                }
+            });
         }
         adapter.notifyDataSetChanged();
+    }
+
+    /** "pkg=n,pkg=n" to a map. */
+    static java.util.Map<String, Integer> counts(String s) {
+        java.util.Map<String, Integer> m = new java.util.HashMap<>();
+        for (String part : s.split(",")) {
+            int eq = part.lastIndexOf('=');
+            if (eq <= 0) continue;
+            try {
+                m.put(part.substring(0, eq), Integer.parseInt(part.substring(eq + 1)));
+            } catch (NumberFormatException ignored) {
+                // a damaged entry: left out
+            }
+        }
+        return m;
+    }
+
+    /** One more open of `pkg`, keeping the 60 most opened apps. */
+    static String bump(String s, String pkg) {
+        java.util.Map<String, Integer> m = counts(s);
+        Integer n = m.get(pkg);
+        m.put(pkg, n == null ? 1 : n + 1);
+        List<java.util.Map.Entry<String, Integer>> l = new ArrayList<>(m.entrySet());
+        java.util.Collections.sort(l, new java.util.Comparator<java.util.Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(java.util.Map.Entry<String, Integer> a, java.util.Map.Entry<String, Integer> b) {
+                return Integer.compare(b.getValue(), a.getValue());
+            }
+        });
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < Math.min(60, l.size()); i++) b.append(b.length() == 0 ? "" : ",").append(l.get(i).getKey()).append('=').append(l.get(i).getValue());
+        return b.toString();
     }
 
     private ResolveInfo find(String pkg) {
@@ -236,7 +309,10 @@ public class AppsActivity extends Activity {
             Toast.makeText(this, Hindi.t(ChildLock.SORRY), Toast.LENGTH_SHORT).show();
             return;
         }
-        if (extras) prefs.put("recentApps", join(push(split(prefs.str("recentApps", "")), pkg, RECENT)));
+        if (extras) {
+            prefs.put("recentApps", join(push(split(prefs.str("recentApps", "")), pkg, RECENT)));
+            prefs.put("appUses", bump(prefs.str("appUses", ""), pkg));
+        }
         Intent in = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
                 .setClassName(pkg, r.activityInfo.name)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -249,7 +325,9 @@ public class AppsActivity extends Activity {
         final List<String> pinned = split(prefs.str("pinnedApps", ""));
         final boolean isPinned = pinned.contains(pkg);
         final List<String> items = new ArrayList<>();
+        final List<String> hidden = split(prefs.str("hiddenApps", ""));
         if (extras) items.add(isPinned ? "Unpin" : "Pin to the top");
+        if (extras) items.add(hidden.contains(pkg) ? "Show in the list" : "Hide from the list");
         items.add("App info");
         items.add("Uninstall");
         String[] shownItems = new String[items.size()];
@@ -266,6 +344,13 @@ public class AppsActivity extends Activity {
                         } else if ("Pin to the top".equals(it)) {
                             prefs.put("pinnedApps", join(push(remove(pinned, pkg), pkg, 12)));
                             fillStrip();
+                        } else if ("Hide from the list".equals(it)) {
+                            prefs.put("hiddenApps", join(push(hidden, pkg, 500)));
+                            filter();
+                            Toast.makeText(AppsActivity.this, Hindi.t("Hidden. Search for it to find it again."), Toast.LENGTH_SHORT).show();
+                        } else if ("Show in the list".equals(it)) {
+                            prefs.put("hiddenApps", join(remove(hidden, pkg)));
+                            filter();
                         } else if ("App info".equals(it)) {
                             start(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                                     Uri.parse("package:" + pkg)));

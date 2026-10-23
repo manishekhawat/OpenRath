@@ -8,14 +8,14 @@ import android.widget.TextView;
 
 /**
  * Bluetooth phone through Topway's service: who is calling (from its Bluetooth callback),
- * answer and hang up, and up to three favourite numbers to call with one tap.
+ * answer and hang up, up to three favourite numbers to call with one tap, and the unit's contacts.
  */
 final class PhoneCard extends Cards.Card {
     final TextView head = Ui.label(getContext(), Hindi.t("PHONE"));
     final TextView title = Ui.text(getContext(), 24, Ui.SILVER, "sans-serif-light", Gravity.LEFT);
     final TextView sub = Ui.text(getContext(), 13, Ui.SILVER_DIM, "sans-serif", Gravity.LEFT);
     final LinearLayout row = new LinearLayout(getContext());
-    final TextView answer, end;
+    final TextView answer, end, people;
     final TextView[] favs = new TextView[3];
     /** The last calls, while a phone is connected; tap one to call back. */
     final LinearLayout calls = new LinearLayout(getContext());
@@ -35,6 +35,13 @@ final class PhoneCard extends Cards.Card {
         row.setGravity(Gravity.CENTER_VERTICAL);
         row.addView(answer);
         row.addView(end);
+        people = pill(c, Hindi.t("Contacts"), 0);
+        clickable(people, new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getContext() instanceof HomeActivity) Contacts.show((HomeActivity) getContext(), unit);
+            }
+        });
         for (int i = 0; i < 3; i++) {
             favs[i] = pill(c, "", 0);
             row.addView(favs[i]);
@@ -49,6 +56,7 @@ final class PhoneCard extends Cards.Card {
                 }
             });
         }
+        row.addView(people);
         addView(head);
         addView(title);
         addView(sub);
@@ -134,7 +142,7 @@ final class PhoneCard extends Cards.Card {
     void fit(int w, int h) {
         float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
         int m = Ui.px(18 * s);
-        head.setTextSize(0, 11 * Ui.k * s);
+        head.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
         head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(12 * s), 0, 0));
         title.setTextSize(0, 24 * Ui.k * s);
         title.setMaxWidth(w - 2 * m);
@@ -199,6 +207,7 @@ final class PhoneCard extends Cards.Card {
         }
         answer.setVisibility(call ? VISIBLE : GONE);
         end.setVisibility(call ? VISIBLE : GONE);
+        people.setVisibility(call ? GONE : VISIBLE);
         // connected and no call on: the last five calls instead of just the last one
         String key = p.str("callHistory", "").hashCode() + "/" + h.btConnected + call;
         if (!key.equals(callsKey) || System.currentTimeMillis() - callsAt > 15000) {
@@ -215,6 +224,7 @@ final class PhoneCard extends Cards.Card {
             callRows[i].setVisibility(show ? VISIBLE : GONE);
             if (!show) continue;
             String[] f = recentCalls.get(i);
+            if (f[1].isEmpty()) f[1] = Contacts.nameFor(getContext(), f[0]);
             String arrow = "out".equals(f[2]) ? "↗  " : "missed".equals(f[2]) ? "✕  " : "↙  ";
             callRows[i].setText(arrow + (f[1].isEmpty() ? f[0] : f[1]) + "   ·   " + ago(Long.parseLong(f[3])));
             callRows[i].setTextColor("missed".equals(f[2]) ? 0xFFE0796F : Ui.SILVER);

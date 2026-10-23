@@ -81,6 +81,15 @@ final class HomeDialogs {
     /** First start: pick the unit's own radio app, so the radio box and dock button just work. */
     static void findRadio(final HomeActivity a) {
         if (a.prefs.app("media:radio") != null) return;
+        Bg.run(new Runnable() {   // listing every app is slow on these units: not on the screen's thread
+            @Override
+            public void run() {
+                findRadioNow(a);
+            }
+        });
+    }
+
+    private static void findRadioNow(HomeActivity a) {
         // none found today: listing every app again on each start is slow on these units; try again tomorrow
         String today = Times.today();
         if (today.equals(a.prefs.str("radioNotFound", ""))) return;
@@ -208,14 +217,21 @@ final class HomeDialogs {
         String cur = a.prefs.slot(slot);
         String c = cur.startsWith("widget") ? cur : Prefs.WIDGET1;
         if (!cur.startsWith("widget")) {
-            // use a widget content no other box on this page shows, so nothing else moves
-            boolean oneUsed = false;
-            for (int i = 0; i < Prefs.SLOTS; i++) if (Prefs.WIDGET1.equals(a.prefs.slot(i))) oneUsed = true;
-            c = oneUsed ? Prefs.WIDGET2 : Prefs.WIDGET1;
+            // a widget box no box on any page shows yet, so every box can hold its own widget
+            java.util.List<String> used = new java.util.ArrayList<>();
+            for (int pg = 0; pg < Prefs.MAX_PAGES; pg++) for (int i = 0; i < Prefs.SLOTS; i++) used.add(a.prefs.slotOn(pg, i));
+            c = freeWidget(used);
             a.prefs.setSlot(slot, c);
             a.build();
         }
         a.pickWidget(c);
+    }
+
+    /** The first of "widget1", "widget2", "widget3"… that no box shows. Pure, for the tests. */
+    static String freeWidget(java.util.List<String> used) {
+        int n = 1;
+        while (used.contains("widget" + n)) n++;
+        return "widget" + n;
     }
 
     static String slotName(final HomeActivity a, int slot) {

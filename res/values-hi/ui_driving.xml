@@ -16,7 +16,7 @@
     <string name="ui_driving_no_gps_position_yet" formatted="false">अभी GPS लोकेशन नहीं मिली</string>
     <string name="ui_driving_this_spot_is_already_marked" formatted="false">यह जगह पहले से मार्क है</string>
     <string name="ui_driving_marked_as_a_waterlogging_spot" formatted="false">जलभराव वाली जगह के रूप में मार्क किया</string>
-    <string name="ui_driving_tap_here_to_leave_night_drive_mode" formatted="false">नाइट-ड्राइव मोड से निकलने के लिए यहाँ टैप करें</string>
+    <string name="ui_driving_tap_here_to_leave_night_drive_mode" formatted="false">नाइट-ड्राइव मोड से निकलने के लिए यहाँ दबाकर रखें</string>
     <string name="ui_driving_not_enough_drives_yet_after_three_or" formatted="false">अभी काफ़ी ड्राइव नहीं हुईं। एक ही दो जगहों के बीच तीन या ज़्यादा ड्राइव के बाद, यहाँ दिखेगा कि निकलने के समय के हिसाब से ड्राइव में कितना समय लगता है।</string>
     <string name="ui_driving_to_drives_about_km" formatted="false">%1$s से %2$s: %3$s ड्राइव, लगभग %4$s km</string>
     <string name="ui_driving_leaving_min_on_average_drive" formatted="false">%1$s–%2$s पर निकलें: औसतन %3$s मिनट (%4$s ड्राइव)</string>

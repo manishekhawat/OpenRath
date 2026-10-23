@@ -2,6 +2,26 @@
 
 Newest first.
 
+## Unreleased: On the road
+
+- **Next turn from your navigation app:** when Google Maps, Waze, OsmAnd or another navigation app guides you, its next turn shows in a card on the dashboard, and in a small strip over other apps along with what's playing (play, pause, next). Tap the card to go back to the app; hold it to hide it for the trip.
+- **Call screen over any app:** an incoming call shows who it is, with big Answer and End buttons, whatever app is in front.
+- **Contacts:** the phone box has a Contacts list (hidden while moving: say "call" and a name instead), voice calls find people in the unit's contacts, and recent calls show names.
+- **Reply by voice:** say "reply" after a message is read out, speak the answer, and confirm before it goes.
+- **Voice in a small bar:** the voice search listens in a bar at the bottom instead of a full-screen window, once the microphone is allowed.
+- **Music box menu:** tap the music or radio box's name to switch the source or music app, browse an app's playlists, albums or stations, and see what's up next. Lists stop at 12 rows while moving.
+- **Phone connects:** CarPlay or Android Auto can open by itself, and a driver's settings load when their phone connects (choose each driver's phone in the driver menu).
+- **Carries on after the ignition:** the exact music app picks up again, retried for a few seconds while the app starts, and navigation to a destination set in the last half hour resumes. Each music app, FM and online radio come back at their own volume.
+- **Safer while driving:** buttons you use while driving are at least 76 px, small text is larger, Settings opens only when stopped (with "I'm a passenger"), the child and valet locks hold for 10 minutes when the GPS drops out, and night-drive mode needs a hold to leave. The theme and screen brightness can follow the headlights.
+- **App list:** A to Z or most used first, and hide apps you never open (search still finds them).
+- **Every box can hold its own widget**, instead of two at most.
+- **Your country:** prices show in your currency, holidays and the FASTag lane reminder are India-only, and the country is in Settings > Dashboard.
+- **Plain words** in place of MCU link, ELM327 and SHA-256 in everyday settings, and a list of the hidden shortcuts (holding a box or a button) in Settings > Help, with one tip a day on the dashboard.
+- **More from the engine:** air flow and petrol used an hour, manifold pressure, throttle and fuel trims under Live engine readings, and codes seen once but not confirmed yet as an early warning with the fault codes.
+- **Routes keep working** when the main route server is busy: a second one answers.
+- **The equalizer says what it reaches:** OpenRath's own music always, other apps only where the unit allows.
+- **Lighter on slow stereos:** the map pauses behind other apps, GPS slows sooner with the screen off, start-up scans run off the screen's thread, and the radio keeps the processor awake while it plays.
+
 ## 1.43: Safer and lighter
 
 - **Safer:** other apps can no longer run code inside OpenRath, send it steering-wheel actions (SOS, answering or ending calls) or use its own messages; only the unit's own system apps are trusted. The map only runs its own page and asks before calling a number from it. Updates must be OpenRath, newer, and signed with the same key. Backups never carry or overwrite the valet PIN, the hotspot password or a fleet's settings. Crash logs stay in OpenRath's private storage with places and links removed. OpenRath's own web traffic uses https only; radio streams can still use http.

@@ -32,7 +32,7 @@ final class Features {
     /** Off whatever the level until the owner turns them on: they need hardware, or change the home screen. */
     private static final java.util.Set<String> ASK_FIRST = new java.util.HashSet<>(java.util.Arrays.asList("cab", "obd", "dashcam", "tpms", "reports"));
 
-    private static final String[] SIMPLE_IDS = {"arrows", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "longKeys", "resume", "offlineMap", "backup", "reports"};
+    private static final String[] SIMPLE_IDS = {"arrows", "navTurns", "parkedSettings", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "longKeys", "resume", "offlineMap", "backup", "reports"};
     private static final String[] CUSTOM_IDS = {"pages", "widgets", "saver", "perf", "bootArt", "soundProfiles", "speedVolume", "eq", "profiles"};
     private static final String[] DEV_IDS = {"maker", "perf"};
 
@@ -107,9 +107,12 @@ final class Features {
             new F("widgets", "Widgets from other apps", "Dashboard", true, "Put another app's widget in a box"),
             new F("saver", "Clock screensaver", "Dashboard", false, "Big clock after a few idle minutes while parked"),
             new F("ticker", "Notification ticker", "Dashboard", true, "Messages slide in along the top"),
+            new F("navTurns", "Next turn from your navigation app", "Driving", true, "Google Maps, Waze, OsmAnd and others: the next turn, its distance and arrow in a card on the dashboard"),
+            new F("overStrip", "Mini strip over other apps", "Driving", false, "The next turn and what's playing, with play, pause and skip, along the bottom while another app is open"),
             new F("readAloud", "Read messages aloud", "Dashboard", false, "Says who sent a message, or the whole message"),
             new F("nightDrive", "Night-drive mode", "Dashboard", true, "After sunset while driving: big red speed, dim red map, nothing else"),
             new F("voice", "Voice commands (Hindi and English)", "Dashboard", true, "\"FM 91.1\", \"call Mom\", \"घर ले चलो\" from the mic; choose where the mic sits in Home screen"),
+            new F("parkedSettings", "Settings only when stopped", "Driving", true, "Settings and their keyboard open when the car is stopped; a passenger can still open them"),
             new F("smoothSpeed", "Smooth speed number", "Driving", true, "The speed eases between GPS readings and shows 0 when standing still, without flicker"),
             new F("places", "Saved places for any navigation app", "Driving", true, "Long-press Navigation in the dock: Home, Office, the parked car and your own places; typing is blocked while moving"),
             new F("tripShare", "Share the trip by QR code", "Driving", true, "A code family scan to see where you are and the route; nothing is sent online"),
@@ -132,7 +135,7 @@ final class Features {
             new F("achievements", "Badges for good driving", "Driving", true, "Smooth-driving streaks, weeks within the limit and distance milestones"),
             new F("accel", "0–100 km/h timer", "Driving", true, "Times every standing start"),
             new F("gpx", "Record routes (GPX export)", "Driving", true, "Kept 60 days on the unit only"),
-            new F("tolls", "Tolls", "Driving", true, "Toll plazas and costs on a planned route, and a countdown with a FASTag lane reminder"),
+            new F("tolls", "Tolls", "Driving", true, "Toll plazas and costs on a planned route, and a countdown (with a FASTag lane reminder in India)"),
             new F("reverse", "Reverse guide lines", "Driving", true, "Shown when reverse gear is engaged"),
             new F("fuelPrice", "Fuel and mileage", "Driving", true, "Trip cost from your city's petrol price, which drives used extra fuel, how far the tank goes, and a leak or theft check"),
             new F("restStop", "Break reminder and rest stops", "Driving", true, "After 2 hours at the wheel, dhabas and pumps ahead"),
@@ -145,9 +148,11 @@ final class Features {
             new F("lightsReminder", "Car-signal reminders", "Driving", true, "Headlights after sunset, doors and seat belts, by voice (needs the setup in Car signals)"),
             new F("bumps", "Road learning", "Driving", true, "Learns speed-breakers and how long you wait at signals and tolls, and tells you next time"),
             new F("duck", "Music dips for voice prompts", "Driving", true, "Music lowers while the car speaks a turn or a warning"),
+            new F("callScreen", "Call screen over other apps", "Phone", true, "Who is calling, with big Answer and End buttons, on top of whatever app is open"),
             new F("hotspot", "Guest Wi-Fi", "Phone", true, "A QR code passengers scan to join the unit's hotspot"),
             new F("maker", "Stereo maker's services", "Radio and music", true, "Topway, FYT, MTCD/Joying and szchoiceway units: FM in the radio box, Bluetooth calls, reverse gear and lights through the maker's own services. Off, or on other stereos: plain Android only (the radio app's controls, the system phone)"),
             new F("projection", "Phone projection app", "Radio and music", true, "A button in the music box opens your wireless CarPlay or Android Auto app (ZLink, AutoKit and others)"),
+            new F("projectionAuto", "Open the projection app when the phone connects", "Radio and music", false, "Your CarPlay or Android Auto app opens by itself when a phone connects by Bluetooth"),
             new F("radioText", "Big frequency from any radio app", "Radio and music", true, "Shows \"FM 98.3\" and the station name from the radio app's text"),
             new F("soundboard", "Soundboard", "Radio and music", false, "A box of fun sounds (horn, fart, applause and more) that plays only when the car is stopped"),
             new F("video", "Video window", "Radio and music", false, "Plays a video from the unit or a USB stick in a box; the picture shows only when the car is stopped"),
@@ -157,7 +162,7 @@ final class Features {
             new F("view360", "360 view of your car", "Car", true, "Your car in 3D in its shape, colour and number plate, from any side; opens the stereo's 360 camera app when it has one"),
             new F("cam360Turn", "360 camera on turn signals", "Car", false, "Below 15 km/h the indicator opens the stereo's 360 camera app (needs the indicators set up in Car signals)"),
             new F("care", "Car service", "Car", true, "Oil, tyres, service, insurance and PUC reminders, the nearest workshops, and a call to book"),
-            new F("obd", "OBD-II engine data", "Car", true, "Needs a Bluetooth or Wi-Fi ELM327 adapter"),
+            new F("obd", "OBD-II engine data", "Car", true, "Needs a small plug-in OBD adapter (Bluetooth or Wi-Fi, often sold as ELM327)"),
             new F("faultWords", "Fault codes in plain words", "Car", true, "Each fault code with what it means, what to check and how urgent it is, from a table kept on the unit"),
             new F("askCar", "Ask the car by voice", "Car", true, "\"How's the engine?\", \"how much fuel?\", \"any faults?\" answered from the engine data"),
             new F("ledStrip", "LED light strip", "Car", false, "A Bluetooth ELK-BLEDOM strip takes the theme's colour, dims at night and turns red for a warning"),
@@ -172,6 +177,7 @@ final class Features {
             // sound
             new F("wake", "Recover after deep sleep", "Sound", true, "When the stereo wakes from sleep with the ignition, the GPS, music link and map start again"),
             new F("resume", "Resume after switch-on", "Sound", true, "Plays what was on, at the same volume"),
+            new F("sourceVolume", "Volume for each music app", "Sound", false, "Each music app, FM and online radio come back at the volume they last played at"),
             new F("speedVolume", "Volume rises with speed", "Sound", false, "Louder on the highway, back down in town"),
             new F("eq", "Equalizer", "Sound", false, "Bass, treble and presets for the app's own sound"),
             new F("quiet", "Quiet hours", "Sound", false, "Late at night: music turned down, no alert beeps"),
@@ -179,7 +185,7 @@ final class Features {
             new F("offlineMap", "Without internet", "Driving", true, "Keeps the map of places you've seen, and uses the offline speech pack, for when there's no Wi-Fi"),
             new F("bootArt", "Boot logo and animation maker", "Dashboard", true, "Your car's badge and name for the stereo's start-up screens"),
             new F("backup", "Daily automatic backup", "Data", true, "Settings, fuel log and trips to OpenRath/backup"),
-            new F("updates", "App updates from GitHub", "Data", false, "Checks once a day for a new OpenRath, checks the download's SHA-256 and offers it only when parked"),
+            new F("updates", "App updates from GitHub", "Data", false, "Checks once a day for a new OpenRath, makes sure the download is genuine and offers it only when parked"),
             new F("reports", "Crash and usage reports", "Data", false, "Counts which settings you open, kept on the unit with any crash reports for you to share; off forgets them"),
             // cab drivers: one switch for all, then one each
             new F("cab", "Cab driver tools", "Cab", false, "Earnings, fare meter, SOS and more; adds the Cab box and the Cab menu"),

@@ -45,23 +45,49 @@ final class Extras {
         a.dash.removeCallbacks(saverCheck(a));
         a.dash.postDelayed(saverCheck(a), 20000);
         if (Resume.due(a, a.prefs)) {
+            resumeNav(a);
+            // tried after 2 seconds, then every 2 seconds while the music app or radio isn't ready yet
             a.dash.postDelayed(new Runnable() {
+                int tries;
+
                 @Override
                 public void run() {
-                    resumeAudio(a);
+                    if (!resumeAudio(a, ++tries) && tries < Resume.TRIES) a.dash.postDelayed(this, 2000);
                 }
-            }, 6000);   // the radio service and the audio system need a moment after boot
+            }, 2000);
         }
     }
 
-    static void resumeAudio(HomeActivity a) {
+    /**
+     * The stereo switched off mid-trip (the navigation app was still guiding a short while before):
+     * open the navigation app again so the route carries on.
+     */
+    static void resumeNav(HomeActivity a) {
+        String pkg = a.prefs.str("navApp", "");
+        long at = a.prefs.longNum("navAt", 0L);
+        if (!Resume.navDue(pkg, at, System.currentTimeMillis())) return;
+        a.prefs.putLong("navAt", 0L);   // once
+        android.content.Intent i = a.getPackageManager().getLaunchIntentForPackage(pkg);
+        if (i == null) return;
+        try {
+            a.startActivity(i.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
+        } catch (Exception e) {
+            Diag.note("resume navigation", e);
+        }
+    }
+
+    /** Carry on playing (try is 1, 2, ...); false while what played isn't ready yet (try again), true when done. */
+    static boolean resumeAudio(HomeActivity a, int attempt) {
+        boolean last = attempt >= Resume.TRIES;
         Prefs p = a.prefs;
         String what = p.str("resume", "");
         Resume.restoreVolume(a, p);
-        if (what.isEmpty()) return;
+        if (what.isEmpty()) return true;
         try {
             AudioManager am = (AudioManager) a.getSystemService(android.content.Context.AUDIO_SERVICE);
-            if (am.isMusicActive()) return;   // the unit already carried on by itself
+            if (am.isMusicActive()) return true;   // the unit already carried on by itself
+            if (what.startsWith("app:") && !Resume.playApp(a, what.substring(4), last)) return false;
+            if (!what.startsWith("app:") && attempt < 2) return false;   // FM and the player's services need a moment after boot
             if ("fm".equals(what)) {
                 MediaCard.owner = "radio";
                 String err = Fm.play(p, a.hub.xt, a.hub.fm, true);
@@ -72,7 +98,6 @@ final class Extras {
                 Player.send(a, Player.PLAY, what);
             } else if (what.startsWith("app:")) {
                 MediaCard.owner = "music";
-                key(a, KeyEvent.KEYCODE_MEDIA_PLAY);
             }
             Toast.makeText(a, Hindi.t("Carrying on where you left off"), Toast.LENGTH_SHORT).show();
             if (!"text".equals(a.prefs.str("summaryHow", "voice"))) Speak.say(a, "Welcome back. Carrying on where you left off.", false);
@@ -80,6 +105,7 @@ final class Extras {
             Diag.note("resume playback", e);
         }
         a.hub.notifyIfChanged(true);
+        return true;
     }
 
     static void key(android.content.Context c, int code) {
@@ -162,6 +188,11 @@ final class Extras {
         }
         View s = strip.get();
         if (s != null && s.getContext() == a) strip = new WeakReference<>(null);
+    }
+
+    /** Whether the screen-off cover has the backlight down (night dimming leaves it alone then). */
+    static boolean darkScreen() {
+        return dark;
     }
 
     /** Remove the screensaver or screen-off cover; true if one was showing. */
@@ -275,6 +306,23 @@ final class Extras {
         LinearLayout.LayoutParams mp = new LinearLayout.LayoutParams(0, -2, 1f);
         mp.leftMargin = Ui.px(14);
         s.addView(msg, mp);
+        if (Features.on(p, "voice") && Ticker.canReply()) {   // answer by voice, sent after one tap
+            TextView reply = Ui.text(a, 18, Ui.SILVER, "sans-serif-medium", Gravity.CENTER);
+            reply.setText(Hindi.t("Reply"));
+            GradientDrawable rg = new GradientDrawable();
+            rg.setCornerRadius(999);
+            rg.setStroke(Math.max(1, Ui.px(1.5f)), Ui.ACCENT);
+            reply.setBackground(rg);
+            reply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HomeVoice.reply(a);
+                }
+            });
+            LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(Ui.px(130), Ui.px(HomeDock.TARGET) - Ui.px(20));
+            rp.leftMargin = Ui.px(12);
+            s.addView(reply, rp);
+        }
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(-1, -2, Gravity.TOP);
         lp.setMargins(Ui.px(140), Ui.px(10), Ui.px(140), 0);
         a.root.addView(s, lp);
@@ -485,7 +533,7 @@ final class Extras {
         final List<String> devs = Obd.paired();
         if (devs.isEmpty()) {
             new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("No paired Bluetooth devices"))
-                    .setMessage(Hindi.t("Plug the ELM327 adapter into the OBD socket under the steering wheel, switch the ignition on, "
+                    .setMessage(Hindi.t("Plug the OBD adapter (often sold as ELM327) into the socket under the steering wheel, switch the ignition on, "
                             + "and pair it in the unit's Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here."))
                     .setPositiveButton(Hindi.t("Bluetooth settings"), new DialogInterface.OnClickListener() {
                         @Override
@@ -537,6 +585,10 @@ final class Extras {
                     for (String c : Obd.codes) {
                         if (Features.on(a.prefs, "faultWords")) sb.append(FaultCodes.explain(c)).append("\n\n");
                         else sb.append(c).append("  ").append(Obd.meaning(c)).append('\n');
+                    }
+                    if (!Obd.pendingCodes.isEmpty()) {
+                        sb.append('\n').append(Hindi.t("Seen once, not confirmed yet (an early warning):")).append('\n');
+                        for (String c : Obd.pendingCodes) sb.append(c).append("  ").append(Obd.meaning(c)).append('\n');
                     }
                 }
                 new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Obd.codesAt < asked ? "No answer from the engine computer"
@@ -756,6 +808,15 @@ final class Extras {
             @Override
             public void run() {
                 readCodes(a);
+            }
+        }));
+        r.add(new SettingsView.Row(g, "Live engine readings", Obd.connected ? null : "when the adapter is connected", new Runnable() {
+            @Override
+            public void run() {
+                String now = Obd.connected ? Obd.readings() : "";
+                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Live engine readings"))
+                        .setMessage(now.isEmpty() ? Hindi.f("Not connected to the adapter: %1$s", Hindi.t(Obd.status)) : now)
+                        .setPositiveButton(Hindi.t("OK"), null).show();
             }
         }));
         r.add(new SettingsView.Row(g, "Clear fault codes", "after a repair", new Runnable() {
@@ -1207,7 +1268,7 @@ final class Extras {
                 p.put("fogSpeed", String.valueOf(s[(i + 1) % s.length]));
             }
         }));
-        r.add(new SettingsView.Row(g, "Holidays ahead", android.text.TextUtils.join(";  ", Holidays.upcoming(java.util.Calendar.getInstance(), 3)), new Runnable() {
+        if (Money.india()) r.add(new SettingsView.Row(g, "Holidays ahead", android.text.TextUtils.join(";  ", Holidays.upcoming(java.util.Calendar.getInstance(), 3)), new Runnable() {
             @Override
             public void run() {
                 new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Holidays with heavy traffic"))
@@ -1534,18 +1595,29 @@ final class Extras {
         if ("lightsReminder".equals(id) && !lightsOrDoors) return "This needs the headlight, door or seat-belt setup. Set up the headlights now?";
         if ("obd".equals(id) && !obdChosen) return "Choose your OBD-II Bluetooth adapter now?";
         if ("tpms".equals(id) && !tyresChosen) return "Find your tyre sensors now?";
-        if ("projection".equals(id) && !projectionFound) return "No CarPlay or Android Auto app was found. Choose it now?";
+        if (("projection".equals(id) || "projectionAuto".equals(id)) && !projectionFound) return "No CarPlay or Android Auto app was found. Choose it now?";
         return null;
     }
 
     /** Just switched on: if the feature needs setting up, offer to do it now instead of only saying so. */
     static void offerSetup(final HomeActivity a, final String id) {
         Prefs p = a.prefs;
+        if (("overStrip".equals(id) || "callScreen".equals(id)) && !OverMic.allowed(a)) {
+            new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Features.get(id).name))
+                    .setMessage(Hindi.t("This needs \"Display over other apps\" for OpenRath. Allow it now?"))
+                    .setPositiveButton(Hindi.t("Allow"), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface d, int w) {
+                            OverMic.ask(a);
+                        }
+                    }).setNegativeButton(Hindi.t("Later"), null).show();
+            return;
+        }
         boolean ind = p.signal("left") != null || p.signal("right") != null;
         boolean lights = p.lightSignal() != null || p.signal("door") != null || p.signal("belt") != null;
         boolean tyres = false;
         for (int i = 0; i < 4; i++) tyres |= !p.str("tpms" + i, "").isEmpty();
-        boolean proj = !"projection".equals(id) || Projection.app(a, p) != null;
+        boolean proj = !("projection".equals(id) || "projectionAuto".equals(id)) || Projection.app(a, p) != null;
         String q = needs(id, ind, lights, !p.str("obdMac", "").isEmpty(), tyres, proj);
         if (q == null) return;
         new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Features.get(id).name)).setMessage(Hindi.t(q))
@@ -1567,7 +1639,7 @@ final class Extras {
                             a.setupLights();
                         } else if ("obd".equals(id)) a.obdMenu();
                         else if ("tpms".equals(id)) a.tyresMenu();
-                        else if ("projection".equals(id)) {
+                        else if ("projection".equals(id) || "projectionAuto".equals(id)) {
                             AppPicker.show(a, Hindi.t("Your CarPlay or Android Auto app"), new AppPicker.Picked() {
                                 @Override
                                 public void picked(String pkg) {
@@ -1759,6 +1831,7 @@ final class Extras {
         Features.set(p, "eq", true);
         Eq.apply(a, p, 0);
         new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Equalizer")).setView(col)
+                .setMessage(Hindi.t(Eq.status.startsWith("This unit") ? Eq.status : Eq.REACH))
                 .setPositiveButton(Hindi.t("Done"), null)
                 .setNeutralButton(Hindi.t("Turn off"), new DialogInterface.OnClickListener() {
                     @Override
@@ -1767,7 +1840,6 @@ final class Extras {
                         Eq.apply(a, p, 0);
                     }
                 }).show();
-        if (Eq.status.startsWith("This unit")) Toast.makeText(a, Hindi.t(Eq.status), Toast.LENGTH_LONG).show();
     }
 
     private static void exportGpx(final HomeActivity a) {

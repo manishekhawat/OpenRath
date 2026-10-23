@@ -28,8 +28,12 @@ final class ThemeAuto {
         return null;
     }
 
-    /** Night at the dashboard's position, or by the clock (a may be null). */
+    /**
+     * Night: the headlights when their wire is set up (they go on in tunnels and on dark rainy days
+     * too), else sunset at the dashboard's position, else the clock (a may be null).
+     */
     static boolean night(HomeActivity a, long now) {
+        if (a != null && a.hub != null && a.prefs.lightSignal() != null) return a.hub.lightsOn();
         android.location.Location f = a == null || a.hub == null ? null : a.hub.fix;
         if (f != null) return Care.dark(f.getLatitude(), f.getLongitude(), now);
         int h = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);

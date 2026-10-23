@@ -107,7 +107,7 @@ final class Fm {
     }
 
     static String label(String cmd) {
-        if ("mcu".equals(cmd)) return Hindi.t("Topway MCU link (no radio service)");
+        if ("mcu".equals(cmd)) return Hindi.t("Straight to the radio chip (no radio service)");
         if (cmd.startsWith("launch:")) return Hindi.t("Open the radio app, then back to the dashboard");
         if (cmd.startsWith("svc:")) return Hindi.f("Radio app's service %1$s", cmd.substring(cmd.lastIndexOf('.') + 1));
         if (opensApp(cmd)) return Hindi.f("%1$s, then back to the dashboard", label0(cmd));

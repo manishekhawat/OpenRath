@@ -136,8 +136,8 @@ final class HomeDock {
             final String label = Prefs.DOCK_NAMES[i];
             ImageView v = new ImageView(a);
             v.setImageBitmap(Ui.img(a, "dock_" + name));
-            LinearLayout.LayoutParams p = across ? new LinearLayout.LayoutParams(0, Ui.px(62), 1f)
-                    : new LinearLayout.LayoutParams(Ui.px(62), 0, 1f);
+            LinearLayout.LayoutParams p = across ? new LinearLayout.LayoutParams(0, Ui.px(TARGET), 1f)
+                    : new LinearLayout.LayoutParams(Ui.px(TARGET), 0, 1f);
             v.setLayoutParams(p);
             v.setScaleType(ImageView.ScaleType.FIT_CENTER);
             gap(v, across);
@@ -180,7 +180,7 @@ final class HomeDock {
         gear.setImageBitmap(Ui.img(a, "dock_settings"));
         gear.setScaleType(ImageView.ScaleType.FIT_CENTER);
         gap(gear, across);
-        gear.setLayoutParams(across ? new LinearLayout.LayoutParams(0, Ui.px(62), 1f) : new LinearLayout.LayoutParams(Ui.px(62), 0, 1f));
+        gear.setLayoutParams(across ? new LinearLayout.LayoutParams(0, Ui.px(TARGET), 1f) : new LinearLayout.LayoutParams(Ui.px(TARGET), 0, 1f));
         gear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View x) {
@@ -206,10 +206,16 @@ final class HomeDock {
      * instead of touching. Where there's room the ring is already narrower than its space, so it
      * doesn't change.
      */
+    /**
+     * Each dock button takes touches across 76 (the size Android's car guidelines ask for while
+     * driving); its picture stays 62 wide, with the rest as padding.
+     */
+    static final int TARGET = 76;
+
     private static void gap(ImageView v, boolean across) {
-        int g = Ui.px(5);
-        if (across) v.setPadding(g, 0, g, 0);
-        else v.setPadding(0, g, 0, g);
+        int g = Ui.px(5), side = Ui.px((TARGET - 62) / 2f);
+        if (across) v.setPadding(g, side, g, side);
+        else v.setPadding(side, g, side, g);
     }
 
     /** Music and radio share their app with the music and radio boxes. */
