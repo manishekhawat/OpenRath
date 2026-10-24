@@ -93,7 +93,7 @@ final class View360 {
 
         @Override
         protected void onDraw(Canvas c) {
-            String s = Car3D.shape(prefs);
+            String s = Car3D.drawn(prefs);
             if (!s.equals(shape)) {
                 shape = s;
                 faces = Car3D.build(s);

@@ -188,6 +188,8 @@ final class Cards {
 
     static final class ClockCard extends Card {
         final TextClock time = new TextClock(getContext()), date = new TextClock(getContext());
+        /** Under the date: the next event today, else the weather now. */
+        final TextView next = Ui.text(getContext(), 12, Ui.SILVER_DIM, "sans-serif", Gravity.CENTER);
         final LinearLayout col = new LinearLayout(getContext());
 
         ClockCard(Context c) {
@@ -209,13 +211,16 @@ final class Cards {
             col.setGravity(Gravity.CENTER);
             col.addView(time);
             col.addView(date);
+            next.setEllipsize(android.text.TextUtils.TruncateAt.END);
+            next.setVisibility(GONE);
+            col.addView(next);
             addView(col, new LayoutParams(-1, -1));
         }
 
         @Override
         void fit(int w, int h) {
-            // time, gap and date together take at most ~80% of the box height
-            float big = Math.min(h * 0.46f, w * 0.17f);
+            // time, date and the line under it together take at most ~80% of the box height
+            float big = Math.min(h * 0.42f, w * 0.17f);
             float small = Math.min(Math.max(big * 0.22f, 11 * Ui.k), w / 16f);
             time.setTextSize(0, big);
             date.setTextSize(0, small);
@@ -224,10 +229,31 @@ final class Cards {
             dp.topMargin = Math.round(big * 0.14f);
             time.setLayoutParams(tp);
             date.setLayoutParams(dp);
+            next.setTextSize(0, small * 0.92f);
+            next.setMaxWidth(w - Ui.px(24));
+            LinearLayout.LayoutParams np = new LinearLayout.LayoutParams(-2, -2);
+            np.topMargin = Math.round(small * 0.5f);
+            next.setLayoutParams(np);
         }
 
         @Override
         public void changed(Hub h) {
+            String t = nextLine(h, System.currentTimeMillis());
+            if (!t.contentEquals(next.getText())) next.setText(t);
+            next.setVisibility(t.isEmpty() ? GONE : VISIBLE);
+        }
+
+        /** "14:30  Dentist" for the next event today (from the calendar box's last read), else "23° Clear", else "". */
+        String nextLine(Hub h, long now) {
+            java.util.List<Agenda.Event> ev = CalendarCard.seen;
+            if (ev != null && Features.on(host.prefs(), "calendar")) for (Agenda.Event e : ev) {
+                if (e.end <= now) continue;
+                String[] w = Agenda.when(e.start, e.end, e.allDay, now, java.util.TimeZone.getDefault());
+                if (!"Today".equals(w[0])) break;
+                return (w[1].isEmpty() ? "" : Hindi.t(w[1]) + "  ") + e.title;
+            }
+            if (h.temp == null || h.temp.startsWith("--")) return "";
+            return h.temp + (h.weather == null || h.weather.isEmpty() || "Weather".equals(h.weather) ? "" : " " + Hindi.t(h.weather));
         }
     }
 
@@ -290,7 +316,7 @@ final class Cards {
             temp.setText(h.temp);
             desc.setText(Hindi.t(h.weather));
             int aq = Features.on(host.prefs(), "aqi") ? Air.aqi : -1;
-            place.setText(aq < 0 ? h.place : h.place + (h.place.isEmpty() ? "" : "  ·  ") + "AQI " + aq);
+            place.setText(placeLine(h.place, aq, place.getPaint(), place.getMaxWidth()));
             place.setTextColor(aq > 200 ? 0xFFFFB02E : Ui.SILVER_DIM);
             // rain on the planned route wins over rain here; both come and go
             String r = !Features.on(host.prefs(), "rain") ? "" : !Hub.routeRain.isEmpty() ? Hub.routeRain : Hub.showRain(h.rainSoon);
@@ -310,6 +336,20 @@ final class Cards {
                 if (this.w > 0) fit(this.w, this.h);
             }
         }
+    }
+
+    /**
+     * "Gurugram  ·  AQI 197". The air quality's number never goes without its label: when the line
+     * is too wide, the place name is shortened ("Gurug…  ·  AQI 197"), never the AQI.
+     */
+    static CharSequence placeLine(String place, int aqi, android.text.TextPaint paint, int maxW) {
+        if (aqi < 0) return place;
+        String aq = "AQI\u00A0" + aqi;   // a space that never breaks the line
+        if (place.isEmpty()) return aq;
+        String sep = "  ·  ";
+        if (maxW <= 0 || maxW == Integer.MAX_VALUE) return place + sep + aq;
+        CharSequence p = android.text.TextUtils.ellipsize(place, paint, maxW - paint.measureText(sep + aq), android.text.TextUtils.TruncateAt.END);
+        return p.length() == 0 ? aq : p + sep + aq;
     }
 
     /** The next 24 hours: a temperature curve with the hours marked, and a blue bar where rain is expected. */
@@ -380,12 +420,17 @@ final class Cards {
 
     // ---------------------------------------------------------------- news
 
-    /** The top five headlines. Read aloud reads them all; tapping one reads just that one. */
+    /**
+     * The top headlines, as many as the box has room for (up to News.KEEP); spare room lets the first
+     * ones run to two lines. Read aloud reads the top five; tapping one reads just that one.
+     */
     static final class NewsCard extends Card {
         final TextView head = Ui.text(getContext(), 13, Ui.SILVER_DIM, "sans-serif-medium", Gravity.LEFT);
         final TextView read = Ui.text(getContext(), 13, Ui.SILVER, "sans-serif-medium", Gravity.CENTER);
-        final TextView[] lines = new TextView[News.COUNT];
+        final TextView[] lines = new TextView[News.KEEP];
         final LinearLayout col = new LinearLayout(getContext());
+        /** Headline rows that fit under the title, and how many headlines the lines were laid out for. */
+        int room = News.COUNT, laidFor = -1;
         int shown = -1;
         boolean wasSpeaking;
         long lastAge;
@@ -397,7 +442,8 @@ final class Cards {
             for (int i = 0; i < lines.length; i++) {
                 final int n = i;
                 lines[i] = Ui.text(c, 15, Ui.SILVER, "sans-serif", Gravity.LEFT);
-                lines[i].setSingleLine(true);
+                lines[i].setSingleLine(false);
+                lines[i].setMaxLines(1);
                 lines[i].setEllipsize(android.text.TextUtils.TruncateAt.END);
                 clickable(lines[i], new OnClickListener() {
                     @Override
@@ -449,20 +495,36 @@ final class Cards {
             read.setTextSize(0, 17 * Ui.k * s);
             read.setPadding(Ui.px(22 * s), Ui.px(9 * s), Ui.px(22 * s), Ui.px(9 * s));
             read.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(10 * s), m, 0));
-            // as many headlines as fit under the title row
+            // as many headline rows as fit under the title row
             float row = big * 1.55f;
-            int room = (int) ((h - Ui.px(62 * s) - m) / row);
-            int n = Math.max(1, Math.min(News.COUNT, room));
+            room = Math.max(1, (int) ((h - Ui.px(62 * s) - m) / row));
             for (int i = 0; i < lines.length; i++) {
                 lines[i].setTextSize(0, big);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
                 lp.topMargin = Math.round(big * 0.5f);
                 lines[i].setLayoutParams(lp);
-                lines[i].setVisibility(i < n ? VISIBLE : GONE);
             }
+            laidFor = -1;
+            rows();
             col.setLayoutParams(at(-1, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(14 * s), m, 0));
             head.setLayoutParams(new LinearLayout.LayoutParams(-2, Ui.px(44 * s)));
             head.setGravity(Gravity.CENTER_VERTICAL);
+        }
+
+        /**
+         * Show as many headlines as there are rows for; with rows to spare (fewer headlines than
+         * rows), the first ones may wrap to a second line, never more lines than the box holds.
+         */
+        void rows() {
+            int have = Math.max(1, News.items.size());
+            if (have == laidFor) return;
+            laidFor = have;
+            int n = Math.min(Math.min(lines.length, room), have);
+            int spare = room - n;
+            for (int i = 0; i < lines.length; i++) {
+                lines[i].setVisibility(i < n ? VISIBLE : GONE);
+                lines[i].setMaxLines(i < spare ? 2 : 1);
+            }
         }
 
         void button() {
@@ -480,6 +542,7 @@ final class Cards {
             if (shown == News.version && now - lastAge < 60000) return;
             shown = News.version;
             lastAge = now;
+            rows();
             String age = News.age(now);
             String topic = News.topicName(p.str("newsTopic", "top"));
             head.setText((topic.equals("Top stories") ? Hindi.t("TOP NEWS") : Hindi.f("%1$s NEWS", Hindi.t(topic).toUpperCase(Locale.US)))
@@ -526,6 +589,8 @@ final class Cards {
     abstract static class FiguresCard extends Card {
         final TextView head;
         final TextView foot = Ui.text(getContext(), 12, Ui.SILVER_DIM, "sans-serif", Gravity.CENTER);
+        /** One friendly line in the middle, in place of a row of "--" (see note()). */
+        final TextView middle = Ui.text(getContext(), 14, Ui.SILVER_DIM, "sans-serif", Gravity.CENTER);
         final Figure[] figs;
         final LinearLayout row = new LinearLayout(getContext());
 
@@ -540,9 +605,13 @@ final class Cards {
             }
             foot.setSingleLine(true);
             foot.setEllipsize(android.text.TextUtils.TruncateAt.END);
+            middle.setSingleLine(false);
+            middle.setMaxLines(3);
+            middle.setVisibility(GONE);
             addView(head);
             addView(row);
             addView(foot);
+            addView(middle);
             clickable(this, new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -553,10 +622,21 @@ final class Cards {
 
         abstract void tapped();
 
+        /** Show one centred line instead of the figures and the foot line, or (null) the figures again. */
+        void note(String text) {
+            boolean on = text != null;
+            if (on && !text.contentEquals(middle.getText())) middle.setText(text);
+            middle.setVisibility(on ? VISIBLE : GONE);
+            row.setVisibility(on ? INVISIBLE : VISIBLE);
+            foot.setVisibility(on ? INVISIBLE : VISIBLE);
+        }
+
         @Override
         void fit(int w, int h) {
             float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
             int m = Ui.px(20 * s);
+            middle.setTextSize(0, Math.max(Ui.MIN_TEXT, 14 * s) * Ui.k);
+            middle.setLayoutParams(at(-1, -2, Gravity.CENTER, m, Ui.px(10 * s), m, 0));
             head.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
             head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(12 * s), 0, 0));
             for (Figure f : figs) f.size(s);
@@ -569,6 +649,10 @@ final class Cards {
     }
 
     static final class TripCard extends FiguresCard {
+        /** The day-by-day history, read again every few minutes for the last drive. */
+        private org.json.JSONObject hist;
+        private long histAt;
+
         TripCard(Context c) {
             super(c, "TODAY", "KM", "DRIVE TIME", "AVG KM/H");
         }
@@ -578,13 +662,49 @@ final class Cards {
             host.tripMenu();
         }
 
+        /** Distance, time and average speed in the three figures. */
+        void figures(double km, long sec) {
+            figs[0].value.setText(km < 100 ? Fuel.fmt(km) : String.valueOf(Math.round(km)));
+            long min = sec / 60;
+            figs[1].value.setText(min < 60 ? min + "m" : (min / 60) + "h " + (min % 60) + "m");
+            double avg = sec < 60 ? 0 : km / (sec / 3600.0);
+            figs[2].value.setText(avg <= 0 ? "--" : String.valueOf(Math.round(avg)));
+        }
+
+        /**
+         * No driving yet today: the last day that had some, labelled with when it was; or a friendly
+         * line when nothing was ever recorded.
+         */
+        private void lastDrive() {
+            long now = System.currentTimeMillis();
+            if (hist == null || now - histAt > 5 * 60000) {
+                hist = Drive.history(getContext());
+                histAt = now;
+            }
+            String today = Times.today();
+            String day = Drive.lastDay(hist, today);
+            if (day == null) {
+                head.setText(Hindi.t("TODAY"));
+                note(Hindi.t("Your trips show here after your first drive"));
+                return;
+            }
+            note(null);
+            org.json.JSONArray a = hist.optJSONArray(day);
+            figures(a.optDouble(0, 0), a.optLong(1, 0));
+            int ago = Drive.daysBetween(day, today);
+            head.setText(Hindi.f("LAST DRIVE, %1$s", ago <= 1 ? Hindi.t("YESTERDAY") : Hindi.f("%1$s DAYS AGO", ago)));
+            foot.setText(Drive.parkAt == 0 ? "" : Hindi.f("Parked %1$s", ago(Drive.parkAt)));
+        }
+
         @Override
         public void changed(Hub h) {
-            figs[0].value.setText(Drive.todayKm < 100 ? Fuel.fmt(Drive.todayKm) : String.valueOf(Math.round(Drive.todayKm)));
-            long min = Drive.todaySec / 60;
-            figs[1].value.setText(min < 60 ? min + "m" : (min / 60) + "h " + (min % 60) + "m");
-            double avg = Drive.avgKmh();
-            figs[2].value.setText(avg <= 0 ? "--" : String.valueOf(Math.round(avg)));
+            if (Drive.todayKm < 0.05 && Drive.todaySec < 60) {
+                lastDrive();
+                return;
+            }
+            head.setText(Hindi.t("TODAY"));
+            note(null);
+            figures(Drive.todayKm, Drive.todaySec);
             String park = Drive.parkAt == 0 ? "" : "  ·  " + Hindi.f("parked %1$s", ago(Drive.parkAt));
             double rs = Features.on(host.prefs(), "fuelPrice") ? Fuel.cost(host.prefs(), Drive.todayKm) : 0;
             foot.setText(Hindi.f("This drive %1$s km", Fuel.fmt(Drive.driveKm)) + (rs >= 1 ? "  ·  " + Hindi.f("₹%1$s petrol today", Math.round(rs)) : "")
@@ -622,6 +742,7 @@ final class Cards {
         @Override
         public void changed(Hub h) {
             Fuel.Stats st = Fuel.stats(host.prefs());
+            note(st.fills == 0 ? Hindi.t("Add your first fill-up to see mileage") : null);
             figs[0].value.setText(st.lastKmpl > 0 ? Fuel.fmt(st.lastKmpl) : "--");
             figs[1].value.setText(st.avgKmpl > 0 ? Fuel.fmt(st.avgKmpl) : "--");
             figs[2].value.setText(st.rupeesPerKm > 0 ? Fuel.fmt(st.rupeesPerKm) : "--");
@@ -774,13 +895,16 @@ final class Cards {
 
         @Override
         public void changed(Hub h) {
-            double hd = Drive.headingNow >= 0 ? Drive.headingNow : Drive.headingKept;
+            // parked: the last heading while driving (kept over a restart by the trip service), else the GPS's own
+            android.location.Location f = h.fix;
+            double hd = Drive.headingNow >= 0 ? Drive.headingNow : Drive.headingKept >= 0 ? Drive.headingKept
+                    : f != null && f.hasBearing() ? f.getBearing() : -1;
             figs[0].value.setText(hd < 0 ? "--" : Hindi.t(point(hd)));
             figs[1].value.setText(hd < 0 ? "--" : Math.round(hd) % 360 + "°");
-            double alt = Drive.altNow;
+            double alt = !Double.isNaN(Drive.altNow) ? Drive.altNow : f != null && f.hasAltitude() ? f.getAltitude() : Double.NaN;
             figs[2].value.setText(Double.isNaN(alt) ? "--" : String.valueOf(Math.round(alt)));
             foot.setText(hd < 0 ? Hindi.t("The heading shows once the car moves")
-                    : Drive.headingNow < 0 ? Hindi.t("Last heading while moving; GPS altitude is within about 10 m")
+                    : Drive.headingNow < 0 ? Hindi.t("Last heading while driving")
                     : Hindi.t("GPS altitude is within about 10 m"));
         }
 
@@ -858,6 +982,8 @@ final class Cards {
         final TextView note = Ui.text(getContext(), 12, Ui.SILVER_DIM, "sans-serif", Gravity.CENTER);
         final LinearLayout col = new LinearLayout(getContext());
         final TextView[] lines = new TextView[Agenda.MAX];
+        /** The events last read, for the clock box's line under the date; null before the first read. */
+        static volatile java.util.List<Agenda.Event> seen;
         long readAt;
         boolean reading;
         int fitLines = Agenda.MAX;
@@ -871,6 +997,8 @@ final class Cards {
                 lines[i].setEllipsize(android.text.TextUtils.TruncateAt.END);
                 col.addView(lines[i]);
             }
+            note.setSingleLine(false);
+            note.setMaxLines(3);
             addView(head);
             addView(col);
             addView(note);
@@ -905,8 +1033,9 @@ final class Cards {
             for (TextView t : lines) t.setTextSize(0, line);
             fitLines = Math.max(1, Math.min(Agenda.MAX, (int) ((h - Ui.px(48 * s)) / (line * 1.35f))));
             col.setLayoutParams(at(-1, -2, Gravity.TOP, m, Ui.px(30 * s), m, 0));
-            note.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
-            note.setLayoutParams(at(-1, -2, Gravity.BOTTOM, m, 0, m, Ui.px(8 * s)));
+            this.w = w;
+            this.h = h;
+            placeNote();
         }
 
         @Override
@@ -928,19 +1057,42 @@ final class Cards {
                 @Override
                 public void run() {
                     final java.util.List<Agenda.Event> ev = Agenda.read(c, System.currentTimeMillis());
+                    seen = ev;
                     post(new Runnable() {
                         @Override
                         public void run() {
                             reading = false;
-                            show(ev, ev.isEmpty() ? Hindi.t("Nothing in the next few days") : "");
+                            show(ev, ev.isEmpty() ? nothing() : "");
                         }
                     });
                 }
             });
         }
 
+        /** No events: say so, with the next holiday when there is one (India's list only). */
+        static String nothing() {
+            java.util.List<String> hol = Holidays.upcoming(java.util.Calendar.getInstance(), 1);
+            return Hindi.t("Nothing in the next few days") + (hol.isEmpty() ? "" : "\n" + Hindi.f("Next holiday: %1$s", hol.get(0)));
+        }
+
+        private int w, h;
+        /** Nothing to list: the message sits in the middle of the box instead of under a gap. */
+        private boolean blank = true;
+
+        private void placeNote() {
+            float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
+            int m = Ui.px(16 * s);
+            note.setTextSize(0, Math.max(Ui.MIN_TEXT, (blank ? 13 : 11) * s) * Ui.k);
+            note.setLayoutParams(blank ? at(-1, -2, Gravity.CENTER, m, Ui.px(10 * s), m, 0) : at(-1, -2, Gravity.BOTTOM, m, 0, m, Ui.px(8 * s)));
+        }
+
         private void show(java.util.List<Agenda.Event> ev, String foot) {
             long now = System.currentTimeMillis();
+            boolean empty = ev == null || ev.isEmpty();
+            if (empty != blank) {
+                blank = empty;
+                if (w > 0) placeNote();
+            }
             for (int i = 0; i < lines.length; i++) {
                 boolean has = ev != null && i < ev.size() && i < fitLines;
                 lines[i].setVisibility(has ? VISIBLE : GONE);
@@ -1085,10 +1237,11 @@ final class Cards {
         public void changed(Hub h) {
             Prefs p = host.prefs();
             if (!Features.on(p, "obd")) {
-                for (Figure f : figs) f.value.setText("--");
-                foot.setText(Hindi.t("Engine data is off in Settings > Car"));
+                note(Hindi.t("Engine data is off in Settings > Car"));
                 return;
             }
+            // no adapter chosen yet: one line instead of a row of dashes
+            note(p.str("obdMac", "").isEmpty() ? Hindi.t("Connect an OBD adapter to see engine data") : null);
             boolean live = Obd.connected && System.currentTimeMillis() - Obd.readAt < 5000;
             figs[0].value.setText(live && Obd.rpm >= 0 ? String.valueOf(Obd.rpm) : "--");
             figs[1].value.setText(live && Obd.coolant > -40 ? String.valueOf(Obd.coolant) : "--");
