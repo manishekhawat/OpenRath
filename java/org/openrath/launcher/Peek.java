@@ -62,6 +62,14 @@ final class Peek {
                 } catch (Throwable ignored) {
                     // not readable on this unit
                 }
+                // theme apps and other launchers (iLauncher, the stock theme app): they know how the
+                // stock unit reads the headlights for day and night
+                try {
+                    for (ApplicationInfo ai : pm.getInstalledApplications(0))
+                        if (themeLike(ai.packageName) && !ai.packageName.equals(a.getPackageName())) pkgs.add(ai.packageName);
+                } catch (Throwable ignored) {
+                    // not readable on this unit
+                }
                 List<String> saved = new ArrayList<>();
                 for (String pkg : pkgs) {
                     ApplicationInfo ai;
@@ -115,6 +123,13 @@ final class Peek {
                 });
             }
         });
+    }
+
+    /** Apps worth copying for how the stock unit switches day and night: themes and launchers. */
+    static boolean themeLike(String pkg) {
+        String l = pkg.toLowerCase(Locale.US);
+        if (l.startsWith("com.android.") || l.startsWith("android.") || l.startsWith("com.google.")) return false;
+        return l.contains("theme") || l.contains("launcher") || l.contains("skin");
     }
 
     private static final String SKIPPED = "Skipped: reading the stock apps stopped OpenRath before.\nUse Help > Clear the crash note to try again.";

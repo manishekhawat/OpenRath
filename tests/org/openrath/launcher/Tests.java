@@ -1316,6 +1316,17 @@ public final class Tests {
 
     static void batch2() {
         // distances and "ahead"
+        eq("Topway headlights: the illumination getter wins", "getIllState",
+                Xt.headlightGetter(java.util.Arrays.asList("getNightMode()", "isLightFromMCU()", "getIllState()", "lightUp()")));
+        eq("Topway headlights: light-from-MCU before night mode", "isLightFromMCU",
+                Xt.headlightGetter(java.util.Arrays.asList("getNightMode()", "isLightFromMCU()", "getBrightness()")));
+        eq("Topway headlights: brightness and setters are never used", null,
+                Xt.headlightGetter(java.util.Arrays.asList("getBrightness()", "lightValue(int)", "getLightValue()", "getBacklightLevel()")));
+        eq("Topway headlights: first answer is not trusted", "getIllState:on", Xt.seenAfter("", "getIllState", true));
+        eq("Topway headlights: trusted once seen on and off", "getIllState:both", Xt.seenAfter("getIllState:on", "getIllState", false));
+        eq("Topway headlights: same answer again", "getIllState:on", Xt.seenAfter("getIllState:on", "getIllState", true));
+        eq("Topway headlights: a new getter starts again", "isLightFromMCU:off", Xt.seenAfter("getIllState:both", "isLightFromMCU", false));
+        check("copy theme apps", Peek.themeLike("com.tw.theme") && Peek.themeLike("com.ilauncher.car") && !Peek.themeLike("com.android.theme.color.red"));
         check("voice: none installed says so", Speak.state(false, false, false).startsWith("No voice engine"));
         check("voice: broken engine says how to fix", Speak.state(true, false, true).contains("doesn't start"));
         eq("voice: working", "The voice is working.", Speak.state(true, true, false));
