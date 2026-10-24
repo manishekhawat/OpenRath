@@ -456,6 +456,9 @@ public final class Tests {
             check("backup copy: " + e, false);
         }
         // online radio: web streams only
+        eq("station name cleaned", "Bollywood Dance", Player.clean(" Bollywood_Dance  "));
+        eq("station tags cleaned", "dance, music", Player.clean("dance,  music"));
+        eq("station name null", "", Player.clean(null));
         check("stream http", Player.streamable("http://stream.example:8000/live.mp3") && Player.streamable("HTTPS://s.example/a"));
         check("stream not files", !Player.streamable("file:///sdcard/x.mp3") && !Player.streamable("content://media/1")
                 && !Player.streamable("rtsp://s.example/a") && !Player.streamable("") && !Player.streamable(null) && !Player.streamable("http://"));
