@@ -587,7 +587,7 @@ final class Cab {
             Toast.makeText(a, Hindi.t("All the cab tools are switched off in Settings > Cab driver"), Toast.LENGTH_LONG).show();
             return;
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(title(p))
                 .setItems(names.toArray(new String[0]), new DialogInterface.OnClickListener() {
                     @Override
@@ -674,7 +674,7 @@ final class Cab {
         }
         String[] names = new String[apps.size()];
         for (int i = 0; i < names.length; i++) names[i] = apps.get(i)[0];
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Ride apps"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
@@ -723,7 +723,7 @@ final class Cab {
         for (int i = 0; i < PHRASES.length; i++) list.add(phrase(i, lang));
         for (String s : p.str("cabOwnPhrases", "").split("\n")) if (!s.trim().isEmpty()) list.add(s.trim());
         int li = java.util.Arrays.asList(LANGS).indexOf(lang);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Say to the passenger (%1$s)", Hindi.t(LANG_NAMES[Math.max(0, li)])))
                 .setItems(list.toArray(new String[0]), new DialogInterface.OnClickListener() {
                     @Override
@@ -742,7 +742,7 @@ final class Cab {
                 .setNeutralButton(Hindi.t("Language"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
-                        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                 .setTitle(Hindi.t("Phrases in"))
                                 .setItems(tr(LANG_NAMES), new DialogInterface.OnClickListener() {
                                     @Override
@@ -758,7 +758,7 @@ final class Cab {
                     public void onClick(DialogInterface d, int w) {
                         final EditText e = new EditText(a);
                         e.setHint(Hindi.t("Type it in any language"));
-                        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                 .setTitle(Hindi.t("Your own phrase")).setView(e)
                                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                                     @Override
@@ -796,7 +796,7 @@ final class Cab {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         final List<double[]> spots = hotspots(log(a.prefs), hour, 6);
         if (spots.isEmpty()) {
-            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+            new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                     .setTitle(Hindi.t("Pickup hotspots"))
                     .setMessage(Hindi.t("Not enough rides around this hour yet. Each ride you log (or meter) remembers where it started; "
                             + "places with two or more rides around this time of day show here."))
@@ -810,7 +810,7 @@ final class Cab {
                     String.format(Locale.US, "%.1f", Geo.dist(Drive.latNow, Drive.lonNow, s[0], s[1]) / 1000));
             rows[i] = far + Hindi.f("%1$s rides around %2$s:00   (%3$s)", Math.round(s[2]), hour, String.format(java.util.Locale.US, "%.5f, %.5f", s[0], s[1]));
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Where you got rides at this hour (tap to drive there)"))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override
@@ -871,7 +871,7 @@ final class Cab {
         }
         String head = st[1] > 0 ? Hindi.f("CNG  ·  %1$s km/kg average, %2$s last, ₹%3$s a km", Fuel.fmt(st[1]), Fuel.fmt(st[0]), Fuel.fmt(st[2]))
                 : Hindi.t(rows.length == 0 ? "No CNG fills yet" : "CNG  ·  km/kg shows after two fills");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(head)
                 .setItems(rows, null)
                 .setPositiveButton(Hindi.t("Add a fill"), new DialogInterface.OnClickListener() {
@@ -888,7 +888,7 @@ final class Cab {
         final EditText kg = number(box, Hindi.t("Kg"), null);
         final EditText rupees = number(box, Hindi.t("Amount paid (₹)"), null);
         final EditText odo = number(box, Hindi.t("Odometer (km)"), String.valueOf(Care.odo(p)));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Add a CNG fill")).setView(box)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
@@ -950,7 +950,7 @@ final class Cab {
             JSONObject o = l.optJSONObject(l.length() - 1 - i);
             rows[i] = f.format(new Date(o.optLong("t"))) + "   " + (o.has("photo") ? "📷 " : "") + o.optString("text");
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t(rows.length == 0 ? "No notes yet" : "Ride notes"))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override
@@ -977,7 +977,7 @@ final class Cab {
         e.setHint(Hindi.t("Passenger's name, what was left, a phone number…"));
         e.setText(start);
         e.setSelection(start.length());
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t(photo == null ? "Note" : "What was left, and by whom?")).setView(e)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
@@ -1021,7 +1021,7 @@ final class Cab {
             img.setImageBitmap(android.graphics.BitmapFactory.decodeFile(photo, op));
             box.addView(img, new LinearLayout.LayoutParams(-1, Ui.px(300)));
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(new SimpleDateFormat("d MMM yyyy, HH:mm", Locale.getDefault()).format(new Date(o.optLong("t"))))
                 .setView(box)
                 .setPositiveButton(Hindi.t("Close"), null)
@@ -1046,7 +1046,7 @@ final class Cab {
             rows[i] = d == Long.MIN_VALUE ? Hindi.f("%1$s: tap to set the expiry date", Hindi.t(PAPER_NAMES[i])) : dueShow(PAPER_NAMES[i], d)
                     + "  (" + p.str(paperKey(PAPERS[i]), "") + ")";
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Papers (reminded 15 days ahead)"))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override

@@ -427,8 +427,60 @@ public final class Tests {
         finishFixes();
         musicScreen();
         androidAuto();
+        glassLook();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
+    }
+
+    /** The Glass look: the wallpaper's blur, its colours and the see-through mixing of glass panels. */
+    private static void glassLook() {
+        // the blur: spreads a light, keeps one colour and opacity, leaves the input alone
+        int[] dot = new int[9 * 9];
+        java.util.Arrays.fill(dot, 0xFF000000);
+        dot[40] = 0xFFFFFFFF;
+        int[] soft = Glass.blur(dot, 9, 9, 2);
+        check("glass: blur softens the light", (soft[40] & 255) < 255 && (soft[40] & 255) > 0);
+        check("glass: blur spreads it", (soft[38] & 255) > 0 && (soft[22] & 255) > 0);
+        check("glass: blur keeps it opaque", (soft[0] >>> 24) == 255 && (soft[40] >>> 24) == 255);
+        eq("glass: blur leaves the picture", 0xFFFFFFFF, dot[40]);
+        int[] flat = new int[12 * 5];
+        java.util.Arrays.fill(flat, 0xFF336699);
+        eq("glass: blur of one colour is that colour", 0xFF336699, Glass.blur(flat, 12, 5, 4)[33]);
+        eq("glass: blur radius 0 changes nothing", 0xFFFFFFFF, Glass.blur(dot, 9, 9, 0)[40]);
+        int[] wide = Glass.blur(dot, 9, 9, 20);   // a radius bigger than the picture holds the edges
+        check("glass: big blur stays in range", (wide[0] & 255) >= 0 && (wide[0] & 255) < 40);
+        long sum = 0;
+        for (int p : soft) sum += p & 255;
+        check("glass: blur keeps about the same light", sum > 200 && sum < 300);
+
+        // the alpha-aware mix glass panels need, and what it looks like over the wallpaper
+        eq("glass: mix halves the alpha too", 0x80FFFFFF, Glass.mix(0xFFFFFFFF, 0x00FFFFFF, 0.5f));
+        eq("glass: mix of opaque colours is Ui.mix", Ui.mix(0xFF6F8FC8, 0xFF101114, 0.3f), Glass.mix(0xFF6F8FC8, 0xFF101114, 0.3f));
+        eq("glass: mix ends", 0x26FFFFFF, Glass.mix(0xFF000000, Glass.DAY_FILL, 0f));
+        eq("glass: white 15% over black", 0xFF262626, Glass.over(0x26FFFFFF, 0xFF000000));
+        eq("glass: see-through nothing over a colour", 0xFF336699, Glass.over(0x00FFFFFF, 0xFF336699));
+        boolean was = Glass.on;
+        Glass.on = true;
+        int lit = Ui.mix(0xFF5D9BE0, Glass.DAY_FILL, 0.13f);
+        check("glass: a lit row on glass stays see-through", (lit >>> 24) < 0xFF && (lit >>> 24) > (Glass.DAY_FILL >>> 24));
+        Glass.on = false;
+        eq("glass: off, Ui.mix is opaque as before", 0xFF000000, Ui.mix(0xFF5D9BE0, Glass.DAY_FILL, 0.13f) & 0xFF000000);
+        Glass.on = was;
+
+        // the built-in wallpapers: opaque, colourful, different, and dark enough for white text once shaded
+        for (int i = 0; i < 3; i++) {
+            int[] w = Glass.paint(i, 64, 36);
+            check("glass: wallpaper " + i + " is opaque", (w[0] >>> 24) == 255 && (w[w.length - 1] >>> 24) == 255);
+            int avg = Glass.average(Glass.shade(w, Glass.DAY_SHADE));
+            double lum = (0.299 * ((avg >> 16) & 255) + 0.587 * ((avg >> 8) & 255) + 0.114 * (avg & 255)) / 255;
+            check("glass: wallpaper " + i + " is dark enough for white text (" + lum + ")", lum < 0.4);
+            check("glass: wallpaper " + i + " isn't flat", w[0] != w[w.length / 2 + 32]);
+        }
+        check("glass: wallpapers differ", Glass.paint(0, 16, 9)[40] != Glass.paint(1, 16, 9)[40]);
+        eq("glass: unknown wallpaper is the first", Glass.paint(0, 8, 4)[5], Glass.paint(7, 8, 4)[5]);
+        eq("glass: shade halves", 0xFF402010, Glass.shade(new int[]{0xFF804020}, 0.5f)[0]);
+        eq("glass: average", 0xFF7F7F7F, Glass.average(new int[]{0xFF000000, 0xFFFFFFFF, 0xFF808080, 0xFF808080}));
+        eq("glass: night glass is darker", true, Glass.NIGHT_SHADE < Glass.DAY_SHADE && (Glass.NIGHT_FILL & 0xFFFFFF) == 0);
     }
 
     /** The radio and music screen: FM presets and tuning, favourite stations, songs by artist or folder, search, voice. */

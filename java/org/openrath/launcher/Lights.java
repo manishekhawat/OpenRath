@@ -523,7 +523,7 @@ final class Lights {
 
     private static void step(final Activity a, final Prefs prefs, final Done done,
                              final List<Map<String, String>> shots, final String[] steps, final int i) {
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("%1$s setup  %2$s/3", Hindi.t(noun()).substring(0, 1).toUpperCase(Locale.US) + Hindi.t(noun()).substring(1), i + 1))
                 .setMessage(Hindi.t(steps[i]))
                 .setCancelable(false)
@@ -562,7 +562,7 @@ final class Lights {
 
     private static void finish(final Activity a, final Prefs prefs, final Done done, final List<Candidate> found) {
         stopListening(a);
-        AlertDialog.Builder b = new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert);
+        AlertDialog.Builder b = new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert);
         if (found.isEmpty()) {
             b.setTitle(Hindi.f("No %1$s signal found", Hindi.t(noun())))
                     .setMessage(("lights".equals(kind) ? Hindi.t("Nothing this app can read changed with the headlights, so the unit may not pass the "
@@ -718,7 +718,7 @@ final class Lights {
                 "Switch both indicators OFF (and the hazard lights). Tap Next and wait 4 seconds.",
                 "Switch the LEFT indicator on. Tap Next and leave it blinking for 4 seconds.",
                 "Switch the left one off and the RIGHT indicator on. Tap Next and leave it blinking for 4 seconds."};
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Indicator setup  %1$s/3", i + 1))
                 .setMessage(Hindi.t(steps[i]))
                 .setCancelable(false)
@@ -760,7 +760,7 @@ final class Lights {
         stopListening(a);
         final Side l = bestSide(runs.get(0), runs.get(1), runs.get(2), "left");
         final Side r = bestSide(runs.get(0), runs.get(2), runs.get(1), "right");
-        AlertDialog.Builder b = new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert);
+        AlertDialog.Builder b = new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert);
         if (l == null && r == null) {
             b.setTitle(Hindi.t("No indicator signal found"))
                     .setMessage(Hindi.t("Nothing this app can read changed with the indicators. Many units only get the "

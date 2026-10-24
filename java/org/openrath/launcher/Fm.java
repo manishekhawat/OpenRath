@@ -204,7 +204,7 @@ final class Fm {
         String[] names = new String[all.size()];
         String cur = p.fmCmd(stop ? "stop" : "play");
         for (int i = 0; i < names.length; i++) names[i] = (all.get(i).equals(cur) ? "✓  " : "") + label(all.get(i));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(stop ? Hindi.t("Start FM first, then try each until FM stops") : Hindi.t("Try each until FM starts playing"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
@@ -212,7 +212,7 @@ final class Fm {
                         final String cmd = all.get(which);
                         String err = run(cmd, xt, fm, !stop);
                         if (err != null) {
-                            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                            new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                     .setMessage(Hindi.f("%1$s didn't run: %2$s", label(cmd), Hindi.t(err)))
                                     .setPositiveButton(Hindi.t("Try another"), new DialogInterface.OnClickListener() {
                                         @Override
@@ -226,7 +226,7 @@ final class Fm {
                             @Override
                             public void run() {
                                 if (a.isFinishing()) return;
-                                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                         .setTitle(label(cmd))
                                         .setMessage(stop ? Hindi.t("Did the FM radio stop?") : Hindi.t("Is the FM radio playing now, with the dashboard still in front?"))
                                         .setPositiveButton(Hindi.t("Yes, use this"), new DialogInterface.OnClickListener() {

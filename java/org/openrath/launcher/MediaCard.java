@@ -71,6 +71,7 @@ final class MediaCard extends Cards.Card {
             android.graphics.drawable.GradientDrawable pill = new android.graphics.drawable.GradientDrawable();
             pill.setCornerRadius(999);
             pill.setStroke(Math.max(1, Ui.px(1.5f)), Ui.EDGE);
+            if (Glass.on) pill.setColor(Ui.PANEL_TOP);   // a glass pill
             scan.setBackground(pill);
             scan.setText(Hindi.t("SCAN"));
             scan.setVisibility(GONE);
@@ -92,6 +93,7 @@ final class MediaCard extends Cards.Card {
             android.graphics.drawable.GradientDrawable pill = new android.graphics.drawable.GradientDrawable();
             pill.setCornerRadius(999);
             pill.setStroke(Math.max(1, Ui.px(1.5f)), Ui.EDGE);
+            if (Glass.on) pill.setColor(Ui.PANEL_TOP);   // a glass pill
             phone.setBackground(pill);
             phone.setText(Hindi.t("PHONE"));
             phone.setVisibility(GONE);

@@ -87,7 +87,7 @@ final class AppPicker {
         String[] names = new String[more ? n + 1 : n];
         for (int i = 0; i < n; i++) names[i] = more ? list.get(i).loadLabel(pm).toString() : label(pm, list.get(i));
         if (more) names[n] = Hindi.t("More apps (without an icon)…");
-        new AlertDialog.Builder(c, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(c, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(title)
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override

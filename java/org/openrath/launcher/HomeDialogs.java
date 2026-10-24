@@ -18,7 +18,7 @@ final class HomeDialogs {
     static void askOverlay(final HomeActivity a) {
         if (!HomeActivity.visible || !OverMic.wanted(a.prefs) || OverMic.allowed(a) || "yes".equals(a.prefs.str("overlayAsked", ""))) return;
         a.prefs.put("overlayAsked", "yes");
-        new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Mic over other apps"))
                 .setMessage(Hindi.t("To keep the floating mic on top of maps and music, Android needs you to allow "
                         + "\"Display over other apps\" for OpenRath on the next page. You can turn the mic over other apps "
@@ -61,7 +61,7 @@ final class HomeDialogs {
                 a.requestPermissions(missing, 1);
             }
         };
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Before you start"))
                 .setMessage(b.toString())
                 .setPositiveButton(Hindi.t("Continue"), new DialogInterface.OnClickListener() {
@@ -129,7 +129,7 @@ final class HomeDialogs {
         long k = Care.kmLeft(a.prefs, i);
         String what = Hindi.t(Care.NAMES[i]);
         String when = k < 0 ? Hindi.f("%1$s is overdue by %2$s km.", what, String.valueOf(-k)) : Hindi.f("%1$s is due in %2$s km.", what, String.valueOf(k));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Book the service?"))
                 .setMessage(when + (have ? Hindi.f(" Call %1$s to book a slot?", mine[0])
                         : Hindi.t(" Find your service centre on the map and tap Mine next to it, so next time it's one tap to call.")))
@@ -148,7 +148,7 @@ final class HomeDialogs {
         android.content.SharedPreferences sp = a.getSharedPreferences("once", android.content.Context.MODE_PRIVATE);
         if (a.hub.mediaAccess || sp.getBoolean("askedTrackInfo", false)) return;
         sp.edit().putBoolean("askedTrackInfo", true).apply();
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Show what's playing"))
                 .setMessage(Hindi.t("To show the station, the track and the right play or pause button, OpenRath needs "
                         + "notification access. On the next screen, turn on OpenRath."))
@@ -191,7 +191,7 @@ final class HomeDialogs {
         items[items.length - 1] = "      " + Hindi.t("All settings…");
         items = java.util.Arrays.copyOf(items, items.length + 1);
         items[items.length - 1] = "      " + Hindi.t("Move boxes (drag and drop)…");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t(slotName(a, slot)))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -258,7 +258,7 @@ final class HomeDialogs {
     static boolean askAllFiles(final HomeActivity a) {
         if (!a.prefs.str("askedAllFiles", "").isEmpty() || !Compat.needsAllFiles()) return false;
         a.prefs.put("askedAllFiles", "yes");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Allow the OpenRath folder"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Allow the OpenRath folder"))
                 .setMessage(Hindi.t("On this Android version OpenRath needs \"Allow access to manage all files\" to keep its backups, "
                         + "themes, dashcam clips and documents in the OpenRath folder, and to find music on USB sticks."))
                 .setPositiveButton(Hindi.t("Open the setting"), new DialogInterface.OnClickListener() {
@@ -274,7 +274,7 @@ final class HomeDialogs {
     static boolean askVoice(final HomeActivity a) {
         if (!a.prefs.str("askedVoice", "").isEmpty() || !Speak.engines(a).isEmpty()) return false;
         a.prefs.put("askedVoice", "yes");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Get a spoken voice"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Get a spoken voice"))
                 .setMessage(Hindi.t("This stereo has no text-to-speech voice, so OpenRath can't speak alerts, turns or the news. "
                         + "Get \"Speech Services by Google\" (free) from the Play Store? Later: Settings > Map and navigation > Spoken voice."))
                 .setPositiveButton(Hindi.t("Open the Play Store"), new DialogInterface.OnClickListener() {

@@ -72,7 +72,7 @@ final class Scan {
         items[0] = Hindi.t(found.isEmpty() ? "Scan for stations" : "Scan again");
         String now = freq(xt);
         for (int i = 0; i < found.size(); i++) items[i + 1] = found.get(i) + " FM" + (found.get(i).equals(now) ? Hindi.t("   (playing)") : "");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(found.isEmpty() ? Hindi.t("FM stations") : Hindi.f("%1$s FM stations", found.size()))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -89,7 +89,7 @@ final class Scan {
         String[] items = new String[found.size() + 1];
         items[0] = Hindi.t(found.isEmpty() ? "Scan for stations" : "Scan again");
         for (int i = 0; i < found.size(); i++) items[i + 1] = found.get(i) + " FM" + (found.get(i).equals(Tuner.freqText()) ? Hindi.t("   (playing)") : "");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(found.isEmpty() ? Hindi.t("FM stations") : Hindi.f("%1$s FM stations", found.size()))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override

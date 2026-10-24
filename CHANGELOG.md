@@ -4,6 +4,7 @@ Newest first.
 
 ## Unreleased: On the road
 
+- **Glass look:** Settings > Look > Themes > Glass look turns every screen into frosted glass, like a phone: see-through panels with a light edge and big round corners over a soft, blurred, colourful background (Aurora, Sunset, Ocean, or your own picture blurred). The dock floats as a glass bar, and the music and radio screen, Settings, the app list and pop-ups follow. Your theme's accent colour stays, and the glass turns darker at night. It is drawn once, so it costs nothing on slow stereos.
 - **Next turn from your navigation app:** when Google Maps, Waze, OsmAnd or another navigation app guides you, its next turn shows in a card on the dashboard, and in a small strip over other apps along with what's playing (play, pause, next). Tap the card to go back to the app; hold it to hide it for the trip.
 - **Call screen over any app:** an incoming call shows who it is, with big Answer and End buttons, whatever app is in front.
 - **Contacts:** the phone box has a Contacts list (hidden while moving: say "call" and a name instead), voice calls find people in the unit's contacts, and recent calls show names.

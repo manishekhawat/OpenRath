@@ -166,7 +166,7 @@ final class Care {
             return;
         }
         String[] opts = {Hindi.f("Done today (at %1$s km)", odo(p)), Hindi.t("Last done at a different km"), Hindi.f("Change how often (now every %1$s km)", every(p, i))};
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t(NAMES[i]))
                 .setItems(opts, new DialogInterface.OnClickListener() {
                     @Override
@@ -261,7 +261,7 @@ final class Care {
         period(b, "Last month", lastMonth, monthStart, days, fuel, toll);
         b.append(Hindi.f("Today's driving score: %1$s / 100 (%2$s harsh brakes, %3$s hard starts, %4$s min over the limit)",
                 Drive.score(), Drive.todayBrakes, Drive.todayAccels, Drive.todaySpeedSec / 60));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Trip history")).setMessage(b.toString()).setPositiveButton(Hindi.t("OK"), null).show();
     }
 
@@ -326,7 +326,7 @@ final class Care {
         e.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         e.setText(value);
         e.setSelectAllOnFocus(true);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t(title)).setView(e)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override

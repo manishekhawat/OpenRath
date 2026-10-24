@@ -422,6 +422,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             android.graphics.drawable.BitmapDrawable bd = new android.graphics.drawable.BitmapDrawable(getResources(), wall);
             dash.setBackground(new CenterCrop(bd));
         }
+        if (Glass.on) dash.setBackground(Glass.backdrop());   // the blurred wallpaper, under glass boxes
         if (Prefs.page >= prefs.pages()) Prefs.page = 0;
         dash.pages = prefs.pages();
         dash.page = Prefs.page;
@@ -876,7 +877,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     public void tripMenu() {
         String[] items = {Hindi.t("Start today's trip again"), Hindi.t("Save the parking spot here"), Hindi.t("Fuel log and fill-ups"),
                 Hindi.t("Trip history and driving score"), Hindi.t("Add a toll payment")};
-        new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Today %1$s km  ·  GPS odometer %2$s km", String.format(java.util.Locale.US, "%.1f", Drive.todayKm), String.valueOf(Math.round(Drive.odoKm))))
                 .setItems(items, new android.content.DialogInterface.OnClickListener() {
                     @Override
@@ -1107,7 +1108,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     void openSettings() {
         if (settingsView != null) return;
         if (Features.on(prefs, "parkedSettings") && !passenger && ChildLock.moving()) {
-            new android.app.AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+            new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                     .setTitle(Hindi.t("Settings open when the car is stopped"))
                     .setMessage(Hindi.t("Changing settings while driving takes your eyes off the road."))
                     .setPositiveButton(Hindi.t("OK"), null)
@@ -1202,7 +1203,9 @@ public class HomeActivity extends Activity implements Cards.Host {
         LinearLayout bar = new LinearLayout(this);
         bar.setGravity(Gravity.CENTER_VERTICAL);
         bar.setPadding(Ui.px(18), Ui.px(8), Ui.px(8), Ui.px(8));
-        bar.setBackground(Ui.panel());
+        android.graphics.drawable.GradientDrawable barBg = Ui.panel();
+        if (Glass.on) barBg.setColors(new int[]{Glass.solid(), Glass.solid()});   // over the boxes: solid, to read
+        bar.setBackground(barBg);
         TextView t = Ui.text(this, 16, Ui.SILVER, "sans-serif", Gravity.LEFT);
         t.setText(Hindi.t("Drag a box onto another to swap them, or drag a bar between boxes to resize them"));
         bar.addView(t);

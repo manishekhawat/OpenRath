@@ -57,7 +57,7 @@ final class CabSos {
             f[i * 2 + 1].setText(c == null ? "" : c[1]);
             box.addView(f[i * 2 + 1]);
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("SOS contacts"))
                 .setMessage(Hindi.t("SOS texts them where the car is. Without a SIM in the stereo it calls the first one through your phone instead."))
                 .setView(box)
@@ -94,7 +94,7 @@ final class CabSos {
         final Prefs p = a.prefs;
         final String[] c1 = contact(p, 1), c2 = contact(p, 2);
         if (c1 == null && c2 == null) {
-            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+            new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                     .setTitle(Hindi.t("No SOS contacts yet"))
                     .setMessage(Hindi.t("Add two people to text in an emergency."))
                     .setPositiveButton(Hindi.t("Add them"), new DialogInterface.OnClickListener() {

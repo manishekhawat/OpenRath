@@ -57,7 +57,7 @@ final class HomeVoice {
     static void confirmReply(final HomeActivity a, final String words) {
         final String to = Ticker.title.isEmpty() ? Ticker.app : Ticker.title;
         a.speak("Send to " + to + ": " + words + "?");
-        new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Reply to %1$s", to)).setMessage(words)
                 .setPositiveButton(Hindi.t("Send"), new android.content.DialogInterface.OnClickListener() {
                     @Override

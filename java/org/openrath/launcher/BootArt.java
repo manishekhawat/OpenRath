@@ -434,7 +434,7 @@ final class BootArt {
         final int[][] sizes = {here, {1024, 600}, {1280, 720}, {1280, 800}, {1920, 720}};
         String[] names = new String[sizes.length];
         for (int i = 0; i < sizes.length; i++) names[i] = (i == 0 ? Hindi.t("This screen, ") : "") + sizes[i][0] + " x " + sizes[i][1];
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Make a boot logo and animation for"))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Make a boot logo and animation for"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -444,7 +444,7 @@ final class BootArt {
     }
 
     private static void make(final HomeActivity a, final int w, final int h) {
-        final AlertDialog wait = new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Making the boot animation"))
+        final AlertDialog wait = new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Making the boot animation"))
                 .setMessage(Hindi.f("Drawing frame %1$s of %2$s…", 1, FRAMES + 1)).setCancelable(false).show();
         // its own thread: drawing and packing all the frames takes a while and would hold up the shared ones
         new Thread(new Runnable() {
@@ -488,7 +488,7 @@ final class BootArt {
                     public void run() {
                         wait.dismiss();
                         if (error != null) {
-                            new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Couldn't make them")).setMessage(error)
+                            new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Couldn't make them")).setMessage(error)
                                     .setPositiveButton(Hindi.t("OK"), null).show();
                         } else done(a, files, onUsb);
                     }
@@ -513,7 +513,7 @@ final class BootArt {
                 : Hindi.t("Some stereos have a Boot animation app (in the app list, or in Factory settings) that imports bootanimation.zip from a USB stick.") + " ")
                 + (app != null ? "" : Hindi.t("Without one it needs a computer with ADB, and a mistake can stop the stereo from starting, so "
                 + "follow BOOT.md in OpenRath's source carefully and keep a copy of the original."));
-        AlertDialog.Builder b = new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Boot logo and animation made")).setMessage(msg)
+        AlertDialog.Builder b = new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Boot logo and animation made")).setMessage(msg)
                 .setPositiveButton(Hindi.t("Done"), null);
         if (app != null) b.setNeutralButton(Hindi.f("Open %1$s", app.loadLabel(a.getPackageManager())), new DialogInterface.OnClickListener() {
             @Override

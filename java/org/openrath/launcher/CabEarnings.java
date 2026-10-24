@@ -51,7 +51,7 @@ final class CabEarnings {
         final String[] how = {pay != null ? pay : p.str("cabLastPay", "Cash")};
         chooser(box, "App", APPS, app);
         chooser(box, "Paid by", PAYS, how);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Add a ride")).setView(box)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
@@ -75,7 +75,7 @@ final class CabEarnings {
         final EditText amount = Cab.number(box, Hindi.t("Amount (₹)"), null);
         final String[] what = {p.str("cabLastCost", COSTS[0])};
         chooser(box, "For", COSTS, what);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Add a cost")).setView(box)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
@@ -133,7 +133,7 @@ final class CabEarnings {
 
     static void earnings(final HomeActivity a) {
         final Prefs p = a.prefs;
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Earnings")).setMessage(report(p, System.currentTimeMillis()))
                 .setPositiveButton(Hindi.t("Add a ride"), new DialogInterface.OnClickListener() {
                     @Override
@@ -161,12 +161,12 @@ final class CabEarnings {
             rows[i] = f.format(new Date(e.t)) + "   " + (e.ride ? "+" + Cab.rs(e.rs) + "  " + Hindi.t(e.app) + ", " + Hindi.t(e.pay)
                     + (e.km > 0 ? ", " + Fuel.fmt(e.km) + " km" : "") : "−" + Cab.rs(e.rs) + "  " + Hindi.t(e.what));
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t(n == 0 ? "Nothing logged yet" : "Rides and costs (tap one to delete it)"))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, final int which) {
-                        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                 .setMessage(Hindi.t("Delete this entry?"))
                                 .setPositiveButton(Hindi.t("Delete"), new DialogInterface.OnClickListener() {
                                     @Override

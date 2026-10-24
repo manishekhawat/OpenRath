@@ -129,7 +129,7 @@ final class MusicScreen extends FrameLayout {
         TextView back = Ui.text(act, 16, Ui.SILVER, "sans-serif-medium", Gravity.LEFT | Gravity.CENTER_VERTICAL);
         back.setText(Hindi.t("‹  Back to the dashboard"));
         back.setPadding(Ui.px(20), 0, Ui.px(20), 0);
-        back.setBackground(pressable(shape(alpha(Ui.PANEL, 0.72f), alpha(Ui.EDGE, 0.55f), 28), 28));
+        back.setBackground(pressable(Glass.on ? shape(Ui.PANEL_TOP, Ui.EDGE, 28) : shape(alpha(Ui.PANEL, 0.72f), alpha(Ui.EDGE, 0.55f), 28), 28));
         tap(back, new Runnable() {
             @Override
             public void run() {
@@ -1533,6 +1533,10 @@ final class MusicScreen extends FrameLayout {
         protected void onDraw(Canvas c) {
             float w = getWidth(), h = getHeight(), k = Ui.k;
             int bg = Ui.BACKGROUND;
+            if (Glass.on) {
+                glass(c, w, h, k);
+                return;
+            }
             c.drawColor(bg);
             paint.setShader(null);
             if (small != null) {
@@ -1553,6 +1557,30 @@ final class MusicScreen extends FrameLayout {
             c.drawRect(0, 0, w, h, paint);
             paint.setShader(new LinearGradient(0, 0, 0, h, new int[]{alpha(bg, 0), alpha(bg, 0), alpha(bg, 0.55f)},
                     new float[]{0, 0.45f, 1}, Shader.TileMode.CLAMP));
+            c.drawRect(0, 0, w, h, paint);
+            paint.setShader(null);
+        }
+
+        /**
+         * With Glass on: the blurred wallpaper, the cover's colours softly over its left side (or a
+         * glow in its colour), and a light shade, darker at the bottom, so the lists read.
+         */
+        private void glass(Canvas c, float w, float h, float k) {
+            Glass.drawWall(c, Math.round(w), Math.round(h));
+            paint.setShader(null);
+            if (small != null) {
+                r.set(-40 * k, -60 * k, 680 * k, 660 * k);
+                paint.setAlpha(80);
+                c.drawBitmap(small, null, r, paint);
+                paint.setAlpha(255);
+            } else if (colour != 0) {
+                float cx = w * 0.22f, cy = h * 0.38f, rad = (float) Math.hypot(w - cx, h - cy);
+                paint.setShader(new RadialGradient(cx, cy, rad, new int[]{alpha(colour, 0.45f), alpha(colour, 0.15f), alpha(colour, 0)},
+                        new float[]{0, 0.3f, 0.6f}, Shader.TileMode.CLAMP));
+                c.drawRect(0, 0, w, h, paint);
+            }
+            paint.setShader(new LinearGradient(0, 0, 0, h, new int[]{Glass.night ? 0x40000000 : 0x1F000000, Glass.night ? 0x73000000 : 0x47000000},
+                    null, Shader.TileMode.CLAMP));
             c.drawRect(0, 0, w, h, paint);
             paint.setShader(null);
         }

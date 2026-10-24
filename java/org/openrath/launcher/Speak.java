@@ -512,7 +512,7 @@ final class Speak {
                 open(c, new android.content.Intent("com.android.settings.TTS_SETTINGS"));
             }
         });
-        new android.app.AlertDialog.Builder(c, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(c, android.R.style.Theme_Material_Dialog_Alert)
                 // a dialog with a message hides its list, so the state goes under the title
                 .setCustomTitle(title(c, Hindi.t("Spoken voice"), Hindi.t(state(!engines(c).isEmpty(), ready, failed, heard, spokeFail, noVoiceData))))
                 .setItems(names.toArray(new String[0]), new android.content.DialogInterface.OnClickListener() {

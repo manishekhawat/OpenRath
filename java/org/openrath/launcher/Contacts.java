@@ -147,7 +147,7 @@ final class Contacts {
         ListView list = new ListView(a);
         list.setAdapter(ad);
         box.addView(list, new LinearLayout.LayoutParams(-1, -2));
-        final AlertDialog dlg = new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        final AlertDialog dlg = new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Contacts")).setView(box).setNegativeButton(Hindi.t("Cancel"), null).create();
         list.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
             @Override

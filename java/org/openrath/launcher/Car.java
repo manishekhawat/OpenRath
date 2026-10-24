@@ -191,7 +191,7 @@ final class Car {
             if (!found.isEmpty()) {
                 final File f = found.get(0);
                 String when = new java.text.SimpleDateFormat("d MMM yyyy", Locale.getDefault()).format(new java.util.Date(f.lastModified()));
-                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Welcome to OpenRath"))
+                new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Welcome to OpenRath"))
                         .setMessage(Hindi.f(f.getName().startsWith("dzire-home-") ? "There's a backup here from %1$s, made by Dzire Home. Bring back those settings, the fuel log and trips?"
                                 : "There's a backup here from %1$s. Bring back those settings, the fuel log and trips?", when)
                                 + "\n\n" + Backup.label(f))
@@ -232,7 +232,7 @@ final class Car {
         String[] names = new String[all.size() + 1];
         for (int i = 0; i < all.size(); i++) names[i] = all.get(i).name;
         names[all.size()] = Hindi.t("Another brand…");
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Which car is this? Pick the brand"))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Which car is this? Pick the brand"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -267,7 +267,7 @@ final class Car {
         }
         String[] names = b.models.toArray(new String[b.models.size() + 1]);
         names[b.models.size()] = Hindi.t("Another model…");
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.f("%1$s: which model?", b.name))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.f("%1$s: which model?", b.name))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -279,7 +279,7 @@ final class Car {
 
     /** Hatchback or saloon, or SUV or MUV: picks the car picture's shape. */
     private static void body(final HomeActivity a, final Brand b, final String model) {
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("What shape is it?"))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("What shape is it?"))
                 .setItems(Cab.tr(Car3D.SHAPE_NAMES), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -292,7 +292,7 @@ final class Car {
     }
 
     private static void fuel(final HomeActivity a, final Brand b, final String model) {
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("What does it run on?"))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("What does it run on?"))
                 .setItems(Cab.tr(FUEL_NAMES), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {

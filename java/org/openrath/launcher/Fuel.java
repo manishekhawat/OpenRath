@@ -164,7 +164,7 @@ final class Fuel {
         full.setText(Hindi.t("Filled the tank to full"));
         full.setChecked(true);
         box.addView(full);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Add a fill-up"))
                 .setView(box)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
@@ -187,7 +187,7 @@ final class Fuel {
                             done.run();
                             if (full.isChecked() && Features.on(p, "fuelCheck")) {
                                 String warn = Errands.fuelDrop(fullTankKmpl(l));
-                                if (warn != null) new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                                if (warn != null) new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                         .setTitle(Hindi.t("Mileage dropped")).setMessage(warn).setPositiveButton(Hindi.t("OK"), null).show();
                             }
                         } catch (Exception ex) {
@@ -218,12 +218,12 @@ final class Fuel {
             rows[i] = f.format(new Date(e.optLong("t"))) + "   " + fmt(e.optDouble("l")) + " L   " + Money.shown("₹") + Math.round(e.optDouble("rs"))
                     + "   " + Math.round(e.optDouble("odo")) + " km" + (e.optBoolean("full", true) ? "" : "   " + Hindi.t("(part fill)"));
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(rows.length == 0 ? Hindi.t("No fill-ups yet") : Hindi.t("Fill-ups (tap one to delete it)"))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, final int which) {
-                        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                 .setMessage(Hindi.t("Delete this fill-up?"))
                                 .setPositiveButton(Hindi.t("Delete"), new DialogInterface.OnClickListener() {
                                     @Override

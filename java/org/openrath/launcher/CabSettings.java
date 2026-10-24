@@ -68,7 +68,7 @@ final class CabSettings {
                     final EditText e = new EditText(a);
                     e.setHint("name@bank");
                     e.setText(p.str("upiId", ""));
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                    new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                             .setTitle(Hindi.t("Your UPI id")).setView(e)
                             .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                                 @Override
@@ -120,7 +120,7 @@ final class CabSettings {
                     final EditText e = new EditText(a);
                     e.setHint(Hindi.t("e.g. DL 1R AB 1234"));
                     e.setText(p.str("cabVehicle", ""));
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                    new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                             .setTitle(Hindi.t("Vehicle number")).setView(e)
                             .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                                 @Override
@@ -169,7 +169,7 @@ final class CabSettings {
             r.add(new SettingsView.Row(g, "Clear the earnings log", Hindi.f("%1$s entries", Cab.log(p).size()), new Runnable() {
                 @Override
                 public void run() {
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                    new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                             .setMessage(Hindi.t("Delete every ride and cost in the log?"))
                             .setPositiveButton(Hindi.t("Delete all"), new DialogInterface.OnClickListener() {
                                 @Override
@@ -187,7 +187,7 @@ final class CabSettings {
         final EditText e = new EditText(a);
         e.setInputType(InputType.TYPE_CLASS_NUMBER);
         e.setText(value);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t(title)).setView(e)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
@@ -219,7 +219,7 @@ final class CabSettings {
         }
         android.widget.ScrollView sv = new android.widget.ScrollView(a);
         sv.addView(box);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Fare meter rates")).setView(sv)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override

@@ -245,4 +245,16 @@
     <string name="ui_more_previous" formatted="false">पिछला</string>
     <string name="ui_more_pause" formatted="false">रोकें</string>
     <string name="ui_more_play" formatted="false">चलाएँ</string>
+    <string name="ui_more_glass_look" formatted="false">ग्लास लुक</string>
+    <string name="ui_more_on_see_through_frosted_panels_on_a_soft_colo" formatted="false">चालू; हल्के रंगीन बैकग्राउंड पर धुंधले शीशे जैसे पारदर्शी पैनल</string>
+    <string name="ui_more_off_tap_for_see_through_frosted_panels_on_a_" formatted="false">बंद; हल्के रंगीन बैकग्राउंड पर धुंधले शीशे जैसे पारदर्शी पैनल के लिए टैप करें</string>
+    <string name="ui_more_glass_background" formatted="false">ग्लास के पीछे का बैकग्राउंड</string>
+    <string name="ui_more_aurora" formatted="false">अरोरा</string>
+    <string name="ui_more_sunset" formatted="false">सूर्यास्त</string>
+    <string name="ui_more_ocean" formatted="false">समुद्र</string>
+    <string name="ui_more_my_picture" formatted="false">मेरी तस्वीर</string>
+    <string name="ui_more_my_picture_blurred" formatted="false">मेरी तस्वीर (धुंधली)</string>
+    <string name="ui_more_background_behind_the_glass" formatted="false">शीशे के पीछे का बैकग्राउंड</string>
+    <string name="ui_more_add_your_picture" formatted="false">अपनी तस्वीर जोड़ें</string>
+    <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">यूनिट पर %1$s में एक तस्वीर (JPG या PNG) कॉपी करें, USB स्टिक या फ़ाइल मैनेजर से। तब तक अरोरा बैकग्राउंड दिखेगा।</string>
 </resources>

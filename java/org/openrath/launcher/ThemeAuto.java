@@ -80,8 +80,14 @@ final class ThemeAuto {
             want = pick(p.str("nightTheme", ""), p.str("phoneThemeName", ""), p.str("phoneTheme", ""),
                     night(a, System.currentTimeMillis()), phone);
         }
+        // the Glass look darkens after sunset (or with the headlights) and brightens again in the morning
         String now = Theme.override;
-        if (want == null ? now == null : want.equals(now)) return;
+        boolean same = want == null ? now == null : want.equals(now);
+        if (Glass.setNight(night(a, System.currentTimeMillis())) && same && a.settingsView == null) {
+            a.restyle();
+            return;
+        }
+        if (same) return;
         Theme.override = want;
         if (a.settingsView == null) a.restyle();
     }
@@ -95,7 +101,7 @@ final class ThemeAuto {
         String[] items = {Hindi.f("At night: %1$s", nameOf(packs, a.prefs.str("nightTheme", ""))),
                 Hindi.f("When %1$s connects: %2$s", a.prefs.str("phoneThemeName", "").isEmpty() ? Hindi.t("a phone") : a.prefs.str("phoneThemeName", ""),
                         nameOf(packs, a.prefs.str("phoneTheme", "")))};
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Theme changes by itself"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Theme changes by itself"))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -111,7 +117,7 @@ final class ThemeAuto {
     }
 
     private static void choose(final HomeActivity a, final String key, final List<Theme.Pack> packs, String[] names) {
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which theme?"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which theme?"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -130,7 +136,7 @@ final class ThemeAuto {
         }
         String[] shown = new String[devs.size()];
         for (int i = 0; i < shown.length; i++) shown[i] = devs.get(i).split("\\|")[0];
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which phone?"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which phone?"))
                 .setItems(shown, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {

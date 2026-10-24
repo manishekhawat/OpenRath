@@ -157,7 +157,7 @@ final class Valet {
         android.widget.FrameLayout box = new android.widget.FrameLayout(a);
         box.setPadding(pad, pad / 2, pad, 0);
         box.addView(e);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(title).setView(box)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(title).setView(box)
                 .setPositiveButton(Hindi.t("OK"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {

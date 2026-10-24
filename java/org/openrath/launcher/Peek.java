@@ -116,7 +116,7 @@ final class Peek {
                         } catch (Throwable ignored) {
                             // already gone
                         }
-                        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                 .setTitle(Hindi.t("Stock launcher copied")).setMessage(out.toString())
                                 .setPositiveButton(Hindi.t("OK"), null).show();
                     }
@@ -298,7 +298,7 @@ final class Peek {
         t.setPadding(pad, pad, pad, pad);
         ScrollView sv = new ScrollView(a);
         sv.addView(t);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("How the stock launcher does it (photograph each screen)"))
                 .setView(sv)
                 .setPositiveButton(Hindi.t("OK"), null).show();

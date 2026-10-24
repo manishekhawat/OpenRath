@@ -713,6 +713,7 @@ final class Cards {
             android.graphics.drawable.GradientDrawable pill = new android.graphics.drawable.GradientDrawable();
             pill.setCornerRadius(999);
             pill.setStroke(Math.max(1, Ui.px(1.5f)), Ui.EDGE);
+            if (Glass.on) pill.setColor(Ui.PANEL_TOP);   // a glass pill
             read.setBackground(pill);
             read.setText(Hindi.t("▶  Read aloud"));
             clickable(read, new OnClickListener() {
@@ -1463,7 +1464,7 @@ final class Cards {
             }
             String[] names = new String[found.size()];
             for (int i = 0; i < names.length; i++) names[i] = new java.io.File(found.get(i)).getName();
-            new android.app.AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
+            new Glass.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
                     .setTitle(Hindi.t("Play a video"))
                     .setItems(names, new android.content.DialogInterface.OnClickListener() {
                         @Override

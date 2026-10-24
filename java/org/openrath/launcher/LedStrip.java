@@ -245,7 +245,7 @@ final class LedStrip {
                 }
                 String[] names = new String[found.size()];
                 for (int i = 0; i < names.length; i++) names[i] = found.get(i).replace("|", "  ");
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which light strip?"))
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which light strip?"))
                         .setItems(names, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {

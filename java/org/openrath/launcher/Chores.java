@@ -31,7 +31,7 @@ final class Chores {
         FrameLayout box = new FrameLayout(a);
         box.setPadding(pad, pad / 2, pad, 0);
         box.addView(e);
-        new AlertDialog.Builder(a, DIALOG).setTitle(title).setView(box)
+        new Glass.Builder(a, DIALOG).setTitle(title).setView(box)
                 .setPositiveButton(Hindi.t("OK"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -105,7 +105,7 @@ final class Chores {
             return;
         }
         final int[] mins = {30, 60, 120, 180, 240};
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Parking paid for"))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Parking paid for"))
                 .setItems(new String[]{Hindi.t("30 minutes"), Hindi.t("1 hour"), Hindi.t("2 hours"), Hindi.t("3 hours"), Hindi.t("4 hours")}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -178,7 +178,7 @@ final class Chores {
                 + Coach.reasons(worst, Coach.waste(worst, kmpl));
         String text = Errands.weekly(km, sec, Care.spent(Fuel.log(p), from, t), Care.spent(Care.tolls(p), from, t),
                 scored > 0 ? scoreSum / scored : -1, b, w);
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Your week in the car")).setMessage(text).setPositiveButton(Hindi.t("OK"), null).show();
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Your week in the car")).setMessage(text).setPositiveButton(Hindi.t("OK"), null).show();
     }
 
     // ------------------------------------------------------------------ parking photo
@@ -232,7 +232,7 @@ final class Chores {
             });
             return;
         }
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Guest Wi-Fi"))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Guest Wi-Fi"))
                 .setMessage(Hindi.t("Android only lets the unit's own settings switch the hotspot on. Turn it on there, come back, "
                         + "then show the code for passengers to join."))
                 .setPositiveButton(Hindi.t("Show the code"), new DialogInterface.OnClickListener() {

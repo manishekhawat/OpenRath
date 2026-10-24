@@ -59,7 +59,8 @@ public class AppsActivity extends Activity {
 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setBackgroundColor(0xFF000000);
+        if (Glass.on) root.setBackground(Glass.backdrop());   // the Glass look: the wallpaper, the apps on a glass panel
+        else root.setBackgroundColor(0xFF000000);
 
         if (extras) {
             search = new EditText(this);
@@ -88,6 +89,12 @@ public class AppsActivity extends Activity {
                     filter();
                 }
             });
+            if (Glass.on) {
+                search.setBackground(Glass.pane(28));
+                search.setPadding(Math.round(18 * k), 0, Math.round(18 * k), 0);
+                search.setMinHeight(Math.round(56 * k));
+                order.setBackground(Glass.pane(28));
+            }
             LinearLayout top = new LinearLayout(this);
             top.setGravity(Gravity.CENTER_VERTICAL);
             top.addView(search, new LinearLayout.LayoutParams(0, -2, 1f));
@@ -149,7 +156,13 @@ public class AppsActivity extends Activity {
             ls.addView(letters);
             body.addView(ls, new LinearLayout.LayoutParams(Math.round(44 * k), -1));
         }
-        root.addView(body, new LinearLayout.LayoutParams(-1, 0, 1));
+        LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(-1, 0, 1);
+        if (Glass.on) {
+            body.setBackground(Glass.pane(24));
+            int gm = Math.round(18 * k);
+            bp.setMargins(gm, gm, gm, gm);
+        }
+        root.addView(body, bp);
         Edge.fit(root);
         setContentView(root);
     }
@@ -177,6 +190,7 @@ public class AppsActivity extends Activity {
         t.setTextColor(Ui.SILVER);
         t.setTextSize(0, 14 * k);
         t.setSingleLine(true);
+        if (Glass.on) t.setShadowLayer(2 * k, 0, k, 0x59000000);
         t.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(-1, -2);
         p.topMargin = Math.round(6 * k);
@@ -332,7 +346,7 @@ public class AppsActivity extends Activity {
         items.add("Uninstall");
         String[] shownItems = new String[items.size()];
         for (int i = 0; i < shownItems.length; i++) shownItems[i] = Hindi.t(items.get(i));
-        new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(r.loadLabel(pm))
                 .setItems(shownItems, new android.content.DialogInterface.OnClickListener() {
                     @Override

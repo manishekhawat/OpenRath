@@ -54,7 +54,7 @@ final class SettingsRows {
                         names[i] = n == null ? opts.get(i) : Hindi.t(n);
                         on[i] = Layouts.shown(a.prefs, cur.id, opts.get(i));
                     }
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                    new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                             .setTitle(Hindi.f("Show on %1$s", Hindi.t(cur.name)))
                             .setMultiChoiceItems(names, on, new DialogInterface.OnMultiChoiceClickListener() {
                                 @Override
@@ -89,7 +89,7 @@ final class SettingsRows {
                         names[i] = Hindi.t(Layouts.statName(order.get(i)));
                         on[i] = showing.contains(order.get(i));
                     }
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                    new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                             .setTitle(Hindi.f("Details on %1$s", Hindi.t(cur.name)))
                             .setMultiChoiceItems(names, on, new DialogInterface.OnMultiChoiceClickListener() {
                                 @Override
@@ -141,7 +141,7 @@ final class SettingsRows {
                 String next = walls[(i + 1) % walls.length];
                 a.prefs.put("layWall", next);
                 if (!"layout".equals(next) && Layouts.myWalls().isEmpty())
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                    new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                             .setTitle(Hindi.t("Add your pictures"))
                             .setMessage(Hindi.f("Copy pictures (JPG or PNG) to %1$s on the unit, with a USB stick or a file manager. Until then the layout's own picture shows.",
                                     Layouts.wallDir().getPath()))
@@ -192,7 +192,7 @@ final class SettingsRows {
         }
         String[] names = new String[order.size()];
         for (int i = 0; i < names.length; i++) names[i] = (i + 1) + ".  " + Hindi.t(Layouts.statName(order.get(i)));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Put first"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
@@ -214,7 +214,7 @@ final class SettingsRows {
         for (int i = 0; i < Prefs.SLOTS; i++) {
             names[i] = Hindi.t(HomeDialogs.slotName(a, i)) + ":  " + Hindi.t(contentName(a.prefs.slot(i)));
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("What the boxes show"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("What the boxes show"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, final int slot) {
@@ -225,7 +225,7 @@ final class SettingsRows {
                             shown[i] = Hindi.t(Prefs.CONTENT_NAMES[at[i]]);
                             if (Prefs.CONTENTS[at[i]].equals(a.prefs.slot(slot))) now = i;
                         }
-                        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                 .setTitle(Hindi.f("%1$s shows", Hindi.t(HomeDialogs.slotName(a, slot))))
                                 .setSingleChoiceItems(shown, now,
                                         new DialogInterface.OnClickListener() {
@@ -270,7 +270,7 @@ final class SettingsRows {
             public void run() {
                 String[] names = new String[sizes.length];
                 for (int i = 0; i < sizes.length; i++) names[i] = sizes[i] + "%" + (sizes[i] == 100 ? Hindi.t(" (as designed)") : "");
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Size of text and boxes"))
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Size of text and boxes"))
                         .setItems(names, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -285,7 +285,7 @@ final class SettingsRows {
             public void run() {
                 final String[] names = {"km/h and °C", "mph and °F", "km/h and °F", "mph and °C"};
                 final String[][] vals = {{"kmh", "c"}, {"mph", "f"}, {"kmh", "f"}, {"mph", "c"}};
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Units for speed and temperature"))
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Units for speed and temperature"))
                         .setItems(names, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -305,7 +305,7 @@ final class SettingsRows {
                 String[] names = new String[codes.size()];
                 for (int i = 0; i < names.length; i++)
                     names[i] = (codes.get(i).equals(Money.country) ? "✓  " : "     ") + Money.name(codes.get(i)) + "  ·  " + Money.symbol(codes.get(i)).trim();
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Country"))
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Country"))
                         .setItems(names, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -321,7 +321,7 @@ final class SettingsRows {
             public void run() {
                 String[] names = new String[Motion.NAMES.length];
                 for (int i = 0; i < names.length; i++) names[i] = Hindi.t(Motion.NAMES[i]);
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Animations"))
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Animations"))
                         .setItems(names, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -374,7 +374,7 @@ final class SettingsRows {
                 new Runnable() {
                     @Override
                     public void run() {
-                        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Night dimming"))
+                        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Night dimming"))
                                 .setSingleChoiceItems(tr(dimNames), Math.max(0, java.util.Arrays.asList(dimModes).indexOf(a.prefs.str("dim", "off"))),
                                         new DialogInterface.OnClickListener() {
                                             @Override
@@ -390,7 +390,7 @@ final class SettingsRows {
                                                 for (int i = 0; i < names.length; i++) names[i] = Hindi.f("%1$s%% darker", String.valueOf(dimSteps[i]));
                                                 int at = 0;
                                                 while (at < dimSteps.length && dimSteps[at] != a.prefs.num("dimLevel", 40)) at++;
-                                                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("How dark at night"))
+                                                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("How dark at night"))
                                                         .setSingleChoiceItems(names, at < dimSteps.length ? at : -1, new DialogInterface.OnClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface d2, int w2) {
@@ -407,7 +407,7 @@ final class SettingsRows {
         r.add(new SettingsView.Row(g, "Reset the layout", "boxes and apps back to the start", new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                         .setMessage(Hindi.t("Put the boxes and chosen apps back as they were at the start? Your name, sources and learnt car signals stay."))
                         .setPositiveButton(Hindi.t("Reset"), new DialogInterface.OnClickListener() {
                             @Override
@@ -426,10 +426,45 @@ final class SettingsRows {
         // ---- Themes: the gallery, then ways to make and share themes
         g = "Themes";
         r.add(new SettingsView.Row(g, "", null, null));
+        // the Glass look: works with any theme and accent colour
+        final boolean glass = Glass.wanted(a.prefs);
+        r.add(new SettingsView.Row(g, "Glass look", glass ? "on; see-through frosted panels on a soft colourful background"
+                : "off; tap for see-through frosted panels on a soft colourful background", new Runnable() {
+            @Override
+            public void run() {
+                a.prefs.put("glass", glass ? "off" : "on");
+                a.restyle();
+            }
+        }));
+        if (glass) r.add(new SettingsView.Row(g, "Glass background", Glass.wallName(a.prefs), new Runnable() {
+            @Override
+            public void run() {
+                String[] names = new String[Glass.WALL_NAMES.length];
+                for (int i = 0; i < names.length; i++) names[i] = Hindi.t(Glass.WALL_NAMES[i]);
+                names[names.length - 1] = Hindi.t("My picture (blurred)");
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                        .setTitle(Hindi.t("Background behind the glass"))
+                        .setSingleChoiceItems(names, java.util.Arrays.asList(Glass.WALLS).indexOf(Glass.wall(a.prefs)),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface d, int w) {
+                                        a.prefs.put("glassWall", Glass.WALLS[w]);
+                                        d.dismiss();
+                                        a.restyle();
+                                        if (w == Glass.WALLS.length - 1 && Layouts.myWalls().isEmpty() && Theme.background() == null)
+                                            new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                                                    .setTitle(Hindi.t("Add your picture"))
+                                                    .setMessage(Hindi.f("Copy a picture (JPG or PNG) to %1$s on the unit, with a USB stick or a file manager. Until then the Aurora background shows.",
+                                                            Layouts.wallDir().getPath()))
+                                                    .setPositiveButton(Hindi.t("OK"), null).show();
+                                    }
+                                }).setNegativeButton(Hindi.t("Cancel"), null).show();
+            }
+        }));
         r.add(new SettingsView.Row(g, "Accent colour (car paint)", Theme.json().has("colours") && Theme.json().optJSONObject("colours").has("accent") ? Hindi.f("set by %1$s", Theme.name) : a.prefs.str("theme", Ui.THEMES[0]), new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                         .setTitle(Hindi.t("Match the car's colour"))
                         .setSingleChoiceItems(Ui.THEMES, Math.max(0, java.util.Arrays.asList(Ui.THEMES).indexOf(a.prefs.str("theme", Ui.THEMES[0]))),
                                 new DialogInterface.OnClickListener() {
@@ -461,7 +496,7 @@ final class SettingsRows {
                     String folder = "my-theme";
                     for (int i = 2; new java.io.File(Theme.root(), folder).exists(); i++) folder = "my-theme-" + i;
                     java.io.File d = Theme.starter(a, folder);
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                    new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                             .setTitle(Hindi.t("Theme created"))
                             .setMessage(Hindi.f("Edit the files in %1$s (on a PC over USB, or with a file manager). "
                                     + "HOW-TO.txt in that folder explains each file. It is now in the list above; tap it to use it, and again after each edit.", d.getPath()))
@@ -481,7 +516,7 @@ final class SettingsRows {
                 }
                 String[] names = new String[zips.size()];
                 for (int i = 0; i < names.length; i++) names[i] = zips.get(i).getName();
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                         .setTitle(Hindi.t("Import which theme?"))
                         .setItems(names, new DialogInterface.OnClickListener() {
                             @Override
@@ -537,7 +572,7 @@ final class SettingsRows {
                 e.setSingleLine(true);
                 e.setText(Car.name(a.prefs));
                 e.setSelectAllOnFocus(true);
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                         .setTitle(Hindi.t("Name beside the logo (e.g. SWIFT, BALENO)"))
                         .setView(e)
                         .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
@@ -640,7 +675,7 @@ final class SettingsRows {
                 final android.widget.EditText e = new android.widget.EditText(a);
                 e.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 e.setText(a.prefs.fmFreq());
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                         .setTitle(Hindi.t("FM frequency (MHz)"))
                         .setView(e)
                         .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
@@ -667,7 +702,7 @@ final class SettingsRows {
                 : Hindi.f("%1$s songs found; choose one, or look again", String.valueOf(Player.songs.size())), new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                         .setItems(new String[]{Hindi.t("Choose a song"), Hindi.t("Look for music files again")}, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -727,7 +762,7 @@ final class SettingsRows {
                 String.valueOf(Tiles.sizeMb(a))), new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                         .setMessage(Hindi.t("Delete the kept map? Places will show again once seen with internet."))
                         .setPositiveButton(Hindi.t("Delete"), new DialogInterface.OnClickListener() {
                             @Override
@@ -812,7 +847,7 @@ final class SettingsRows {
                     names[i] = steps[i] == 0 ? Hindi.t("off") : (steps[i] > 0 ? "+" : "") + steps[i] + "%";
                     if (steps[i] == fix) cur = i;
                 }
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                         .setTitle(Hindi.t("Add to the GPS speed, so it matches your car's speedometer"))
                         .setSingleChoiceItems(names, cur, new DialogInterface.OnClickListener() {
                             @Override
@@ -835,7 +870,7 @@ final class SettingsRows {
                     names[i] = steps[i] == 0 ? Hindi.t("off") : steps[i] + " km/h";
                     if (steps[i] == filter) cur = i;
                 }
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                         .setTitle(Hindi.t("Show 0 below this speed, for GPS that drifts when parked"))
                         .setSingleChoiceItems(names, cur, new DialogInterface.OnClickListener() {
                             @Override
@@ -944,7 +979,7 @@ final class SettingsRows {
                 new Runnable() {
                     @Override
                     public void run() {
-                        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Car picture headlights"))
+                        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Car picture headlights"))
                                 .setSingleChoiceItems(tr(lightNames), java.util.Arrays.asList(lightModes).indexOf(a.prefs.lights()), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface d, int w) {
@@ -1139,7 +1174,7 @@ final class SettingsRows {
 
     /** A list of choices, each opening its own setting. */
     private static void menu(HomeActivity a, String title, String[] names, final Runnable[] acts) {
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t(title))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t(title))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {

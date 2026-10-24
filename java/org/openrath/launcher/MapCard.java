@@ -363,7 +363,7 @@ final class MapCard extends Cards.Card {
     private void confirmCall(String number) {
         final String n = number == null ? "" : number.replaceAll("[^0-9+]", "");
         if (n.isEmpty() || !(getContext() instanceof android.app.Activity)) return;
-        new android.app.AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
                 .setMessage(Hindi.f("Call %1$s?", n))
                 .setPositiveButton(Hindi.t("Call"), new android.content.DialogInterface.OnClickListener() {
                     @Override

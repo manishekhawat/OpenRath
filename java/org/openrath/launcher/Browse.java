@@ -115,7 +115,7 @@ final class Browse {
                 }
             });
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t(radio ? "Radio" : "Music"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t(radio ? "Radio" : "Music"))
                 .setItems(labels.toArray(new String[0]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -140,7 +140,7 @@ final class Browse {
             CharSequence t = items.get(i).getDescription().getTitle(), s = items.get(i).getDescription().getSubtitle();
             names[i] = (t == null ? "" : t) + (s == null ? "" : "  ·  " + s);
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Up next"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Up next"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -202,7 +202,7 @@ final class Browse {
                         CharSequence t = items.get(i).getDescription().getTitle();
                         names[i] = (items.get(i).isBrowsable() ? "›  " : "♪  ") + (t == null ? "" : t);
                     }
-                    new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(title)
+                    new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(title)
                             .setItems(names, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface d, int w) {

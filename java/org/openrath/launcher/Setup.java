@@ -108,7 +108,7 @@ final class Setup extends FrameLayout {
         this.p = a.prefs;
         step = Math.max(WELCOME, Math.min(FINISH, p.num("setupStep", WELCOME)));
         if (Features.levelPicked(p)) level = Features.level(p);
-        setBackgroundColor(Ui.BACKGROUND);
+        Glass.screen(this);
         setClickable(true);   // nothing reaches the dashboard underneath
         setElevation(Ui.px(20));   // above the floating mic, which has its own elevation
         p.put("setupStep", String.valueOf(step));
@@ -344,7 +344,7 @@ final class Setup extends FrameLayout {
     }
 
     private void skipAll() {
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Skip setup?"))
                 .setMessage(Hindi.t("OpenRath starts with its usual settings. You can set everything up later in Settings, or run this setup again from Settings, Help."))
                 .setPositiveButton(Hindi.t("Skip"), new DialogInterface.OnClickListener() {
@@ -582,7 +582,7 @@ final class Setup extends FrameLayout {
         String[] names = new String[all.size() + 1];
         for (int i = 0; i < all.size(); i++) names[i] = all.get(i).name;
         names[all.size()] = Hindi.t("Another brand…");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which brand?"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which brand?"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -614,7 +614,7 @@ final class Setup extends FrameLayout {
         }
         String[] names = b.models.toArray(new String[b.models.size() + 1]);
         names[b.models.size()] = Hindi.t("Another model…");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.f("%1$s: which model?", b.name))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.f("%1$s: which model?", b.name))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {

@@ -246,6 +246,18 @@
     <string name="ui_more_previous" formatted="false">Previous</string>
     <string name="ui_more_pause" formatted="false">Pause</string>
     <string name="ui_more_play" formatted="false">Play</string>
+    <string name="ui_more_glass_look" formatted="false">Glass look</string>
+    <string name="ui_more_on_see_through_frosted_panels_on_a_soft_colo" formatted="false">on; see-through frosted panels on a soft colourful background</string>
+    <string name="ui_more_off_tap_for_see_through_frosted_panels_on_a_" formatted="false">off; tap for see-through frosted panels on a soft colourful background</string>
+    <string name="ui_more_glass_background" formatted="false">Glass background</string>
+    <string name="ui_more_aurora" formatted="false">Aurora</string>
+    <string name="ui_more_sunset" formatted="false">Sunset</string>
+    <string name="ui_more_ocean" formatted="false">Ocean</string>
+    <string name="ui_more_my_picture" formatted="false">My picture</string>
+    <string name="ui_more_my_picture_blurred" formatted="false">My picture (blurred)</string>
+    <string name="ui_more_background_behind_the_glass" formatted="false">Background behind the glass</string>
+    <string name="ui_more_add_your_picture" formatted="false">Add your picture</string>
+    <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">Copy a picture (JPG or PNG) to %1$s on the unit, with a USB stick or a file manager. Until then the Aurora background shows.</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -491,5 +503,17 @@
         <item>@string/ui_more_previous</item>
         <item>@string/ui_more_pause</item>
         <item>@string/ui_more_play</item>
+        <item>@string/ui_more_glass_look</item>
+        <item>@string/ui_more_on_see_through_frosted_panels_on_a_soft_colo</item>
+        <item>@string/ui_more_off_tap_for_see_through_frosted_panels_on_a_</item>
+        <item>@string/ui_more_glass_background</item>
+        <item>@string/ui_more_aurora</item>
+        <item>@string/ui_more_sunset</item>
+        <item>@string/ui_more_ocean</item>
+        <item>@string/ui_more_my_picture</item>
+        <item>@string/ui_more_my_picture_blurred</item>
+        <item>@string/ui_more_background_behind_the_glass</item>
+        <item>@string/ui_more_add_your_picture</item>
+        <item>@string/ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit</item>
     </string-array>
 </resources>

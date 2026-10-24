@@ -79,7 +79,7 @@ final class OverStrip {
         s.setPadding(Ui.px(16), Ui.px(2), Ui.px(8), Ui.px(2));
         GradientDrawable g = new GradientDrawable();
         g.setCornerRadius(Ui.RADIUS * Ui.k);
-        g.setColor(0xF0000000 | (Ui.PANEL_TOP & 0xFFFFFF));
+        g.setColor(0xF0000000 | (Ui.solidPanel() & 0xFFFFFF));
         g.setStroke(Math.max(1, Ui.px(1.5f)), Ui.ACCENT);
         s.setBackground(g);
         final TextView line1 = Ui.text(app, 16, Ui.SILVER, "sans-serif", Gravity.LEFT);

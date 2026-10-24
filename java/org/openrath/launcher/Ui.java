@@ -51,7 +51,9 @@ final class Ui {
         EDGE = i == 0 ? 0xFF4C5056 : mix(ACCENT, 0xFF000000, 0.45f);
     }
 
+    /** a over b by t (1 all a); opaque, except with Glass on, where see-through colours stay see-through (Glass.mix). */
     static int mix(int a, int b, float t) {
+        if (Glass.on) return Glass.mix(a, b, t);
         int r = Math.round(((a >> 16) & 255) * t + ((b >> 16) & 255) * (1 - t));
         int g = Math.round(((a >> 8) & 255) * t + ((b >> 8) & 255) * (1 - t));
         int bl = Math.round((a & 255) * t + (b & 255) * (1 - t));
@@ -94,6 +96,7 @@ final class Ui {
     }
 
     static GradientDrawable panel() {
+        if (Glass.on) return Glass.pane(RADIUS);
         GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
                 new int[]{PANEL_TOP, PANEL});
         g.setCornerRadius(RADIUS * k);
@@ -112,7 +115,13 @@ final class Ui {
         t.setGravity(gravity);
         t.setSingleLine(true);
         t.setIncludeFontPadding(false);
+        if (Glass.on) t.setShadowLayer(2 * k, 0, k, 0x59000000);   // white text keeps its edge on bright glass
         return t;
+    }
+
+    /** An opaque panel colour, for pop-ups and strips that may sit over other apps. */
+    static int solidPanel() {
+        return Glass.on ? Glass.solid() : PANEL_TOP | 0xFF000000;
     }
 
     static TextView label(Context c, String s) {

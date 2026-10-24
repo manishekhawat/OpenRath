@@ -26,7 +26,7 @@ import java.util.Set;
  */
 final class Profiles {
 
-    private static final Set<String> KEYS = new HashSet<>(Arrays.asList("theme", "themePack", "swapped", "alerts",
+    private static final Set<String> KEYS = new HashSet<>(Arrays.asList("theme", "themePack", "glass", "glassWall", "swapped", "alerts",
             "warnSpeed", "voiceLang", "eqPreset", "eqBass", "eqCustom", "speedVolPer", "tickerShow", "readAloudMode",
             "fav", "saverMin", "pages", "dim", "dimLevel", "welcome", "quietVol", "feat:speedVolume", "feat:eq",
             "feat:readAloud", "feat:nightDrive", "feat:ticker", "feat:voice", "feat:pages", "feat:saver", "feat:quiet",
@@ -122,7 +122,7 @@ final class Profiles {
         if (!n.isEmpty()) rows.add(Hindi.t("Remove a driver…"));
         final boolean phones = !current(p).isEmpty() && a instanceof HomeActivity;
         if (phones) rows.add(Hindi.f("%1$s's phone…", current(p)));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Who's driving?"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Who's driving?"))
                 .setItems(rows.toArray(new String[0]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -143,7 +143,7 @@ final class Profiles {
         android.widget.FrameLayout box = new android.widget.FrameLayout(a);
         box.setPadding(pad, pad / 2, pad, 0);
         box.addView(e);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Add a driver"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Add a driver"))
                 .setMessage(names(p).isEmpty() ? Hindi.t("Your current settings become this driver's. Add a second driver to switch between them.") : null)
                 .setView(box).setPositiveButton(Hindi.t("Add"), new DialogInterface.OnClickListener() {
                     @Override
@@ -166,7 +166,7 @@ final class Profiles {
             Toast.makeText(a, Hindi.f("Switch to another driver to remove %1$s", current(p)), Toast.LENGTH_LONG).show();
             return;
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Remove a driver"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Remove a driver"))
                 .setItems(n.toArray(new String[0]), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
