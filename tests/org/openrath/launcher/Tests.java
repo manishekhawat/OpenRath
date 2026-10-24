@@ -424,8 +424,57 @@ public final class Tests {
         launcherReview();
         buildFixes();
         finishFixes();
+        musicScreen();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
+    }
+
+    /** The radio and music screen: FM presets and tuning, favourite stations, songs by artist or folder, search, voice. */
+    private static void musicScreen() {
+        eq("music: preset plain", "98.3", MusicLists.freq("98.3"));
+        eq("music: preset with FM", "91.1", MusicLists.freq(" 91.1 FM"));
+        eq("music: preset with a comma", "93.5", MusicLists.freq("93,5"));
+        eq("music: preset in tenths", "98.3", MusicLists.freq("983"));
+        eq("music: preset in hundredths", "104.8", MusicLists.freq("10480"));
+        eq("music: preset in kHz", "92.7", MusicLists.freq("92700"));
+        eq("music: not FM", "", MusicLists.freq("1500"));
+        eq("music: not a number", "", MusicLists.freq("Mirchi"));
+        eq("music: presets merged, sorted, once each", "[91.1, 93.5, 98.3, 104.8]",
+                MusicLists.presets("98.3, 91.1 FM,junk,,98.3", Arrays.asList("104.8", "93.5", "91.1", "150")).toString());
+        eq("music: no presets", "[]", MusicLists.presets("", null).toString());
+        eq("music: tune up", "98.4", MusicLists.step("98.3", 1));
+        eq("music: tune down", "98.2", MusicLists.step("98.3", -1));
+        eq("music: tune past the top", "87.5", MusicLists.step("108.0", 1));
+        eq("music: tune past the bottom", "108.0", MusicLists.step("87.5", -1));
+        eq("music: tune from nothing", "98.4", MusicLists.step("", 1));
+        eq("music: save a preset", "91.1,98.3", MusicLists.toggle("91.1", "98.3", ","));
+        eq("music: unsave a preset", "91.1", MusicLists.toggle("91.1,98.3", "98.3", ","));
+        eq("music: take out", "Radio City", MusicLists.without("Radio City\nMirchi", "Mirchi", "\n"));
+        eq("music: station names with commas", 2, MusicLists.items("Radio City, Hindi\nMirchi\n\n", "\n").size());
+        java.util.Set<String> favs = new java.util.HashSet<>(Arrays.asList("Mirchi", "Vividh Bharati"));
+        eq("music: favourites first", "[1, 3, 0, 2]",
+                MusicLists.favFirst(Arrays.asList("Radio City", "Mirchi", "Red FM", "Vividh Bharati"), favs).toString());
+        eq("music: folder", "Old Hindi", MusicLists.folder("/storage/usb0/Old Hindi/Lag Ja Gale.mp3"));
+        eq("music: folder at the root", "", MusicLists.folder("song.mp3"));
+        eq("music: artist from the list", "Lata Mangeshkar", MusicLists.artist("Lata Mangeshkar", "/sdcard/Music/a.mp3"));
+        eq("music: walked file has no artist", "", MusicLists.artist("Old Hindi", "/storage/usb0/Old Hindi/a.mp3"));
+        java.util.Map<String, List<Integer>> g = MusicLists.group(Arrays.asList("Kishore", "lata", "", "Lata", "Kishore"));
+        eq("music: groups A to Z, case ignored", "[, Kishore, lata]", g.keySet().toString());
+        eq("music: grouped songs", "[1, 3]", g.get("Lata").toString());
+        List<String> names = Arrays.asList("Lag Ja Gale", "Tujhe Dekha", "Gale Lag Ja"), subs = Arrays.asList("Lata", "Kumar Sanu", "Asha");
+        eq("music: search every word", "[0, 2]", MusicLists.search(names, subs, "lag GALE").toString());
+        eq("music: search the artist", "[1]", MusicLists.search(names, subs, "sanu").toString());
+        eq("music: empty search lists all", 3, MusicLists.search(names, subs, "  ").size());
+        eq("music: volume share", 0.5f, MusicLists.share(8, 16));
+        eq("music: no volume", 0f, MusicLists.share(3, 0));
+        eq("voice: open music", "musicApp:music", String.valueOf(Voice.parse("open music")));
+        eq("voice: open the radio", "musicApp:radio", String.valueOf(Voice.parse("open the radio")));
+        eq("voice: radio kholo", "musicApp:radio", String.valueOf(Voice.parse("रेडियो खोलो")));
+        eq("voice: gaane kholo", "musicApp:music", String.valueOf(Voice.parse("gaane kholo")));
+        eq("voice: play music still plays", "music", String.valueOf(Voice.parse("play music")));
+        eq("voice: radio still plays FM", "fm", String.valueOf(Voice.parse("radio")));
+        Features.F f = Features.get("musicApp");
+        check("music: screen switch", f != null && f.def && "Radio and music".equals(f.group) && f.level == Features.SIMPLE);
     }
 
     /** Vendor code loading, key-action tokens, the map page, backups, downloads and file names. */
@@ -845,7 +894,7 @@ public final class Tests {
             else if (x.level == Features.CUSTOM) c++;
             else d++;
         }
-        eq("levels: simple count", 18, s);   // "longKeys" registered beside "keys"; "navTurns" and "parkedSettings" from the launcher review
+        eq("levels: simple count", 19, s);   // "longKeys" registered beside "keys"; "navTurns" and "parkedSettings" from the launcher review; "musicApp"
         eq("levels: custom count", 8, c);
         eq("levels: dev count", 2, d);
         check("levels: full has the most", f > s && f > c);

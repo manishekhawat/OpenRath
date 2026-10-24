@@ -160,6 +160,45 @@
     <string name="ui_more_last_heading_while_driving" formatted="false">Last heading while driving</string>
     <string name="ui_more_next_holiday_1_s" formatted="false">Next holiday: %1$s</string>
     <string name="ui_more_connect_an_obd_adapter_to_see_engine_data" formatted="false">Connect an OBD adapter to see engine data</string>
+    <string name="ui_more_radio_and_music_screen" formatted="false">Radio and music screen</string>
+    <string name="ui_more_a_tap_on_the_music_or_radio_box_opens_a_full" formatted="false">A tap on the music or radio box opens a full screen for FM, online radio, your music files and music apps</string>
+    <string name="ui_more_search_when_the_car_is_stopped" formatted="false">Search when the car is stopped</string>
+    <string name="ui_more_pick_a_station_or_a_song" formatted="false">Pick a station or a song</string>
+    <string name="ui_more_radio_and_music" formatted="false">RADIO AND MUSIC</string>
+    <string name="ui_more_volume" formatted="false">Volume</string>
+    <string name="ui_more_scan" formatted="false">Scan</string>
+    <string name="ui_more_save_a_station_or_scan_to_keep_it_here" formatted="false">Save a station, or scan, to keep it here</string>
+    <string name="ui_more_1_s_fm_taken_off_the_presets" formatted="false">%1$s FM taken off the presets</string>
+    <string name="ui_more_opens_your_radio_app" formatted="false">Opens your radio app</string>
+    <string name="ui_more_online_radio_needs_the_internet" formatted="false">Online radio needs the internet</string>
+    <string name="ui_more_look_again" formatted="false">Look again</string>
+    <string name="ui_more_after_putting_in_a_usb_stick_or_sd_card" formatted="false">After putting in a USB stick or SD card</string>
+    <string name="ui_more_1_song" formatted="false">1 song</string>
+    <string name="ui_more_1_s_songs" formatted="false">%1$s songs</string>
+    <string name="ui_more_nothing_matches_the_search" formatted="false">Nothing matches the search</string>
+    <string name="ui_more_where_the_boxes_play_from" formatted="false">WHERE THE BOXES PLAY FROM</string>
+    <string name="ui_more_music_box" formatted="false">Music box</string>
+    <string name="ui_more_online_radio_music_files_or_a_music_app" formatted="false">Online radio, music files or a music app</string>
+    <string name="ui_more_radio_box" formatted="false">Radio box</string>
+    <string name="ui_more_fm_online_radio_or_a_radio_app" formatted="false">FM, online radio or a radio app</string>
+    <string name="ui_more_music_apps" formatted="false">MUSIC APPS</string>
+    <string name="ui_more_playing_1_s" formatted="false">Playing: %1$s</string>
+    <string name="ui_more_paused_1_s" formatted="false">Paused: %1$s</string>
+    <string name="ui_more_no_music_apps_found_allow_notification_acces" formatted="false">No music apps found. Allow notification access for OpenRath to see what other apps play.</string>
+    <string name="ui_more_1_s_more_when_the_car_is_stopped" formatted="false">%1$s more when the car is stopped</string>
+    <string name="ui_more_artists" formatted="false">Artists</string>
+    <string name="ui_more_folders" formatted="false">Folders</string>
+    <string name="ui_more_seek_down" formatted="false">Seek down</string>
+    <string name="ui_more_seek_up" formatted="false">Seek up</string>
+    <string name="ui_more_stop_fm" formatted="false">Stop FM</string>
+    <string name="ui_more_play_fm" formatted="false">Play FM</string>
+    <string name="ui_more_saved" formatted="false">"★  Saved"</string>
+    <string name="ui_more_save_station" formatted="false">"☆  Save station"</string>
+    <string name="ui_more_all_artists" formatted="false">"‹  All artists"</string>
+    <string name="ui_more_all_folders" formatted="false">"‹  All folders"</string>
+    <string name="ui_more_unknown_artist" formatted="false">Unknown artist</string>
+    <string name="ui_more_other_files" formatted="false">Other files</string>
+    <string name="ui_more_tap_to_choose_from_its_library" formatted="false">Tap to choose from its library</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -319,5 +358,44 @@
         <item>@string/ui_more_last_heading_while_driving</item>
         <item>@string/ui_more_next_holiday_1_s</item>
         <item>@string/ui_more_connect_an_obd_adapter_to_see_engine_data</item>
+        <item>@string/ui_more_radio_and_music_screen</item>
+        <item>@string/ui_more_a_tap_on_the_music_or_radio_box_opens_a_full</item>
+        <item>@string/ui_more_search_when_the_car_is_stopped</item>
+        <item>@string/ui_more_pick_a_station_or_a_song</item>
+        <item>@string/ui_more_radio_and_music</item>
+        <item>@string/ui_more_volume</item>
+        <item>@string/ui_more_scan</item>
+        <item>@string/ui_more_save_a_station_or_scan_to_keep_it_here</item>
+        <item>@string/ui_more_1_s_fm_taken_off_the_presets</item>
+        <item>@string/ui_more_opens_your_radio_app</item>
+        <item>@string/ui_more_online_radio_needs_the_internet</item>
+        <item>@string/ui_more_look_again</item>
+        <item>@string/ui_more_after_putting_in_a_usb_stick_or_sd_card</item>
+        <item>@string/ui_more_1_song</item>
+        <item>@string/ui_more_1_s_songs</item>
+        <item>@string/ui_more_nothing_matches_the_search</item>
+        <item>@string/ui_more_where_the_boxes_play_from</item>
+        <item>@string/ui_more_music_box</item>
+        <item>@string/ui_more_online_radio_music_files_or_a_music_app</item>
+        <item>@string/ui_more_radio_box</item>
+        <item>@string/ui_more_fm_online_radio_or_a_radio_app</item>
+        <item>@string/ui_more_music_apps</item>
+        <item>@string/ui_more_playing_1_s</item>
+        <item>@string/ui_more_paused_1_s</item>
+        <item>@string/ui_more_no_music_apps_found_allow_notification_acces</item>
+        <item>@string/ui_more_1_s_more_when_the_car_is_stopped</item>
+        <item>@string/ui_more_artists</item>
+        <item>@string/ui_more_folders</item>
+        <item>@string/ui_more_seek_down</item>
+        <item>@string/ui_more_seek_up</item>
+        <item>@string/ui_more_stop_fm</item>
+        <item>@string/ui_more_play_fm</item>
+        <item>@string/ui_more_saved</item>
+        <item>@string/ui_more_save_station</item>
+        <item>@string/ui_more_all_artists</item>
+        <item>@string/ui_more_all_folders</item>
+        <item>@string/ui_more_unknown_artist</item>
+        <item>@string/ui_more_other_files</item>
+        <item>@string/ui_more_tap_to_choose_from_its_library</item>
     </string-array>
 </resources>

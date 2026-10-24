@@ -207,9 +207,14 @@ public class HomeActivity extends Activity implements Cards.Host {
         else if ("answer".equals(a)) hub.unit.answer(this);
         else if ("hangup".equals(a)) hub.unit.hangUp(this);
         else if ("navi".equals(a)) openApp("dock:navi", "Navigation");
-        else if ("radio".equals(a)) openApp("media:radio", "Radio");
-        else if ("music".equals(a)) openApp("media:music", "Music");
-        else if ("dash".equals(a)) closeSettings();
+        else if ("radio".equals(a)) {
+            if (!openMusic(MusicScreen.RADIO)) openApp("media:radio", "Radio");
+        } else if ("music".equals(a)) {
+            if (!openMusic(MusicScreen.MUSIC)) openApp("media:music", "Music");
+        } else if ("dash".equals(a)) {
+            closeMusic();
+            closeSettings();
+        }
         else if ("screen".equals(a)) Extras.screenOff(this);
         else if ("page".equals(a)) turnPage(1);
         else if ("voice".equals(a)) voiceSearch(mapCard());
@@ -1033,6 +1038,38 @@ public class HomeActivity extends Activity implements Cards.Host {
     }
 
     SettingsView settingsView;
+    MusicScreen musicScreen;
+
+    /**
+     * The radio and music screen, on the Radio, Music or Apps list (null: the last one). False when
+     * its switch in Settings > Features is off, so the caller does what it did before.
+     */
+    boolean openMusic(String tab) {
+        if (!Features.on(prefs, "musicApp")) return false;
+        if (musicScreen != null) {
+            if (tab != null) MusicScreen.tab = tab;
+            musicScreen.refresh(true);
+            return true;
+        }
+        musicScreen = new MusicScreen(this, tab, new MusicScreen.Closed() {
+            @Override
+            public void closed() {
+                closeMusic();
+            }
+        });
+        root.addView(musicScreen, new android.widget.FrameLayout.LayoutParams(-1, -1));
+        return true;
+    }
+
+    /** Back to the dashboard from the radio and music screen; false when it wasn't open. */
+    boolean closeMusic() {
+        if (musicScreen == null) return false;
+        musicScreen.gone();
+        root.removeView(musicScreen);
+        musicScreen = null;
+        hub.notifyIfChanged(true);
+        return true;
+    }
 
     /** The owner entered the valet PIN: Settings and box menus open until Settings is closed. */
     boolean ownerUnlocked;
@@ -1370,6 +1407,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             setup.back();
             return;
         }
+        if (closeMusic()) return;
         if (dash.editing()) stopMoving();
         else closeSettings();
     }

@@ -86,6 +86,36 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
         }
     }
 
+    /** The running player, for where the music file is (the radio and music screen's bar). */
+    private static Player self;
+
+    /** How far into the music file, in ms; 0 when no file is loaded (or a station plays). Main thread only. */
+    static long position() {
+        try {
+            return self != null && self.mp != null && !busy && FILES.equals(mode) ? self.mp.getCurrentPosition() : 0;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    /** How long the music file is, in ms; 0 when not known. */
+    static long duration() {
+        try {
+            return self != null && self.mp != null && !busy && FILES.equals(mode) ? Math.max(0, self.mp.getDuration()) : 0;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    /** Move in the music file, from the screen's bar. */
+    static void seek(long ms) {
+        try {
+            if (self != null && self.mp != null && !busy && FILES.equals(mode)) self.mp.seekTo((int) ms);
+        } catch (Exception e) {
+            Diag.note("music seek", e);
+        }
+    }
+
     private final Handler handler = new Handler();
     private MediaPlayer mp;
     private MediaSession session;
@@ -95,6 +125,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
     @Override
     public void onCreate() {
         super.onCreate();
+        self = this;
         sp = getSharedPreferences("player", MODE_PRIVATE);
         station = sp.getInt("station", 0);
         song = sp.getInt("song", 0);
@@ -498,6 +529,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
 
     @Override
     public void onDestroy() {
+        if (self == this) self = null;
         release();
         session.release();
         super.onDestroy();

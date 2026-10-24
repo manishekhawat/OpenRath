@@ -159,4 +159,43 @@
     <string name="ui_more_last_heading_while_driving" formatted="false">चलते समय की आख़िरी दिशा</string>
     <string name="ui_more_next_holiday_1_s" formatted="false">अगली छुट्टी: %1$s</string>
     <string name="ui_more_connect_an_obd_adapter_to_see_engine_data" formatted="false">इंजन की जानकारी देखने के लिए OBD अडैप्टर जोड़ें</string>
+    <string name="ui_more_radio_and_music_screen" formatted="false">रेडियो और संगीत स्क्रीन</string>
+    <string name="ui_more_a_tap_on_the_music_or_radio_box_opens_a_full" formatted="false">संगीत या रेडियो बॉक्स पर टैप करने से FM, ऑनलाइन रेडियो, आपकी संगीत फ़ाइलों और संगीत ऐप्स के लिए पूरी स्क्रीन खुलती है</string>
+    <string name="ui_more_search_when_the_car_is_stopped" formatted="false">गाड़ी रुकने पर खोजें</string>
+    <string name="ui_more_pick_a_station_or_a_song" formatted="false">कोई स्टेशन या गाना चुनें</string>
+    <string name="ui_more_radio_and_music" formatted="false">रेडियो और संगीत</string>
+    <string name="ui_more_volume" formatted="false">आवाज़</string>
+    <string name="ui_more_scan" formatted="false">स्कैन</string>
+    <string name="ui_more_save_a_station_or_scan_to_keep_it_here" formatted="false">स्टेशन यहाँ रखने के लिए उसे सेव करें या स्कैन करें</string>
+    <string name="ui_more_1_s_fm_taken_off_the_presets" formatted="false">%1$s FM सेव किए स्टेशनों से हटाया</string>
+    <string name="ui_more_opens_your_radio_app" formatted="false">आपका रेडियो ऐप खोलता है</string>
+    <string name="ui_more_online_radio_needs_the_internet" formatted="false">ऑनलाइन रेडियो के लिए इंटरनेट चाहिए</string>
+    <string name="ui_more_look_again" formatted="false">फिर से देखें</string>
+    <string name="ui_more_after_putting_in_a_usb_stick_or_sd_card" formatted="false">USB स्टिक या SD कार्ड लगाने के बाद</string>
+    <string name="ui_more_1_song" formatted="false">1 गाना</string>
+    <string name="ui_more_1_s_songs" formatted="false">%1$s गाने</string>
+    <string name="ui_more_nothing_matches_the_search" formatted="false">खोज से कुछ नहीं मिला</string>
+    <string name="ui_more_where_the_boxes_play_from" formatted="false">बॉक्स कहाँ से बजते हैं</string>
+    <string name="ui_more_music_box" formatted="false">संगीत बॉक्स</string>
+    <string name="ui_more_online_radio_music_files_or_a_music_app" formatted="false">ऑनलाइन रेडियो, संगीत फ़ाइलें या कोई संगीत ऐप</string>
+    <string name="ui_more_radio_box" formatted="false">रेडियो बॉक्स</string>
+    <string name="ui_more_fm_online_radio_or_a_radio_app" formatted="false">FM, ऑनलाइन रेडियो या कोई रेडियो ऐप</string>
+    <string name="ui_more_music_apps" formatted="false">संगीत ऐप्स</string>
+    <string name="ui_more_playing_1_s" formatted="false">चल रहा है: %1$s</string>
+    <string name="ui_more_paused_1_s" formatted="false">रुका है: %1$s</string>
+    <string name="ui_more_no_music_apps_found_allow_notification_acces" formatted="false">कोई संगीत ऐप नहीं मिला। दूसरे ऐप्स में क्या बज रहा है यह देखने के लिए OpenRath को सूचना की अनुमति दें।</string>
+    <string name="ui_more_1_s_more_when_the_car_is_stopped" formatted="false">गाड़ी रुकने पर %1$s और</string>
+    <string name="ui_more_artists" formatted="false">कलाकार</string>
+    <string name="ui_more_folders" formatted="false">फ़ोल्डर</string>
+    <string name="ui_more_seek_down" formatted="false">पीछे खोजें</string>
+    <string name="ui_more_seek_up" formatted="false">आगे खोजें</string>
+    <string name="ui_more_stop_fm" formatted="false">FM बंद करें</string>
+    <string name="ui_more_play_fm" formatted="false">FM चलाएँ</string>
+    <string name="ui_more_saved" formatted="false">"★  सेव है"</string>
+    <string name="ui_more_save_station" formatted="false">"☆  स्टेशन सेव करें"</string>
+    <string name="ui_more_all_artists" formatted="false">"‹  सभी कलाकार"</string>
+    <string name="ui_more_all_folders" formatted="false">"‹  सभी फ़ोल्डर"</string>
+    <string name="ui_more_unknown_artist" formatted="false">अज्ञात कलाकार</string>
+    <string name="ui_more_other_files" formatted="false">अन्य फ़ाइलें</string>
+    <string name="ui_more_tap_to_choose_from_its_library" formatted="false">इसकी लाइब्रेरी से चुनने के लिए टैप करें</string>
 </resources>

@@ -164,6 +164,7 @@ final class LayoutView extends View implements Hub.Listener {
             if ("apps".equals(n)) a.startActivity(new Intent(a, AppsActivity.class));
             else if ("settings".equals(n)) a.openSettings();
             else if ("user".equals(n)) user();
+            else if (("music".equals(n) || "radio".equals(n)) && a.openMusic(n)) return;
             else if ("dash".equals(n)) {
                 prefs.put("layout", Layouts.BOXES);   // back to the boxes
                 a.build();
@@ -172,7 +173,8 @@ final class LayoutView extends View implements Hub.Listener {
             String m = action.substring(6);
             if ("open".equals(m)) {
                 Now n = now();
-                a.openApp(n.radio ? "media:radio" : "media:music", n.radio ? "Radio" : "Music");
+                if (!a.openMusic(n.radio ? MusicScreen.RADIO : MusicScreen.MUSIC))
+                    a.openApp(n.radio ? "media:radio" : "media:music", n.radio ? "Radio" : "Music");
             } else Extras.media(a, m);
             postInvalidateDelayed(300);
         } else if (action.startsWith("place:")) {
@@ -1140,7 +1142,7 @@ final class LayoutView extends View implements Hub.Listener {
     }
 
     /** Soft colours for the stand-in cover, one picked for each station or app by its name. */
-    private static final int[] SOFT = {0xFF5B7DB1, 0xFF4E9A8A, 0xFFC07A4E, 0xFF8A6BB0, 0xFFB0607A, 0xFF6B8E4E};
+    static final int[] SOFT = {0xFF5B7DB1, 0xFF4E9A8A, 0xFFC07A4E, 0xFF8A6BB0, 0xFFB0607A, 0xFF6B8E4E};
 
     /**
      * The album cover, or when there's no real one the station's or app's initials on a soft

@@ -32,7 +32,7 @@ final class Features {
     /** Off whatever the level until the owner turns them on: they need hardware, or change the home screen. */
     private static final java.util.Set<String> ASK_FIRST = new java.util.HashSet<>(java.util.Arrays.asList("cab", "obd", "dashcam", "tpms", "reports"));
 
-    private static final String[] SIMPLE_IDS = {"arrows", "navTurns", "parkedSettings", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "longKeys", "resume", "offlineMap", "backup", "reports"};
+    private static final String[] SIMPLE_IDS = {"arrows", "navTurns", "parkedSettings", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "longKeys", "resume", "offlineMap", "backup", "reports", "musicApp"};
     private static final String[] CUSTOM_IDS = {"pages", "widgets", "saver", "perf", "bootArt", "soundProfiles", "speedVolume", "eq", "profiles"};
     private static final String[] DEV_IDS = {"maker", "perf"};
 
@@ -150,6 +150,7 @@ final class Features {
             new F("duck", "Music dips for voice prompts", "Driving", true, "Music lowers while the car speaks a turn or a warning"),
             new F("callScreen", "Call screen over other apps", "Phone", true, "Who is calling, with big Answer and End buttons, on top of whatever app is open"),
             new F("hotspot", "Guest Wi-Fi", "Phone", true, "A QR code passengers scan to join the unit's hotspot"),
+            new F("musicApp", "Radio and music screen", "Radio and music", true, "A tap on the music or radio box opens a full screen for FM, online radio, your music files and music apps"),
             new F("maker", "Stereo maker's services", "Radio and music", true, "Uses your stereo maker's own services for FM, calls, reverse and lights; off: plain Android only"),
             new F("projection", "Phone projection app", "Radio and music", true, "A button in the music box opens your wireless CarPlay or Android Auto app (ZLink, AutoKit and others)"),
             new F("projectionAuto", "Open the projection app when the phone connects", "Radio and music", false, "Your CarPlay or Android Auto app opens by itself when a phone connects by Bluetooth"),
