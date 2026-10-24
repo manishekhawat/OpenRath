@@ -131,6 +131,38 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         return todaySec < 60 ? 0 : todayKm / (todaySec / 3600.0);
     }
 
+    /**
+     * Whether a speed of 0 can be shown when no fresh one came in: there is a position (the
+     * dashboard's or the trip service's) and the last speed the trip service saw was standing still.
+     */
+    static boolean standing(boolean hasFix, long tripFixAt, float lastKmh) {
+        return (hasFix || tripFixAt > 0) && lastKmh < Fixes.stillKmh;
+    }
+
+    /** Whole days from one "2026-10-12" date to a later one (0 for the same day, -1 if either isn't a date). */
+    static int daysBetween(String from, String to) {
+        try {
+            java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            f.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+            return (int) Math.round((f.parse(to).getTime() - f.parse(from).getTime()) / 86400000.0);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    /** The latest day before `today` in the history with some driving (0.1 km or more), or null. */
+    static String lastDay(JSONObject hist, String today) {
+        String best = null;
+        java.util.Iterator<String> it = hist.keys();
+        while (it.hasNext()) {
+            String d = it.next();
+            JSONArray a = hist.optJSONArray(d);
+            if (d.compareTo(today) >= 0 || a == null || a.optDouble(0, 0) < 0.1) continue;
+            if (best == null || d.compareTo(best) > 0) best = d;
+        }
+        return best;
+    }
+
     private SharedPreferences sp;
     private Prefs prefs;
     private final Handler handler = new Handler();
@@ -160,6 +192,9 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
             sp.edit().putFloat("parkLat", (float) parkLat).putFloat("parkLon", (float) parkLon).putLong("parkAt", parkAt).apply();
         }
         loadToday();
+        // the last heading and height from before the unit was switched off, until a fix brings new ones
+        if (headingKept < 0) headingKept = sp.getFloat("headingKept", -1);
+        if (Double.isNaN(altNow) && sp.contains("altKept")) altNow = sp.getFloat("altKept", 0);
         try {
             tone = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 80);
         } catch (Throwable e) {
@@ -581,8 +616,10 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
             if (spotSaved == null || spotSaved.distanceTo(l) > 10 || now - spotSavedAt > 5 * 60000) {
                 spotSaved = l;
                 spotSavedAt = now;
-                sp.edit().putFloat("lastLat", (float) l.getLatitude()).putFloat("lastLon", (float) l.getLongitude())
-                        .putLong("lastAt", now).apply();
+                SharedPreferences.Editor e = sp.edit().putFloat("lastLat", (float) l.getLatitude()).putFloat("lastLon", (float) l.getLongitude())
+                        .putLong("lastAt", now).putFloat("headingKept", (float) headingKept);
+                if (!Double.isNaN(altNow)) e.putFloat("altKept", (float) altNow);
+                e.apply();
             }
             if (spotsLoaded) {
                 // the big settings file is written again only when something new was learnt

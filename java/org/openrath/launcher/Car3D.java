@@ -16,7 +16,7 @@ import java.util.Locale;
 
 /**
  * The owner's car in 3D, drawn by OpenRath itself: a low-poly body in one of four shapes (hatchback,
- * saloon, SUV, MUV), in the car's colour, with the number plate, lamps and wheels, on a 360 ground
+ * saloon, SUV, MUV, and the compact saloon for the models that are one), in the car's colour, with the number plate, lamps and wheels, on a 360 ground
  * ring. No model files and no 3D library: the faces are built here and painted back to front on a
  * Canvas. Metres; x to the car's right, y up, z forward.
  */
@@ -24,6 +24,12 @@ final class Car3D {
 
     static final String[] SHAPES = {"hatch", "sedan", "suv", "muv"};
     static final String[] SHAPE_NAMES = {"Hatchback", "Saloon (sedan)", "SUV", "MUV / people carrier"};
+    /**
+     * The short Indian saloon under four metres (Dzire, Amaze, Aura, Tigor): drawn for a saloon of
+     * one of those models instead of the long one. Not one of the SHAPES to pick: it comes with the model.
+     */
+    static final String COMPACT = "compact";
+    private static final String[] COMPACT_MODELS = {"dzire", "amaze", "aura", "tigor", "xcent", "aspire", "ameo", "zest"};
 
     static final int BODY = 0, GLASS = 1, TYRE = 2, HUB = 3, HEAD = 4, TAIL = 5, GRILLE = 6, PLATE = 7, UNDER = 8;
 
@@ -63,6 +69,8 @@ final class Car3D {
     static double[] dims(String shape) {
         //                    L     W     H     sill  belt  hood  wb    r     rearGlassBase roofRear roofFront windscreenBase
         if ("sedan".equals(shape)) return new double[]{4.40, 1.73, 1.48, .17, .92, .78, 2.60, .30, -1.35, -.75, .35, 1.05};
+        // short bonnet, stubby boot, a little lower: a Dzire is 3.99 m long
+        if (COMPACT.equals(shape)) return new double[]{3.99, 1.73, 1.50, .17, .92, .78, 2.45, .29, -1.40, -.80, .28, .98};
         if ("suv".equals(shape)) return new double[]{4.30, 1.79, 1.68, .24, 1.05, .98, 2.60, .34, -2.07, -1.97, .55, 1.15};
         if ("muv".equals(shape)) return new double[]{4.40, 1.75, 1.75, .20, 1.00, .90, 2.75, .32, -2.14, -2.08, .75, 1.40};
         return new double[]{3.85, 1.73, 1.50, .18, .95, .80, 2.45, .30, -1.81, -1.63, .35, 1.05};
@@ -72,6 +80,20 @@ final class Car3D {
         String s = p.str("carShape", "");
         for (String k : SHAPES) if (k.equals(s)) return s;
         return "suv".equals(p.str("carBody", "car")) ? "suv" : "hatch";
+    }
+
+    /** The shape to draw: the one picked, or the compact saloon for a saloon (or a car with no shape yet) of those models. */
+    static String drawn(Prefs p) {
+        String s = shape(p);
+        boolean saloon = "sedan".equals(s) || p.str("carShape", "").isEmpty();
+        return saloon && compact(Car.model(p)) ? COMPACT : s;
+    }
+
+    /** Whether a model is one of India's sub-four-metre saloons ("Swift Dzire", "Amaze", "Aura"). */
+    static boolean compact(String model) {
+        String m = model == null ? "" : model.toLowerCase(Locale.US);
+        for (String k : COMPACT_MODELS) if (m.matches(".*\\b" + k + "\\b.*")) return true;
+        return false;
     }
 
     static int colour(Prefs p) {

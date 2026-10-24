@@ -375,7 +375,9 @@ final class Hub implements LocationListener {
         if (now - Drive.fixAt < FIX_TIMEOUT_MS && (!fresh || Drive.fixAt > fixAt)) raw = Drive.kmhNow;
         else if (!fresh) {
             shownKmh = 0;
-            return "--";
+            // no new speed, but the GPS has a position and the car was last seen standing still
+            // (parked, the GPS asks only every 15 s): 0, not "--", which means no GPS at all
+            return Drive.standing(fix != null, Drive.fixAt, Drive.kmhNow) ? "0" : "--";
         } else raw = fix.getSpeed() * 3.6f;
         long t = android.os.SystemClock.elapsedRealtime();
         shownKmh = Features.on(prefs, "smoothSpeed") ? Fixes.smooth(shownKmh, raw, t - shownAt) : raw < Fixes.stillKmh ? 0 : raw;

@@ -1040,13 +1040,33 @@ public final class Tests {
         eq("unit mtc kHz", Unit.mhzText(99900), "99.9");
         eq("unit mtc Hz", Unit.mhzText(91100000L), "91.1");
         eq("unit AM", Unit.mhzText(531), "");
-        for (String sh : Car3D.SHAPES) {
+        java.util.List<String> drawn = new java.util.ArrayList<>(Arrays.asList(Car3D.SHAPES));
+        drawn.add(Car3D.COMPACT);
+        for (String sh : drawn) {
             java.util.List<Car3D.Face> fs = Car3D.build(sh);
             check("3d " + sh + " faces", fs.size() > 60);
             boolean out = true;
             for (Car3D.Face f : fs) if (f.layer == 2 && f.c[1] > 0.5 && f.n[1] < -0.5) out = false;
             check("3d " + sh + " body tops face up", out);
         }
+        check("3d compact saloon is short", Car3D.dims(Car3D.COMPACT)[0] < 4.0 && Car3D.dims(Car3D.COMPACT)[0] < Car3D.dims("sedan")[0]);
+        check("3d compact models", Car3D.compact("Dzire") && Car3D.compact("Swift Dzire") && Car3D.compact("Amaze") && Car3D.compact("Aura"));
+        check("3d not compact", !Car3D.compact("City") && !Car3D.compact("Verna") && !Car3D.compact("Laura") && !Car3D.compact("") && !Car3D.compact(null));
+        try {
+            org.json.JSONObject hist = new org.json.JSONObject("{\"2026-10-20\":[5.5,660,0,0,0,100],\"2026-10-22\":[0.0,0,0,0,0,100],"
+                    + "\"2026-10-21\":[12.4,1800,0,0,0,96],\"2026-10-24\":[3.0,300,0,0,0,100]}");
+            eq("last drive day", "2026-10-21", Drive.lastDay(hist, "2026-10-24"));
+            eq("last drive none", null, Drive.lastDay(new org.json.JSONObject(), "2026-10-24"));
+            eq("last drive skips today", null, Drive.lastDay(new org.json.JSONObject("{\"2026-10-24\":[3.0,300]}"), "2026-10-24"));
+        } catch (org.json.JSONException e) {
+            check("last drive json", false);
+        }
+        eq("days between", 3, Drive.daysBetween("2026-10-21", "2026-10-24"));
+        eq("days between months", 2, Drive.daysBetween("2026-10-31", "2026-11-02"));
+        eq("days between junk", -1, Drive.daysBetween("x", "2026-11-02"));
+        check("speed 0 parked with a fix", Drive.standing(true, 0, 0) && Drive.standing(false, 1000, 0.5f));
+        check("speed -- without GPS", !Drive.standing(false, 0, 0));
+        check("speed -- when last seen moving", !Drive.standing(true, 1000, 40));
         Car3D.Cam cam = new Car3D.Cam();
         cam.setup(1000, 600);
         float[] mid = cam.project(cam.target);
@@ -1165,6 +1185,8 @@ public final class Tests {
         String r = News.read(l, "Top stories");
         check("news read start", r.startsWith("Here are the top headlines. One. Monsoon to reach Kerala early, says IMD. From The Hindu."));
         check("news read five", r.contains("Five. Five.") && !r.contains("Six"));
+        eq("news keeps more for the box", 6, News.parse(xml, News.KEEP).size());
+        check("news reads only five", !News.read(News.parse(xml, News.KEEP), "Top stories").contains("Six"));
         eq("news read sport", "Here are the Sports headlines. One. Four.", News.read(java.util.Collections.singletonList(new News.Item("Four", "")), "Sports"));
         eq("news none", "There's no news to read yet.", News.read(new java.util.ArrayList<News.Item>(), "Top stories"));
         eq("news one", "India beat Australia by 6 wickets in Perth. From ESPNcricinfo.", News.read(l.get(2)));

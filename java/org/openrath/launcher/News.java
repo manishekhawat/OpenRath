@@ -12,16 +12,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The top five headlines for the news box, from Google News (RSS, no account or key). Refreshed every
- * 30 minutes while there is internet; the last five are kept so the box still shows them offline.
- * read() turns them into one passage for the car's voice. parse() and read() have no Android types,
+ * The top headlines for the news box, from Google News (RSS, no account or key): up to eight are kept,
+ * so a tall box is full, and the first five are read aloud. Refreshed every 30 minutes while there is
+ * internet; the last ones are kept so the box still shows them offline. read() turns them into one
+ * passage for the car's voice. parse() and read() have no Android types,
  * so they are unit-tested.
  */
 final class News {
 
     static final String[] TOPICS = {"top", "NATION", "WORLD", "BUSINESS", "SPORTS", "TECHNOLOGY", "ENTERTAINMENT"};
     static final String[] TOPIC_NAMES = {"Top stories", "India", "World", "Business", "Sports", "Technology", "Entertainment"};
-    static final int COUNT = 5;
+    /** Headlines read aloud, and kept for the box. */
+    static final int COUNT = 5, KEEP = 8;
     static final long FRESH_MS = 30L * 60 * 1000, RETRY_MS = 3L * 60 * 1000;
 
     static final class Item {
@@ -101,12 +103,12 @@ final class News {
                 .replace("&nbsp;", " ").replace("&amp;", "&").replaceAll("\\s+", " ").trim();
     }
 
-    /** What the voice says: "Here are the top 5 stories. One. … Two. …". */
+    /** What the voice says: "Here are the top 5 stories. One. … Two. …" (the first COUNT). */
     static String read(List<Item> list, String topicName) {
         if (list == null || list.isEmpty()) return "There's no news to read yet.";
         String[] n = {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"};
         StringBuilder b = new StringBuilder("Here are the " + ("Top stories".equals(topicName) ? "top" : topicName) + " headlines. ");
-        for (int i = 0; i < list.size() && i < n.length; i++) {
+        for (int i = 0; i < list.size() && i < n.length && i < COUNT; i++) {
             Item it = list.get(i);
             b.append(n[i]).append(". ").append(it.title);
             if (!it.title.endsWith(".") && !it.title.endsWith("?") && !it.title.endsWith("!")) b.append('.');
@@ -147,7 +149,7 @@ final class News {
             @Override
             public void run() {
                 try {
-                    List<Item> l = parse(get(url(topic)), COUNT);
+                    List<Item> l = parse(get(url(topic)), KEEP);
                     if (!l.isEmpty()) {
                         StringBuilder b = new StringBuilder();
                         for (Item it : l) b.append(it.title.replace('\t', ' ')).append('\t').append(it.source.replace('\n', ' ')).append('\n');
