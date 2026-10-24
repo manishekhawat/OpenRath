@@ -375,18 +375,23 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
                 JSONObject s = a.getJSONObject(i);
                 String codec = s.optString("codec", "").toUpperCase(Locale.US);
                 String url = s.optString("url_resolved", s.optString("url", ""));
-                String name = s.optString("name", "").trim();
+                String name = clean(s.optString("name", ""));
                 if (!streamable(url) || name.isEmpty() || seen.contains(name.toLowerCase(Locale.US))) continue;
                 if (!(codec.contains("MP3") || codec.contains("AAC") || codec.isEmpty())) continue;
                 seen.add(name.toLowerCase(Locale.US));
                 String tags = s.optString("tags", "");
                 if (tags.length() > 40) tags = tags.substring(0, 40);
-                out.add(new Track(name, tags.replace(",", ", "), url));
+                out.add(new Track(name, clean(tags.replace(",", ", ")), url));
             }
         } catch (Exception e) {
             Diag.note("station list read", e);
         }
         return out;
+    }
+
+    /** A station or show name as the directory gives it, made readable: "Bollywood_Dance " is "Bollywood Dance". */
+    static String clean(String s) {
+        return s == null ? "" : s.replace('_', ' ').replaceAll("\\s+", " ").trim();
     }
 
     private static String get(String u) throws Exception {

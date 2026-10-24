@@ -41,12 +41,15 @@ final class OverMic {
         }
     }
 
-    /** Where the mic goes: its saved spot as a share of the screen, kept fully on it. */
+    /**
+     * Where the mic goes: its saved spot as a share of the screen, kept fully on it. Until it is
+     * moved it waits in the bottom-right corner, clear of the boxes' words and buttons.
+     */
     static int[] spot(Prefs p, int w, int h, int size) {
-        float fx = 0.94f, fy = 0.80f;
+        float fx = 1f, fy = 1f;
         try {
-            fx = Float.parseFloat(p.str("micX", "0.94"));
-            fy = Float.parseFloat(p.str("micY", "0.80"));
+            fx = Float.parseFloat(p.str("micX", "1"));
+            fy = Float.parseFloat(p.str("micY", "1"));
         } catch (Exception ignored) {
             // not a number: keep the default
         }
@@ -57,7 +60,7 @@ final class OverMic {
     static void show(final Context app, final Prefs p) {
         if (shown != null || !wanted(p) || !allowed(app)) return;
         final WindowManager wm = (WindowManager) app.getSystemService(Context.WINDOW_SERVICE);
-        final int size = Ui.px(64);
+        final int size = Ui.px(Floaters.MIC);
         final int sw = app.getResources().getDisplayMetrics().widthPixels, sh = app.getResources().getDisplayMetrics().heightPixels;
         int type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         final WindowManager.LayoutParams lp = new WindowManager.LayoutParams(size, size, type,

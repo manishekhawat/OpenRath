@@ -85,6 +85,9 @@ final class Floaters {
         return new float[]{x, y};
     }
 
+    /** The floating mic's size before scaling: small, so it covers little of a box. */
+    static final int MIC = 40;
+
     static class Mic extends View {
         private final Prefs prefs;
         private final Runnable tapped;
@@ -101,14 +104,7 @@ final class Floaters {
 
         /** Put it where it was left (call once the parent has its size). */
         void restore(int w, int h) {
-            float fx = 0.94f, fy = 0.80f;
-            try {
-                fx = Float.parseFloat(prefs.str("micX", "0.94"));
-                fy = Float.parseFloat(prefs.str("micY", "0.80"));
-            } catch (Exception ignored) {
-                // not a number: keep the default
-            }
-            float[] at = place(fx, fy, w, h, getWidth() > 0 ? getWidth() : Ui.px(64));
+            int[] at = OverMic.spot(prefs, w, h, getWidth() > 0 ? getWidth() : Ui.px(MIC));
             setX(at[0]);
             setY(at[1]);
         }
