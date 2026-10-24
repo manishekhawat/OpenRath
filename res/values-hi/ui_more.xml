@@ -87,4 +87,66 @@
     <string name="ui_more_fuel_tank_1_s" formatted="false">फ़्यूल टैंक: %1$s%%</string>
     <string name="ui_more_battery_1_s_v" formatted="false">बैटरी: %1$s V</string>
     <string name="ui_more_always_works_on_openrath_s_own_music_other_m" formatted="false">OpenRath के अपने म्यूज़िक पर हमेशा चलता है। दूसरे म्यूज़िक ऐप पर तभी असर होता है जब यूनिट इसकी अनुमति दे; अगर आवाज़ वैसी ही लगे तो यूनिट का अपना EQ ऐप इस्तेमाल करें।</string>
+    <string name="ui_more_general" formatted="false">सामान्य</string>
+    <string name="ui_more_voice" formatted="false">आवाज़</string>
+    <string name="ui_more_driving_alerts" formatted="false">ड्राइविंग चेतावनी</string>
+    <string name="ui_more_fuel_and_parking" formatted="false">पेट्रोल और पार्किंग</string>
+    <string name="ui_more_your_driving" formatted="false">आपकी ड्राइविंग</string>
+    <string name="ui_more_records" formatted="false">रिकॉर्ड</string>
+    <string name="ui_more_apps_and_voice" formatted="false">ऐप और आवाज़</string>
+    <string name="ui_more_level_language_units_country" formatted="false">लेवल, भाषा, इकाइयाँ, देश</string>
+    <string name="ui_more_boxes_pages_weather_news" formatted="false">बॉक्स, पेज, मौसम, खबरें</string>
+    <string name="ui_more_map_navigation_apps_next_turn" formatted="false">नक्शा, नेविगेशन ऐप, अगला मोड़</string>
+    <string name="ui_more_mic_language_what_you_can_say" formatted="false">माइक, भाषा, आप क्या बोल सकते हैं</string>
+    <string name="ui_more_petrol_tolls_parking_sharing_costs" formatted="false">पेट्रोल, टोल, पार्किंग, खर्च बाँटना</string>
+    <string name="ui_more_recording_with_a_usb_camera" formatted="false">USB कैमरे से रिकॉर्डिंग</string>
+    <string name="ui_more_speed_fog_breaks_road_learning" formatted="false">स्पीड, कोहरा, ब्रेक, सड़क की जानकारी</string>
+    <string name="ui_more_trips_badges_routes_learnt_roads" formatted="false">यात्राएँ, बैज, रास्ते, सीखी सड़कें</string>
+    <string name="ui_more_1_s_of_4_added" formatted="false">4 में से %1$s जोड़े गए</string>
+    <string name="ui_more_none_install_organic_maps" formatted="false">कोई नहीं: Organic Maps इंस्टॉल करें</string>
+    <string name="ui_more_1_s_km" formatted="false">%1$s km</string>
+    <string name="ui_more_1_s_km_2_s_due" formatted="false">%1$s km, %2$s बाकी</string>
+    <string name="ui_more_1_s_of_3_set" formatted="false">3 में से %1$s सेट</string>
+    <string name="ui_more_1_s_of_4_set_up" formatted="false">4 में से %1$s सेट</string>
+    <string name="ui_more_headlights" formatted="false">हेडलाइट</string>
+    <string name="ui_more_indicators" formatted="false">इंडिकेटर</string>
+    <string name="ui_more_doors" formatted="false">दरवाज़े</string>
+    <string name="ui_more_seat_belt" formatted="false">सीट बेल्ट</string>
+    <string name="ui_more_button_pictures" formatted="false">बटन की तस्वीरें</string>
+    <string name="ui_more_built_in_or_your_own" formatted="false">पहले से बनी, या आपकी अपनी</string>
+    <string name="ui_more_navigation_app" formatted="false">नेविगेशन ऐप</string>
+    <string name="ui_more_without_internet" formatted="false">बिना इंटरनेट</string>
+    <string name="ui_more_your_own_speed_limit" formatted="false">आपकी अपनी स्पीड सीमा</string>
+    <string name="ui_more_service_reminders" formatted="false">सर्विस रिमाइंडर</string>
+    <string name="ui_more_favourite_contacts" formatted="false">पसंदीदा संपर्क</string>
+    <string name="ui_more_car_signals_setup" formatted="false">कार सिग्नल सेटअप</string>
+    <string name="ui_more_looks_for_a_newer_openrath" formatted="false">नया OpenRath खोजता है</string>
+    <string name="ui_more_night_and_phone_themes" formatted="false">रात और फ़ोन की थीम</string>
+    <string name="ui_more_choose_the_themes" formatted="false">थीम चुनें</string>
+    <string name="ui_more_make_the_boot_logo" formatted="false">बूट लोगो बनाएँ</string>
+    <string name="ui_more_with_your_car_s_badge_and_name" formatted="false">आपकी कार के बैज और नाम के साथ</string>
+    <string name="ui_more_start_from_the_current_theme" formatted="false">अभी की थीम से शुरू करें</string>
+    <string name="ui_more_built_in_tap_to_use_your_own" formatted="false">पहले से बनी; अपनी लगाने के लिए टैप करें</string>
+    <string name="ui_more_read_aloud_says" formatted="false">पढ़कर सुनाता है</string>
+    <string name="ui_more_speed_limit_in_valet_mode" formatted="false">वैले मोड में स्पीड सीमा</string>
+    <string name="ui_more_a_qr_code_with_where_you_are_and_the_route" formatted="false">आपकी जगह और रास्ते का QR कोड</string>
+    <string name="ui_more_a_upi_qr_code_for_each_share" formatted="false">हर हिस्से के लिए UPI QR कोड</string>
+    <string name="ui_more_spot_the_colour_number_plates_how_far" formatted="false">रंग पहचानो, नंबर प्लेट, कितनी दूर</string>
+    <string name="ui_more_how_much_louder" formatted="false">कितना तेज़</string>
+    <string name="ui_more_quiet_hours_start_at" formatted="false">शांत समय शुरू</string>
+    <string name="ui_more_equalizer_settings" formatted="false">इक्वलाइज़र सेटिंग</string>
+    <string name="ui_more_settings_fuel_log_and_trips" formatted="false">सेटिंग, फ़्यूल लॉग और यात्राएँ</string>
+    <string name="ui_more_the_next_turn_from_google_maps_waze_and_othe" formatted="false">Google Maps, Waze और दूसरों से अगला मोड़, डैशबोर्ड पर एक कार्ड में</string>
+    <string name="ui_more_the_next_turn_and_what_s_playing_along_the_b" formatted="false">अगला मोड़ और जो चल रहा है, दूसरे ऐप के नीचे</string>
+    <string name="ui_more_fm_91_1_call_mom_from_the_mic" formatted="false">माइक से \"FM 91.1\", \"मम्मी को कॉल करो\", \"घर ले चलो\"</string>
+    <string name="ui_more_hold_navigation_for_home_office_the_parked_c" formatted="false">घर, ऑफ़िस, खड़ी कार और अपनी जगहों के लिए नेविगेशन दबाकर रखें</string>
+    <string name="ui_more_search_a_to_z_or_most_used_pinned_and_recent" formatted="false">खोज, A से Z या सबसे ज़्यादा इस्तेमाल, पिन और हाल के ऐप, और पिन, छिपाने या हटाने के लिए दबाकर रखें</string>
+    <string name="ui_more_saves_where_you_parked_with_a_photo_and_a_pa" formatted="false">आपने कहाँ पार्क किया, फ़ोटो और पेड पार्किंग रिमाइंडर के साथ सहेजता है</string>
+    <string name="ui_more_trip_cost_how_far_the_tank_goes_and_a_leak_o" formatted="false">यात्रा का खर्च, टैंक कितनी दूर चलेगा, और लीक या चोरी की जाँच</string>
+    <string name="ui_more_each_morning_weather_petrol_and_service_due_" formatted="false">हर सुबह: मौसम, पेट्रोल और सर्विस। रविवार को: हफ़्ते की ड्राइविंग</string>
+    <string name="ui_more_uses_your_stereo_maker_s_own_services_for_fm" formatted="false">FM, कॉल, रिवर्स और लाइट के लिए स्टीरियो कंपनी की अपनी सेवाएँ; बंद: सिर्फ़ सादा Android</string>
+    <string name="ui_more_settings_fuel_log_and_trips_kept_on_the_unit" formatted="false">सेटिंग, फ़्यूल लॉग और यात्राएँ, यूनिट पर रखी जाती हैं</string>
+    <string name="ui_more_checks_once_a_day_for_a_new_openrath_and_off" formatted="false">दिन में एक बार नया OpenRath खोजता है और खड़े होने पर देता है</string>
+    <string name="ui_more_which_settings_you_open_and_any_crashes_kept" formatted="false">आप कौन सी सेटिंग खोलते हैं और कोई क्रैश, यूनिट पर रखा जाता है ताकि आप भेज सकें</string>
+    <string name="ui_more_tap_to_open" formatted="false">खोलने के लिए टैप करें</string>
 </resources>

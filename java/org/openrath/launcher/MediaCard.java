@@ -93,7 +93,7 @@ final class MediaCard extends Cards.Card {
             pill.setCornerRadius(999);
             pill.setStroke(Math.max(1, Ui.px(1.5f)), Ui.EDGE);
             phone.setBackground(pill);
-            phone.setText(Hindi.t("CARPLAY / AUTO"));
+            phone.setText(Hindi.t("PHONE"));
             phone.setVisibility(GONE);
             addView(phone);
             clickable(phone, new OnClickListener() {
@@ -203,6 +203,57 @@ final class MediaCard extends Cards.Card {
         });
     }
 
+    /** What plays now, for the mini strip over other apps (see now). */
+    static final class Now {
+        String title = "", sub = "";
+        boolean playing;
+        /** The other app's player; null when it is OpenRath's own. */
+        MediaController controller;
+    }
+
+    /**
+     * What plays now, from the same places the boxes read: OpenRath's own player (online radio or
+     * music files), else another app's player that is playing (needs notification access). Null when
+     * nothing plays.
+     */
+    static Now now(Context c) {
+        Now n = new Now();
+        Player.Track t = Player.mode != null ? Player.current() : null;
+        if (t != null && (Player.playing || Player.busy)) {
+            n.title = t.name;
+            n.sub = Player.busy ? Hindi.t("Connecting…") : Player.WEB.equals(Player.mode) ? "" : t.sub;
+            n.playing = Player.playing;
+            return n;
+        }
+        try {
+            android.media.session.MediaSessionManager m = (android.media.session.MediaSessionManager)
+                    c.getSystemService(Context.MEDIA_SESSION_SERVICE);
+            for (MediaController x : m.getActiveSessions(new android.content.ComponentName(c, MediaListener.class))) {
+                if (x.getPackageName().equals(c.getPackageName())) continue;   // our own player, read above
+                android.media.session.PlaybackState st = x.getPlaybackState();
+                if (st == null || st.getState() != android.media.session.PlaybackState.STATE_PLAYING) continue;
+                android.media.MediaMetadata md = x.getMetadata();
+                String title = md == null ? null : md.getString(android.media.MediaMetadata.METADATA_KEY_TITLE);
+                if (title == null && md != null) title = md.getString(android.media.MediaMetadata.METADATA_KEY_DISPLAY_TITLE);
+                String artist = md == null ? null : md.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST);
+                boolean radioApp = Hub.looksLikeRadio(x.getPackageName());
+                n.title = title == null ? "" : radioApp ? Player.clean(title) : title;
+                n.sub = artist == null ? "" : radioApp ? Player.clean(artist) : artist;
+                if (n.title.isEmpty()) {
+                    n.title = n.sub;
+                    n.sub = "";
+                }
+                if (n.title.isEmpty()) continue;
+                n.playing = true;
+                n.controller = x;
+                return n;
+            }
+        } catch (Throwable e) {
+            // no notification access: only our own player can be seen
+        }
+        return null;
+    }
+
     /** Our own player is playing this box's kind of thing. */
     boolean isMine() {
         return radio ? Player.WEB.equals(Player.mode) : Player.FILES.equals(Player.mode);
@@ -242,8 +293,8 @@ final class MediaCard extends Cards.Card {
         scan.setTextSize(0, 17 * Ui.k * s);
         scan.setPadding(Ui.px(26 * s), Ui.px(9 * s), Ui.px(26 * s), Ui.px(9 * s));
         scan.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(8 * s), m, 0));
-        phone.setTextSize(0, 13 * Ui.k * s);
-        phone.setPadding(Ui.px(16 * s), Ui.px(6 * s), Ui.px(16 * s), Ui.px(6 * s));
+        phone.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
+        phone.setPadding(Ui.px(10 * s), Ui.px(4 * s), Ui.px(10 * s), Ui.px(4 * s));
         phone.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(8 * s), m, 0));
         progress.setLayoutParams(at(-1, Ui.px(30 * s), Gravity.BOTTOM, m, 0, m, Ui.px(4 * s)));
         progress.text = Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k;
@@ -272,6 +323,7 @@ final class MediaCard extends Cards.Card {
             boolean on = sh.playing != null ? sh.playing : localOn;
             audioOn = on && (unit.fmFirst(p) || "radio".equals(owner));
             showPlay();
+            pair();
             return;
         }
         if (!"app".equals(source)) {
@@ -283,7 +335,8 @@ final class MediaCard extends Cards.Card {
                 sub.setText(Hindi.t(Player.status));
             } else if (t != null) {
                 title.setText(t.name);
-                sub.setText(Player.busy ? Hindi.t("Connecting…") : t.sub);
+                // a station has no song to show: its name alone (the directory's tags are no use here)
+                sub.setText(Player.busy ? Hindi.t("Connecting…") : radio ? "" : t.sub);
             } else {
                 title.setText(radio ? Hindi.t("Online radio") : Hindi.t("Music files"));
                 sub.setText(radio ? Hindi.t("Tap play for Indian stations") : Hindi.t("Tap play for music on the unit or USB"));
@@ -295,19 +348,44 @@ final class MediaCard extends Cards.Card {
                     ? RadioText.parse(media.title, media.subtitle) : null;
             if (rf != null) {
                 title.setText(rf.big());
-                sub.setText(rf.station);
+                sub.setText(Player.clean(rf.station));
             } else if (media != null && media.title != null) {
-                title.setText(media.title);
-                sub.setText(media.subtitle == null ? "" : media.subtitle);
+                title.setText(radio ? Player.clean(media.title) : media.title);
+                sub.setText(media.subtitle == null ? "" : radio ? Player.clean(media.subtitle) : media.subtitle);
             } else {
-                title.setText(radio ? Hindi.t("FM radio") : Hindi.t("Music app"));
-                sub.setText(radio ? Hindi.t("Tap to open the radio") : Hindi.t("Tap to open the music app"));
+                title.setText(radio ? Hindi.t("FM radio") : Hindi.t("Music"));
+                sub.setText(Hindi.t("Tap to open"));
             }
             audioOn = media != null ? media.playing : localOn && kind().equals(owner);
         }
         showPlay();
         tint(p);
         progress.follow(!radio && Features.on(p, "seek") && "app".equals(source) ? media : null);
+        pair();
+    }
+
+    /**
+     * With the music box and the radio box on the same page, only the one that plays keeps its
+     * buttons; the other goes quiet (dimmed, no buttons) until it plays itself or nothing does. A tap
+     * on the quiet box's words still opens or starts its source.
+     */
+    void pair() {
+        MediaCard other = null;
+        if (getParent() instanceof android.view.ViewGroup) {
+            android.view.ViewGroup g = (android.view.ViewGroup) getParent();
+            for (int i = 0; i < g.getChildCount(); i++) {
+                View v = g.getChildAt(i);
+                if (v instanceof MediaCard && ((MediaCard) v).radio != radio) other = (MediaCard) v;
+            }
+        }
+        quiet(other != null && other.audioOn && !audioOn);
+        if (other != null) other.quiet(audioOn && !other.audioOn);
+    }
+
+    /** Dimmed and without buttons while the other music box plays. */
+    void quiet(boolean q) {
+        buttons.setVisibility(q ? INVISIBLE : VISIBLE);
+        text.setAlpha(q ? 0.55f : 1f);
     }
 
     /** The box's colour from the album cover, or the theme's panel. */
