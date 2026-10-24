@@ -112,6 +112,11 @@ public final class Tests {
         eq("recent newest first, no repeats", "Home app\nSpeed correction", r);
         for (String t : new String[]{"a", "b", "c", "d", "e"}) r = SettingsView.remember(r, t);
         eq("recent keeps four", 4, r.split("\n").length);
+        eq("switch knob dark on a light accent", 0xFF15181C, SettingsView.knob(0xFFFFD54F));
+        eq("switch knob white on a dark accent", 0xFFFFFFFF, SettingsView.knob(0xFF1565C0));
+        eq("setting waits for its feature", "care", SettingsView.dependsOn(new SettingsView.Row("Car care", "Service reminders", null, null)));
+        eq("figure waits for its feature", "gpx", SettingsView.dependsOn(new SettingsView.Row("Driving", "Export routes as GPX", null, null)));
+        check("plain row waits for nothing", SettingsView.dependsOn(new SettingsView.Row("General", "Units", null, null)) == null);
         check("setup arrows asked", Extras.needs("arrows", false, false, false, false, true) != null);
         check("setup arrows ready", Extras.needs("arrows", true, false, false, false, true) == null);
         check("setup obd asked", Extras.needs("obd", true, true, false, true, true) != null);

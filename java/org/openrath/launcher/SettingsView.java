@@ -55,16 +55,20 @@ final class SettingsView extends FrameLayout {
     }
 
     static final Section[] SECTIONS = {
-            new Section("OpenRath level", "Simple, Full or Custom", new String[]{"Level"}, new String[]{"How much OpenRath shows"}),
-            new Section("Home screen", "Boxes, pages, night mode, voice", new String[]{"Dashboard", "Voice"},
-                    new String[]{"Boxes and layout", "Voice commands"}),
+            new Section("General", "Level, language, units, country", new String[]{"Level", "General"},
+                    new String[]{"How much OpenRath shows", "General"}),
+            new Section("Home screen", "Boxes, pages, weather, news", new String[]{"Dashboard"}, new String[]{"Boxes and layout"}),
             new Section("Look", "Layouts, themes, car picture, buttons bar", new String[]{"Layout", "Themes", "Car", "Buttons bar"},
                     new String[]{"Screen layout", "Themes", "Car picture", "Buttons bar"}),
+            new Section("Voice", "Mic, language, what you can say", new String[]{"Voice"}, new String[]{"Voice commands"}),
             new Section("Radio and music", "FM, online radio, sound", new String[]{"Radio and music"}, new String[]{"Radio and music"}),
             new Section("Phone and messages", "Favourites, message ticker", new String[]{"Phone", "Notifications"},
                     new String[]{"Phone", "Messages"}),
-            new Section("Driving", "Map, alerts, trips, fuel, dashcam", new String[]{"Map and navigation", "Driving", "Monsoon", "Dashcam"},
-                    new String[]{"Map and navigation", "Trips, fuel and alerts", "Monsoon", "Dashcam"}),
+            new Section("Navigation", "Map, navigation apps, next turn", new String[]{"Map and navigation"}, new String[]{"Apps and voice"}),
+            new Section("Driving alerts", "Speed, fog, breaks, road learning", new String[]{"Driving", "Monsoon"}, new String[]{"Speed", "Monsoon"}),
+            new Section("Fuel and parking", "Petrol, tolls, parking, sharing costs", new String[0], new String[0]),
+            new Section("Dashcam", "Recording with a USB camera", new String[]{"Dashcam"}, new String[]{"Dashcam"}),
+            new Section("Your driving", "Trips, badges, routes, learnt roads", new String[]{"Your driving"}, new String[]{"Records"}),
             new Section("Family", "Valet, child-lock, drivers", new String[]{"Valet", "Family"},
                     new String[]{"Kids or valet mode", "Child-lock and drivers"}),
             new Section("Car", "Service, engine, lights, buttons", new String[]{"Car care", "Engine and tyres", "Car signals", "Steering-wheel buttons"},
@@ -76,23 +80,108 @@ final class SettingsView extends FrameLayout {
 
     /** Help rows that are for finding faults rather than everyday use. */
     private static final java.util.Set<String> TROUBLE = new java.util.HashSet<>(java.util.Arrays.asList(
-            "Diagnostics", "How the stock launcher does it", "Unit report", "Clear the crash note", "Crash reports",
+            "Diagnostics", "How the stock launcher does it", "Unit report", "Clear the crash note",
             "Headlight setup, deep search", "Reset GPS"));
 
+    /** The section a switch goes in when it isn't its group's: by feature id. */
+    private static final String[][] SECTION_OF = {
+            {"voice", "Voice"}, {"ticker", "Phone and messages"}, {"readAloud", "Phone and messages"},
+            {"callScreen", "Phone and messages"}, {"hotspot", "Phone and messages"},
+            {"autoTheme", "Look"}, {"bootArt", "Look"}, {"intro", "Look"}, {"appDrawer", "Look"}, {"dockStatus", "Look"},
+            {"tapFeedback", "Look"}, {"road", "Look"}, {"arrows", "Look"}, {"artColour", "Look"},
+            {"navTurns", "Navigation"}, {"overStrip", "Navigation"}, {"places", "Navigation"}, {"tripShare", "Navigation"},
+            {"offlineMap", "Navigation"},
+            {"fuelPrice", "Fuel and parking"}, {"tolls", "Fuel and parking"}, {"parking", "Fuel and parking"},
+            {"parkedMusic", "Fuel and parking"}, {"split", "Fuel and parking"},
+            {"dashcam", "Dashcam"},
+            {"score", "Your driving"}, {"achievements", "Your driving"}, {"accel", "Your driving"}, {"gpx", "Your driving"}};
+
+    /**
+     * Rows that set up a feature, by title: each shows just under the feature's switch, and only while the
+     * feature is on. "valet" and "obdReady" (OBD on with an adapter chosen) aren't switches but work the same.
+     */
+    static final String[][] UNDER = {
+            {"Number of pages", "pages"}, {"Clock screensaver after", "saver"}, {"News box shows", "news"},
+            {"Preview night-drive mode", "nightDrive"}, {"Holidays ahead", "calendar"},
+            {"Mark a waterlogging spot here", "rain"}, {"Marked spots", "rain"}, {"Air quality now", "rain"},
+            {"Start-up summary", "startSummary"}, {"This week's report", "startSummary"},
+            {"Night and phone themes", "autoTheme"}, {"Make the boot logo", "bootArt"},
+            {"Listen mainly for", "voice"}, {"Try a voice command", "voice"}, {"Mic button", "voice"}, {"What you can say", "voice"},
+            {"City sound", "soundProfiles"}, {"Highway sound", "soundProfiles"}, {"Night sound", "soundProfiles"},
+            {"How much louder", "speedVolume"}, {"Quiet hours start at", "quiet"}, {"Quiet hours end at", "quiet"},
+            {"Quiet-hours volume", "quiet"}, {"Equalizer settings", "eq"}, {"Phone projection app", "projection"},
+            {"Ticker shows", "ticker"}, {"Apps to listen to", "ticker"}, {"Try the ticker", "ticker"}, {"Read aloud says", "readAloud"},
+            {"Guest Wi-Fi", "hotspot"}, {"Change the hotspot name and password", "hotspot"},
+            {"Map kept for no internet", "offlineMap"}, {"Voice without internet", "offlineMap"},
+            {"Your own speed limit", "speedAlerts"}, {"Break reminder after", "restStop"}, {"Find a rest stop now", "restStop"},
+            {"Fog mode now", "fog"}, {"Speed in fog", "fog"},
+            {"Petrol price", "fuelPrice"}, {"Petrol left", "fuelPrice"}, {"Tank size", "fuelPrice"},
+            {"Warn when the petrol is below", "fuelPrice"}, {"Toll estimate per plaza", "tolls"},
+            {"Send the parking spot to your phone", "parking"}, {"Paid parking reminder", "parking"},
+            {"Share the trip", "tripShare"}, {"Split the cost", "split"}, {"Your UPI id", "split"},
+            {"Pause parked music after", "parkedMusic"},
+            {"Camera", "dashcam"}, {"Space for recordings", "dashcam"}, {"Save the clip now", "dashcam"},
+            {"Trip games for children", "kids"}, {"Apps locked while moving", "childLock"}, {"Who's driving", "profiles"},
+            {"Volume limit", "valet"}, {"Speed limit in valet mode", "valet"}, {"Change the PIN", "valet"}, {"Choose the PIN", "valet"},
+            {"Car documents", "wallet"}, {"Service reminders", "care"}, {"Your service centre", "care"},
+            {"OBD-II adapter", "obd"}, {"Read fault codes", "obdReady"}, {"Live engine readings", "obdReady"},
+            {"Clear fault codes", "obdReady"}, {"Warn when the coolant is above", "obdReady"},
+            {"Tyre sensors", "tpms"}, {"Tyre pressure units", "tpms"}, {"Warn when a tyre is below", "tpms"},
+            {"LED light strip", "ledStrip"}, {"Learn a button", "keys"}, {"Buttons work in other apps too", "keys"},
+            {"Check for updates now", "updates"}, {"Usage report", "reports"}, {"Crash reports", "reports"}};
+
+    /** Figures and records rather than settings, by title: gathered in Your driving, each while its feature is on. */
+    static final String[][] FIGURES = {
+            {"Trips, fuel and tolls", ""}, {"Badges", "achievements"}, {"0–100 km/h", "accel"}, {"Mileage coach", "fuelPrice"},
+            {"Export routes as GPX", "gpx"}, {"Delete recorded routes", "gpx"}, {"Last parking photo", "parking"},
+            {"Speed breakers learnt", "bumps"}, {"Stops learnt", "bumps"}};
+
+    /** Switches that mean something only while another is on: they show once it is. */
+    static final String[][] NEEDS = {
+            {"cabEarnings", "cab"}, {"cabMeter", "cab"}, {"cabApps", "cab"}, {"cabPapers", "cab"}, {"cabCng", "cab"},
+            {"cabSpots", "cab"}, {"cabTarget", "cab"}, {"cabSos", "cab"}, {"cabQuiet", "cab"}, {"cabNotes", "cab"},
+            {"cabPhrases", "cab"}, {"projectionAuto", "projection"}, {"longKeys", "keys"}, {"cam360Turn", "view360"},
+            {"faultWords", "obd"}, {"askCar", "obd"}};
+
+    private static String lookup(String[][] table, String key) {
+        if (key == null) return null;
+        for (String[] t : table) if (t[0].equals(key)) return t[1];
+        return null;
+    }
+
+    /** Whether a row's feature (from UNDER, FIGURES or NEEDS) is on: "" and null always are. */
+    static boolean depOn(Prefs p, String dep) {
+        if (dep == null || dep.isEmpty()) return true;
+        if ("valet".equals(dep)) return Valet.on(p);
+        if ("obdReady".equals(dep)) return Features.on(p, "obd") && !p.str("obdMac", "").isEmpty();
+        return Features.on(p, dep);
+    }
+
+    /** The feature a row waits for, or null: a switch's master switch, a setting's feature, or a figure's. */
+    static String dependsOn(Row r) {
+        if (r.feature != null) return lookup(NEEDS, r.feature);
+        String u = lookup(UNDER, r.title);
+        return u != null ? u : lookup(FIGURES, r.title);
+    }
+
     /** The section a feature's switch goes in. */
-    private static String sectionOf(Features.F f) {
-        if ("ticker".equals(f.id) || "readAloud".equals(f.id)) return "Phone and messages";
+    static String sectionOf(Features.F f) {
+        String s = lookup(SECTION_OF, f.id);
+        if (s != null) return s;
         if ("Dashboard".equals(f.group)) return "Home screen";
         if ("Sound".equals(f.group)) return "Radio and music";
         if ("Data".equals(f.group)) return "Backup and about";
         if ("Family".equals(f.group)) return "Family";
         if ("Cab".equals(f.group)) return "Cab driver";
-        return f.group;   // Driving, Car
+        if ("Phone".equals(f.group)) return "Phone and messages";
+        if ("Driving".equals(f.group)) return "Driving alerts";
+        return f.group;   // Car, Radio and music
     }
 
     /** The old group a row is shown under, after moving fault-finding rows to Troubleshooting. */
     private static String groupOf(Row r) {
         if (TROUBLE.contains(r.title)) return "Troubleshooting";
+        if (lookup(FIGURES, r.title) != null) return "Your driving";
         return r.group;
     }
 
@@ -203,14 +292,24 @@ final class SettingsView extends FrameLayout {
         return g;
     }
 
-    /** The rows each section shows, in order: feature switches first, then each old group under its heading. */
-    private static java.util.Map<String, List<Object>> arrange(List<Row> rows) {
+    /**
+     * The rows each section shows, in order: feature switches first, each followed by the rows that set it up,
+     * then each old group under its heading. Rows waiting for a feature that's off aren't shown.
+     */
+    static java.util.Map<String, List<Object>> arrange(List<Row> rows, Prefs p) {
+        List<Row> live = new ArrayList<>();
+        java.util.Set<String> switchIds = new java.util.HashSet<>();
+        for (Row r : rows) {
+            if (!depOn(p, dependsOn(r))) continue;
+            live.add(r);
+            if (r.feature != null) switchIds.add(r.feature);
+        }
         java.util.Map<String, List<Object>> out = new java.util.LinkedHashMap<>();
         for (Section sec : SECTIONS) {
             List<Object> items = new ArrayList<>();
             List<Row> switches = new ArrayList<>();
             java.util.Set<String> switchNames = new java.util.HashSet<>();
-            for (Row r : rows) {
+            for (Row r : live) {
                 if (r.feature == null) continue;
                 Features.F f = Features.get(r.feature);
                 if (f != null && sectionOf(f).equals(sec.name)) {
@@ -220,13 +319,19 @@ final class SettingsView extends FrameLayout {
             }
             if (!switches.isEmpty()) {
                 items.add("Turn on or off");
-                items.addAll(switches);
+                for (Row s : switches) {
+                    items.add(s);
+                    for (Row r : live) {
+                        if (r.feature == null && r.action != null && s.feature.equals(lookup(UNDER, r.title))) items.add(new Child(r));
+                    }
+                }
             }
             for (int i = 0; i < sec.groups.length; i++) {
                 List<Row> mine = new ArrayList<>();
-                for (Row r : rows) {
+                for (Row r : live) {
                     if (r.feature != null || r.action == null || !groupOf(r).equals(sec.groups[i])) continue;
                     if (switchNames.contains(r.title.toLowerCase(java.util.Locale.US))) continue;   // the switch above does this
+                    if (switchIds.contains(lookup(UNDER, r.title))) continue;   // shown under its switch
                     mine.add(r);
                 }
                 boolean page = "Themes".equals(sec.groups[i]) || "Layout".equals(sec.groups[i]);
@@ -238,6 +343,19 @@ final class SettingsView extends FrameLayout {
             if (!items.isEmpty()) out.put(sec.name, items);
         }
         return out;
+    }
+
+    /** A row that sets up the switch above it: drawn indented. */
+    static final class Child {
+        final Row row;
+
+        Child(Row row) {
+            this.row = row;
+        }
+    }
+
+    private static Row rowOf(Object o) {
+        return o instanceof Row ? (Row) o : o instanceof Child ? ((Child) o).row : null;
     }
 
     static final String RECENT = "Recently used";
@@ -262,8 +380,9 @@ final class SettingsView extends FrameLayout {
             find:
             for (List<Object> items : all.values()) {
                 for (Object o : items) {
-                    if (o instanceof Row && ((Row) o).title.equals(t)) {
-                        out.add(o);
+                    Row r = rowOf(o);
+                    if (r != null && r.title.equals(t)) {
+                        out.add(r);
                         break find;
                     }
                 }
@@ -293,7 +412,8 @@ final class SettingsView extends FrameLayout {
     /** Redraw from the current settings, staying on the same section and scroll position. */
     void refresh() {
         List<Row> rows = source.rows();
-        java.util.Map<String, List<Object>> all = arrange(rows);
+        Prefs prefs = new Prefs(getContext());
+        java.util.Map<String, List<Object>> all = arrange(rows, prefs);
         List<Object> used = recent(all);
         if (!used.isEmpty()) {
             java.util.Map<String, List<Object>> withRecent = new java.util.LinkedHashMap<>();
@@ -343,8 +463,8 @@ final class SettingsView extends FrameLayout {
                 if (RECENT.equals(e.getKey())) continue;
                 boolean head = false;
                 for (Object o : e.getValue()) {
-                    if (!(o instanceof Row)) continue;
-                    Row r = (Row) o;
+                    Row r = rowOf(o);
+                    if (r == null) continue;
                     String hay = (r.title + " " + (r.value == null ? "" : r.value) + " " + e.getKey() + " " + Hindi.t(r.title) + " "
                             + Hindi.t(r.value) + " " + Hindi.t(e.getKey())).toLowerCase(java.util.Locale.US);
                     if (!hay.contains(q)) continue;
@@ -352,7 +472,7 @@ final class SettingsView extends FrameLayout {
                         addHeading(e.getKey());
                         head = true;
                     }
-                    addRow(r);
+                    addRow(r, false);
                     found++;
                 }
             }
@@ -361,8 +481,11 @@ final class SettingsView extends FrameLayout {
             heading.setText(Hindi.t(group));
             subheading.setText(Hindi.t(section(group).about));
             List<Object> items = all.get(group);
+            Row home = homeBanner(rows);
+            if (home != null && !"Backup and about".equals(group)) addRow(home, false);
             if (items != null) for (Object o : items) {
-                if (o instanceof Row) addRow((Row) o);
+                if (o instanceof Row) addRow((Row) o, false);
+                else if (o instanceof Child) addRow(((Child) o).row, true);
                 else if (o instanceof Page) {
                     View page = source.page(((Page) o).group);
                     if (page != null) list.addView(page, new LinearLayout.LayoutParams(-1, -2));
@@ -393,11 +516,17 @@ final class SettingsView extends FrameLayout {
         list.addView(h);
     }
 
-    private void addRow(final Row r) {
+    /** The "Home app" row while OpenRath isn't the home app: shown at the top of every section until it is. */
+    private static Row homeBanner(List<Row> rows) {
+        for (Row r : rows) if ("Home app".equals(r.title) && r.value != null && r.value.startsWith("not OpenRath")) return r;
+        return null;
+    }
+
+    private void addRow(final Row r, boolean child) {
         LinearLayout row = new LinearLayout(getContext());
         row.setGravity(Gravity.CENTER_VERTICAL);
         row.setPadding(Ui.px(18), Ui.px(12), Ui.px(18), Ui.px(12));
-        row.setBackground(pill(false));
+        row.setBackground(pill("Home app".equals(r.title) && r.value != null && r.value.startsWith("not OpenRath")));
         row.setMinimumHeight(Ui.px(68));
         LinearLayout text = new LinearLayout(getContext());
         text.setOrientation(LinearLayout.VERTICAL);
@@ -442,7 +571,14 @@ final class SettingsView extends FrameLayout {
         });
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(-1, -2);
         p.bottomMargin = Ui.px(10);
+        if (child) p.leftMargin = Ui.px(28);
         list.addView(row, p);
+    }
+
+    /** The knob on a lit switch: white on a dark accent, dark on a light one, so it always shows. Pure, for the tests. */
+    static int knob(int accent) {
+        double lum = (0.299 * ((accent >> 16) & 0xFF) + 0.587 * ((accent >> 8) & 0xFF) + 0.114 * (accent & 0xFF)) / 255;
+        return lum > 0.6 ? 0xFF15181C : 0xFFFFFFFF;
     }
 
     /** An on/off switch, drawn: a rounded track with a knob, lit in the accent colour when on. */
@@ -460,7 +596,7 @@ final class SettingsView extends FrameLayout {
             android.graphics.Paint p = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
             p.setColor(on ? Ui.ACCENT : Ui.mix(Ui.SILVER_DIM, Ui.BACKGROUND, 0.35f));
             cv.drawRoundRect(new android.graphics.RectF(0, 0, w, h), r, r, p);
-            p.setColor(on ? 0xFFFFFFFF : Ui.mix(Ui.SILVER, Ui.BACKGROUND, 0.8f));
+            p.setColor(on ? knob(Ui.ACCENT) : Ui.mix(Ui.SILVER, Ui.BACKGROUND, 0.8f));
             float k = r - Ui.px(3);
             cv.drawCircle(on ? w - r : r, r, k, p);
         }

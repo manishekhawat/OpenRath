@@ -777,7 +777,7 @@ final class Extras {
                 }
             }));
         }
-        r.add(new SettingsView.Row("Dashboard", "Clock screensaver after", Features.on(p, "saver") ? Hindi.f("%1$s min idle while parked", p.num("saverMin", 5)) : "off (switch above)",
+        r.add(new SettingsView.Row("Dashboard", "Clock screensaver after", Hindi.f("%1$s min", p.num("saverMin", 5)),
                 new Runnable() {
                     @Override
                     public void run() {
@@ -906,16 +906,10 @@ final class Extras {
                         p.put("tickerShow", "names".equals(p.str("tickerShow", "all")) ? "all" : "names");
                     }
                 }));
-        r.add(new SettingsView.Row(g, "Read aloud", !Features.on(p, "readAloud") ? "off"
-                : "all".equals(p.str("readAloudMode", "names")) ? "who it's from and the message" : "who it's from", new Runnable() {
+        r.add(new SettingsView.Row(g, "Read aloud says", "all".equals(p.str("readAloudMode", "names")) ? "who it's from and the message" : "who it's from", new Runnable() {
             @Override
             public void run() {
-                if (!Features.on(p, "readAloud")) Features.set(p, "readAloud", true);
-                else if ("names".equals(p.str("readAloudMode", "names"))) p.put("readAloudMode", "all");
-                else {
-                    p.put("readAloudMode", "names");
-                    Features.set(p, "readAloud", false);
-                }
+                p.put("readAloudMode", "names".equals(p.str("readAloudMode", "names")) ? "all" : "names");
             }
         }));
         r.add(new SettingsView.Row(g, "Apps to listen to", Hindi.f("%1$s apps", Ticker.apps(p).size()), new Runnable() {
@@ -1006,7 +1000,7 @@ final class Extras {
             }
         }));
         final int[] speeds = {60, 70, 80, 90, 100};
-        r.add(new SettingsView.Row(g, "Speed warning above", Valet.speed(p) + " km/h", new Runnable() {
+        r.add(new SettingsView.Row(g, "Speed limit in valet mode", Valet.speed(p) + " km/h", new Runnable() {
             @Override
             public void run() {
                 int cur = Valet.speed(p), next = speeds[0];
@@ -1098,7 +1092,7 @@ final class Extras {
 
         // ---- Fuel-low planner, commute, parking link
         g = "Driving";
-        r.add(new SettingsView.Row(g, "Petrol left", Features.on(p, "fuelPlan") ? FuelPlan.text(p) : "off (switch above)", new Runnable() {
+        r.add(new SettingsView.Row(g, "Petrol left", FuelPlan.text(p), new Runnable() {
             @Override
             public void run() {
                 a.closeSettings();
@@ -1132,8 +1126,7 @@ final class Extras {
                 a.parkQr();
             }
         }));
-        r.add(new SettingsView.Row(g, "Share the trip", Features.on(p, "tripShare") ? "a QR code with where you are and the route; or say \"share my trip\""
-                : "off (Settings > Features)", new Runnable() {
+        r.add(new SettingsView.Row(g, "Share the trip", "a QR code with where you are and the route", new Runnable() {
             @Override
             public void run() {
                 a.closeSettings();
@@ -1141,8 +1134,7 @@ final class Extras {
             }
         }));
 
-        r.add(new SettingsView.Row(g, "Split the cost", Features.on(p, "split") ? "a UPI QR code for each share; or say \"split the cost\""
-                : "off (Settings > Features)", new Runnable() {
+        r.add(new SettingsView.Row(g, "Split the cost", "a UPI QR code for each share", new Runnable() {
             @Override
             public void run() {
                 Chores.split(a);
@@ -1268,7 +1260,7 @@ final class Extras {
                 p.put("fogSpeed", String.valueOf(s[(i + 1) % s.length]));
             }
         }));
-        if (Money.india()) r.add(new SettingsView.Row(g, "Holidays ahead", android.text.TextUtils.join(";  ", Holidays.upcoming(java.util.Calendar.getInstance(), 3)), new Runnable() {
+        if (Money.india()) r.add(new SettingsView.Row("Dashboard", "Holidays ahead", android.text.TextUtils.join(";  ", Holidays.upcoming(java.util.Calendar.getInstance(), 3)), new Runnable() {
             @Override
             public void run() {
                 new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Holidays with heavy traffic"))
@@ -1323,7 +1315,7 @@ final class Extras {
                 p.put("dashcamGB", String.valueOf(c.get((i + 1) % c.size())));
             }
         }));
-        r.add(new SettingsView.Row(g, "Save the clip now", Hindi.f("%1$s saved in OpenRath/dashcam/saved", Dashcam.savedClips()), new Runnable() {
+        r.add(new SettingsView.Row(g, "Save the clip now", Hindi.f("%1$s saved", Dashcam.savedClips()), new Runnable() {
             @Override
             public void run() {
                 Dashcam.protect();
@@ -1343,8 +1335,7 @@ final class Extras {
         }));
 
         // ---- Documents and service booking
-        r.add(new SettingsView.Row("Car care", "Car documents", Features.on(p, "wallet") ? Hindi.f("%1$s of 4 added; say \"documents\" to show", Wallet.count(a))
-                : "off (switch above)", new Runnable() {
+        r.add(new SettingsView.Row("Car care", "Car documents", Hindi.f("%1$s of 4 added", Wallet.count(a)), new Runnable() {
             @Override
             public void run() {
                 if (Features.on(p, "wallet")) Wallet.menu(a);
@@ -1374,8 +1365,7 @@ final class Extras {
 
         // ---- Child-lock and driver profiles
         g = "Family";
-        r.add(new SettingsView.Row(g, "Trip games for children", Features.on(p, "kids") ? "spot the colour, number plates, how far; say \"games\""
-                : "off (switch above)", new Runnable() {
+        r.add(new SettingsView.Row(g, "Trip games for children", "spot the colour, number plates, how far", new Runnable() {
             @Override
             public void run() {
                 if (Features.on(p, "kids")) {
@@ -1390,8 +1380,7 @@ final class Extras {
                 ChildLock.choose(a, p);
             }
         }));
-        r.add(new SettingsView.Row(g, "Who's driving", !Features.on(p, "profiles") ? "off (switch above)"
-                : Profiles.current(p).isEmpty() ? "no drivers yet: tap to add" : Profiles.current(p), new Runnable() {
+        r.add(new SettingsView.Row(g, "Who's driving", Profiles.current(p).isEmpty() ? "no drivers yet: tap to add" : Profiles.current(p), new Runnable() {
             @Override
             public void run() {
                 if (Features.on(p, "profiles")) Profiles.menu(a, p);
@@ -1404,8 +1393,7 @@ final class Extras {
             final String nice = prof.substring(0, 1).toUpperCase(Locale.US) + prof.substring(1);
             String eq = Sound.eq(p, prof);
             int vol = p.num("sndVol:" + prof, Sound.vol(prof));
-            r.add(new SettingsView.Row(g, nice + " sound", (Features.on(p, "soundProfiles") ? "" : Hindi.t("(profiles off) "))
-                    + Hindi.f("%1$s, volume %2$s", eq.isEmpty() ? Hindi.t("your equalizer") : Hindi.t(eq), (vol > 0 ? "+" : "") + vol)
+            r.add(new SettingsView.Row(g, nice + " sound", Hindi.f("%1$s, volume %2$s", eq.isEmpty() ? Hindi.t("your equalizer") : Hindi.t(eq), (vol > 0 ? "+" : "") + vol)
                     + (prof.equals(Drive.soundNow) ? Hindi.t("  · now") : ""), new Runnable() {
                 @Override
                 public void run() {
@@ -1428,32 +1416,22 @@ final class Extras {
                 }
             }));
         }
-        r.add(new SettingsView.Row(g, "Resume after switch-on", onOff(Features.on(p, "resume")), new Runnable() {
-            @Override
-            public void run() {
-                Features.set(p, "resume", !Features.on(p, "resume"));
-            }
-        }));
         final String[] perNames = {"off", "gently (a step every 30 km/h)", "medium (every 20 km/h)", "strongly (every 15 km/h)"};
-        r.add(new SettingsView.Row(g, "Louder with speed", Features.on(p, "speedVolume") ? perNames[Math.max(1, Math.min(3, p.num("speedVolPer", 2)))] : "off",
+        r.add(new SettingsView.Row(g, "How much louder", perNames[Math.max(1, Math.min(3, p.num("speedVolPer", 2)))],
                 new Runnable() {
                     @Override
                     public void run() {
-                        int i = Features.on(p, "speedVolume") ? p.num("speedVolPer", 2) : 0;
-                        i = (i + 1) % 4;
-                        Features.set(p, "speedVolume", i > 0);
-                        if (i > 0) p.put("speedVolPer", String.valueOf(i));
+                        p.put("speedVolPer", String.valueOf(Math.max(1, Math.min(3, p.num("speedVolPer", 2))) % 3 + 1));
                         Drive.start(a);
                     }
                 }));
         final int[] hours = {20, 21, 22, 23, 0};
-        r.add(new SettingsView.Row(g, "Quiet hours", Features.on(p, "quiet") ? Hindi.f("from %1$s to %2$s, music at %3$s%%", Quiet.hour(Quiet.from(p)), Quiet.hour(Quiet.to(p)), p.num("quietVol", 40)) : "off", new Runnable() {
+        r.add(new SettingsView.Row(g, "Quiet hours start at", Quiet.hour(Quiet.from(p)), new Runnable() {
             @Override
             public void run() {
                 int cur = Quiet.from(p), next = hours[0];
                 for (int i = 0; i < hours.length; i++) if (hours[i] == cur) next = hours[(i + 1) % hours.length];
                 p.put("quietFrom", String.valueOf(next));
-                Features.set(p, "quiet", true);
             }
         }));
         final int[] ends = {5, 6, 7};
@@ -1474,7 +1452,7 @@ final class Extras {
                 p.put("quietVol", String.valueOf(next));
             }
         }));
-        r.add(new SettingsView.Row(g, "Equalizer", Features.on(p, "eq") ? Hindi.t(p.str("eqPreset", "Flat")) + "  ·  " + Hindi.t(Eq.status) : "off", new Runnable() {
+        r.add(new SettingsView.Row(g, "Equalizer settings", Hindi.t(p.str("eqPreset", "Flat")) + "  ·  " + Hindi.t(Eq.status), new Runnable() {
             @Override
             public void run() {
                 equalizer(a);
@@ -1522,7 +1500,7 @@ final class Extras {
 
         // ---- Backup
         g = "Backup";
-        r.add(new SettingsView.Row(g, "Back up now", "to OpenRath/backup", new Runnable() {
+        r.add(new SettingsView.Row(g, "Back up now", "settings, fuel log and trips", new Runnable() {
             @Override
             public void run() {
                 try {
