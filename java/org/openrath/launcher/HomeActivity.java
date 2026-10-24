@@ -553,6 +553,32 @@ public class HomeActivity extends Activity implements Cards.Host {
         micShown();
     }
 
+    /** Whether Android's own status bar shows over the launcher: then OpenRath's status icons would only repeat it. */
+    boolean systemBarShown() {
+        try {
+            android.view.WindowInsets in = getWindow().getDecorView().getRootWindowInsets();
+            return in != null && in.getSystemWindowInsetTop() > 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Where OpenRath's Wi-Fi, Bluetooth, GPS and battery icons go: "" nowhere (switched off, or Android's
+     * status bar already shows them), "clock" along the top of the clock box when this page has one, else
+     * "dock" in the buttons bar. Pure, for the tests.
+     */
+    static String statusPlace(boolean on, boolean systemBar, boolean clockOnPage) {
+        if (!on || systemBar) return "";
+        return clockOnPage ? "clock" : "dock";
+    }
+
+    String statusPlace() {
+        boolean clock = false;
+        if (layoutView == null) for (int i = 0; i < Prefs.SLOTS; i++) if (Prefs.CLOCK.equals(prefs.slot(i))) clock = true;
+        return statusPlace(Features.on(prefs, "dockStatus"), systemBarShown(), clock);
+    }
+
     /**
      * The floating mic stays out of the way: hidden while this page shows the map (which has its own
      * mic) and while Settings or any other full-screen page or menu is open on top.

@@ -1267,6 +1267,15 @@ public final class Tests {
 
     static void batch2() {
         // distances and "ahead"
+        eq("status icons off", "", HomeActivity.statusPlace(false, false, true));
+        eq("status icons left to Android's bar", "", HomeActivity.statusPlace(true, true, true));
+        eq("status icons in the clock box", "clock", HomeActivity.statusPlace(true, false, true));
+        eq("status icons in the dock without a clock", "dock", HomeActivity.statusPlace(true, false, false));
+        eq("AQI good is green", 0xFF4CAF50, Cards.aqiColour(42));
+        eq("AQI poor is orange", 0xFFFFB02E, Cards.aqiColour(197));
+        eq("AQI severe is purple", 0xFFAB47BC, Cards.aqiColour(420));
+        eq("forecast day name", "Mon", Weather.dayName("2026-10-26"));
+        eq("not a date stays", "x", Weather.dayName("x"));
         eq("maps link opens the app", "https://www.google.com/maps/search/?api=1&query=28.48068,76.96826", Geo.mapsLink(28.48068, 76.96826));
         eq("walk back link", "https://www.google.com/maps/dir/?api=1&destination=28.48068,76.96826&travelmode=walking", Geo.walkLink(28.48068, 76.96826));
         near("1 km north", 1000, Geo.dist(28.6, 77.2, 28.6 + 1 / 111.195, 77.2), 2);

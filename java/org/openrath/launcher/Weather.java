@@ -51,6 +51,19 @@ final class Weather {
                 : Hindi.f("Offline · forecast from %1$s days ago", m / 1440);
     }
 
+    private static final String[] DAYS = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+
+    /** "2026-10-26" to "Mon" in the owner's language; anything else comes back as it is. */
+    static String dayName(String date) {
+        try {
+            java.util.Calendar cl = java.util.Calendar.getInstance();
+            cl.setTime(new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).parse(date));
+            return Hindi.t(DAYS[cl.get(java.util.Calendar.DAY_OF_WEEK) - 1]);
+        } catch (Exception e) {
+            return date;
+        }
+    }
+
     private Weather() {
     }
 }

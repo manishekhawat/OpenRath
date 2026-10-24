@@ -215,10 +215,23 @@ final class Cards {
             next.setVisibility(GONE);
             col.addView(next);
             addView(col, new LayoutParams(-1, -1));
+            if (c instanceof HomeActivity) {
+                status = new StatusIcons((HomeActivity) c, true);
+                addView(status);
+            }
         }
+
+        /** Wi-Fi, Bluetooth, GPS and battery along the top right, like a phone's status bar (see HomeActivity.statusPlace). */
+        StatusIcons status;
 
         @Override
         void fit(int w, int h) {
+            if (status != null) {
+                boolean here = "clock".equals(((HomeActivity) getContext()).statusPlace());
+                status.setVisibility(here ? VISIBLE : GONE);
+                int sh = Math.round(Math.max(22 * Ui.k, Math.min(h * 0.13f, 30 * Ui.k)));
+                status.setLayoutParams(at(Math.round(sh * 1.5f * 5), sh, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(8), Ui.px(10), 0));
+            }
             // time, date and the line under it together take at most ~80% of the box height
             float big = Math.min(h * 0.42f, w * 0.17f);
             float small = Math.min(Math.max(big * 0.22f, 11 * Ui.k), w / 16f);
@@ -259,20 +272,32 @@ final class Cards {
 
     // ---------------------------------------------------------------- weather
 
+    /**
+     * The weather now, large: the icon and temperature, what it's like and where; then the car's
+     * altitude, the way it points and the air quality; the next two days' highs and lows; and, in a
+     * tall box, the next 24 hours. Rows that don't fit the box's height are left out, last first.
+     */
     static final class WeatherCard extends Card {
         final ImageView icon = new ImageView(getContext());
-        final TextView temp = Ui.text(getContext(), 40, Ui.SILVER, "sans-serif-light", Gravity.LEFT);
-        final TextView desc = Ui.text(getContext(), 15, Ui.SILVER, "sans-serif-medium", Gravity.RIGHT);
-        final TextView place = Ui.text(getContext(), 13, Ui.SILVER_DIM, "sans-serif", Gravity.RIGHT);
+        final TextView temp = Ui.text(getContext(), 48, Ui.SILVER, "sans-serif-light", Gravity.LEFT);
+        final TextView desc = Ui.text(getContext(), 17, Ui.SILVER, "sans-serif-medium", Gravity.RIGHT);
+        final TextView place = Ui.text(getContext(), 14, Ui.SILVER_DIM, "sans-serif", Gravity.RIGHT);
         final TextView rain = Ui.text(getContext(), 13, 0xFF7FB8FF, "sans-serif-medium", Gravity.RIGHT);
-        final LinearLayout left = new LinearLayout(getContext()), right = new LinearLayout(getContext());
+        final FrameLayout top = new FrameLayout(getContext());
+        final LinearLayout col = new LinearLayout(getContext()), left = new LinearLayout(getContext()), right = new LinearLayout(getContext());
+        final LinearLayout facts = new LinearLayout(getContext()), days = new LinearLayout(getContext());
+        final Glyph[] factIcon = new Glyph[3];
+        final TextView[] factText = new TextView[3];
+        final ImageView[] dayIcon = new ImageView[2];
+        final TextView[] dayName = new TextView[2], dayTemp = new TextView[2];
         final Hours hours = new Hours(getContext());
         String lastIcon;
+        final String[] lastDayIcon = new String[2];
         int w, h;
 
         WeatherCard(Context c) {
             super(c);
-            addView(hours);
+            col.setOrientation(LinearLayout.VERTICAL);
             left.setGravity(Gravity.CENTER_VERTICAL);
             left.addView(icon);
             left.addView(temp);
@@ -282,42 +307,94 @@ final class Cards {
             right.addView(place);
             right.addView(rain);
             rain.setVisibility(GONE);
-            addView(left);
-            addView(right);
+            top.addView(left, new FrameLayout.LayoutParams(-2, -2, Gravity.CENTER_VERTICAL | Gravity.LEFT));
+            top.addView(right, new FrameLayout.LayoutParams(-2, -2, Gravity.CENTER_VERTICAL | Gravity.RIGHT));
+            col.addView(top);
+            for (int i = 0; i < 3; i++) {
+                LinearLayout one = new LinearLayout(c);
+                one.setGravity(Gravity.CENTER_VERTICAL | (i == 0 ? Gravity.LEFT : i == 1 ? Gravity.CENTER_HORIZONTAL : Gravity.RIGHT));
+                factIcon[i] = new Glyph(c, i);
+                factText[i] = Ui.text(c, 16, Ui.SILVER, "sans-serif-medium", Gravity.LEFT);
+                factText[i].setSingleLine(true);
+                one.addView(factIcon[i]);
+                one.addView(factText[i]);
+                facts.addView(one, new LinearLayout.LayoutParams(0, -2, 1));
+            }
+            col.addView(facts);
+            for (int i = 0; i < 2; i++) {
+                LinearLayout one = new LinearLayout(c);
+                one.setGravity(Gravity.CENTER_VERTICAL | (i == 0 ? Gravity.LEFT : Gravity.RIGHT));
+                dayName[i] = Ui.text(c, 16, Ui.SILVER_DIM, "sans-serif-medium", Gravity.LEFT);
+                dayIcon[i] = new ImageView(c);
+                dayTemp[i] = Ui.text(c, 17, Ui.SILVER, "sans-serif-medium", Gravity.LEFT);
+                one.addView(dayName[i]);
+                one.addView(dayIcon[i]);
+                one.addView(dayTemp[i]);
+                days.addView(one, new LinearLayout.LayoutParams(0, -2, 1));
+            }
+            col.addView(days);
+            col.addView(hours);
+            addView(col);
         }
 
         @Override
         void fit(int w, int h) {
-            float s = Math.min(h / (134f * Ui.k), w / (300f * Ui.k));
-            int m = Ui.px(24 * s);
-            int is = Ui.px(56 * s);
+            float s = Math.min(1.4f, Math.min(h / (134f * Ui.k), w / (300f * Ui.k)));
+            float sw = Math.min(1.4f, w / (300f * Ui.k));   // the rows below the reading scale with the width
+            int m = Ui.px(20 * Math.min(s, 1));
+            int is = Ui.px(64 * s);
             icon.setLayoutParams(new LinearLayout.LayoutParams(is, is));
-            temp.setTextSize(0, 40 * Ui.k * s);
-            ((LinearLayout.LayoutParams) temp.getLayoutParams()).leftMargin = Ui.px(16 * s);
-            desc.setTextSize(0, 15 * Ui.k * s);
-            place.setTextSize(0, 13 * Ui.k * s);
-            desc.setMaxWidth(w / 2 - m);
-            place.setMaxWidth(w / 2 - m);
-            rain.setTextSize(0, 12 * Ui.k * s);
-            rain.setMaxWidth(w / 2 - m);
-            // a tall box has room for the next 24 hours under the reading
-            boolean curve = hours.wanted && h > 170 * Ui.k * Math.min(1, w / (300f * Ui.k));
-            int below = curve ? Math.round(h * 0.38f) : 0;
+            temp.setTextSize(0, 48 * Ui.k * s);
+            ((LinearLayout.LayoutParams) temp.getLayoutParams()).leftMargin = Ui.px(12 * s);
+            desc.setTextSize(0, 17 * Ui.k * s);
+            place.setTextSize(0, 14 * Ui.k * s);
+            rain.setTextSize(0, 13 * Ui.k * s);
+            for (TextView t : new TextView[]{desc, place, rain}) t.setMaxWidth(w / 2 - m);
+            int gs = Ui.px(22 * sw);
+            for (int i = 0; i < 3; i++) {
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(gs, gs);
+                lp.rightMargin = Ui.px(6 * sw);
+                factIcon[i].setLayoutParams(lp);
+                factText[i].setTextSize(0, 16 * Ui.k * sw);
+            }
+            int ds = Ui.px(32 * sw);
+            for (int i = 0; i < 2; i++) {
+                dayName[i].setTextSize(0, 16 * Ui.k * sw);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ds, ds);
+                lp.leftMargin = lp.rightMargin = Ui.px(8 * sw);
+                dayIcon[i].setLayoutParams(lp);
+                dayTemp[i].setTextSize(0, 17 * Ui.k * sw);
+            }
+            // which rows fit, from the reading down: facts, then the two days, then the 24-hour curve
+            int topH = Math.round(Math.max(is, 70 * Ui.k * s)), factH = Math.round(30 * Ui.k * sw), dayH = Math.round(40 * Ui.k * sw);
+            int room = h - 2 * m - topH;
+            boolean showFacts = room >= factH;
+            if (showFacts) room -= factH;
+            boolean showDays = room >= dayH && hasDays;
+            if (showDays) room -= dayH;
+            boolean curve = hours.wanted && room >= 60 * Ui.k;
+            facts.setVisibility(showFacts ? VISIBLE : GONE);
+            days.setVisibility(showDays ? VISIBLE : GONE);
             hours.setVisibility(curve ? VISIBLE : GONE);
-            hours.setLayoutParams(at(-1, below, Gravity.BOTTOM, m, 0, m, Ui.px(10 * s)));
-            left.setLayoutParams(at(-2, -2, Gravity.CENTER_VERTICAL | Gravity.LEFT, m, 0, 0, below));
-            right.setLayoutParams(at(-2, -2, Gravity.CENTER_VERTICAL | Gravity.RIGHT, 0, 0, m, below));
+            boolean spread = !curve;   // with no curve the rows share the height evenly
+            top.setLayoutParams(new LinearLayout.LayoutParams(-1, spread ? 0 : topH, spread ? 1.3f : 0));
+            facts.setLayoutParams(new LinearLayout.LayoutParams(-1, spread ? 0 : factH, spread ? 0.8f : 0));
+            days.setLayoutParams(new LinearLayout.LayoutParams(-1, spread ? 0 : dayH, spread ? 1 : 0));
+            hours.setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 1));
+            col.setLayoutParams(at(-1, -1, Gravity.TOP, m, Math.round(m * 0.6f), m, Math.round(m * 0.6f)));
             this.w = w;
             this.h = h;
         }
+
+        boolean hasDays;
 
         @Override
         public void changed(Hub h) {
             temp.setText(h.temp);
             desc.setText(Hindi.t(h.weather));
-            int aq = Features.on(host.prefs(), "aqi") ? Air.aqi : -1;
-            place.setText(placeLine(h.place, aq, place.getPaint(), place.getMaxWidth()));
-            place.setTextColor(aq > 200 ? 0xFFFFB02E : Ui.SILVER_DIM);
+            boolean aqOn = Features.on(host.prefs(), "aqi");
+            int aq = aqOn ? Air.aqi : -1;
+            place.setText(h.place);
             // rain on the planned route wins over rain here; both come and go
             String r = !Features.on(host.prefs(), "rain") ? "" : !Hub.routeRain.isEmpty() ? Hub.routeRain : Hub.showRain(h.rainSoon);
             // offline: say the reading comes from the kept forecast
@@ -329,11 +406,104 @@ final class Cards {
                 icon.setImageBitmap(Ui.img(getContext(), h.weatherIcon));
                 lastIcon = h.weatherIcon;
             }
+            // altitude, the way the car points (kept from the last drive while parked), the air
+            android.location.Location f = h.fix;
+            double alt = f != null && f.hasAltitude() ? f.getAltitude() : Drive.altNow;
+            factText[0].setText(Double.isNaN(alt) ? "--" : Math.round(alt) + " m");
+            double hd = Drive.headingNow >= 0 ? Drive.headingNow : Drive.headingKept >= 0 ? Drive.headingKept
+                    : f != null && f.hasBearing() ? f.getBearing() : -1;
+            factText[1].setText(hd < 0 ? "--" : Layouts.compass(hd) + " " + Math.round(hd) + "°");
+            factIcon[1].turn((float) hd);
+            factText[2].setText(aq < 0 ? (aqOn ? "AQI --" : "") : "AQI\u00A0" + aq);
+            factIcon[2].setVisibility(aqOn ? VISIBLE : INVISIBLE);
+            factIcon[2].colour(aqiColour(aq));
+            factText[2].setTextColor(aq > 200 ? 0xFFFFB02E : Ui.SILVER);
+            // the next two days
+            java.util.List<String[]> fc = h.forecast;
+            boolean had = hasDays;
+            hasDays = fc != null && fc.size() >= 3;
+            for (int i = 0; i < 2 && hasDays; i++) {
+                String[] d = fc.get(i + 1);
+                dayName[i].setText(i == 0 ? Hindi.t("Tomorrow") : Weather.dayName(d[0]));
+                dayTemp[i].setText(d.length > 3 ? d[2] + " / " + d[3] : d[2]);
+                if (!d[1].equals(lastDayIcon[i])) {
+                    dayIcon[i].setImageBitmap(Ui.img(getContext(), d[1]));
+                    lastDayIcon[i] = d[1];
+                }
+            }
             boolean want = Features.on(host.prefs(), "hourlyWeather") && h.hours.length >= 6;
             hours.set(h.hours, h.hoursRain);
-            if (want != hours.wanted) {
+            if ((want != hours.wanted || had != hasDays) && this.w > 0) {
                 hours.wanted = want;
-                if (this.w > 0) fit(this.w, this.h);
+                fit(this.w, this.h);
+            }
+            hours.wanted = want;
+        }
+    }
+
+    /** The air quality's colour, as on India's AQI scale: green, yellow, orange, red, purple. Pure, for the tests. */
+    static int aqiColour(int aqi) {
+        if (aqi < 0) return Ui.SILVER_DIM;
+        if (aqi <= 50) return 0xFF4CAF50;
+        if (aqi <= 100) return 0xFFCDDC39;
+        if (aqi <= 200) return 0xFFFFB02E;
+        if (aqi <= 300) return 0xFFF4511E;
+        return 0xFFAB47BC;
+    }
+
+    /** The small pictures in the weather box: a hill for the altitude, an arrow that turns with the heading, a dot for the air. */
+    static final class Glyph extends View {
+        final android.graphics.Paint ink = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+        final android.graphics.Path path = new android.graphics.Path();
+        final int kind;
+        float angle;
+        int dot = Ui.SILVER_DIM;
+
+        Glyph(Context c, int kind) {
+            super(c);
+            this.kind = kind;
+        }
+
+        void turn(float deg) {
+            if (deg == angle) return;
+            angle = deg;
+            invalidate();
+        }
+
+        void colour(int c) {
+            if (c == dot) return;
+            dot = c;
+            invalidate();
+        }
+
+        @Override
+        protected void onDraw(android.graphics.Canvas c) {
+            float w = getWidth(), h = getHeight();
+            path.reset();
+            ink.setStyle(android.graphics.Paint.Style.FILL);
+            if (kind == 0) {
+                ink.setColor(Ui.SILVER_DIM);
+                path.moveTo(0, h * 0.9f);
+                path.lineTo(w * 0.38f, h * 0.2f);
+                path.lineTo(w * 0.6f, h * 0.55f);
+                path.lineTo(w * 0.72f, h * 0.4f);
+                path.lineTo(w, h * 0.9f);
+                path.close();
+                c.drawPath(path, ink);
+            } else if (kind == 1) {
+                ink.setColor(angle < 0 ? Ui.SILVER_DIM : 0xFFEA4335);
+                c.save();
+                c.rotate(Math.max(0, angle), w / 2, h / 2);
+                path.moveTo(w / 2, h * 0.05f);
+                path.lineTo(w * 0.85f, h * 0.92f);
+                path.lineTo(w / 2, h * 0.7f);
+                path.lineTo(w * 0.15f, h * 0.92f);
+                path.close();
+                c.drawPath(path, ink);
+                c.restore();
+            } else {
+                ink.setColor(dot);
+                c.drawCircle(w / 2, h / 2, Math.min(w, h) * 0.38f, ink);
             }
         }
     }
@@ -427,7 +597,8 @@ final class Cards {
     static final class NewsCard extends Card {
         final TextView head = Ui.text(getContext(), 13, Ui.SILVER_DIM, "sans-serif-medium", Gravity.LEFT);
         final TextView read = Ui.text(getContext(), 13, Ui.SILVER, "sans-serif-medium", Gravity.CENTER);
-        final TextView[] lines = new TextView[News.KEEP];
+        final TextView[] lines = new TextView[News.KEEP], srcs = new TextView[News.KEEP], nums = new TextView[News.KEEP];
+        final LinearLayout[] items = new LinearLayout[News.KEEP];
         final LinearLayout col = new LinearLayout(getContext());
         /** Headline rows that fit under the title, and how many headlines the lines were laid out for. */
         int room = News.COUNT, laidFor = -1;
@@ -441,17 +612,32 @@ final class Cards {
             col.addView(head);
             for (int i = 0; i < lines.length; i++) {
                 final int n = i;
-                lines[i] = Ui.text(c, 15, Ui.SILVER, "sans-serif", Gravity.LEFT);
+                // each headline: a numbered badge in the accent colour, the headline, and its paper under it
+                items[i] = new LinearLayout(c);
+                items[i].setGravity(Gravity.CENTER_VERTICAL);
+                nums[i] = Ui.text(c, 13, 0xFF15181C, "sans-serif-medium", Gravity.CENTER);
+                nums[i].setText(String.valueOf(i + 1));
+                LinearLayout words = new LinearLayout(c);
+                words.setOrientation(LinearLayout.VERTICAL);
+                lines[i] = Ui.text(c, 15, Ui.SILVER, i == 0 ? "sans-serif-medium" : "sans-serif", Gravity.LEFT);
                 lines[i].setSingleLine(false);
                 lines[i].setMaxLines(1);
                 lines[i].setEllipsize(android.text.TextUtils.TruncateAt.END);
-                clickable(lines[i], new OnClickListener() {
+                lines[i].setLineSpacing(0, 1.1f);
+                srcs[i] = Ui.text(c, 12, Ui.SILVER_DIM, "sans-serif", Gravity.LEFT);
+                srcs[i].setSingleLine(true);
+                srcs[i].setEllipsize(android.text.TextUtils.TruncateAt.END);
+                words.addView(lines[i]);
+                words.addView(srcs[i]);
+                items[i].addView(nums[i]);
+                items[i].addView(words, new LinearLayout.LayoutParams(0, -2, 1));
+                clickable(items[i], new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (n < News.items.size()) Speak.sayLong(getContext(), News.read(News.items.get(n)));
                     }
                 });
-                col.addView(lines[i]);
+                col.addView(items[i]);
             }
             addView(col);
             android.graphics.drawable.GradientDrawable pill = new android.graphics.drawable.GradientDrawable();
@@ -489,20 +675,39 @@ final class Cards {
             float s = Math.min(h / (300f * Ui.k), w / (420f * Ui.k));
             s = Math.max(0.55f, Math.min(1.3f, s));
             int m = Ui.px(18 * s);
-            float big = 16 * Ui.k * s, small = 12.5f * Ui.k * s;
+            float big, small = 12.5f * Ui.k * s;
             head.setTextSize(0, small);
             // a big target: it's pressed while driving
             read.setTextSize(0, 17 * Ui.k * s);
             read.setPadding(Ui.px(22 * s), Ui.px(9 * s), Ui.px(22 * s), Ui.px(9 * s));
             read.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(10 * s), m, 0));
-            // as many headline rows as fit under the title row
-            float row = big * 1.55f;
+            // larger headlines, each a soft rounded panel with its paper's name under it
+            big = 17.5f * Ui.k * s;
+            float src = 12.5f * Ui.k * s;
+            int gap = Math.round(big * 0.45f), pad = Math.round(big * 0.45f);
+            float row = big * 1.3f + src * 1.35f + gap + 2 * pad;
             room = Math.max(1, (int) ((h - Ui.px(62 * s) - m) / row));
+            int badge = Math.round(big * 1.45f);
             for (int i = 0; i < lines.length; i++) {
-                lines[i].setTextSize(0, big);
+                lines[i].setTextSize(0, i == 0 ? big * 1.08f : big);
+                srcs[i].setTextSize(0, src);
+                nums[i].setTextSize(0, big * 0.75f);
+                android.graphics.drawable.GradientDrawable dot = new android.graphics.drawable.GradientDrawable();
+                dot.setShape(android.graphics.drawable.GradientDrawable.OVAL);
+                dot.setColor(i == 0 ? Ui.ACCENT : Ui.SILVER_DIM);
+                nums[i].setBackground(dot);
+                nums[i].setTextColor(SettingsView.knob(i == 0 ? Ui.ACCENT : Ui.SILVER_DIM));
+                LinearLayout.LayoutParams bl = new LinearLayout.LayoutParams(badge, badge);
+                bl.rightMargin = Math.round(big * 0.7f);
+                nums[i].setLayoutParams(bl);
+                android.graphics.drawable.GradientDrawable card = new android.graphics.drawable.GradientDrawable();
+                card.setCornerRadius(Ui.px(12 * s));
+                card.setColor(0x14FFFFFF);
+                items[i].setBackground(card);
+                items[i].setPadding(pad, pad, pad, pad);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
-                lp.topMargin = Math.round(big * 0.5f);
-                lines[i].setLayoutParams(lp);
+                lp.topMargin = gap;
+                items[i].setLayoutParams(lp);
             }
             laidFor = -1;
             rows();
@@ -522,7 +727,7 @@ final class Cards {
             int n = Math.min(Math.min(lines.length, room), have);
             int spare = room - n;
             for (int i = 0; i < lines.length; i++) {
-                lines[i].setVisibility(i < n ? VISIBLE : GONE);
+                items[i].setVisibility(i < n ? VISIBLE : GONE);
                 lines[i].setMaxLines(i < spare ? 2 : 1);
             }
         }
@@ -550,12 +755,17 @@ final class Cards {
             for (int i = 0; i < lines.length; i++) {
                 if (i < News.items.size()) {
                     News.Item it = News.items.get(i);
-                    lines[i].setText((i + 1) + ".  " + it.title);
+                    lines[i].setText(it.title);
                     lines[i].setTextColor(Ui.SILVER);
+                    srcs[i].setText(it.source);
+                    srcs[i].setVisibility(it.source.isEmpty() ? GONE : VISIBLE);
+                    nums[i].setVisibility(VISIBLE);
                 } else if (i == 0) {
                     lines[i].setText(!Features.on(p, "news") ? Hindi.t("The news box is switched off in Settings > Features.")
                             : Player.online(getContext()) ? Hindi.t("Getting the headlines…") : Hindi.t("Headlines show here when there's internet."));
                     lines[i].setTextColor(Ui.SILVER_DIM);
+                    srcs[i].setVisibility(GONE);
+                    nums[i].setVisibility(GONE);
                 } else lines[i].setText("");
             }
         }

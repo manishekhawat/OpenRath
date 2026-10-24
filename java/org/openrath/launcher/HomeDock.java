@@ -172,7 +172,7 @@ final class HomeDock {
             });
             d.addView(v);
         }
-        if (Features.on(a.prefs, "dockStatus")) {
+        if ("dock".equals(a.statusPlace())) {
             d.addView(new StatusIcons(a, across), across ? new LinearLayout.LayoutParams(0, Ui.px(62), 1.5f)
                     : new LinearLayout.LayoutParams(Ui.px(62), 0, 1.5f));
         }
