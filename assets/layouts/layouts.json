@@ -41,8 +41,9 @@
     {
       "id": "picture_clock", "name": "Picture and clock", "bg": "picture_clock", "light": true,
       "parts": [
-        {"kind": "car", "src": "car_rear_white", "x": 70, "y": 250, "w": 400, "h": 286, "opt": "car"},
+        {"kind": "car", "src": "car_rear_white", "x": 40, "y": 176, "w": 480, "h": 343, "opt": "car"},
         {"kind": "clock", "style": "digital-line", "x": 600, "y": 80, "w": 260, "h": 130, "ink": "#14171B", "sub": "#3E4650", "opt": "time"},
+        {"kind": "speed", "style": "gauge-small", "x": 600, "y": 300, "w": 260, "h": 120, "ink": "#14171B", "sub": "#3E4650", "accent": "#3A8DFF", "opt": "speed"},
         {"kind": "weather", "style": "range", "x": 870, "y": 80, "w": 140, "h": 130, "ink": "#14171B", "sub": "#3E4650", "opt": "weather"},
         {"kind": "dock", "items": ["apps", "radio", "navi", "music", "bt"], "shape": "rect", "r": 18, "x": 10, "y": 510, "w": 1004, "h": 80, "fill": "#F6F7F9", "alpha": 0.7, "ink": "#22272E"}
       ]
@@ -108,7 +109,7 @@
         {"kind": "clock", "style": "analog-dark", "shape": "rect", "r": 14, "x": 296, "y": 50, "w": 170, "h": 170, "fill": "#14171B", "ink": "#FFFFFF", "sub": "#C8CDD3", "accent": "#E0A040", "opt": "clock"},
         {"kind": "music", "style": "wide", "shape": "rect", "r": 14, "x": 482, "y": 50, "w": 482, "h": 170, "fill": "#F5F6F8", "ink": "#14171B", "sub": "#4E5660", "opt": "media"},
         {"kind": "weather", "style": "card", "shape": "rect", "r": 14, "x": 296, "y": 236, "w": 170, "h": 154, "fill": "#7CC0F2", "fill2": "#4C9EE0", "ink": "#FFFFFF", "sub": "#EAF5FF", "opt": "weather"},
-        {"kind": "favourites", "x": 482, "y": 236, "w": 482, "h": 154, "ink": "#FFFFFF"},
+        {"kind": "favourites", "shape": "rect", "r": 14, "x": 482, "y": 236, "w": 482, "h": 154, "fill": "#1E2630", "alpha": 0.55, "ink": "#FFFFFF"},
         {"kind": "dock", "items": ["navi", "music", "radio", "apps", "bt", "phone", "settings"], "shape": "rect", "r": 18, "x": 60, "y": 420, "w": 904, "h": 90, "fill": "#DDE2E8", "alpha": 0.45, "ink": "#FFFFFF"}
       ]
     },

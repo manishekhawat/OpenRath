@@ -219,9 +219,6 @@ def picture_clock(out):
 def strip(out):
     a = grad((214, 224, 246), (238, 222, 232), power=1.1)
     blob(a, 1000, 330, 300, 200, (250, 214, 220), 0.5)
-    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-    d = np.sqrt((xx - 960) ** 2 + (yy - 420) ** 2)
-    put(a, np.clip(1 - np.abs(d - 130) / 34, 0, 1) * (yy < 520), (246, 140, 150), 0.85)
     hz = 520
     r = np.random.default_rng(3)
     x = 40
@@ -294,19 +291,9 @@ def room(out):
 
 
 def big_clock(out):
+    """Plain grey, a little lighter behind the clock, so the clock face stands on a clean background."""
     a = grad((70, 72, 76), (52, 54, 58))
-    im = to_img(a)
-    sq = Image.new('RGB', (W, H), (0, 0, 0))
-    m = Image.new('L', (W, H), 0)
-    d, dm = ImageDraw.Draw(sq), ImageDraw.Draw(m)
-    for box, col in (((560, 170, 1000, 520), (80, 170, 230)), ((780, 300, 1240, 700), (140, 200, 40)),
-                     ((900, 140, 1180, 420), (70, 90, 110))):
-        d.rounded_rectangle(box, 30, fill=col)
-        dm.rounded_rectangle(box, 30, fill=200)
-    sq = sq.filter(ImageFilter.GaussianBlur(26))
-    m = m.filter(ImageFilter.GaussianBlur(26))
-    im.paste(sq, (0, 0), m)
-    a = np.asarray(im, np.float32).copy()
+    blob(a, 940, 350, 420, 360, (80, 82, 87), 0.5)
     noise(a, 2)
     save(a, out, 'big_clock')
 
