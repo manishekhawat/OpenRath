@@ -88,6 +88,67 @@
     <string name="ui_more_fuel_tank_1_s" formatted="false">Fuel tank: %1$s%%</string>
     <string name="ui_more_battery_1_s_v" formatted="false">Battery: %1$s V</string>
     <string name="ui_more_always_works_on_openrath_s_own_music_other_m" formatted="false">Always works on OpenRath\'s own music. Other music apps hear it only when this unit allows that; if they sound the same, use the unit\'s own EQ app.</string>
+    <string name="ui_more_general" formatted="false">General</string>
+    <string name="ui_more_voice" formatted="false">Voice</string>
+    <string name="ui_more_driving_alerts" formatted="false">Driving alerts</string>
+    <string name="ui_more_fuel_and_parking" formatted="false">Fuel and parking</string>
+    <string name="ui_more_your_driving" formatted="false">Your driving</string>
+    <string name="ui_more_records" formatted="false">Records</string>
+    <string name="ui_more_apps_and_voice" formatted="false">Apps and voice</string>
+    <string name="ui_more_level_language_units_country" formatted="false">Level, language, units, country</string>
+    <string name="ui_more_boxes_pages_weather_news" formatted="false">Boxes, pages, weather, news</string>
+    <string name="ui_more_map_navigation_apps_next_turn" formatted="false">Map, navigation apps, next turn</string>
+    <string name="ui_more_mic_language_what_you_can_say" formatted="false">Mic, language, what you can say</string>
+    <string name="ui_more_petrol_tolls_parking_sharing_costs" formatted="false">Petrol, tolls, parking, sharing costs</string>
+    <string name="ui_more_recording_with_a_usb_camera" formatted="false">Recording with a USB camera</string>
+    <string name="ui_more_speed_fog_breaks_road_learning" formatted="false">Speed, fog, breaks, road learning</string>
+    <string name="ui_more_trips_badges_routes_learnt_roads" formatted="false">Trips, badges, routes, learnt roads</string>
+    <string name="ui_more_1_s_of_4_added" formatted="false">%1$s of 4 added</string>
+    <string name="ui_more_none_install_organic_maps" formatted="false">none: install Organic Maps</string>
+    <string name="ui_more_1_s_km" formatted="false">%1$s km</string>
+    <string name="ui_more_1_s_km_2_s_due" formatted="false">%1$s km, %2$s due</string>
+    <string name="ui_more_1_s_of_3_set" formatted="false">%1$s of 3 set</string>
+    <string name="ui_more_1_s_of_4_set_up" formatted="false">%1$s of 4 set up</string>
+    <string name="ui_more_headlights" formatted="false">Headlights</string>
+    <string name="ui_more_indicators" formatted="false">Indicators</string>
+    <string name="ui_more_doors" formatted="false">Doors</string>
+    <string name="ui_more_seat_belt" formatted="false">Seat belt</string>
+    <string name="ui_more_button_pictures" formatted="false">Button pictures</string>
+    <string name="ui_more_built_in_or_your_own" formatted="false">built-in, or your own</string>
+    <string name="ui_more_navigation_app" formatted="false">Navigation app</string>
+    <string name="ui_more_without_internet" formatted="false">Without internet</string>
+    <string name="ui_more_your_own_speed_limit" formatted="false">Your own speed limit</string>
+    <string name="ui_more_service_reminders" formatted="false">Service reminders</string>
+    <string name="ui_more_favourite_contacts" formatted="false">Favourite contacts</string>
+    <string name="ui_more_car_signals_setup" formatted="false">Car signals setup</string>
+    <string name="ui_more_looks_for_a_newer_openrath" formatted="false">looks for a newer OpenRath</string>
+    <string name="ui_more_night_and_phone_themes" formatted="false">Night and phone themes</string>
+    <string name="ui_more_choose_the_themes" formatted="false">choose the themes</string>
+    <string name="ui_more_make_the_boot_logo" formatted="false">Make the boot logo</string>
+    <string name="ui_more_with_your_car_s_badge_and_name" formatted="false">with your car\'s badge and name</string>
+    <string name="ui_more_start_from_the_current_theme" formatted="false">start from the current theme</string>
+    <string name="ui_more_built_in_tap_to_use_your_own" formatted="false">built-in; tap to use your own</string>
+    <string name="ui_more_read_aloud_says" formatted="false">Read aloud says</string>
+    <string name="ui_more_speed_limit_in_valet_mode" formatted="false">Speed limit in valet mode</string>
+    <string name="ui_more_a_qr_code_with_where_you_are_and_the_route" formatted="false">a QR code with where you are and the route</string>
+    <string name="ui_more_a_upi_qr_code_for_each_share" formatted="false">a UPI QR code for each share</string>
+    <string name="ui_more_spot_the_colour_number_plates_how_far" formatted="false">spot the colour, number plates, how far</string>
+    <string name="ui_more_how_much_louder" formatted="false">How much louder</string>
+    <string name="ui_more_quiet_hours_start_at" formatted="false">Quiet hours start at</string>
+    <string name="ui_more_equalizer_settings" formatted="false">Equalizer settings</string>
+    <string name="ui_more_settings_fuel_log_and_trips" formatted="false">settings, fuel log and trips</string>
+    <string name="ui_more_the_next_turn_from_google_maps_waze_and_othe" formatted="false">The next turn from Google Maps, Waze and others, in a card on the dashboard</string>
+    <string name="ui_more_the_next_turn_and_what_s_playing_along_the_b" formatted="false">The next turn and what\'s playing, along the bottom of other apps</string>
+    <string name="ui_more_fm_91_1_call_mom_from_the_mic" formatted="false">\"FM 91.1\", \"call Mom\", \"घर ले चलो\" from the mic</string>
+    <string name="ui_more_hold_navigation_for_home_office_the_parked_c" formatted="false">Hold Navigation for Home, Office, the parked car and your own places</string>
+    <string name="ui_more_search_a_to_z_or_most_used_pinned_and_recent" formatted="false">Search, A to Z or most used, pinned and recent apps, and a long press to pin, hide or uninstall</string>
+    <string name="ui_more_saves_where_you_parked_with_a_photo_and_a_pa" formatted="false">Saves where you parked, with a photo and a paid-parking reminder</string>
+    <string name="ui_more_trip_cost_how_far_the_tank_goes_and_a_leak_o" formatted="false">Trip cost, how far the tank goes, and a leak or theft check</string>
+    <string name="ui_more_each_morning_weather_petrol_and_service_due_" formatted="false">Each morning: weather, petrol and service due. On Sundays: the week\'s driving</string>
+    <string name="ui_more_uses_your_stereo_maker_s_own_services_for_fm" formatted="false">Uses your stereo maker\'s own services for FM, calls, reverse and lights; off: plain Android only</string>
+    <string name="ui_more_settings_fuel_log_and_trips_kept_on_the_unit" formatted="false">Settings, fuel log and trips, kept on the unit</string>
+    <string name="ui_more_checks_once_a_day_for_a_new_openrath_and_off" formatted="false">Checks once a day for a new OpenRath and offers it when parked</string>
+    <string name="ui_more_which_settings_you_open_and_any_crashes_kept" formatted="false">Which settings you open and any crashes, kept on the unit for you to share</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -175,5 +236,66 @@
         <item>@string/ui_more_fuel_tank_1_s</item>
         <item>@string/ui_more_battery_1_s_v</item>
         <item>@string/ui_more_always_works_on_openrath_s_own_music_other_m</item>
+        <item>@string/ui_more_general</item>
+        <item>@string/ui_more_voice</item>
+        <item>@string/ui_more_driving_alerts</item>
+        <item>@string/ui_more_fuel_and_parking</item>
+        <item>@string/ui_more_your_driving</item>
+        <item>@string/ui_more_records</item>
+        <item>@string/ui_more_apps_and_voice</item>
+        <item>@string/ui_more_level_language_units_country</item>
+        <item>@string/ui_more_boxes_pages_weather_news</item>
+        <item>@string/ui_more_map_navigation_apps_next_turn</item>
+        <item>@string/ui_more_mic_language_what_you_can_say</item>
+        <item>@string/ui_more_petrol_tolls_parking_sharing_costs</item>
+        <item>@string/ui_more_recording_with_a_usb_camera</item>
+        <item>@string/ui_more_speed_fog_breaks_road_learning</item>
+        <item>@string/ui_more_trips_badges_routes_learnt_roads</item>
+        <item>@string/ui_more_1_s_of_4_added</item>
+        <item>@string/ui_more_none_install_organic_maps</item>
+        <item>@string/ui_more_1_s_km</item>
+        <item>@string/ui_more_1_s_km_2_s_due</item>
+        <item>@string/ui_more_1_s_of_3_set</item>
+        <item>@string/ui_more_1_s_of_4_set_up</item>
+        <item>@string/ui_more_headlights</item>
+        <item>@string/ui_more_indicators</item>
+        <item>@string/ui_more_doors</item>
+        <item>@string/ui_more_seat_belt</item>
+        <item>@string/ui_more_button_pictures</item>
+        <item>@string/ui_more_built_in_or_your_own</item>
+        <item>@string/ui_more_navigation_app</item>
+        <item>@string/ui_more_without_internet</item>
+        <item>@string/ui_more_your_own_speed_limit</item>
+        <item>@string/ui_more_service_reminders</item>
+        <item>@string/ui_more_favourite_contacts</item>
+        <item>@string/ui_more_car_signals_setup</item>
+        <item>@string/ui_more_looks_for_a_newer_openrath</item>
+        <item>@string/ui_more_night_and_phone_themes</item>
+        <item>@string/ui_more_choose_the_themes</item>
+        <item>@string/ui_more_make_the_boot_logo</item>
+        <item>@string/ui_more_with_your_car_s_badge_and_name</item>
+        <item>@string/ui_more_start_from_the_current_theme</item>
+        <item>@string/ui_more_built_in_tap_to_use_your_own</item>
+        <item>@string/ui_more_read_aloud_says</item>
+        <item>@string/ui_more_speed_limit_in_valet_mode</item>
+        <item>@string/ui_more_a_qr_code_with_where_you_are_and_the_route</item>
+        <item>@string/ui_more_a_upi_qr_code_for_each_share</item>
+        <item>@string/ui_more_spot_the_colour_number_plates_how_far</item>
+        <item>@string/ui_more_how_much_louder</item>
+        <item>@string/ui_more_quiet_hours_start_at</item>
+        <item>@string/ui_more_equalizer_settings</item>
+        <item>@string/ui_more_settings_fuel_log_and_trips</item>
+        <item>@string/ui_more_the_next_turn_from_google_maps_waze_and_othe</item>
+        <item>@string/ui_more_the_next_turn_and_what_s_playing_along_the_b</item>
+        <item>@string/ui_more_fm_91_1_call_mom_from_the_mic</item>
+        <item>@string/ui_more_hold_navigation_for_home_office_the_parked_c</item>
+        <item>@string/ui_more_search_a_to_z_or_most_used_pinned_and_recent</item>
+        <item>@string/ui_more_saves_where_you_parked_with_a_photo_and_a_pa</item>
+        <item>@string/ui_more_trip_cost_how_far_the_tank_goes_and_a_leak_o</item>
+        <item>@string/ui_more_each_morning_weather_petrol_and_service_due_</item>
+        <item>@string/ui_more_uses_your_stereo_maker_s_own_services_for_fm</item>
+        <item>@string/ui_more_settings_fuel_log_and_trips_kept_on_the_unit</item>
+        <item>@string/ui_more_checks_once_a_day_for_a_new_openrath_and_off</item>
+        <item>@string/ui_more_which_settings_you_open_and_any_crashes_kept</item>
     </string-array>
 </resources>
