@@ -1833,8 +1833,8 @@ public final class Tests {
                 }
             }
             check("finish: caught errors noted for Diagnostics", notes > 70);
-            // Bg's pool, the boot logo, OBD-II and Android Auto's reader
-            check("finish: few threads of their own", threads <= 4);
+            // Bg's pool, the boot logo, OBD-II, Android Auto's reader and wireless Android Auto
+            check("finish: few threads of their own", threads <= 5);
         } catch (Exception x) {
             check("finish fixes: " + x, false);
         }
@@ -2003,6 +2003,36 @@ public final class Tests {
         eq("aa pem", "010203", hex(AaCert.pem("x\n-----BEGIN PRIVATE KEY-----\nAQID\n-----END PRIVATE KEY-----\n", "PRIVATE KEY")));
         check("aa pem other kind", AaCert.pem("-----BEGIN RSA PRIVATE KEY-----\nAQID\n-----END RSA PRIVATE KEY-----", "PRIVATE KEY") == null);
         check("aa feature registered", Features.get("androidAuto") != null && !Features.get("androidAuto").def);
+
+        // wireless: the Bluetooth messages that start the phone
+        byte[] wf = AaWireless.frame(AaWireless.START_REQUEST, new byte[]{1, 2, 3});
+        eq("aa wireless frame", "0003000101" + "0203", hex(wf));
+        byte[] start = AaWireless.startRequest("192.168.49.1", AaWireless.PORT);
+        r = new AaProto.Reader(start);
+        String sip = null;
+        long sport = 0;
+        while (r.next()) {
+            if (r.field == 1) sip = r.text();
+            else if (r.field == 2) sport = r.num();
+        }
+        eq("aa wireless start ip", "192.168.49.1", sip);
+        eq("aa wireless start port", 5288L, sport);
+        byte[] info = AaWireless.infoResponse("DIRECT-ab-OpenRath", "secret12", null);
+        r = new AaProto.Reader(info);
+        String wssid = null, wkey = null, wbssid = null;
+        long sec = 0;
+        while (r.next()) {
+            if (r.field == 1) wssid = r.text();
+            else if (r.field == 2) wkey = r.text();
+            else if (r.field == 3) wbssid = r.text();
+            else if (r.field == 4) sec = r.num();
+        }
+        eq("aa wireless ssid", "DIRECT-ab-OpenRath", wssid);
+        eq("aa wireless key", "secret12", wkey);
+        eq("aa wireless empty bssid", "", wbssid);
+        eq("aa wireless wpa2", 8L, sec);
+        eq("aa wireless version", 4L, AaProto.find(AaWireless.versionRequest(new AaMessages.Car()), 0, 1000, 1, 0));
+        check("aa wireless feature registered", Features.get("androidAutoWireless") != null && !Features.get("androidAutoWireless").def);
     }
 
 }

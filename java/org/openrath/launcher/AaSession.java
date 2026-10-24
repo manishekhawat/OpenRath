@@ -141,7 +141,7 @@ final class AaSession {
     }
 
     /** What this car says about itself: names from the car setup, the picture size for this screen, the driver's side. */
-    private static AaMessages.Car car(Context c, boolean wireless) {
+    static AaMessages.Car car(Context c, boolean wireless) {
         AaMessages.Car car = new AaMessages.Car();
         try {
             Prefs p = new Prefs(c);

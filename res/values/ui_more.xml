@@ -190,6 +190,9 @@
     <string name="ui_more_android_auto_built_in" formatted="false">Android Auto built in</string>
     <string name="ui_more_plug_in_your_phone_with_its_cable_and_androi" formatted="false">Plug in your phone with its cable and Android Auto shows on this screen; needs Headunit Revived installed for its certificate</string>
     <string name="ui_more_the_phone_was_unplugged" formatted="false">The phone was unplugged</string>
+    <string name="ui_more_wireless_android_auto" formatted="false">Wireless Android Auto</string>
+    <string name="ui_more_a_paired_phone_starts_android_auto_by_itself" formatted="false">A paired phone starts Android Auto by itself over Bluetooth and Wi-Fi, without the cable; needs Android Auto built in</string>
+    <string name="ui_more_or_keep_bluetooth_on_a_paired_phone_with_wir" formatted="false">Or keep Bluetooth on: a paired phone with wireless Android Auto connects by itself in a minute</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -379,5 +382,8 @@
         <item>@string/ui_more_android_auto_built_in</item>
         <item>@string/ui_more_plug_in_your_phone_with_its_cable_and_androi</item>
         <item>@string/ui_more_the_phone_was_unplugged</item>
+        <item>@string/ui_more_wireless_android_auto</item>
+        <item>@string/ui_more_a_paired_phone_starts_android_auto_by_itself</item>
+        <item>@string/ui_more_or_keep_bluetooth_on_a_paired_phone_with_wir</item>
     </string-array>
 </resources>

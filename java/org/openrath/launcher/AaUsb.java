@@ -157,6 +157,7 @@ final class AaUsb {
             final Context app = c.getApplicationContext();
             boolean on = Features.on(new Prefs(app), "androidAuto");
             plugStart(app, on);
+            AaWireless.check(app);
             if (!on || AaSession.current() != null) return;
             final UsbManager m = (UsbManager) app.getSystemService(Context.USB_SERVICE);
             if (m == null) return;

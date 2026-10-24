@@ -106,6 +106,7 @@ public class AaActivity extends Activity implements SurfaceHolder.Callback, AaSe
         AaSession.ui(this);
         AaUsb.listen(this);
         AaUsb.check(this, true);
+        askWireless();
         immersive();
         render();
     }
@@ -120,6 +121,21 @@ public class AaActivity extends Activity implements SurfaceHolder.Callback, AaSe
     protected void onNewIntent(Intent i) {
         super.onNewIntent(i);
         if (root != null) AaUsb.check(this, true);   // another phone plugged in, or the music box's button
+    }
+
+    private boolean askedWireless;
+
+    /** With wireless on: Android's questions for Bluetooth and the phone's Wi-Fi network, once per visit. */
+    private void askWireless() {
+        if (askedWireless || !Features.on(new Prefs(this), "androidAutoWireless")) return;
+        askedWireless = true;
+        java.util.List<String> want = new java.util.ArrayList<>();
+        want.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+        if (android.os.Build.VERSION.SDK_INT >= 31) want.add("android.permission.BLUETOOTH_CONNECT");
+        if (android.os.Build.VERSION.SDK_INT >= 33) want.add("android.permission.NEARBY_WIFI_DEVICES");
+        java.util.List<String> missing = new java.util.ArrayList<>();
+        for (String w : want) if (checkSelfPermission(w) != android.content.pm.PackageManager.PERMISSION_GRANTED) missing.add(w);
+        if (!missing.isEmpty()) requestPermissions(missing.toArray(new String[0]), 7);
     }
 
     /** Sizes the picture to the screen, in proportion and centred. */
@@ -149,6 +165,9 @@ public class AaActivity extends Activity implements SurfaceHolder.Callback, AaSe
             text.setText(Hindi.t("Android Auto needs a head unit certificate, which OpenRath can't include. Install the Headunit Revived app on this unit (OpenRath uses its certificate), or copy cert.pem and privkey.pem into the androidauto folder inside OpenRath's folder."));
         } else if (!AaSession.lastEnd.isEmpty()) {
             text.setText(AaSession.lastEnd + "\n\n" + Hindi.t("Plug your phone into the unit's USB port to start Android Auto"));
+        } else if (Features.on(new Prefs(this), "androidAutoWireless")) {
+            text.setText(Hindi.t("Plug your phone into the unit's USB port to start Android Auto") + "\n\n"
+                    + Hindi.t("Or keep Bluetooth on: a paired phone with wireless Android Auto connects by itself in a minute"));
         } else {
             text.setText(Hindi.t("Plug your phone into the unit's USB port to start Android Auto"));
         }

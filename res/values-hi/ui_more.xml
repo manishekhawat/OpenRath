@@ -189,4 +189,7 @@
     <string name="ui_more_android_auto_built_in" formatted="false">Android Auto, OpenRath में ही</string>
     <string name="ui_more_plug_in_your_phone_with_its_cable_and_androi" formatted="false">फ़ोन को केबल से लगाएँ और Android Auto इसी स्क्रीन पर दिखेगा; सर्टिफ़िकेट के लिए Headunit Revived इंस्टॉल होना चाहिए</string>
     <string name="ui_more_the_phone_was_unplugged" formatted="false">फ़ोन निकाल दिया गया</string>
+    <string name="ui_more_wireless_android_auto" formatted="false">बिना तार Android Auto</string>
+    <string name="ui_more_a_paired_phone_starts_android_auto_by_itself" formatted="false">पेयर किया फ़ोन बिना केबल के, Bluetooth और Wi-Fi से अपने आप Android Auto शुरू करता है; Android Auto, OpenRath में ही चालू होना चाहिए</string>
+    <string name="ui_more_or_keep_bluetooth_on_a_paired_phone_with_wir" formatted="false">या Bluetooth चालू रखें: बिना तार Android Auto वाला पेयर किया फ़ोन एक मिनट में अपने आप जुड़ जाएगा</string>
 </resources>
