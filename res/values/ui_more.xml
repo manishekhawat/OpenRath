@@ -154,6 +154,19 @@
     <string name="ui_more_light_by_day_dark_at_night" formatted="false">light by day, dark at night</string>
     <string name="ui_more_always_light" formatted="false">always light</string>
     <string name="ui_more_always_dark" formatted="false">always dark</string>
+    <string name="ui_more_no_voice_engine_is_installed_so_openrath_can" formatted="false">No voice engine is installed, so OpenRath can\'t speak.</string>
+    <string name="ui_more_the_voice_is_working" formatted="false">The voice is working.</string>
+    <string name="ui_more_the_voice_engine_is_installed_but_doesn_t_st" formatted="false">The voice engine is installed but doesn\'t start. Updating it, or clearing its storage, usually fixes this.</string>
+    <string name="ui_more_the_voice_hasn_t_been_tried_yet_tap_test_the" formatted="false">The voice hasn\'t been tried yet: tap Test the voice.</string>
+    <string name="ui_more_test_the_voice" formatted="false">Test the voice</string>
+    <string name="ui_more_hello_the_openrath_voice_is_working" formatted="false">Hello. The OpenRath voice is working.</string>
+    <string name="ui_more_update_speech_services_by_google" formatted="false">Update Speech Services by Google</string>
+    <string name="ui_more_get_speech_services_by_google_speaks_hindi" formatted="false">Get Speech Services by Google (speaks Hindi)</string>
+    <string name="ui_more_repair_it_open_its_app_info_to_enable_it_or_" formatted="false">Repair it: open its app info to enable it or clear its storage</string>
+    <string name="ui_more_get_espeak_ng_instead_free_no_google_needed" formatted="false">Get eSpeak NG instead (free, no Google needed)</string>
+    <string name="ui_more_android_s_voice_settings" formatted="false">Android\'s voice settings</string>
+    <string name="ui_more_spoken_voice" formatted="false">Spoken voice</string>
+    <string name="ui_more_speech_services_by_google_tap_to_test_or_fix" formatted="false">Speech Services by Google; tap to test or fix it</string>
     <string name="ui_more_tap_to_open" formatted="false">Tap to open</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">Your trips show here after your first drive</string>
     <string name="ui_more_last_drive_1_s" formatted="false">LAST DRIVE, %1$s</string>
@@ -317,6 +330,19 @@
         <item>@string/ui_more_light_by_day_dark_at_night</item>
         <item>@string/ui_more_always_light</item>
         <item>@string/ui_more_always_dark</item>
+        <item>@string/ui_more_no_voice_engine_is_installed_so_openrath_can</item>
+        <item>@string/ui_more_the_voice_is_working</item>
+        <item>@string/ui_more_the_voice_engine_is_installed_but_doesn_t_st</item>
+        <item>@string/ui_more_the_voice_hasn_t_been_tried_yet_tap_test_the</item>
+        <item>@string/ui_more_test_the_voice</item>
+        <item>@string/ui_more_hello_the_openrath_voice_is_working</item>
+        <item>@string/ui_more_update_speech_services_by_google</item>
+        <item>@string/ui_more_get_speech_services_by_google_speaks_hindi</item>
+        <item>@string/ui_more_repair_it_open_its_app_info_to_enable_it_or_</item>
+        <item>@string/ui_more_get_espeak_ng_instead_free_no_google_needed</item>
+        <item>@string/ui_more_android_s_voice_settings</item>
+        <item>@string/ui_more_spoken_voice</item>
+        <item>@string/ui_more_speech_services_by_google_tap_to_test_or_fix</item>
         <item>@string/ui_more_tap_to_open</item>
         <item>@string/ui_more_your_trips_show_here_after_your_first_drive</item>
         <item>@string/ui_more_last_drive_1_s</item>

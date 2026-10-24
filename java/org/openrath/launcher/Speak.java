@@ -189,22 +189,93 @@ final class Speak {
         return out;
     }
 
+    /** How the voice is doing, for Settings: working, not starting, or not tried yet. Pure, for the tests. */
+    static String state(boolean installed, boolean ready, boolean failed) {
+        if (!installed) return "No voice engine is installed, so OpenRath can't speak.";
+        if (ready) return "The voice is working.";
+        if (failed) return "The voice engine is installed but doesn't start. Updating it, or clearing its storage, usually fixes this.";
+        return "The voice hasn't been tried yet: tap Test the voice.";
+    }
+
     /**
-     * Get a voice: Google's Speech Services from the Play Store when there's no engine (Android doesn't let
-     * an app install another one by itself, and Google's can't be shipped inside OpenRath), else the
-     * voice settings to pick it and download the Hindi and English voices.
+     * Get a working voice. Android doesn't let an app install an engine by itself, and Google's can't be
+     * shipped inside OpenRath, so this offers the ways to fix it: test it, update or repair Speech
+     * Services by Google, get eSpeak NG (free, works without Google), or Android's voice settings. Some
+     * stereos' voice settings screen closes by itself when the engine is broken, so it comes last.
      */
-    static synchronized void getVoice(Context c) {
-        android.content.Intent i;
-        if (!engines(c).contains(GOOGLE_TTS)) {
-            i = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("market://details?id=" + GOOGLE_TTS));
-            if (c.getPackageManager().resolveActivity(i, 0) == null) {
-                i = new android.content.Intent(android.content.Intent.ACTION_VIEW,
-                        android.net.Uri.parse("https://play.google.com/store/apps/details?id=" + GOOGLE_TTS));
-            }
-        } else {
-            i = new android.content.Intent("com.android.settings.TTS_SETTINGS");
+    static synchronized void getVoice(final Context c) {
+        if (!(c instanceof android.app.Activity)) {
+            open(c, store(c, GOOGLE_TTS));
+            return;
         }
+        final boolean google = engines(c).contains(GOOGLE_TTS);
+        java.util.List<String> names = new ArrayList<>();
+        final java.util.List<Runnable> acts = new ArrayList<>();
+        names.add(Hindi.t("Test the voice"));
+        acts.add(new Runnable() {
+            @Override
+            public void run() {
+                failed = false;
+                tts = null;
+                ready = false;
+                sayLong(c, Hindi.t("Hello. The OpenRath voice is working."));
+            }
+        });
+        names.add(Hindi.t(google ? "Update Speech Services by Google" : "Get Speech Services by Google (speaks Hindi)"));
+        acts.add(new Runnable() {
+            @Override
+            public void run() {
+                open(c, store(c, GOOGLE_TTS));
+            }
+        });
+        if (google) {
+            names.add(Hindi.t("Repair it: open its app info to enable it or clear its storage"));
+            acts.add(new Runnable() {
+                @Override
+                public void run() {
+                    open(c, new android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            android.net.Uri.parse("package:" + GOOGLE_TTS)));
+                }
+            });
+        }
+        names.add(Hindi.t("Get eSpeak NG instead (free, no Google needed)"));
+        acts.add(new Runnable() {
+            @Override
+            public void run() {
+                open(c, store(c, ESPEAK));
+            }
+        });
+        names.add(Hindi.t("Android's voice settings"));
+        acts.add(new Runnable() {
+            @Override
+            public void run() {
+                open(c, new android.content.Intent("com.android.settings.TTS_SETTINGS"));
+            }
+        });
+        new android.app.AlertDialog.Builder(c, android.R.style.Theme_Material_Dialog_Alert)
+                .setTitle(Hindi.t("Spoken voice"))
+                .setMessage(Hindi.t(state(!engines(c).isEmpty(), ready, failed)))
+                .setItems(names.toArray(new String[0]), new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface d, int w) {
+                        acts.get(w).run();
+                    }
+                })
+                .setNegativeButton(Hindi.t("Close"), null).show();
+    }
+
+    /** eSpeak NG's package: a free, open-source voice that works without Google's services. */
+    static final String ESPEAK = "com.reecedunn.espeak";
+
+    /** An app's page in the Play Store, else on the web (F-Droid for eSpeak NG, which isn't on every store). */
+    private static android.content.Intent store(Context c, String pkg) {
+        android.content.Intent i = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("market://details?id=" + pkg));
+        if (c.getPackageManager().resolveActivity(i, 0) != null) return i;
+        return new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(ESPEAK.equals(pkg)
+                ? "https://f-droid.org/packages/" + pkg + "/" : "https://play.google.com/store/apps/details?id=" + pkg));
+    }
+
+    private static void open(Context c, android.content.Intent i) {
         try {
             c.startActivity(i.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
         } catch (Exception e) {

@@ -1267,6 +1267,9 @@ public final class Tests {
 
     static void batch2() {
         // distances and "ahead"
+        check("voice: none installed says so", Speak.state(false, false, false).startsWith("No voice engine"));
+        check("voice: broken engine says how to fix", Speak.state(true, false, true).contains("doesn't start"));
+        eq("voice: working", "The voice is working.", Speak.state(true, true, false));
         eq("status icons off", "", HomeActivity.statusPlace(false, false, true));
         eq("status icons left to Android's bar", "", HomeActivity.statusPlace(true, true, true));
         eq("status icons in the clock box", "clock", HomeActivity.statusPlace(true, false, true));

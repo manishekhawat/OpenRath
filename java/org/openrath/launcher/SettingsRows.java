@@ -739,7 +739,7 @@ final class SettingsRows {
         }));
         String offNav = OfflineNav.app(a, a.prefs);
         final java.util.List<String> engines = Speak.engines(a);
-        r.add(new SettingsView.Row(g, "Spoken voice", engines.contains(Speak.GOOGLE_TTS) ? "Speech Services by Google (tap to pick it, or get the Hindi voice)"
+        r.add(new SettingsView.Row(g, "Spoken voice", engines.contains(Speak.GOOGLE_TTS) ? "Speech Services by Google; tap to test or fix it"
                 : engines.isEmpty() ? "none installed: tap to get Speech Services by Google" : "another engine (tap to get Google's, which speaks Hindi)", new Runnable() {
             @Override
             public void run() {

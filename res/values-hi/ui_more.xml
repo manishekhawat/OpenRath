@@ -153,6 +153,19 @@
     <string name="ui_more_light_by_day_dark_at_night" formatted="false">दिन में हल्का, रात में गहरा</string>
     <string name="ui_more_always_light" formatted="false">हमेशा हल्का</string>
     <string name="ui_more_always_dark" formatted="false">हमेशा गहरा</string>
+    <string name="ui_more_no_voice_engine_is_installed_so_openrath_can" formatted="false">कोई आवाज़ इंजन इंस्टॉल नहीं है, इसलिए OpenRath बोल नहीं सकता।</string>
+    <string name="ui_more_the_voice_is_working" formatted="false">आवाज़ काम कर रही है।</string>
+    <string name="ui_more_the_voice_engine_is_installed_but_doesn_t_st" formatted="false">आवाज़ इंजन इंस्टॉल है पर शुरू नहीं होता। इसे अपडेट करने या इसकी स्टोरेज साफ़ करने से अक्सर ठीक हो जाता है।</string>
+    <string name="ui_more_the_voice_hasn_t_been_tried_yet_tap_test_the" formatted="false">आवाज़ अभी आज़माई नहीं गई: आवाज़ जाँचें पर टैप करें।</string>
+    <string name="ui_more_test_the_voice" formatted="false">आवाज़ जाँचें</string>
+    <string name="ui_more_hello_the_openrath_voice_is_working" formatted="false">नमस्ते। OpenRath की आवाज़ काम कर रही है।</string>
+    <string name="ui_more_update_speech_services_by_google" formatted="false">Speech Services by Google अपडेट करें</string>
+    <string name="ui_more_get_speech_services_by_google_speaks_hindi" formatted="false">Speech Services by Google पाएँ (हिन्दी बोलता है)</string>
+    <string name="ui_more_repair_it_open_its_app_info_to_enable_it_or_" formatted="false">ठीक करें: ऐप जानकारी खोलकर इसे चालू करें या स्टोरेज साफ़ करें</string>
+    <string name="ui_more_get_espeak_ng_instead_free_no_google_needed" formatted="false">इसकी जगह eSpeak NG पाएँ (मुफ़्त, Google की ज़रूरत नहीं)</string>
+    <string name="ui_more_android_s_voice_settings" formatted="false">Android की आवाज़ सेटिंग</string>
+    <string name="ui_more_spoken_voice" formatted="false">बोली जाने वाली आवाज़</string>
+    <string name="ui_more_speech_services_by_google_tap_to_test_or_fix" formatted="false">Speech Services by Google; जाँचने या ठीक करने के लिए टैप करें</string>
     <string name="ui_more_tap_to_open" formatted="false">खोलने के लिए टैप करें</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">आपकी पहली ड्राइव के बाद यहाँ यात्राएँ दिखेंगी</string>
     <string name="ui_more_last_drive_1_s" formatted="false">पिछली ड्राइव, %1$s</string>
