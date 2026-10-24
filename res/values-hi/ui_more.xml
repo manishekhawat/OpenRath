@@ -149,7 +149,23 @@
     <string name="ui_more_checks_once_a_day_for_a_new_openrath_and_off" formatted="false">दिन में एक बार नया OpenRath खोजता है और खड़े होने पर देता है</string>
     <string name="ui_more_which_settings_you_open_and_any_crashes_kept" formatted="false">आप कौन सी सेटिंग खोलते हैं और कोई क्रैश, यूनिट पर रखा जाता है ताकि आप भेज सकें</string>
     <string name="ui_more_yesterday" formatted="false">कल</string>
-    <string name="ui_more_tap_to_open" formatted="false">खोलने के लिए टैप करें</string>
+    <string name="ui_more_map_look" formatted="false">नक्शे का रूप</string>
+    <string name="ui_more_light_by_day_dark_at_night" formatted="false">दिन में हल्का, रात में गहरा</string>
+    <string name="ui_more_always_light" formatted="false">हमेशा हल्का</string>
+    <string name="ui_more_always_dark" formatted="false">हमेशा गहरा</string>
+    <string name="ui_more_no_voice_engine_is_installed_so_openrath_can" formatted="false">कोई आवाज़ इंजन इंस्टॉल नहीं है, इसलिए OpenRath बोल नहीं सकता।</string>
+    <string name="ui_more_the_voice_is_working" formatted="false">आवाज़ काम कर रही है।</string>
+    <string name="ui_more_the_voice_engine_is_installed_but_doesn_t_st" formatted="false">आवाज़ इंजन इंस्टॉल है पर शुरू नहीं होता। इसे अपडेट करने या इसकी स्टोरेज साफ़ करने से अक्सर ठीक हो जाता है।</string>
+    <string name="ui_more_the_voice_hasn_t_been_tried_yet_tap_test_the" formatted="false">आवाज़ अभी आज़माई नहीं गई: आवाज़ जाँचें पर टैप करें।</string>
+    <string name="ui_more_test_the_voice" formatted="false">आवाज़ जाँचें</string>
+    <string name="ui_more_hello_the_openrath_voice_is_working" formatted="false">नमस्ते। OpenRath की आवाज़ काम कर रही है।</string>
+    <string name="ui_more_update_speech_services_by_google" formatted="false">Speech Services by Google अपडेट करें</string>
+    <string name="ui_more_get_speech_services_by_google_speaks_hindi" formatted="false">Speech Services by Google पाएँ (हिन्दी बोलता है)</string>
+    <string name="ui_more_repair_it_open_its_app_info_to_enable_it_or_" formatted="false">ठीक करें: ऐप जानकारी खोलकर इसे चालू करें या स्टोरेज साफ़ करें</string>
+    <string name="ui_more_get_espeak_ng_instead_free_no_google_needed" formatted="false">इसकी जगह eSpeak NG पाएँ (मुफ़्त, Google की ज़रूरत नहीं)</string>
+    <string name="ui_more_android_s_voice_settings" formatted="false">Android की आवाज़ सेटिंग</string>
+    <string name="ui_more_spoken_voice" formatted="false">बोली जाने वाली आवाज़</string>
+    <string name="ui_more_speech_services_by_google_tap_to_test_or_fix" formatted="false">Speech Services by Google; जाँचने या ठीक करने के लिए टैप करें</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">आपकी पहली ड्राइव के बाद यहाँ यात्राएँ दिखेंगी</string>
     <string name="ui_more_last_drive_1_s" formatted="false">पिछली ड्राइव, %1$s</string>
     <string name="ui_more_yesterday2" formatted="false">कल</string>
@@ -159,4 +175,18 @@
     <string name="ui_more_last_heading_while_driving" formatted="false">चलते समय की आख़िरी दिशा</string>
     <string name="ui_more_next_holiday_1_s" formatted="false">अगली छुट्टी: %1$s</string>
     <string name="ui_more_connect_an_obd_adapter_to_see_engine_data" formatted="false">इंजन की जानकारी देखने के लिए OBD अडैप्टर जोड़ें</string>
+    <string name="ui_more_tap_to_open" formatted="false">खोलने के लिए टैप करें</string>
+    <string name="ui_more_no_head_unit_certificate_install_headunit_re" formatted="false">हेड यूनिट का सर्टिफ़िकेट नहीं है: Headunit Revived इंस्टॉल करें, या उसकी दो फ़ाइलें OpenRath के androidauto फ़ोल्डर में डालें</string>
+    <string name="ui_more_the_phone_left_android_auto" formatted="false">फ़ोन Android Auto से हट गया</string>
+    <string name="ui_more_connecting_to_the_phone" formatted="false">फ़ोन से जुड़ रहे हैं…</string>
+    <string name="ui_more_starting_android_auto_on_the_phone" formatted="false">फ़ोन पर Android Auto शुरू हो रहा है…</string>
+    <string name="ui_more_the_phone_didn_t_accept_this_head_unit_s_cer" formatted="false">फ़ोन ने इस हेड यूनिट का सर्टिफ़िकेट नहीं माना</string>
+    <string name="ui_more_the_phone_ended_android_auto" formatted="false">फ़ोन ने Android Auto बंद कर दिया</string>
+    <string name="ui_more_android_auto_ended" formatted="false">Android Auto बंद हुआ</string>
+    <string name="ui_more_this_unit_can_t_show_the_phone_s_picture" formatted="false">यह यूनिट फ़ोन की स्क्रीन नहीं दिखा सकता</string>
+    <string name="ui_more_android_auto_needs_a_head_unit_certificate_w" formatted="false">Android Auto को हेड यूनिट का सर्टिफ़िकेट चाहिए, जो OpenRath साथ नहीं दे सकता। इस यूनिट पर Headunit Revived ऐप इंस्टॉल करें (OpenRath उसका सर्टिफ़िकेट इस्तेमाल करेगा), या cert.pem और privkey.pem को OpenRath फ़ोल्डर के अंदर androidauto फ़ोल्डर में कॉपी करें।</string>
+    <string name="ui_more_plug_your_phone_into_the_unit_s_usb_port_to_" formatted="false">Android Auto शुरू करने के लिए फ़ोन को यूनिट के USB पोर्ट में लगाएँ</string>
+    <string name="ui_more_android_auto_built_in" formatted="false">Android Auto, OpenRath में ही</string>
+    <string name="ui_more_plug_in_your_phone_with_its_cable_and_androi" formatted="false">फ़ोन को केबल से लगाएँ और Android Auto इसी स्क्रीन पर दिखेगा; सर्टिफ़िकेट के लिए Headunit Revived इंस्टॉल होना चाहिए</string>
+    <string name="ui_more_the_phone_was_unplugged" formatted="false">फ़ोन निकाल दिया गया</string>
 </resources>

@@ -30,7 +30,7 @@ final class Features {
             "Simple plus the helpers: voice, road warnings, highway trips, car care, driving score, cab tools",
             "Full plus making it your own: widgets, extra pages, boot logo, equalizer, driver profiles"};
     /** Off whatever the level until the owner turns them on: they need hardware, or change the home screen. */
-    private static final java.util.Set<String> ASK_FIRST = new java.util.HashSet<>(java.util.Arrays.asList("cab", "obd", "dashcam", "tpms", "reports"));
+    private static final java.util.Set<String> ASK_FIRST = new java.util.HashSet<>(java.util.Arrays.asList("cab", "obd", "dashcam", "tpms", "reports", "androidAuto"));
 
     private static final String[] SIMPLE_IDS = {"arrows", "navTurns", "parkedSettings", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "longKeys", "resume", "offlineMap", "backup", "reports"};
     private static final String[] CUSTOM_IDS = {"pages", "widgets", "saver", "perf", "bootArt", "soundProfiles", "speedVolume", "eq", "profiles"};
@@ -153,6 +153,7 @@ final class Features {
             new F("maker", "Stereo maker's services", "Radio and music", true, "Uses your stereo maker's own services for FM, calls, reverse and lights; off: plain Android only"),
             new F("projection", "Phone projection app", "Radio and music", true, "A button in the music box opens your wireless CarPlay or Android Auto app (ZLink, AutoKit and others)"),
             new F("projectionAuto", "Open the projection app when the phone connects", "Radio and music", false, "Your CarPlay or Android Auto app opens by itself when a phone connects by Bluetooth"),
+            new F("androidAuto", "Android Auto built in", "Radio and music", false, "Plug in your phone with its cable and Android Auto shows on this screen; needs Headunit Revived installed for its certificate"),
             new F("radioText", "Big frequency from any radio app", "Radio and music", true, "Shows \"FM 98.3\" and the station name from the radio app's text"),
             new F("soundboard", "Soundboard", "Radio and music", false, "A box of fun sounds (horn, fart, applause and more) that plays only when the car is stopped"),
             new F("video", "Video window", "Radio and music", false, "Plays a video from the unit or a USB stick in a box; the picture shows only when the car is stopped"),

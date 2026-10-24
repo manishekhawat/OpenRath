@@ -20,9 +20,18 @@ These are bundled in the source or in the APK. Each keeps its own licence, and t
 | leaflet-rotate, map turning for Leaflet | `assets/map/leaflet-rotate.js` | Iván Sánchez Ortega (author), Raruto, Fabien Nicollet and Zsolt Ero (github.com/Raruto/leaflet-rotate) | GPL-3.0 (`LICENSES/leaflet-rotate-GPL-3.0.txt`, `assets/map/LEAFLET-ROTATE-LICENSE`) |
 | QR code generator for JavaScript, for the QR codes on the map page | `assets/map/qrcode.js` | Kazuhiko Arase | MIT (`LICENSES/qrcode-generator-MIT.txt`) |
 | QR Code generator library (Java), moved to the package `org.openrath.qr` | `java/org/openrath/qr/` | Project Nayuki | MIT (at the top of each file) |
+| Android Auto receiver, derived from Headunit Revived / Open Headunit (github.com/andreknieriem/headunit-revived), itself based on headunit (github.com/mikereidis/headunit) | `java/org/openrath/launcher/Aa*.java`, `res/xml/aa_usb.xml` | Michael A. Reid (headunit, 2011-2015), Andre Rinas (Headunit Revived / Open Headunit), and the OpenRath contributors | AGPL-3.0-or-later (`LICENSES/AGPL-3.0.txt`, and at the top of each file); see "Android Auto and the AGPL" below |
 | Inter and Inter Display fonts, used to draw the artwork and copied into the APK for the welcome line | Taken from the `fonts-inter` package at build time | The Inter Project Authors | SIL Open Font License 1.1 (`LICENSES/Inter-OFL-1.1.txt`, and `assets/fonts/INTER-LICENSE` in the APK) |
 
 "QR Code" is a registered trademark of DENSO WAVE INCORPORATED.
+
+### Android Auto and the AGPL
+
+OpenRath's built-in Android Auto receiver (the `Aa*.java` files) is written in Java from the Kotlin and C++ of Headunit Revived / Open Headunit, which comes from Michael Reid's headunit. Those projects are under the GNU Affero General Public License, version 3 or later, so these files are too. GPLv3 section 13 lets them be combined with the rest of OpenRath (GPL-3.0-or-later): each part keeps its own licence, and the AGPL's terms also apply to the combined app. In practice: if you convey OpenRath, or let people use a modified version over a network, offer them the source of the whole app, as both licences ask.
+
+No certificate or private key from those projects is in OpenRath's source or APK. Android Auto on the unit borrows the one inside an installed Headunit Revived app, or reads two files the owner copies into `OpenRath/androidauto/` (`cert.pem` and `privkey.pem`).
+
+"Android Auto" is a trademark of Google LLC. OpenRath is not affiliated with or endorsed by Google.
 
 ### Map data and online services
 

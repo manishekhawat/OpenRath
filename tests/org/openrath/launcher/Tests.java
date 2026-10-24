@@ -424,6 +424,7 @@ public final class Tests {
         launcherReview();
         buildFixes();
         finishFixes();
+        androidAuto();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
     }
@@ -1832,9 +1833,176 @@ public final class Tests {
                 }
             }
             check("finish: caught errors noted for Diagnostics", notes > 70);
-            check("finish: few threads of their own", threads <= 3);
+            // Bg's pool, the boot logo, OBD-II and Android Auto's reader
+            check("finish: few threads of their own", threads <= 4);
         } catch (Exception x) {
             check("finish fixes: " + x, false);
         }
     }
+    private static String hex(byte[] b) {
+        StringBuilder sb = new StringBuilder();
+        for (byte x : b) sb.append(String.format("%02x", x & 0xFF));
+        return sb.toString();
+    }
+
+    /** Android Auto: protobuf, framing, joining split messages, the picture's size and touches, phones on USB. */
+    private static void androidAuto() {
+        // protobuf varints and fields
+        eq("aa varint 1", "01", hex(AaProto.varint(1)));
+        eq("aa varint 300", "ac02", hex(AaProto.varint(300)));
+        eq("aa varint -1 is ten bytes", 10, AaProto.varint(-1).length);
+        eq("aa field 150", "089601", hex(new AaProto.Writer().num(1, 150).bytes()));
+        eq("aa text field", "120774657374696e67", hex(new AaProto.Writer().text(2, "testing").bytes()));
+        eq("aa sint -1", "0801", hex(new AaProto.Writer().sint(1, -1).bytes()));
+        eq("aa sint 1", "0802", hex(new AaProto.Writer().sint(1, 1).bytes()));
+        eq("aa bool", "1801", hex(new AaProto.Writer().bool(3, true).bytes()));
+        byte[] msg = new AaProto.Writer().num(1, 150).text(2, "hi").msg(3, new AaProto.Writer().num(1, -7)).sint(4, -3)
+                .num(5, 1L << 40).bytes();
+        AaProto.Reader r = new AaProto.Reader(msg);
+        long a = 0, inner = 0, big = 0;
+        String t = null;
+        int z = 0, fields = 0;
+        while (r.next()) {
+            fields++;
+            if (r.field == 1) a = r.num();
+            else if (r.field == 2) t = r.text();
+            else if (r.field == 3) inner = AaProto.find(r.bytes(), 0, 1000, 1, 0);
+            else if (r.field == 4) z = r.sint();
+            else if (r.field == 5) big = r.num();
+        }
+        eq("aa read fields", 5, fields);
+        eq("aa read number", 150L, a);
+        eq("aa read text", "hi", t);
+        eq("aa read negative inside", -7L, inner);
+        eq("aa read sint", -3, z);
+        eq("aa read 64 bits", 1L << 40, big);
+        r = new AaProto.Reader(msg);
+        int seen = 0;
+        while (r.next()) seen++;   // fields skipped unread
+        eq("aa skip unread fields", 5, seen);
+        eq("aa find missing", 9L, AaProto.find(msg, 0, msg.length, 7, 9));
+        check("aa broken message ends", !new AaProto.Reader(new byte[]{0x12, 0x7f, 0x01}).next()
+                || new AaProto.Reader(new byte[]{0x12, 0x7f, 0x01}).bytes().length == 0);
+
+        // frame headers and flags
+        eq("aa flags control", 0x0b, AaFrame.flagsFor(0, AaMessages.DISCOVERY_RESPONSE, true));
+        eq("aa flags control on another channel", 0x0f, AaFrame.flagsFor(3, AaMessages.OPEN_RESPONSE, true));
+        eq("aa flags media", 0x0b, AaFrame.flagsFor(2, AaMessages.VIDEO_FOCUS, true));
+        eq("aa flags plain", 0x03, AaFrame.flagsFor(0, AaMessages.VERSION_REQUEST, false));
+        byte[] f = AaFrame.frame(2, AaFrame.FIRST | AaFrame.ENCRYPTED, new byte[300], 0, 300);
+        eq("aa frame size", 304, f.length);
+        eq("aa frame channel", 2, AaFrame.channel(f));
+        eq("aa frame flags", 0x09, AaFrame.flags(f));
+        eq("aa frame length", 300, AaFrame.length(f));
+        check("aa first has total", AaFrame.hasTotal(0x09));
+        check("aa whole has no total", !AaFrame.hasTotal(0x0b));
+        check("aa last has no total", !AaFrame.hasTotal(0x0a));
+        check("aa middle has no total", !AaFrame.hasTotal(0x08));
+        eq("aa int32", 0x01020304, AaFrame.int32(new byte[]{1, 2, 3, 4}, 0));
+        eq("aa version request bytes", "000300060001" + "00010002", hex(AaFrame.frame(0, 3, AaMessages.versionRequest(), 0, 6)));
+        eq("aa auth complete", "00040800", hex(AaMessages.authComplete()));
+        eq("aa version ok", 0, AaMessages.versionStatus(new byte[]{0, 2, 0, 1, 0, 6, 0, 0}));
+        eq("aa version refused", -1, AaMessages.versionStatus(new byte[]{0, 2, 0, 1, 0, 6, (byte) 0xff, (byte) 0xff}));
+        byte[] media = AaFrame.media(0x0102030405L, new byte[]{9, 8}, 0, 2);
+        eq("aa media type", 0, AaFrame.type(media, media.length));
+        eq("aa media timestamp", 0x0102030405L, AaFrame.timestamp(media));
+        eq("aa media sound", 9, (int) media[10]);
+
+        // joining split messages
+        AaFrame.Joiner j = new AaFrame.Joiner();
+        byte[] whole = j.add(0, 0x0b, new byte[]{0, 5, 1}, 0, 3, 0);
+        eq("aa join whole", "000501", whole == null ? null : hex(whole));
+        check("aa join first", j.add(2, 0x09, new byte[]{0, 0}, 0, 2, 6) == null);
+        check("aa join other channel between", j.add(3, 0x0b, new byte[]{0, 1}, 0, 2, 0) != null);
+        check("aa join middle", j.add(2, 0x08, new byte[]{1, 2}, 0, 2, 0) == null);
+        byte[] joined = j.add(2, 0x0a, new byte[]{3, 4}, 0, 2, 0);
+        eq("aa join last", "000001020304", joined == null ? null : hex(joined));
+        check("aa join orphan middle", j.add(2, 0x08, new byte[]{1}, 0, 1, 0) == null);
+        check("aa join orphan last", j.add(2, 0x0a, new byte[]{1}, 0, 1, 0) == null);
+        j.add(4, 0x09, new byte[]{0, 0}, 0, 2, 5);
+        check("aa join short run dropped", j.add(4, 0x0a, new byte[]{1}, 0, 1, 0) == null);
+        j.add(4, 0x09, new byte[]{0, 0}, 0, 2, 3);
+        check("aa join long run dropped", j.add(4, 0x0a, new byte[]{1, 2}, 0, 2, 0) == null);
+        check("aa join silly total", j.add(4, 0x09, new byte[]{0, 0}, 0, 2, AaFrame.MAX_MESSAGE + 1) == null
+                && j.add(4, 0x0a, new byte[]{0}, 0, 1, 0) == null);
+
+        // the picture's size and where touches land
+        eq("aa size 1024x600", AaScreen.SD, AaScreen.pick(1024, 600));
+        eq("aa size 1280x720", AaScreen.HD, AaScreen.pick(1280, 720));
+        eq("aa size 2000x1200", AaScreen.FULL_HD, AaScreen.pick(2000, 1200));
+        eq("aa size portrait", AaScreen.SD, AaScreen.pick(600, 1024));
+        eq("aa size widths", "800x480 1280x720 1920x1080", AaScreen.width(1) + "x" + AaScreen.height(1) + " "
+                + AaScreen.width(2) + "x" + AaScreen.height(2) + " " + AaScreen.width(3) + "x" + AaScreen.height(3));
+        int[] fit = AaScreen.fit(1024, 600, 800, 480);
+        eq("aa fit 1024x600", "12 0 1000 600", fit[0] + " " + fit[1] + " " + fit[2] + " " + fit[3]);
+        fit = AaScreen.fit(1280, 800, 1280, 720);
+        eq("aa fit 1280x800", "0 40 1280 720", fit[0] + " " + fit[1] + " " + fit[2] + " " + fit[3]);
+        eq("aa touch middle", 400, AaScreen.toVideo(500, 0, 1000, 800));
+        eq("aa touch scaled", 799, AaScreen.toVideo(1000, 0, 1000, 800));
+        eq("aa touch left bar", 0, AaScreen.toVideo(5, 12, 1000, 800));
+        eq("aa touch offset", 400, AaScreen.toVideo(512, 12, 1000, 800));
+        eq("aa touch no view", 0, AaScreen.toVideo(5, 0, 0, 800));
+        byte[] touch = AaMessages.touch(5, 0, 0, new int[]{0}, new int[]{400}, new int[]{240});
+        eq("aa touch type", AaMessages.INPUT_EVENT, AaFrame.type(touch, touch.length));
+        r = new AaProto.Reader(touch, 2, touch.length - 2);
+        long x = -1, act = -1;
+        while (r.next()) {
+            if (r.field != 3) continue;
+            AaProto.Reader te = r.msg();
+            while (te.next()) {
+                if (te.field == 1) x = AaProto.find(te.bytes(), 0, 100, 1, -1);
+                else if (te.field == 3) act = te.num();
+            }
+        }
+        eq("aa touch x", 400L, x);
+        eq("aa touch action", 0L, act);
+
+        // what the head unit offers
+        AaMessages.Car car = new AaMessages.Car();
+        car.model = "Dzire";
+        byte[] d = AaMessages.discovery(car);
+        eq("aa discovery type", AaMessages.DISCOVERY_RESPONSE, AaFrame.type(d, d.length));
+        r = new AaProto.Reader(d, 2, d.length - 2);
+        int services = 0;
+        String model = null;
+        java.util.Set<Long> ids = new java.util.HashSet<>();
+        while (r.next()) {
+            if (r.field == 1) {
+                services++;
+                ids.add(AaProto.find(r.bytes(), 0, 100000, 1, -1));
+            } else if (r.field == 3) model = r.text();
+        }
+        eq("aa discovery services", 7, services);
+        check("aa discovery channels", ids.containsAll(java.util.Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L)));
+        eq("aa discovery model", "Dzire", model);
+        eq("aa focus gain", AaMessages.STATE_GAIN, AaMessages.focusAnswer(AaMessages.FOCUS_GAIN));
+        eq("aa focus release", AaMessages.STATE_LOSS, AaMessages.focusAnswer(AaMessages.FOCUS_RELEASE));
+        check("aa right hand India", AaSession.rightHand("IN", "UTC"));
+        check("aa right hand US locale in India", AaSession.rightHand("US", "Asia/Kolkata"));
+        check("aa left hand US", !AaSession.rightHand("US", "America/New_York"));
+        check("aa left hand Germany", !AaSession.rightHand("DE", "Europe/Berlin"));
+
+        // phones on USB
+        check("aa usb accessory", AaUsb.looksLikePhone(0x18D1, 0x2D01, 0, new int[0][]));
+        check("aa usb phone file transfer", AaUsb.looksLikePhone(0x04E8, 0x6860, 0, new int[][]{{0xFF, 0xFF, 0}}));
+        check("aa usb phone adb", AaUsb.looksLikePhone(0x2717, 0xFF48, 0, new int[][]{{0xFF, 0x42, 1}}));
+        check("aa usb not apple", !AaUsb.looksLikePhone(0x05AC, 0x12A8, 0, new int[][]{{6, 1, 1}}));
+        check("aa usb not a memory stick", !AaUsb.looksLikePhone(0x0781, 0x5567, 0, new int[][]{{8, 6, 0x50}}));
+        check("aa usb not a hub", !AaUsb.looksLikePhone(0x05E3, 0x0608, 9, new int[][]{{9, 0, 0}}));
+        check("aa usb not an obd cable", !AaUsb.looksLikePhone(0x0403, 0x6001, 0, new int[][]{{0xFF, 0xFF, 0xFF}}));
+        check("aa usb not a ch340", !AaUsb.looksLikePhone(0x1A86, 0x7523, 0, new int[][]{{0xFF, 0xFF, 0}}));
+
+        // the certificate files
+        eq("aa der short", "040201ff", hex(AaCert.der(4, new byte[]{1, (byte) 0xff})));
+        byte[] long1 = AaCert.der(4, new byte[200]);
+        eq("aa der long", "0481c8", hex(java.util.Arrays.copyOf(long1, 3)));
+        byte[] long2 = AaCert.der(0x30, new byte[1200]);
+        eq("aa der longer", "308204b0", hex(java.util.Arrays.copyOf(long2, 4)));
+        byte[] p8 = AaCert.pkcs8(new byte[]{0x30, 0x00});
+        eq("aa pkcs8 wrap", "3016020100300d06092a864886f70d010101050004023000", hex(p8));
+        eq("aa pem", "010203", hex(AaCert.pem("x\n-----BEGIN PRIVATE KEY-----\nAQID\n-----END PRIVATE KEY-----\n", "PRIVATE KEY")));
+        check("aa pem other kind", AaCert.pem("-----BEGIN RSA PRIVATE KEY-----\nAQID\n-----END RSA PRIVATE KEY-----", "PRIVATE KEY") == null);
+        check("aa feature registered", Features.get("androidAuto") != null && !Features.get("androidAuto").def);
+    }
+
 }
