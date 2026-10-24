@@ -524,7 +524,7 @@ public final class Tests {
             check("map CSP no eval", !csp.contains("unsafe-eval"));
             java.util.regex.Matcher u = java.util.regex.Pattern.compile("'(https://[a-z0-9.-]+)/").matcher(html);
             while (u.find()) {
-                if (u.group(1).equals("https://maps.google.com")) continue;   // inside a QR code, never loaded
+                if (u.group(1).equals("https://www.google.com")) continue;   // inside a QR code, never loaded
                 check("map CSP allows " + u.group(1), csp.contains(u.group(1)));
             }
         } catch (Exception e) {
@@ -1267,6 +1267,8 @@ public final class Tests {
 
     static void batch2() {
         // distances and "ahead"
+        eq("maps link opens the app", "https://www.google.com/maps/search/?api=1&query=28.48068,76.96826", Geo.mapsLink(28.48068, 76.96826));
+        eq("walk back link", "https://www.google.com/maps/dir/?api=1&destination=28.48068,76.96826&travelmode=walking", Geo.walkLink(28.48068, 76.96826));
         near("1 km north", 1000, Geo.dist(28.6, 77.2, 28.6 + 1 / 111.195, 77.2), 2);
         near("bearing east", 90, Geo.bearing(28.6, 77.2, 28.6, 77.3), 0.5);
         check("ahead when heading at it", Geo.ahead(28.6, 77.2, 0, 28.603, 77.2, 700));
@@ -1413,8 +1415,8 @@ public final class Tests {
         eq("text signal on", true, Lights.isOn("1", new String[]{"prop:x", "0", "1"}));
         eq("text signal off", false, Lights.isOn("0", new String[]{"prop:x", "0", "1"}));
         eq("missing reading", false, Lights.isOn(null, sig));
-        boolean[][] m = Qr.modules(Geo.mapsLink(28.6139, 77.209));
-        eq("parking code stays version 3", 29, m.length);
+        boolean[][] m = Qr.modules(Geo.walkLink(28.6139, 77.209));
+        check("parking code stays small enough to scan (version 5 or less)", m.length <= 37);
         eq("finder corner dark", true, m[0][0]);
     }
 

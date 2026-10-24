@@ -33,8 +33,13 @@ final class ThemeAuto {
      * too), else sunset at the dashboard's position, else the clock (a may be null).
      */
     static boolean night(HomeActivity a, long now) {
-        if (a != null && a.hub != null && a.prefs.lightSignal() != null) return a.hub.lightsOn();
-        android.location.Location f = a == null || a.hub == null ? null : a.hub.fix;
+        return night(a == null ? null : a.prefs, a == null ? null : a.hub, now);
+    }
+
+    /** The same from the settings and the hub (either may be null). */
+    static boolean night(Prefs p, Hub hub, long now) {
+        if (p != null && hub != null && p.lightSignal() != null) return hub.lightsOn();
+        android.location.Location f = hub == null ? null : hub.fix;
         if (f != null) return Care.dark(f.getLatitude(), f.getLongitude(), now);
         int h = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
         return h >= 19 || h < 6;

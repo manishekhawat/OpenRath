@@ -3,76 +3,89 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://server.arcgisonline.com https://tile.openstreetmap.org; connect-src 'self' https://photon.komoot.io https://nominatim.openstreetmap.org https://router.project-osrm.org https://routing.openstreetmap.de https://overpass-api.de https://api.open-meteo.com; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://a.basemaps.cartocdn.com https://b.basemaps.cartocdn.com https://c.basemaps.cartocdn.com https://d.basemaps.cartocdn.com https://server.arcgisonline.com https://tile.openstreetmap.org; connect-src 'self' https://photon.komoot.io https://nominatim.openstreetmap.org https://router.project-osrm.org https://routing.openstreetmap.de https://overpass-api.de https://api.open-meteo.com; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="stylesheet" href="leaflet.css">
 <style>
-  html, body, #map { margin: 0; height: 100%; background: #0e0f12; overflow: hidden; }
-  body { font-family: sans-serif; color: #d8dce2; }
-  .leaflet-control-attribution { background: rgba(0,0,0,.55) !important; color: #8a8f96 !important; font: 9px sans-serif; }
-  .leaflet-control-attribution a { color: #8a8f96 !important; }
+  /* Colours in the style of Google Maps: white panels by day, dark grey at night (setStyle) */
+  :root { --bg: #e8eaed; --panel: #ffffff; --solid: #ffffff; --ink: #202124; --sub: #5f6368; --line: #dadce0;
+          --press: #f1f3f4; --accent: #1a73e8; --on-accent: #ffffff; --shadow: 0 1px 4px rgba(60,64,67,.35); }
+  body.night { --bg: #1b1f27; --panel: #303134; --solid: #303134; --ink: #e8eaed; --sub: #9aa0a6; --line: #5f6368;
+               --press: #3c4043; --accent: #8ab4f8; --on-accent: #202124; --shadow: 0 1px 4px rgba(0,0,0,.6); }
+  html, body, #map { margin: 0; height: 100%; background: var(--bg); overflow: hidden; }
+  body { font-family: Roboto, sans-serif; color: var(--ink); }
+  .leaflet-container { background: var(--bg); }
+  .leaflet-control-attribution { background: rgba(255,255,255,.7) !important; color: #5f6368 !important; font: 9px sans-serif; }
+  body.night .leaflet-control-attribution { background: rgba(0,0,0,.55) !important; color: #9aa0a6 !important; }
+  .leaflet-control-attribution a { color: inherit !important; }
   .osm-dark { filter: invert(1) hue-rotate(180deg) brightness(.95) contrast(1.15) grayscale(.6); }
-  /* the grey streets are faint on their own: darker ground, brighter roads and names */
+  /* the night streets are CARTO's dark map, tinted towards Google's blue-grey night map with clearer roads */
+  .night-tiles { filter: sepia(.35) hue-rotate(180deg) saturate(1.6) brightness(1.35) contrast(1.15); }
   .esri-base { filter: brightness(1.5) contrast(1.5); }
   .esri-labels { filter: brightness(1.3); }
-  .car { width: 30px; height: 30px; }
-  .car svg { width: 30px; height: 30px; filter: drop-shadow(0 0 4px rgba(255,255,255,.5)); transition: transform .4s; }
-  .dest { width: 18px; height: 18px; border-radius: 50%; background: #d8dce2; border: 3px solid #0e0f12;
-          box-shadow: 0 0 0 2px #d8dce2; box-sizing: border-box; }
+  /* where you are: Google's blue dot with a white ring, and a beam showing the way the car points */
+  .car { width: 34px; height: 34px; }
+  .car svg { width: 34px; height: 34px; filter: drop-shadow(0 1px 3px rgba(0,0,0,.45)); transition: transform .4s; }
+  .dest { width: 22px; height: 22px; border-radius: 50% 50% 50% 0; background: #ea4335; border: 2px solid #fff;
+          transform: rotate(-45deg); box-shadow: var(--shadow); box-sizing: border-box; }
   #wait { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-          color: #8a8f96; font-size: 15px; z-index: 900; pointer-events: none; }
+          color: var(--sub); font-size: 15px; z-index: 900; pointer-events: none; }
 
-  .btn { width: 46px; height: 46px; border-radius: 12px; background: rgba(17,18,21,.88); flex: none;
-         border: 1px solid #4c5056; color: #d8dce2; display: flex; align-items: center; justify-content: center;
+  .btn { width: 46px; height: 46px; border-radius: 50%; background: var(--panel); flex: none; box-shadow: var(--shadow);
+         border: 0; color: var(--ink); display: flex; align-items: center; justify-content: center;
          font-size: 26px; line-height: 1; user-select: none; -webkit-user-select: none; box-sizing: border-box; }
-  .btn:active { background: #2a2d32; }
-  .btn svg { width: 22px; height: 22px; fill: none; stroke: #d8dce2; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .btn:active { background: var(--press); }
+  .btn svg { width: 22px; height: 22px; fill: none; stroke: var(--sub); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
   #zoom { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); z-index: 1000;
-          display: flex; flex-direction: column; gap: 8px; }
+          display: flex; flex-direction: column; gap: 10px; }
   #center, #north { display: none; }
+  #center svg { stroke: var(--accent); }
   #north svg { transition: transform .3s; }
 
   #searchbar { position: absolute; left: 12px; top: 12px; right: 70px; z-index: 1001; display: flex; gap: 8px; }
-  #q { display: none; flex: 1; min-width: 0; height: 46px; box-sizing: border-box; border-radius: 12px; border: 1px solid #4c5056;
-       background: rgba(17,18,21,.95); color: #d8dce2; font-size: 17px; padding: 0 14px; outline: none; }
+  #q { display: none; flex: 1; min-width: 0; height: 46px; box-sizing: border-box; border-radius: 23px; border: 0;
+       box-shadow: var(--shadow); background: var(--solid); color: var(--ink); font-size: 17px; padding: 0 18px; outline: none; }
   #results { position: absolute; left: 12px; top: 64px; right: 70px; z-index: 1001; max-height: 60%; overflow-y: auto;
-             background: rgba(17,18,21,.97); border: 1px solid #4c5056; border-radius: 12px; display: none; }
-  .r { padding: 11px 14px; border-bottom: 1px solid #26292e; }
+             background: var(--solid); box-shadow: var(--shadow); border-radius: 12px; display: none; }
+  .r { padding: 11px 14px; border-bottom: 1px solid var(--line); }
   .r:last-child { border-bottom: 0; }
   .r b { display: block; font-weight: 500; font-size: 15px; }
-  .r span { font-size: 12px; color: #8a8f96; }
-  .r:active { background: #2a2d32; }
+  .r span { font-size: 12px; color: var(--sub); }
+  .r:active { background: var(--press); }
 
   .panel { position: absolute; left: 12px; right: 70px; z-index: 1000; display: none;
-           background: rgba(17,18,21,.94); border: 1px solid #4c5056; border-radius: 12px; box-sizing: border-box; }
+           background: var(--solid); box-shadow: var(--shadow); border-radius: 14px; box-sizing: border-box; }
   #route { bottom: 12px; padding: 8px 8px 8px 14px; align-items: center; gap: 10px; }
   .txt { flex: 1; min-width: 0; }
-  .name { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .info { font-size: 13px; color: #8a8f96; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  #guide { color: #d8dce2; text-decoration: underline; text-underline-offset: 2px; }
-  .primary { height: 40px; padding: 0 18px; border-radius: 10px; background: #d8dce2; color: #0e0f12; flex: none;
-             font-weight: 600; font-size: 15px; display: flex; align-items: center; }
-  .primary:active { background: #fff; }
-  .panel .btn { width: 40px; height: 40px; font-size: 20px; }
+  .name { font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .info { font-size: 13px; color: var(--sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #guide { color: var(--accent); }
+  .primary { height: 40px; padding: 0 20px; border-radius: 20px; background: var(--accent); color: var(--on-accent); flex: none;
+             font-weight: 500; font-size: 15px; display: flex; align-items: center; }
+  .primary:active { opacity: .85; }
+  .panel .btn { width: 40px; height: 40px; font-size: 20px; box-shadow: none; background: var(--press); }
 
-  #turn { top: 12px; padding: 10px 14px; align-items: center; gap: 14px; }
-  #turn svg { width: 46px; height: 46px; flex: none; fill: none; stroke: #d8dce2; stroke-width: 2.6;
+  /* the next turn: Google's green direction card */
+  #turn { top: 12px; padding: 10px 14px; align-items: center; gap: 14px; background: #0f9d58; color: #fff; }
+  body.night #turn { background: #0b7a45; }
+  #turn svg { width: 46px; height: 46px; flex: none; fill: none; stroke: #fff; stroke-width: 2.6;
               stroke-linecap: round; stroke-linejoin: round; }
-  #tdist { font-size: 26px; font-weight: 300; }
-  #ttext { font-size: 15px; color: #b9bec5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #tdist { font-size: 26px; font-weight: 400; }
+  #ttext { font-size: 15px; color: rgba(255,255,255,.9); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #trip { bottom: 12px; padding: 8px 8px 8px 14px; align-items: center; gap: 10px; }
   #tripinfo { font-size: 16px; }
-  #end { background: #3a1f1f; color: #f0d0d0; border-color: #6a3a3a; }
-  #park { font-weight: 700; font-size: 22px; }
-  .lnk { color: #d8dce2; text-decoration: underline; text-underline-offset: 2px; }
+  #tripinfo b, #tripinfo strong { color: #188038; }
+  #end { background: #ea4335; color: #fff; }
+  #park { font-weight: 700; font-size: 22px; color: var(--accent); }
+  .lnk { color: var(--accent); }
   #rextra { white-space: normal; }
-  #rextra .rain { color: #7fb8ff; }
+  #rextra .rain { color: var(--accent); }
   #favs { position: absolute; left: 12px; top: 64px; z-index: 1001; display: none; gap: 8px; }
-  .chip { height: 42px; padding: 0 16px; border-radius: 21px; background: rgba(17,18,21,.95); border: 1px solid #4c5056;
+  .chip { height: 40px; padding: 0 16px; border-radius: 20px; background: var(--solid); box-shadow: var(--shadow);
           display: flex; align-items: center; font-size: 15px; }
-  .chip:active { background: #2a2d32; }
-  .pin { width: 28px; height: 28px; border-radius: 7px; background: #2f6fd6; color: #fff; font: 700 18px sans-serif;
+  .chip:active { background: var(--press); }
+  .pin { width: 28px; height: 28px; border-radius: 50%; background: #1a73e8; color: #fff; font: 700 16px sans-serif;
          display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-sizing: border-box;
-         box-shadow: 0 1px 6px rgba(0,0,0,.6); }
+         box-shadow: var(--shadow); }
   #parkp { z-index: 1002; top: 12px; bottom: 12px; padding: 12px 14px; gap: 14px; align-items: center; overflow: hidden; }
   #parkp .txt { align-self: stretch; display: flex; flex-direction: column; gap: 6px; justify-content: center; }
   #parkp .info { white-space: normal; }
@@ -80,9 +93,9 @@
   #qr img { display: block; image-rendering: pixelated; }
   .r .call { float: right; height: 34px; margin: -2px 0 0 10px; }
   .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
-  .ghost { height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid #4c5056; display: flex; align-items: center;
-           font-size: 14px; }
-  .ghost:active { background: #2a2d32; }
+  .ghost { height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid var(--line); color: var(--accent);
+           display: flex; align-items: center; font-size: 14px; }
+  .ghost:active { background: var(--press); }
 </style>
 </head>
 <body>
@@ -101,7 +114,7 @@
 <div id="zoom">
   <div class="btn" id="zin">+</div>
   <div class="btn" id="zout">&minus;</div>
-  <div class="btn" id="north"><svg viewBox="0 0 24 24"><path d="M12 3 16.5 19 12 15.5 7.5 19z" fill="#d8dce2"/></svg></div>
+  <div class="btn" id="north"><svg viewBox="0 0 24 24"><path d="M12 3 16.5 19 12 15.5 7.5 19z" fill="#ea4335" stroke="none"/></svg></div>
   <div class="btn" id="park">P</div>
   <div class="btn" id="center"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div>
 </div>
@@ -141,31 +154,49 @@
 <script src="qrcode.js"></script>
 <script src="leaflet-rotate.js"></script>
 <script>
-  // Dark grey streets from Esri (no key needed; given more contrast in .esri-base); if those tiles fail it switches to OpenStreetMap
-  // with the colours inverted. Two fingers zoom and rotate. Places come from Photon (OpenStreetMap
+  // Streets in the style of Google Maps from CARTO (no key needed): Voyager by day, the dark map tinted
+  // blue-grey at night; setStyle swaps them. If CARTO's tiles fail it switches to Esri's grey streets,
+  // then to OpenStreetMap. Two fingers zoom and rotate. Places come from Photon (OpenStreetMap
   // search), routes and turn-by-turn steps from the OSRM demo server, and spoken prompts from the
   // unit's text-to-speech. Navigation can be handed to Google Maps instead (the "Guide in" switch).
   var map = L.map('map', { zoomControl: false, rotate: true, touchRotate: true, rotateControl: false,
                            bearing: 0 }).setView([28.61, 77.21], 15);
-  var esri = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
-  var base = L.tileLayer(esri + 'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19, maxNativeZoom: 16, className: 'esri-base', attribution: 'Esri, HERE, Garmin, &copy; OpenStreetMap'
-  }).addTo(map);
-  var labels = L.tileLayer(esri + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19, maxNativeZoom: 16, className: 'esri-labels'
-  }).addTo(map);
-  var errors = 0, loaded = 0, fallback = false;
-  base.on('tileload', function () { loaded++; });
-  base.on('tileerror', function () {
-    errors++;
-    if (!fallback && errors >= 4 && loaded === 0) {
-      fallback = true;
-      map.removeLayer(base); map.removeLayer(labels);
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19, className: 'osm-dark', attribution: '&copy; OpenStreetMap'
-      }).addTo(map);
-    }
-  });
+  var CARTO = 'https://{s}.basemaps.cartocdn.com/rastertiles/';
+  var ATTR = '&copy; OpenStreetMap contributors &copy; CARTO';
+  var style = 'day', base = null, errors = 0, loaded = 0, fallback = false;
+  function cartoLayer(night) {
+    return L.tileLayer(night ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png' : CARTO + 'voyager/{z}/{x}/{y}.png', {
+      maxZoom: 20, maxNativeZoom: 19, subdomains: 'abcd', className: night ? 'night-tiles' : '', attribution: ATTR });
+  }
+  function useTiles() {
+    if (base) map.removeLayer(base);
+    base = cartoLayer(style === 'night');
+    base.on('tileload', function () { loaded++; });
+    base.on('tileerror', function () {
+      errors++;
+      if (!fallback && errors >= 4 && loaded === 0) {
+        fallback = true;
+        map.removeLayer(base);
+        var esri = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
+        base = L.tileLayer(esri + 'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19, maxNativeZoom: 16, className: 'esri-base', attribution: 'Esri, HERE, Garmin, &copy; OpenStreetMap' }).addTo(map);
+        L.tileLayer(esri + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19, maxNativeZoom: 16, className: 'esri-labels' }).addTo(map);
+        document.body.classList.add('night');
+      }
+    });
+    base.addTo(map);
+  }
+  useTiles();
+  // "day" or "night", from the Android side (the headlights, else sunset)
+  function setStyle(s) {
+    if (s !== 'day' && s !== 'night') return;
+    document.body.classList.toggle('night', s === 'night');
+    if (s === style || fallback) return;
+    style = s;
+    useTiles();
+    if (line) { line.setStyle({ color: ROUTE[style][0] }); casing.setStyle({ color: ROUTE[style][1] }); }
+  }
 
   var app = window.OpenRath || null;   // the Android side; absent when the page is opened in a browser
   function $(id) { return document.getElementById(id); }
@@ -179,8 +210,10 @@
   function say(t) { if (app) app.speak(t); }
 
   // ---------------------------------------------------------------- the car and the view
-  var icon = L.divIcon({ className: 'car', iconSize: [30, 30], iconAnchor: [15, 15],
-    html: '<svg viewBox="0 0 24 24"><path d="M12 2 20 21 12 16.5 4 21z" fill="#e8ebef"/></svg>' });
+  var icon = L.divIcon({ className: 'car', iconSize: [34, 34], iconAnchor: [17, 17],
+    html: '<svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="15" fill="#1a73e8" fill-opacity=".18"/>'
+      + '<circle cx="17" cy="17" r="9" fill="#1a73e8" stroke="#fff" stroke-width="3"/>'
+      + '<path d="M17 10.5 21.5 21 17 18.4 12.5 21z" fill="#fff"/></svg>' });
   var marker = null, me = null, heading = 0, follow = true, headingUp = true;   // the map turns so the car's arrow points up
 
   function bearing() { return map.getBearing ? map.getBearing() : 0; }
@@ -240,7 +273,7 @@
   tap('find', function () { showSearch(!open); });
   tap('mic', function () {
     if (!app) return;
-    $('mic').style.background = '#2a2d32';
+    $('mic').style.background = 'var(--press)';
     app.voice();
   });
   function voiceResult(text) {
@@ -346,6 +379,8 @@
 
   // ---------------------------------------------------------------- destination and route
   var dest = null, destMarker = null, line = null, casing = null, plan = null;
+  // the route in Google's blue with a darker edge: {style: [line, edge]}
+  var ROUTE = { day: ['#4285f4', '#1967d2'], night: ['#8ab4f8', '#1a3a6b'] };
   try { dest = JSON.parse(localStorage.getItem('dest')); } catch (e) {}
 
   function setDest(p) {
@@ -378,7 +413,7 @@
     if (!dest) return;
     var from = me || [map.getCenter().lat, map.getCenter().lng];
     if (destMarker) map.removeLayer(destMarker);
-    destMarker = L.marker([dest.lat, dest.lon], { icon: L.divIcon({ className: 'dest', iconSize: [18, 18] }),
+    destMarker = L.marker([dest.lat, dest.lon], { icon: L.divIcon({ className: 'dest', iconSize: [22, 22], iconAnchor: [11, 22] }),
                                                   interactive: false }).addTo(map);
     if (!keepNav) {
       $('rname').textContent = dest.name;
@@ -412,8 +447,8 @@
 
   function draw(pts, fit) {
     if (line) { map.removeLayer(line); map.removeLayer(casing); }
-    casing = L.polyline(pts, { color: '#0e0f12', weight: 10, opacity: .9, interactive: false }).addTo(map);
-    line = L.polyline(pts, { color: '#d8dce2', weight: 5, interactive: false }).addTo(map);
+    casing = L.polyline(pts, { color: ROUTE[style][1], weight: 11, opacity: .95, interactive: false }).addTo(map);
+    line = L.polyline(pts, { color: ROUTE[style][0], weight: 7, interactive: false }).addTo(map);
     if (fit) {
       setFollow(false);
       map.fitBounds(line.getBounds(), { paddingTopLeft: [20, 70], paddingBottomRight: [80, 90] });
@@ -614,7 +649,8 @@
     try {
       // low error correction keeps the squares big; a 4-square white border is what scanners expect
       var q = qrcode(0, 'L');
-      q.addData('https://maps.google.com/?q=' + park.lat.toFixed(5) + ',' + park.lon.toFixed(5));
+      // Google's own directions link: opens the Maps app on the phone, walking back to the car
+      q.addData('https://www.google.com/maps/dir/?api=1&destination=' + park.lat.toFixed(5) + ',' + park.lon.toFixed(5) + '&travelmode=walking');
       q.make();
       var h = $('parkp').clientHeight - 24;
       var cell = Math.max(2, Math.floor(Math.min(h, 240) / (q.getModuleCount() + 8)));

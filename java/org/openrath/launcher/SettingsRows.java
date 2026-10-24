@@ -713,6 +713,16 @@ final class SettingsRows {
 
         // ---- Map and navigation
         g = "Map and navigation";
+        final String[] looks = {"auto", "day", "night"};
+        final String[] lookNames = {"light by day, dark at night", "always light", "always dark"};
+        r.add(new SettingsView.Row(g, "Map look", lookNames[Math.max(0, java.util.Arrays.asList(looks).indexOf(a.prefs.str("mapStyle", "auto")))], new Runnable() {
+            @Override
+            public void run() {
+                int i = java.util.Arrays.asList(looks).indexOf(a.prefs.str("mapStyle", "auto"));
+                a.prefs.put("mapStyle", looks[(i + 1) % looks.length]);
+                a.hub.notifyIfChanged(true);
+            }
+        }));
         if (Features.on(a.prefs, "offlineMap")) r.add(new SettingsView.Row(g, "Map kept for no internet", Hindi.f("about %1$s MB of places you've seen; tap to clear",
                 String.valueOf(Tiles.sizeMb(a))), new Runnable() {
             @Override

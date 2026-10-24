@@ -26,9 +26,14 @@ final class Geo {
         return diff < 50;
     }
 
-    /** A Google Maps link to a point, which opens on any phone. */
+    /** A Google Maps link to a point: Google's own link format, which opens the Maps app on Android and iPhone. */
     static String mapsLink(double lat, double lon) {
-        return String.format(java.util.Locale.US, "https://maps.google.com/?q=%.5f,%.5f", lat, lon);
+        return String.format(java.util.Locale.US, "https://www.google.com/maps/search/?api=1&query=%.5f,%.5f", lat, lon);
+    }
+
+    /** Walking directions in Google Maps from wherever the phone is to a point: for walking back to the car. */
+    static String walkLink(double lat, double lon) {
+        return String.format(java.util.Locale.US, "https://www.google.com/maps/dir/?api=1&destination=%.5f,%.5f&travelmode=walking", lat, lon);
     }
 
     /** Google Maps directions from one spot to another: family see the route and time on their phone. */

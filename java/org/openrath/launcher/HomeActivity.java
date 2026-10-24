@@ -272,7 +272,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             Toast.makeText(this, Hindi.t("No parking spot saved yet"), Toast.LENGTH_SHORT).show();
             return;
         }
-        Qr.show(this, Hindi.t("Where the car is parked"), Geo.mapsLink(Drive.parkLat, Drive.parkLon),
+        Qr.show(this, Hindi.t("Where the car is parked"), Geo.walkLink(Drive.parkLat, Drive.parkLon),
                 Hindi.t("Scan with your phone to open the spot in Google Maps and walk back to the car."));
     }
 
