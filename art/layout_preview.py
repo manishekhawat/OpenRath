@@ -168,8 +168,8 @@ def glyph(c, name, x, y, size, ink, lw=2.0):
         if name == 'play':
             d.polygon(P(7, 4, 20, 12, 7, 20), fill=fill)
         elif name == 'pause':
-            d.rectangle(P(6, 4, 10, 20), fill=fill)
-            d.rectangle(P(14, 4, 18, 20), fill=fill)
+            d.rectangle(P(5.5, 4, 9.5, 20), fill=fill)
+            d.rectangle(P(14.5, 4, 18.5, 20), fill=fill)
         else:
             sgn = 1 if name == 'next' else -1
             m = lambda v: 12 + sgn * (v - 12)
@@ -518,8 +518,12 @@ def part_stats(c, p):
         yy = y + i * step
         L, d = c.draw()
         if it == 'temp':
-            d.arc([(x + 4) * S, (yy + 10) * S, (x + 44) * S, (yy + 50) * S], 150, 390, fill=col(ink), width=S * 3)
-            d.line([(x + 24) * S, (yy + 30) * S, (x + 34) * S, (yy + 18) * S], fill=col(ink), width=S * 3)
+            # a thermometer, as LayoutView draws it
+            d.rounded_rectangle([(x + 19) * S, (yy + 6) * S, (x + 29) * S, (yy + 40) * S], 5 * S, outline=col(ink), width=S * 3)
+            d.ellipse([(x + 16) * S, (yy + 35) * S, (x + 32) * S, (yy + 51) * S], fill=col(ink))
+            d.line([(x + 24) * S, (yy + 43) * S, (x + 24) * S, (yy + 20) * S], fill=col(ink), width=S * 3)
+            for my in (14, 22):
+                d.line([(x + 33) * S, (yy + my) * S, (x + 38) * S, (yy + my) * S], fill=col(ink), width=S * 2)
         elif it == 'altitude':
             d.line([(x + 4) * S, (yy + 44) * S, (x + 18) * S, (yy + 18) * S, (x + 28) * S, (yy + 32) * S, (x + 34) * S, (yy + 24) * S,
                     (x + 46) * S, (yy + 44) * S], fill=col(ink), width=S * 3, joint='curve')
