@@ -175,6 +175,7 @@
     <string name="ui_more_no_topway_radio_service" formatted="false">Topway रेडियो सेवा नहीं</string>
     <string name="ui_more_1_s_light_values_from_the_topway_radio_servi" formatted="false">Topway रेडियो सेवा से %1$s लाइट मान</string>
     <string name="ui_more_not_tried" formatted="false">आज़माया नहीं गया</string>
+    <string name="ui_more_download_the_english_voice_opens_google_s_vo" formatted="false">अंग्रेज़ी आवाज़ डाउनलोड करें (Google का आवाज़ डाउनलोड खुलेगा)</string>
     <string name="ui_more_tap_to_open" formatted="false">खोलने के लिए टैप करें</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">आपकी पहली ड्राइव के बाद यहाँ यात्राएँ दिखेंगी</string>
     <string name="ui_more_last_drive_1_s" formatted="false">पिछली ड्राइव, %1$s</string>

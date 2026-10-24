@@ -176,6 +176,7 @@
     <string name="ui_more_no_topway_radio_service" formatted="false">no Topway radio service</string>
     <string name="ui_more_1_s_light_values_from_the_topway_radio_servi" formatted="false">%1$s light values from the Topway radio service</string>
     <string name="ui_more_not_tried" formatted="false">not tried</string>
+    <string name="ui_more_download_the_english_voice_opens_google_s_vo" formatted="false">Download the English voice (opens Google\'s voice download)</string>
     <string name="ui_more_tap_to_open" formatted="false">Tap to open</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">Your trips show here after your first drive</string>
     <string name="ui_more_last_drive_1_s" formatted="false">LAST DRIVE, %1$s</string>
@@ -416,6 +417,7 @@
         <item>@string/ui_more_no_topway_radio_service</item>
         <item>@string/ui_more_1_s_light_values_from_the_topway_radio_servi</item>
         <item>@string/ui_more_not_tried</item>
+        <item>@string/ui_more_download_the_english_voice_opens_google_s_vo</item>
         <item>@string/ui_more_tap_to_open</item>
         <item>@string/ui_more_your_trips_show_here_after_your_first_drive</item>
         <item>@string/ui_more_last_drive_1_s</item>

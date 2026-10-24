@@ -189,7 +189,9 @@ final class Speak {
         try {
             if (tts.setLanguage(new Locale("en", "IN")) >= 0) return true;
             if (tts.setLanguage(Locale.UK) >= 0 || tts.setLanguage(Locale.US) >= 0) return true;
-            return tts.setLanguage(Locale.getDefault()) >= 0;
+            if (tts.setLanguage(Locale.getDefault()) >= 0) return true;
+            // a Hindi voice still reads English words, better than silence
+            return tts.setLanguage(new Locale("hi", "IN")) >= 0;
         } catch (Throwable e) {
             return false;
         }
@@ -466,6 +468,19 @@ final class Speak {
                 sayLong(c, Hindi.t("Hello. The OpenRath voice is working."));
             }
         });
+        if (google) {
+            // the voice's own download screen: the stereo's Android voice settings screen may crash
+            names.add(Hindi.t("Download the English voice (opens Google's voice download)"));
+            acts.add(new Runnable() {
+                @Override
+                public void run() {
+                    android.content.Intent i = new android.content.Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA).setPackage(GOOGLE_TTS);
+                    if (c.getPackageManager().resolveActivity(i, 0) == null) i = new android.content.Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                    open(c, i);
+                    noVoiceData = false;
+                }
+            });
+        }
         names.add(Hindi.t(google ? "Update Speech Services by Google" : "Get Speech Services by Google (speaks Hindi)"));
         acts.add(new Runnable() {
             @Override
@@ -533,6 +548,8 @@ final class Speak {
 
     /** An app's page in the Play Store, else on the web (F-Droid for eSpeak NG, which isn't on every store). */
     private static android.content.Intent store(Context c, String pkg) {
+        // eSpeak NG isn't on the Play Store: always its F-Droid page, which has the APK to download
+        if (ESPEAK.equals(pkg)) return new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://f-droid.org/packages/" + pkg + "/"));
         android.content.Intent i = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("market://details?id=" + pkg));
         if (c.getPackageManager().resolveActivity(i, 0) != null) return i;
         return new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(ESPEAK.equals(pkg)
