@@ -10,7 +10,10 @@
   body { font-family: sans-serif; color: #d8dce2; }
   .leaflet-control-attribution { background: rgba(0,0,0,.55) !important; color: #8a8f96 !important; font: 9px sans-serif; }
   .leaflet-control-attribution a { color: #8a8f96 !important; }
-  .osm-dark { filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9) grayscale(.6); }
+  .osm-dark { filter: invert(1) hue-rotate(180deg) brightness(.95) contrast(1.15) grayscale(.6); }
+  /* the grey streets are faint on their own: darker ground, brighter roads and names */
+  .esri-base { filter: brightness(1.5) contrast(1.5); }
+  .esri-labels { filter: brightness(1.3); }
   .car { width: 30px; height: 30px; }
   .car svg { width: 30px; height: 30px; filter: drop-shadow(0 0 4px rgba(255,255,255,.5)); transition: transform .4s; }
   .dest { width: 18px; height: 18px; border-radius: 50%; background: #d8dce2; border: 3px solid #0e0f12;
@@ -138,7 +141,7 @@
 <script src="qrcode.js"></script>
 <script src="leaflet-rotate.js"></script>
 <script>
-  // Dark grey streets from Esri (no key needed); if those tiles fail it switches to OpenStreetMap
+  // Dark grey streets from Esri (no key needed; given more contrast in .esri-base); if those tiles fail it switches to OpenStreetMap
   // with the colours inverted. Two fingers zoom and rotate. Places come from Photon (OpenStreetMap
   // search), routes and turn-by-turn steps from the OSRM demo server, and spoken prompts from the
   // unit's text-to-speech. Navigation can be handed to Google Maps instead (the "Guide in" switch).
@@ -146,10 +149,10 @@
                            bearing: 0 }).setView([28.61, 77.21], 15);
   var esri = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
   var base = L.tileLayer(esri + 'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19, maxNativeZoom: 16, attribution: 'Esri, HERE, Garmin, &copy; OpenStreetMap'
+    maxZoom: 19, maxNativeZoom: 16, className: 'esri-base', attribution: 'Esri, HERE, Garmin, &copy; OpenStreetMap'
   }).addTo(map);
   var labels = L.tileLayer(esri + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19, maxNativeZoom: 16
+    maxZoom: 19, maxNativeZoom: 16, className: 'esri-labels'
   }).addTo(map);
   var errors = 0, loaded = 0, fallback = false;
   base.on('tileload', function () { loaded++; });

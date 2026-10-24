@@ -41,7 +41,20 @@ public class HomeActivity extends Activity implements Cards.Host {
         turn();
         hub = new Hub(this, prefs);
         dash = new Dashboard(this);
-        root = new android.widget.FrameLayout(this);
+        root = new android.widget.FrameLayout(this) {
+            // a full-screen page (Settings, a menu) coming or going: the floating mic hides or comes back
+            @Override
+            public void onViewAdded(View v) {
+                super.onViewAdded(v);
+                micShown();
+            }
+
+            @Override
+            public void onViewRemoved(View v) {
+                super.onViewRemoved(v);
+                micShown();
+            }
+        };
         root.addView(dash, new android.widget.FrameLayout.LayoutParams(-1, -1));
         Edge.fit(root);
         setContentView(root);
@@ -529,7 +542,7 @@ public class HomeActivity extends Activity implements Cards.Host {
                 }
             });
             micView = mic;
-            root.addView(mic, at, new android.widget.FrameLayout.LayoutParams(Ui.px(64), Ui.px(64)));
+            root.addView(mic, at, new android.widget.FrameLayout.LayoutParams(Ui.px(Floaters.MIC), Ui.px(Floaters.MIC)));
             root.post(new Runnable() {
                 @Override
                 public void run() {
@@ -537,6 +550,25 @@ public class HomeActivity extends Activity implements Cards.Host {
                 }
             });
         }
+        micShown();
+    }
+
+    /**
+     * The floating mic stays out of the way: hidden while this page shows the map (which has its own
+     * mic) and while Settings or any other full-screen page or menu is open on top.
+     */
+    void micShown() {
+        if (micView == null || root == null) return;
+        boolean hide = settingsView != null || mapCard() != null;
+        if (layoutView == null && dash != null) {
+            for (int i = 0; i < Prefs.SLOTS; i++) if (Prefs.MAP.equals(prefs.slot(i))) hide = true;
+        }
+        for (int i = root.indexOfChild(micView) + 1; i > 0 && i < root.getChildCount() && !hide; i++) {
+            View v = root.getChildAt(i);
+            android.view.ViewGroup.LayoutParams lp = v.getLayoutParams();
+            if (v != dimmer && v.getVisibility() == View.VISIBLE && lp != null && lp.width == -1 && lp.height == -1) hide = true;
+        }
+        micView.setVisibility(hide ? View.GONE : View.VISIBLE);
     }
 
     // ------------------------------------------------------------------ night dimming and reverse
@@ -1079,6 +1111,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         if (settingsView == null) return;
         root.removeView(settingsView);
         settingsView = null;
+        micShown();
         ownerUnlocked = false;
         passenger = false;
         hub.notifyIfChanged(true);
