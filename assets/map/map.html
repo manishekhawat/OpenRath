@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://a.basemaps.cartocdn.com https://b.basemaps.cartocdn.com https://c.basemaps.cartocdn.com https://d.basemaps.cartocdn.com https://server.arcgisonline.com https://tile.openstreetmap.org; connect-src 'self' https://photon.komoot.io https://nominatim.openstreetmap.org https://router.project-osrm.org https://routing.openstreetmap.de https://overpass-api.de https://api.open-meteo.com; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://server.arcgisonline.com https://tile.openstreetmap.org; connect-src 'self' https://photon.komoot.io https://nominatim.openstreetmap.org https://router.project-osrm.org https://routing.openstreetmap.de https://overpass-api.de https://api.open-meteo.com; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="stylesheet" href="leaflet.css">
 <style>
   /* Colours in the style of Google Maps: white panels by day, dark grey at night (setStyle) */
@@ -18,8 +18,6 @@
   body.night .leaflet-control-attribution { background: rgba(0,0,0,.55) !important; color: #9aa0a6 !important; }
   .leaflet-control-attribution a { color: inherit !important; }
   .osm-dark { filter: invert(1) hue-rotate(180deg) brightness(.95) contrast(1.15) grayscale(.6); }
-  /* the night streets are CARTO's dark map, tinted towards Google's blue-grey night map with clearer roads */
-  .night-tiles { filter: sepia(.35) hue-rotate(180deg) saturate(1.6) brightness(1.35) contrast(1.15); }
   .esri-base { filter: brightness(1.5) contrast(1.5); }
   .esri-labels { filter: brightness(1.3); }
   /* where you are: Google's blue dot with a white ring, and a beam showing the way the car points */
@@ -154,45 +152,58 @@
 <script src="qrcode.js"></script>
 <script src="leaflet-rotate.js"></script>
 <script>
-  // Streets in the style of Google Maps from CARTO (no key needed): Voyager by day, the dark map tinted
-  // blue-grey at night; setStyle swaps them. If CARTO's tiles fail it switches to Esri's grey streets,
-  // then to OpenStreetMap. Two fingers zoom and rotate. Places come from Photon (OpenStreetMap
-  // search), routes and turn-by-turn steps from the OSRM demo server, and spoken prompts from the
-  // unit's text-to-speech. Navigation can be handed to Google Maps instead (the "Guide in" switch).
+  // Streets in the style of Google Maps from Esri (no key needed): World Street Map by day (white
+  // roads, beige land, blue water), the dark grey canvas with its labels at night; setStyle swaps
+  // them. CARTO is not used: it now draws "API key required" on tiles fetched by an app. If Esri's
+  // tiles fail it switches to OpenStreetMap (darkened at night). Two fingers zoom and rotate. Places
+  // come from Photon (OpenStreetMap search), routes and turn-by-turn steps from the OSRM demo server,
+  // and spoken prompts from the unit's text-to-speech. Navigation can be handed to Google Maps
+  // instead (the "Guide in" switch).
   var map = L.map('map', { zoomControl: false, rotate: true, touchRotate: true, rotateControl: false,
                            bearing: 0 }).setView([28.61, 77.21], 15);
-  var CARTO = 'https://{s}.basemaps.cartocdn.com/rastertiles/';
-  var ATTR = '&copy; OpenStreetMap contributors &copy; CARTO';
-  var style = 'day', base = null, errors = 0, loaded = 0, fallback = false;
-  function cartoLayer(night) {
-    return L.tileLayer(night ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png' : CARTO + 'voyager/{z}/{x}/{y}.png', {
-      maxZoom: 20, maxNativeZoom: 19, subdomains: 'abcd', className: night ? 'night-tiles' : '', attribution: ATTR });
+  var ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+  var ATTR = 'Esri, HERE, Garmin, &copy; OpenStreetMap contributors';
+  var style = 'day', base = null, labels = null, errors = 0, loaded = 0, fallback = false;
+  function esriLayers(night) {
+    if (!night) return [L.tileLayer(ESRI + 'World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 20, maxNativeZoom: 18, attribution: ATTR })];
+    return [L.tileLayer(ESRI + 'Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 20, maxNativeZoom: 16, className: 'esri-base', attribution: ATTR }),
+      L.tileLayer(ESRI + 'Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 20, maxNativeZoom: 16, className: 'esri-labels' })];
+  }
+  function osmLayer(night) {
+    return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 20, maxNativeZoom: 19, className: night ? 'osm-dark' : '', attribution: '&copy; OpenStreetMap contributors' });
   }
   function useTiles() {
     if (base) map.removeLayer(base);
-    base = cartoLayer(style === 'night');
+    if (labels) map.removeLayer(labels);
+    labels = null;
+    var night = style === 'night';
+    if (fallback) {
+      base = osmLayer(night).addTo(map);
+      return;
+    }
+    var ls = esriLayers(night);
+    base = ls[0];
     base.on('tileload', function () { loaded++; });
     base.on('tileerror', function () {
       errors++;
       if (!fallback && errors >= 4 && loaded === 0) {
         fallback = true;
-        map.removeLayer(base);
-        var esri = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
-        base = L.tileLayer(esri + 'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-          maxZoom: 19, maxNativeZoom: 16, className: 'esri-base', attribution: 'Esri, HERE, Garmin, &copy; OpenStreetMap' }).addTo(map);
-        L.tileLayer(esri + 'World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
-          maxZoom: 19, maxNativeZoom: 16, className: 'esri-labels' }).addTo(map);
-        document.body.classList.add('night');
+        useTiles();
       }
     });
     base.addTo(map);
+    if (ls[1]) labels = ls[1].addTo(map);
   }
   useTiles();
   // "day" or "night", from the Android side (the headlights, else sunset)
   function setStyle(s) {
     if (s !== 'day' && s !== 'night') return;
     document.body.classList.toggle('night', s === 'night');
-    if (s === style || fallback) return;
+    if (s === style) return;
     style = s;
     useTiles();
     if (line) { line.setStyle({ color: ROUTE[style][0] }); casing.setStyle({ color: ROUTE[style][1] }); }

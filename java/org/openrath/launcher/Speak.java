@@ -64,13 +64,37 @@ final class Speak {
         speak(text, flush, longOne);
     }
 
+    /** Engines already tried since the last time the voice worked or was retried. */
+    private static final List<String> tried = new ArrayList<>();
+
     private static void start() {
-        tts = new TextToSpeech(app, new TextToSpeech.OnInitListener() {
+        start(null);
+    }
+
+    /**
+     * Start the unit's chosen engine (null), or a named one. When an engine doesn't start, the next
+     * installed one is tried before giving up: a stereo whose Google voice is disabled or broken may
+     * still have its own, or eSpeak NG.
+     */
+    private static void start(final String engine) {
+        if (engine == null) tried.clear();
+        else tried.add(engine);
+        TextToSpeech.OnInitListener l = new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 synchronized (Speak.class) {
                     ready = status == TextToSpeech.SUCCESS;
                     if (!ready) {
+                        String next = nextEngine(engines(app), tried, engine == null ? defaultEngine() : null);
+                        if (next != null) {
+                            try {
+                                tts.shutdown();
+                            } catch (Throwable ignored) {
+                                // that engine already failed
+                            }
+                            start(next);
+                            return;
+                        }
                         failed = true;
                         failedAt = System.currentTimeMillis();
                         if (!waiting.isEmpty()) tell(NO_VOICE);
@@ -105,7 +129,23 @@ final class Speak {
                     waiting.clear();
                 }
             }
-        });
+        };
+        tts = engine == null ? new TextToSpeech(app, l) : new TextToSpeech(app, l, engine);
+    }
+
+    /** The engine Android uses by default, or null. */
+    private static String defaultEngine() {
+        try {
+            return android.provider.Settings.Secure.getString(app.getContentResolver(), "tts_default_synth");
+        } catch (Throwable e) {
+            return null;
+        }
+    }
+
+    /** The next engine to try after the default one (`failedDefault`) and the ones in `tried` didn't start, or null. Pure, for the tests. */
+    static String nextEngine(List<String> installed, List<String> tried, String failedDefault) {
+        for (String e : installed) if (!tried.contains(e) && !e.equals(failedDefault)) return e;
+        return null;
     }
 
     private static void speak(String text, boolean flush, boolean longOne) {
@@ -253,8 +293,8 @@ final class Speak {
             }
         });
         new android.app.AlertDialog.Builder(c, android.R.style.Theme_Material_Dialog_Alert)
-                .setTitle(Hindi.t("Spoken voice"))
-                .setMessage(Hindi.t(state(!engines(c).isEmpty(), ready, failed)))
+                // a dialog with a message hides its list, so the state goes under the title
+                .setCustomTitle(title(c, Hindi.t("Spoken voice"), Hindi.t(state(!engines(c).isEmpty(), ready, failed))))
                 .setItems(names.toArray(new String[0]), new android.content.DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(android.content.DialogInterface d, int w) {
@@ -262,6 +302,25 @@ final class Speak {
                     }
                 })
                 .setNegativeButton(Hindi.t("Close"), null).show();
+    }
+
+    private static android.view.View title(Context c, String title, String text) {
+        float d = c.getResources().getDisplayMetrics().density;
+        android.widget.LinearLayout box = new android.widget.LinearLayout(c);
+        box.setOrientation(android.widget.LinearLayout.VERTICAL);
+        box.setPadding((int) (24 * d), (int) (20 * d), (int) (24 * d), (int) (8 * d));
+        android.widget.TextView t = new android.widget.TextView(c);
+        t.setText(title);
+        t.setTextSize(22);
+        t.setTextColor(0xFFFFFFFF);
+        box.addView(t);
+        android.widget.TextView m = new android.widget.TextView(c);
+        m.setText(text);
+        m.setTextSize(17);
+        m.setTextColor(0xCCFFFFFF);
+        m.setPadding(0, (int) (10 * d), 0, 0);
+        box.addView(m);
+        return box;
     }
 
     /** eSpeak NG's package: a free, open-source voice that works without Google's services. */

@@ -83,7 +83,7 @@ F-Droid marks apps that rely on services or software that aren't free. These app
 - **NonFreeNet** (uses non-free network services):
   - The News box reads Google News RSS feeds (news.google.com).
   - Voice search and voice commands use the unit's speech recogniser, which on most units is Google's.
-  - The map's tiles come from CARTO (basemaps.cartocdn.com, OpenStreetMap data). Esri (server.arcgisonline.com) and then OpenStreetMap tiles are used when CARTO's fail.
+  - The map's tiles come from Esri (server.arcgisonline.com: World Street Map by day, the dark grey canvas at night). OpenStreetMap tiles are used when Esri's fail.
   - The place name in the weather box comes from BigDataCloud when the unit has no built-in geocoder.
 - **Possibly NonFreeAdd** (promotes non-free add-ons): when the unit has no text-to-speech voice, OpenRath offers to open "Speech Services by Google" in the Play Store, and guidance can be handed to Google Maps. Both are optional. F-Droid reviewers may or may not count them.
 

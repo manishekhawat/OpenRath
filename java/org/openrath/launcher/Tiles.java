@@ -33,8 +33,7 @@ final class Tiles {
     /** True for a map tile address this keeps. */
     static boolean isTile(String url) {
         return url.startsWith("https://server.arcgisonline.com/") && url.contains("/tile/")
-                || url.startsWith("https://tile.openstreetmap.org/")
-                || url.startsWith("https://") && url.contains(".basemaps.cartocdn.com/");
+                || url.startsWith("https://tile.openstreetmap.org/");
     }
 
     /** The kept file for a tile address: its host and path, made safe as a file name. */
