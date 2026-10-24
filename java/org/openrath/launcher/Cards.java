@@ -339,6 +339,20 @@ final class Cards {
 
         @Override
         void fit(int w, int h) {
+            this.w = w;
+            this.h = h;
+            if (wide(w, h, Ui.k)) {
+                fitWide(w, h);
+                return;
+            }
+            col.setOrientation(LinearLayout.VERTICAL);
+            facts.setOrientation(LinearLayout.HORIZONTAL);
+            days.setOrientation(LinearLayout.HORIZONTAL);
+            for (int i = 0; i < 3; i++) facts.getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1));
+            for (int i = 0; i < 2; i++) {
+                ((LinearLayout) days.getChildAt(i)).setGravity(Gravity.CENTER_VERTICAL | (i == 0 ? Gravity.LEFT : Gravity.RIGHT));
+                days.getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1));
+            }
             float s = Math.min(1.4f, Math.min(h / (134f * Ui.k), w / (300f * Ui.k)));
             float sw = Math.min(1.4f, w / (300f * Ui.k));   // the rows below the reading scale with the width
             int m = Ui.px(20 * Math.min(s, 1));
@@ -382,8 +396,60 @@ final class Cards {
             days.setLayoutParams(new LinearLayout.LayoutParams(-1, spread ? 0 : dayH, spread ? 1 : 0));
             hours.setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 1));
             col.setLayoutParams(at(-1, -1, Gravity.TOP, m, Math.round(m * 0.6f), m, Math.round(m * 0.6f)));
-            this.w = w;
-            this.h = h;
+        }
+
+        /** A wide, low box (a strip across the page): too low for rows, so the facts and the next two days stand beside the reading. Pure, for the tests. */
+        static boolean wide(int w, int h, float k) {
+            return w >= 2.6f * h && w >= 420 * k;
+        }
+
+        private void fitWide(int w, int h) {
+            col.setOrientation(LinearLayout.HORIZONTAL);
+            facts.setOrientation(LinearLayout.VERTICAL);
+            days.setOrientation(LinearLayout.VERTICAL);
+            float s = Math.min(1.4f, Math.min(h / (110f * Ui.k), w / (700f * Ui.k)));
+            int m = Ui.px(16 * Math.min(s, 1));
+            int inner = h - 2 * m;
+            int is = Ui.px(64 * s);
+            icon.setLayoutParams(new LinearLayout.LayoutParams(is, is));
+            temp.setTextSize(0, 48 * Ui.k * s);
+            ((LinearLayout.LayoutParams) temp.getLayoutParams()).leftMargin = Ui.px(12 * s);
+            desc.setTextSize(0, 17 * Ui.k * s);
+            place.setTextSize(0, 14 * Ui.k * s);
+            rain.setTextSize(0, 13 * Ui.k * s);
+            int part = (w - 2 * m) / 10;
+            for (TextView t : new TextView[]{desc, place, rain}) t.setMaxWidth(2 * part);
+            // three facts one under the other, two days one under the other
+            float fs = Math.min(1.5f, inner / (3 * 28f * Ui.k));
+            int gs = Ui.px(22 * fs);
+            for (int i = 0; i < 3; i++) {
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(gs, gs);
+                lp.rightMargin = Ui.px(8 * fs);
+                factIcon[i].setLayoutParams(lp);
+                factText[i].setTextSize(0, 16 * Ui.k * fs);
+                ((LinearLayout) facts.getChildAt(i)).setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+                facts.getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 1));
+            }
+            float ds = Math.min(1.5f, inner / (2 * 40f * Ui.k));
+            int di = Ui.px(32 * ds);
+            for (int i = 0; i < 2; i++) {
+                dayName[i].setTextSize(0, 16 * Ui.k * ds);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(di, di);
+                lp.leftMargin = lp.rightMargin = Ui.px(8 * ds);
+                dayIcon[i].setLayoutParams(lp);
+                dayTemp[i].setTextSize(0, 17 * Ui.k * ds);
+                ((LinearLayout) days.getChildAt(i)).setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+                days.getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 1));
+            }
+            facts.setVisibility(VISIBLE);
+            days.setVisibility(hasDays ? VISIBLE : GONE);
+            hours.setVisibility(GONE);
+            top.setLayoutParams(new LinearLayout.LayoutParams(0, -1, 5));
+            LinearLayout.LayoutParams fl = new LinearLayout.LayoutParams(0, -1, 2.2f);
+            fl.leftMargin = Ui.px(24 * s);
+            facts.setLayoutParams(fl);
+            days.setLayoutParams(new LinearLayout.LayoutParams(0, -1, 2.8f));
+            col.setLayoutParams(at(-1, -1, Gravity.TOP, m, m, m, m));
         }
 
         boolean hasDays;

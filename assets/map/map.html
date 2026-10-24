@@ -18,8 +18,7 @@
   body.night .leaflet-control-attribution { background: rgba(0,0,0,.55) !important; color: #9aa0a6 !important; }
   .leaflet-control-attribution a { color: inherit !important; }
   .osm-dark { filter: invert(1) hue-rotate(180deg) brightness(.95) contrast(1.15) grayscale(.6); }
-  .esri-base { filter: brightness(1.5) contrast(1.5); }
-  .esri-labels { filter: brightness(1.3); }
+  .esri-night { filter: invert(.9) hue-rotate(180deg) saturate(.75) brightness(.9) contrast(.95); }
   /* where you are: Google's blue dot with a white ring, and a beam showing the way the car points */
   .car { width: 34px; height: 34px; }
   .car svg { width: 34px; height: 34px; filter: drop-shadow(0 1px 3px rgba(0,0,0,.45)); transition: transform .4s; }
@@ -153,7 +152,7 @@
 <script src="leaflet-rotate.js"></script>
 <script>
   // Streets in the style of Google Maps from Esri (no key needed): World Street Map by day (white
-  // roads, beige land, blue water), the dark grey canvas with its labels at night; setStyle swaps
+  // roads, beige land, blue water), the same map darkened at night; setStyle swaps
   // them. CARTO is not used: it now draws "API key required" on tiles fetched by an app. If Esri's
   // tiles fail it switches to OpenStreetMap (darkened at night). Two fingers zoom and rotate. Places
   // come from Photon (OpenStreetMap search), routes and turn-by-turn steps from the OSRM demo server,
@@ -165,12 +164,9 @@
   var ATTR = 'Esri, HERE, Garmin, &copy; OpenStreetMap contributors';
   var style = 'day', base = null, labels = null, errors = 0, loaded = 0, fallback = false;
   function esriLayers(night) {
-    if (!night) return [L.tileLayer(ESRI + 'World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 20, maxNativeZoom: 18, attribution: ATTR })];
-    return [L.tileLayer(ESRI + 'Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 20, maxNativeZoom: 16, className: 'esri-base', attribution: ATTR }),
-      L.tileLayer(ESRI + 'Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 20, maxNativeZoom: 16, className: 'esri-labels' })];
+    // at night the same street map, darkened the way Google's night map is: hues kept, light turned down
+    return [L.tileLayer(ESRI + 'World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 20, maxNativeZoom: 18, className: night ? 'esri-night' : '', attribution: ATTR })];
   }
   function osmLayer(night) {
     return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -664,7 +660,7 @@
       q.addData('https://www.google.com/maps/dir/?api=1&destination=' + park.lat.toFixed(5) + ',' + park.lon.toFixed(5) + '&travelmode=walking');
       q.make();
       var h = $('parkp').clientHeight - 24;
-      var cell = Math.max(2, Math.floor(Math.min(h, 240) / (q.getModuleCount() + 8)));
+      var cell = Math.max(3, Math.floor(Math.min(h, 420) / (q.getModuleCount() + 8)));
       $('qr').innerHTML = q.createImgTag(cell, cell * 4);
       $('qr').style.display = h > 90 ? '' : 'none';
     } catch (e) { $('qr').style.display = 'none'; }

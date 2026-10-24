@@ -1331,6 +1331,8 @@ public final class Tests {
                 Speak.nextEngine(java.util.Arrays.asList("com.google.android.tts", "com.tw.tts"), new java.util.ArrayList<String>(), "com.google.android.tts"));
         eq("voice: nothing left to try", null,
                 Speak.nextEngine(java.util.Arrays.asList("com.google.android.tts", "com.tw.tts"), java.util.Arrays.asList("com.tw.tts"), "com.google.android.tts"));
+        check("weather: a wide low strip puts the facts and days beside the reading", Cards.WeatherCard.wide(1200, 300, 1f));
+        check("weather: a normal box keeps rows", !Cards.WeatherCard.wide(600, 400, 1f));
         check("voice: none installed says so", Speak.state(false, false, false).startsWith("No voice engine"));
         check("voice: broken engine says how to fix", Speak.state(true, false, true).contains("doesn't start"));
         eq("voice: working", "The voice is working.", Speak.state(true, true, false));
