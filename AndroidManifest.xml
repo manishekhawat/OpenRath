@@ -37,12 +37,16 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!-- wireless Android Auto: its own Wi-Fi Direct network for the phone -->
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation"/>
     <!-- OpenRath's own broadcasts (key actions, trip and player updates) are sent and received with
          this permission; signature level, so no other app can send them -->
     <permission android:name="org.openrath.launcher.permission.OWN_BROADCAST" android:protectionLevel="signature"/>
     <uses-permission android:name="org.openrath.launcher.permission.OWN_BROADCAST"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.telephony" android:required="false"/>
+    <uses-feature android:name="android.hardware.usb.host" android:required="false"/>
     <application android:name="org.openrath.launcher.App" android:largeHeap="true" android:allowBackup="false" android:icon="@mipmap/ic_launcher" android:label="@string/app_name"
         android:hardwareAccelerated="true" android:requestLegacyExternalStorage="true"
         android:networkSecurityConfig="@xml/network_security_config">
@@ -60,6 +64,19 @@
         </activity>
         <activity android:name="org.openrath.launcher.AppsActivity" android:label="All apps" android:exported="false"
             android:theme="@android:style/Theme.Material.NoActionBar"/>
+        <!-- Android Auto built in (AGPL-3.0, see NOTICE.md): the phone's picture. AaUsbStart opens it when
+             a phone is plugged in; it is off until the androidAuto switch turns it on (AaUsb.plugStart). -->
+        <activity android:name="org.openrath.launcher.AaActivity" android:label="Android Auto" android:exported="false"
+            android:theme="@android:style/Theme.Material.NoActionBar" android:launchMode="singleTop"
+            android:excludeFromRecents="true"
+            android:configChanges="uiMode|orientation|screenSize|screenLayout|keyboardHidden|keyboard|navigation"/>
+        <activity-alias android:name="org.openrath.launcher.AaUsbStart" android:targetActivity="org.openrath.launcher.AaActivity"
+            android:label="Android Auto" android:exported="true" android:enabled="false">
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"/>
+            </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" android:resource="@xml/aa_usb"/>
+        </activity-alias>
         <service android:name="org.openrath.launcher.Player" android:exported="false" android:foregroundServiceType="mediaPlayback"/>
         <service android:name="org.openrath.launcher.Drive" android:exported="false" android:foregroundServiceType="location"/>
         <service android:name="org.openrath.launcher.MediaListener" android:label="@string/app_name"

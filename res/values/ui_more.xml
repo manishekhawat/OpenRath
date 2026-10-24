@@ -216,6 +216,22 @@
     <string name="ui_more_unknown_artist" formatted="false">Unknown artist</string>
     <string name="ui_more_other_files" formatted="false">Other files</string>
     <string name="ui_more_tap_to_choose_from_its_library" formatted="false">Tap to choose from its library</string>
+    <string name="ui_more_no_head_unit_certificate_install_headunit_re" formatted="false">No head unit certificate: install Headunit Revived, or copy its two files to OpenRath\'s androidauto folder</string>
+    <string name="ui_more_the_phone_left_android_auto" formatted="false">The phone left Android Auto</string>
+    <string name="ui_more_connecting_to_the_phone" formatted="false">Connecting to the phone…</string>
+    <string name="ui_more_starting_android_auto_on_the_phone" formatted="false">Starting Android Auto on the phone…</string>
+    <string name="ui_more_the_phone_didn_t_accept_this_head_unit_s_cer" formatted="false">The phone didn\'t accept this head unit\'s certificate</string>
+    <string name="ui_more_the_phone_ended_android_auto" formatted="false">The phone ended Android Auto</string>
+    <string name="ui_more_android_auto_ended" formatted="false">Android Auto ended</string>
+    <string name="ui_more_this_unit_can_t_show_the_phone_s_picture" formatted="false">This unit can\'t show the phone\'s picture</string>
+    <string name="ui_more_android_auto_needs_a_head_unit_certificate_w" formatted="false">Android Auto needs a head unit certificate, which OpenRath can\'t include. Install the Headunit Revived app on this unit (OpenRath uses its certificate), or copy cert.pem and privkey.pem into the androidauto folder inside OpenRath\'s folder.</string>
+    <string name="ui_more_plug_your_phone_into_the_unit_s_usb_port_to_" formatted="false">Plug your phone into the unit\'s USB port to start Android Auto</string>
+    <string name="ui_more_android_auto_built_in" formatted="false">Android Auto built in</string>
+    <string name="ui_more_plug_in_your_phone_with_its_cable_and_androi" formatted="false">Plug in your phone with its cable and Android Auto shows on this screen; needs Headunit Revived installed for its certificate</string>
+    <string name="ui_more_the_phone_was_unplugged" formatted="false">The phone was unplugged</string>
+    <string name="ui_more_wireless_android_auto" formatted="false">Wireless Android Auto</string>
+    <string name="ui_more_a_paired_phone_starts_android_auto_by_itself" formatted="false">A paired phone starts Android Auto by itself over Bluetooth and Wi-Fi, without the cable; needs Android Auto built in</string>
+    <string name="ui_more_or_keep_bluetooth_on_a_paired_phone_with_wir" formatted="false">Or keep Bluetooth on: a paired phone with wireless Android Auto connects by itself in a minute</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -431,5 +447,21 @@
         <item>@string/ui_more_unknown_artist</item>
         <item>@string/ui_more_other_files</item>
         <item>@string/ui_more_tap_to_choose_from_its_library</item>
+        <item>@string/ui_more_no_head_unit_certificate_install_headunit_re</item>
+        <item>@string/ui_more_the_phone_left_android_auto</item>
+        <item>@string/ui_more_connecting_to_the_phone</item>
+        <item>@string/ui_more_starting_android_auto_on_the_phone</item>
+        <item>@string/ui_more_the_phone_didn_t_accept_this_head_unit_s_cer</item>
+        <item>@string/ui_more_the_phone_ended_android_auto</item>
+        <item>@string/ui_more_android_auto_ended</item>
+        <item>@string/ui_more_this_unit_can_t_show_the_phone_s_picture</item>
+        <item>@string/ui_more_android_auto_needs_a_head_unit_certificate_w</item>
+        <item>@string/ui_more_plug_your_phone_into_the_unit_s_usb_port_to_</item>
+        <item>@string/ui_more_android_auto_built_in</item>
+        <item>@string/ui_more_plug_in_your_phone_with_its_cable_and_androi</item>
+        <item>@string/ui_more_the_phone_was_unplugged</item>
+        <item>@string/ui_more_wireless_android_auto</item>
+        <item>@string/ui_more_a_paired_phone_starts_android_auto_by_itself</item>
+        <item>@string/ui_more_or_keep_bluetooth_on_a_paired_phone_with_wir</item>
     </string-array>
 </resources>

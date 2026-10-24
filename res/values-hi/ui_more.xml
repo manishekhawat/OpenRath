@@ -215,4 +215,20 @@
     <string name="ui_more_unknown_artist" formatted="false">अज्ञात कलाकार</string>
     <string name="ui_more_other_files" formatted="false">अन्य फ़ाइलें</string>
     <string name="ui_more_tap_to_choose_from_its_library" formatted="false">इसकी लाइब्रेरी से चुनने के लिए टैप करें</string>
+    <string name="ui_more_no_head_unit_certificate_install_headunit_re" formatted="false">हेड यूनिट का सर्टिफ़िकेट नहीं है: Headunit Revived इंस्टॉल करें, या उसकी दो फ़ाइलें OpenRath के androidauto फ़ोल्डर में डालें</string>
+    <string name="ui_more_the_phone_left_android_auto" formatted="false">फ़ोन Android Auto से हट गया</string>
+    <string name="ui_more_connecting_to_the_phone" formatted="false">फ़ोन से जुड़ रहे हैं…</string>
+    <string name="ui_more_starting_android_auto_on_the_phone" formatted="false">फ़ोन पर Android Auto शुरू हो रहा है…</string>
+    <string name="ui_more_the_phone_didn_t_accept_this_head_unit_s_cer" formatted="false">फ़ोन ने इस हेड यूनिट का सर्टिफ़िकेट नहीं माना</string>
+    <string name="ui_more_the_phone_ended_android_auto" formatted="false">फ़ोन ने Android Auto बंद कर दिया</string>
+    <string name="ui_more_android_auto_ended" formatted="false">Android Auto बंद हुआ</string>
+    <string name="ui_more_this_unit_can_t_show_the_phone_s_picture" formatted="false">यह यूनिट फ़ोन की स्क्रीन नहीं दिखा सकता</string>
+    <string name="ui_more_android_auto_needs_a_head_unit_certificate_w" formatted="false">Android Auto को हेड यूनिट का सर्टिफ़िकेट चाहिए, जो OpenRath साथ नहीं दे सकता। इस यूनिट पर Headunit Revived ऐप इंस्टॉल करें (OpenRath उसका सर्टिफ़िकेट इस्तेमाल करेगा), या cert.pem और privkey.pem को OpenRath फ़ोल्डर के अंदर androidauto फ़ोल्डर में कॉपी करें।</string>
+    <string name="ui_more_plug_your_phone_into_the_unit_s_usb_port_to_" formatted="false">Android Auto शुरू करने के लिए फ़ोन को यूनिट के USB पोर्ट में लगाएँ</string>
+    <string name="ui_more_android_auto_built_in" formatted="false">Android Auto, OpenRath में ही</string>
+    <string name="ui_more_plug_in_your_phone_with_its_cable_and_androi" formatted="false">फ़ोन को केबल से लगाएँ और Android Auto इसी स्क्रीन पर दिखेगा; सर्टिफ़िकेट के लिए Headunit Revived इंस्टॉल होना चाहिए</string>
+    <string name="ui_more_the_phone_was_unplugged" formatted="false">फ़ोन निकाल दिया गया</string>
+    <string name="ui_more_wireless_android_auto" formatted="false">बिना तार Android Auto</string>
+    <string name="ui_more_a_paired_phone_starts_android_auto_by_itself" formatted="false">पेयर किया फ़ोन बिना केबल के, Bluetooth और Wi-Fi से अपने आप Android Auto शुरू करता है; Android Auto, OpenRath में ही चालू होना चाहिए</string>
+    <string name="ui_more_or_keep_bluetooth_on_a_paired_phone_with_wir" formatted="false">या Bluetooth चालू रखें: बिना तार Android Auto वाला पेयर किया फ़ोन एक मिनट में अपने आप जुड़ जाएगा</string>
 </resources>

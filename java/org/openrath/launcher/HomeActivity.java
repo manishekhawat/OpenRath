@@ -83,6 +83,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         sys.addAction(Intent.ACTION_SCREEN_ON);   // back from the stereo's sleep: check at once (Wake)
         Compat.fromSystem(this, events, sys);
         PhoneLink.listen(this);
+        AaUsb.listen(this);   // a phone plugged in starts Android Auto (when switched on)
         build();
         root.post(new Runnable() {
             @Override
@@ -1332,6 +1333,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         Reports.maybeSend(versionName());
         Updates.resumed(this);
         Wake.watch(this);
+        AaUsb.check(this, false);
         highwayStrip();
         if (Setup.showing() != null) Setup.showing().render();   // back from Android's settings: show what changed
         // once per return to the dashboard: a quick back-and-forth doesn't queue them up again

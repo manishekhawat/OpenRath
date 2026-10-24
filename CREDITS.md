@@ -13,6 +13,7 @@ Nothing from the projects below is copied into OpenRath unless NOTICE.md says so
 | MTCD-E_Radio-app | The FM radio on MTCD/Joying stereos through CarManager, used by the MTCD add-on (`MtcUnit.java`) |
 | MtcDialer | Bluetooth calls on MTCD stereos through the android.microntek.mtcser service |
 | mtccanbus-decompiled (github.com/xbenjii/mtccanbus-decompiled) | How MTC stereos talk to the car |
+| headunit by Michael Reid (github.com/mikereidis/headunit) and Headunit Revived / Open Headunit by Andre Rinas (github.com/andreknieriem/headunit-revived), AGPL-3.0 | The Android Auto protocol: the USB accessory switch, framing, TLS handshake, service list, video, sound and touch. OpenRath's built-in Android Auto (`Aa*.java`) is derived from their code, so it keeps their licence (see NOTICE.md) |
 | Femto Car Launcher (github.com/seijikohara/femto-car-launcher, Apache-2.0) | The app drawer, the status in the dock, saved places, smoothed speed, the calendar box, video when parked, hourly weather and updates from GitHub |
 
 ## Apps that inspired features
