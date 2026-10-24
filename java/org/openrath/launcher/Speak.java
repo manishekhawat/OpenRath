@@ -137,20 +137,24 @@ final class Speak {
                     tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                         @Override
                         public void onStart(String id) {
-                            if (Features.on(prefs, "duck")) Duck.start(app);
+                            if (!id.startsWith("f") && Features.on(prefs, "duck")) Duck.start(app);
                         }
 
                         @Override
                         public void onDone(String id) {
+                            if (id.startsWith("f")) {
+                                made(id, true);
+                                return;
+                            }
                             heard = true;
                             spokeFail = false;
                             Duck.end(app);
-                            if (id.equals(lastId)) finishLong();
+                            if (id.equals(lastId) || ("f" + id).equals(lastId)) finishLong();
                         }
 
                         @Override
                         public void onStop(String id, boolean interrupted) {
-                            Duck.end(app);
+                            if (!id.startsWith("f")) Duck.end(app);
                         }
 
                         @Override
@@ -161,8 +165,11 @@ final class Speak {
 
                         @Override
                         public void onError(String id, int code) {
-                            Duck.end(app);
-                            finishLong();
+                            if (id.startsWith("f")) made(id, false);
+                            else {
+                                Duck.end(app);
+                                finishLong();
+                            }
                             if (heard) return;
                             spokeFail = true;
                             Diag.note("voice", new IllegalStateException("speak error " + code));
@@ -206,18 +213,151 @@ final class Speak {
         return null;
     }
 
+    /**
+     * Speech is made into sound files and played by OpenRath's own player, the way the online radio
+     * plays: on some stereos the voice engine's own sound never reaches the speakers (the engine
+     * says it spoke, nothing is heard), while the app's music does. Clips are {id, file, long, made}.
+     */
+    private static final List<Object[]> clips = new ArrayList<>();
+    private static android.media.MediaPlayer mp;
+    private static boolean ducked;
+
     private static void speak(String text, boolean flush, boolean longOne) {
-        tts.setAudioAttributes(new android.media.AudioAttributes.Builder()
-                .setUsage(longOne ? android.media.AudioAttributes.USAGE_MEDIA : android.media.AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
-                .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SPEECH).build());
-        if (flush) finishLong();
+        if (flush) {
+            stopClips();
+            finishLong();
+            try {
+                tts.stop();
+            } catch (Throwable ignored) {
+                // nothing was being made
+            }
+        }
         if (longOne) fmAside();
         List<String> parts = sentences(text, 380);
         for (int i = 0; i < parts.size(); i++) {
-            String id = (longOne ? "long" : "say") + (++seq);
+            String id = "f" + (longOne ? "long" : "say") + (++seq);
             if (longOne && i == parts.size() - 1) lastId = id;
-            tts.speak(parts.get(i), flush && i == 0 ? TextToSpeech.QUEUE_FLUSH : TextToSpeech.QUEUE_ADD, null, id);
+            java.io.File f = new java.io.File(app.getCacheDir(), "say-" + seq + ".wav");
+            clips.add(new Object[]{id, f, longOne, false});
+            int r;
+            try {
+                r = tts.synthesizeToFile(parts.get(i), null, f, id);
+            } catch (Throwable e) {
+                r = TextToSpeech.ERROR;
+            }
+            if (r != TextToSpeech.SUCCESS) {
+                // this engine can't make files: let it speak by itself
+                clips.remove(clips.size() - 1);
+                tts.setAudioAttributes(attrs(longOne));
+                tts.speak(parts.get(i), TextToSpeech.QUEUE_ADD, null, id.substring(1));
+            }
         }
+    }
+
+    private static android.media.AudioAttributes attrs(boolean longOne) {
+        return new android.media.AudioAttributes.Builder()
+                .setUsage(longOne ? android.media.AudioAttributes.USAGE_MEDIA : android.media.AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
+                .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SPEECH).build();
+    }
+
+    /** A clip was made (ok) or failed: play the next ones in order. */
+    private static void made(final String id, final boolean ok) {
+        main().post(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (Speak.class) {
+                    for (int i = 0; i < clips.size(); i++) {
+                        Object[] c = clips.get(i);
+                        if (!c[0].equals(id)) continue;
+                        if (ok) c[3] = true;
+                        else {
+                            clips.remove(i);
+                            ((java.io.File) c[1]).delete();
+                        }
+                        break;
+                    }
+                    playNext();
+                }
+            }
+        });
+    }
+
+    private static void playNext() {
+        if (mp != null) return;
+        if (clips.isEmpty() || !(Boolean) clips.get(0)[3]) {
+            if (clips.isEmpty()) {
+                if (ducked) Duck.end(app);
+                ducked = false;
+            }
+            return;
+        }
+        final Object[] c = clips.remove(0);
+        final java.io.File f = (java.io.File) c[1];
+        try {
+            mp = new android.media.MediaPlayer();
+            mp.setAudioAttributes(attrs((Boolean) c[2]));
+            mp.setDataSource(f.getPath());
+            mp.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(android.media.MediaPlayer p) {
+                    synchronized (Speak.class) {
+                        heard = true;
+                        spokeFail = false;
+                        done(p, f, c[0]);
+                    }
+                }
+            });
+            mp.setOnErrorListener(new android.media.MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(android.media.MediaPlayer p, int what, int extra) {
+                    synchronized (Speak.class) {
+                        Diag.note("voice", new IllegalStateException("clip play error " + what + "/" + extra));
+                        done(p, f, c[0]);
+                    }
+                    return true;
+                }
+            });
+            mp.prepare();
+            if (!ducked && Features.on(new Prefs(app), "duck")) {
+                Duck.start(app);
+                ducked = true;
+            }
+            mp.start();
+        } catch (Throwable e) {
+            Diag.note("voice clip", e);
+            if (mp != null) mp.release();
+            mp = null;
+            f.delete();
+            playNext();
+        }
+    }
+
+    private static void done(android.media.MediaPlayer p, java.io.File f, Object id) {
+        try {
+            p.release();
+        } catch (Throwable ignored) {
+            // already released
+        }
+        if (p == mp) mp = null;
+        f.delete();
+        if (String.valueOf(id).substring(1).equals(lastId) || String.valueOf(id).equals(lastId)) finishLong();
+        playNext();
+    }
+
+    private static void stopClips() {
+        for (Object[] c : clips) ((java.io.File) c[1]).delete();
+        clips.clear();
+        if (mp != null) {
+            try {
+                mp.stop();
+                mp.release();
+            } catch (Throwable ignored) {
+                // already done
+            }
+            mp = null;
+        }
+        if (ducked) Duck.end(app);
+        ducked = false;
     }
 
     /** Text in pieces of at most `max` characters, broken after sentences where possible. */
@@ -442,12 +582,13 @@ final class Speak {
 
     /** True while something is being said (or waits to be). */
     static synchronized boolean speaking() {
-        return !waiting.isEmpty() || tts != null && ready && tts.isSpeaking();
+        return !waiting.isEmpty() || mp != null || !clips.isEmpty() || tts != null && ready && tts.isSpeaking();
     }
 
     /** Stop talking now (the news box's Stop). */
     static synchronized void stop() {
         waiting.clear();
+        stopClips();
         if (tts != null && ready) tts.stop();
         finishLong();
     }

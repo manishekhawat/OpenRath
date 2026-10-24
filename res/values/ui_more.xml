@@ -172,6 +172,10 @@
     <string name="ui_more_the_voice_engine_has_started_tap_test_the_vo" formatted="false">The voice engine has started. Tap Test the voice and listen.</string>
     <string name="ui_more_the_voice_engine_has_no_english_voice_instal2" formatted="false">The voice engine has no English voice installed. Settings &gt; Map and navigation &gt; Spoken voice &gt; Android\'s voice settings downloads one, or get eSpeak NG.</string>
     <string name="ui_more_the_voice_engine_started_but_couldn_t_speak_" formatted="false">The voice engine started but couldn\'t speak. Settings &gt; Map and navigation &gt; Spoken voice &gt; Repair it, or get eSpeak NG.</string>
+    <string name="ui_more_1_s_settings_2_s_system_properties_3_s_backl" formatted="false">%1$s settings, %2$s system properties, %3$s backlight files, %4$s broadcast values, %5$s, %6$s received</string>
+    <string name="ui_more_no_topway_radio_service" formatted="false">no Topway radio service</string>
+    <string name="ui_more_1_s_light_values_from_the_topway_radio_servi" formatted="false">%1$s light values from the Topway radio service</string>
+    <string name="ui_more_not_tried" formatted="false">not tried</string>
     <string name="ui_more_tap_to_open" formatted="false">Tap to open</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">Your trips show here after your first drive</string>
     <string name="ui_more_last_drive_1_s" formatted="false">LAST DRIVE, %1$s</string>
@@ -408,6 +412,10 @@
         <item>@string/ui_more_the_voice_engine_has_started_tap_test_the_vo</item>
         <item>@string/ui_more_the_voice_engine_has_no_english_voice_instal2</item>
         <item>@string/ui_more_the_voice_engine_started_but_couldn_t_speak_</item>
+        <item>@string/ui_more_1_s_settings_2_s_system_properties_3_s_backl</item>
+        <item>@string/ui_more_no_topway_radio_service</item>
+        <item>@string/ui_more_1_s_light_values_from_the_topway_radio_servi</item>
+        <item>@string/ui_more_not_tried</item>
         <item>@string/ui_more_tap_to_open</item>
         <item>@string/ui_more_your_trips_show_here_after_your_first_drive</item>
         <item>@string/ui_more_last_drive_1_s</item>

@@ -171,6 +171,10 @@
     <string name="ui_more_the_voice_engine_has_started_tap_test_the_vo" formatted="false">वॉइस इंजन शुरू हो गया है। आवाज़ जाँचें दबाएँ और सुनें।</string>
     <string name="ui_more_the_voice_engine_has_no_english_voice_instal2" formatted="false">वॉइस इंजन में अंग्रेज़ी आवाज़ इंस्टॉल नहीं है। सेटिंग &gt; मैप और नेविगेशन &gt; बोली जाने वाली आवाज़ &gt; Android की आवाज़ सेटिंग से एक डाउनलोड करें, या eSpeak NG लें।</string>
     <string name="ui_more_the_voice_engine_started_but_couldn_t_speak_" formatted="false">वॉइस इंजन शुरू हुआ पर बोल नहीं पाया। सेटिंग &gt; मैप और नेविगेशन &gt; बोली जाने वाली आवाज़ &gt; इसे ठीक करें, या eSpeak NG लें।</string>
+    <string name="ui_more_1_s_settings_2_s_system_properties_3_s_backl" formatted="false">%1$s सेटिंग, %2$s सिस्टम प्रॉपर्टी, %3$s बैकलाइट फ़ाइलें, %4$s ब्रॉडकास्ट मान, %5$s, %6$s मिले</string>
+    <string name="ui_more_no_topway_radio_service" formatted="false">Topway रेडियो सेवा नहीं</string>
+    <string name="ui_more_1_s_light_values_from_the_topway_radio_servi" formatted="false">Topway रेडियो सेवा से %1$s लाइट मान</string>
+    <string name="ui_more_not_tried" formatted="false">आज़माया नहीं गया</string>
     <string name="ui_more_tap_to_open" formatted="false">खोलने के लिए टैप करें</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">आपकी पहली ड्राइव के बाद यहाँ यात्राएँ दिखेंगी</string>
     <string name="ui_more_last_drive_1_s" formatted="false">पिछली ड्राइव, %1$s</string>

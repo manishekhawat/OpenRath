@@ -325,6 +325,7 @@ final class Cards {
                 LinearLayout one = new LinearLayout(c);
                 one.setGravity(Gravity.CENTER_VERTICAL | (i == 0 ? Gravity.LEFT : Gravity.RIGHT));
                 dayName[i] = Ui.text(c, 16, Ui.SILVER_DIM, "sans-serif-medium", Gravity.LEFT);
+                dayName[i].setSingleLine(true);
                 dayIcon[i] = new ImageView(c);
                 dayTemp[i] = Ui.text(c, 17, Ui.SILVER, "sans-serif-medium", Gravity.LEFT);
                 one.addView(dayName[i]);
@@ -345,6 +346,7 @@ final class Cards {
                 fitWide(w, h);
                 return;
             }
+            wideNow = false;
             col.setOrientation(LinearLayout.VERTICAL);
             facts.setOrientation(LinearLayout.HORIZONTAL);
             days.setOrientation(LinearLayout.HORIZONTAL);
@@ -418,9 +420,9 @@ final class Cards {
             place.setTextSize(0, 14 * Ui.k * s);
             rain.setTextSize(0, 13 * Ui.k * s);
             int part = (w - 2 * m) / 10;
-            for (TextView t : new TextView[]{desc, place, rain}) t.setMaxWidth(2 * part);
-            // three facts one under the other, two days one under the other
-            float fs = Math.min(1.5f, inner / (3 * 28f * Ui.k));
+            for (TextView t : new TextView[]{desc, place, rain}) t.setMaxWidth(Math.round(1.8f * part));
+            // three facts one under the other, two days one under the other, each sized to fit its column
+            float fs = Math.min(1.5f, Math.min(inner / (3 * 28f * Ui.k), 2.4f * part / (100f * Ui.k)));
             int gs = Ui.px(22 * fs);
             for (int i = 0; i < 3; i++) {
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(gs, gs);
@@ -430,7 +432,7 @@ final class Cards {
                 ((LinearLayout) facts.getChildAt(i)).setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
                 facts.getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 1));
             }
-            float ds = Math.min(1.5f, inner / (2 * 40f * Ui.k));
+            float ds = Math.min(1.5f, Math.min(inner / (2 * 40f * Ui.k), 3.6f * part / (175f * Ui.k)));
             int di = Ui.px(32 * ds);
             for (int i = 0; i < 2; i++) {
                 dayName[i].setTextSize(0, 16 * Ui.k * ds);
@@ -444,15 +446,16 @@ final class Cards {
             facts.setVisibility(VISIBLE);
             days.setVisibility(hasDays ? VISIBLE : GONE);
             hours.setVisibility(GONE);
-            top.setLayoutParams(new LinearLayout.LayoutParams(0, -1, 5));
-            LinearLayout.LayoutParams fl = new LinearLayout.LayoutParams(0, -1, 2.2f);
-            fl.leftMargin = Ui.px(24 * s);
+            top.setLayoutParams(new LinearLayout.LayoutParams(0, -1, 3.8f));
+            LinearLayout.LayoutParams fl = new LinearLayout.LayoutParams(0, -1, 2.6f);
+            fl.leftMargin = Ui.px(16 * s);
             facts.setLayoutParams(fl);
-            days.setLayoutParams(new LinearLayout.LayoutParams(0, -1, 2.8f));
+            days.setLayoutParams(new LinearLayout.LayoutParams(0, -1, 3.6f));
+            wideNow = true;
             col.setLayoutParams(at(-1, -1, Gravity.TOP, m, m, m, m));
         }
 
-        boolean hasDays;
+        boolean hasDays, wideNow;
 
         @Override
         public void changed(Hub h) {
@@ -490,7 +493,8 @@ final class Cards {
             hasDays = fc != null && fc.size() >= 3;
             for (int i = 0; i < 2 && hasDays; i++) {
                 String[] d = fc.get(i + 1);
-                dayName[i].setText(i == 0 ? Hindi.t("Tomorrow") : Weather.dayName(d[0]));
+                // a narrow column has room for the day's short name only
+                dayName[i].setText(i == 0 && !wideNow ? Hindi.t("Tomorrow") : Weather.dayName(d[0]));
                 dayTemp[i].setText(d.length > 3 ? d[2] + " / " + d[3] : d[2]);
                 if (!d[1].equals(lastDayIcon[i])) {
                     dayIcon[i].setImageBitmap(Ui.img(getContext(), d[1]));
