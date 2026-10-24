@@ -148,10 +148,11 @@
     <string name="ui_more_settings_fuel_log_and_trips_kept_on_the_unit" formatted="false">सेटिंग, फ़्यूल लॉग और यात्राएँ, यूनिट पर रखी जाती हैं</string>
     <string name="ui_more_checks_once_a_day_for_a_new_openrath_and_off" formatted="false">दिन में एक बार नया OpenRath खोजता है और खड़े होने पर देता है</string>
     <string name="ui_more_which_settings_you_open_and_any_crashes_kept" formatted="false">आप कौन सी सेटिंग खोलते हैं और कोई क्रैश, यूनिट पर रखा जाता है ताकि आप भेज सकें</string>
+    <string name="ui_more_yesterday" formatted="false">कल</string>
     <string name="ui_more_tap_to_open" formatted="false">खोलने के लिए टैप करें</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">आपकी पहली ड्राइव के बाद यहाँ यात्राएँ दिखेंगी</string>
     <string name="ui_more_last_drive_1_s" formatted="false">पिछली ड्राइव, %1$s</string>
-    <string name="ui_more_yesterday" formatted="false">कल</string>
+    <string name="ui_more_yesterday2" formatted="false">कल</string>
     <string name="ui_more_1_s_days_ago" formatted="false">%1$s दिन पहले</string>
     <string name="ui_more_parked_1_s" formatted="false">%1$s खड़ी की</string>
     <string name="ui_more_add_your_first_fill_up_to_see_mileage" formatted="false">माइलेज देखने के लिए अपना पहला फ़्यूल भराव जोड़ें</string>

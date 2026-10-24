@@ -799,10 +799,26 @@ final class LayoutView extends View implements Hub.Listener {
             else if ("user".equals(kind)) userPart(c, p);
             else if ("favourites".equals(kind)) favourites(c, p);
             else if ("picture".equals(kind) && "trip".equals(p.style)) {
-                String km = Drive.todayKm < 100 ? Fuel.fmt(Drive.todayKm) : String.valueOf(Math.round(Drive.todayKm));
+                double dk = Drive.todayKm;
+                String when = Hindi.t("today");
+                if (Drive.todayKm < 0.05 && Drive.todaySec < 60) {
+                    // nothing yet today: the last day with some driving, as the Today box does
+                    long now = System.currentTimeMillis();
+                    if (hist == null || now - histAt > 5 * 60000) {
+                        hist = Drive.history(a);
+                        histAt = now;
+                    }
+                    String today = Times.today(), day = Drive.lastDay(hist, today);
+                    if (day != null) {
+                        dk = hist.optJSONArray(day).optDouble(0, 0);
+                        int ago = Drive.daysBetween(day, today);
+                        when = ago <= 1 ? Hindi.t("yesterday") : Hindi.f("%1$s days ago", ago);
+                    }
+                }
+                String km = dk < 100 ? Fuel.fmt(dk) : String.valueOf(Math.round(dk));
                 text(c, km + " km", p.x + p.w / 2, p.y + p.h * 0.42f, 40, p.ink, MED, "mm");
                 String pl = a.hub.place;
-                text(c, pl == null || pl.isEmpty() ? Hindi.t("today") : Hindi.f("today · %1$s", pl), p.x + p.w / 2, p.y + p.h * 0.42f + 40, 15, p.sub, REG, "mm");
+                text(c, pl == null || pl.isEmpty() ? when : when + " · " + pl, p.x + p.w / 2, p.y + p.h * 0.42f + 40, 15, p.sub, REG, "mm");
             } else if ("dock".equals(kind)) {
                 List<String> items = dockItems(p);
                 int n = items.size() + (p.clock ? 1 : 0);
@@ -997,6 +1013,10 @@ final class LayoutView extends View implements Hub.Listener {
         return day;
     }
 
+    /** The day-by-day driving record, read at most every five minutes, for the trip picture. */
+    private org.json.JSONObject hist;
+    private long histAt;
+
     private void forecast(Canvas c, Layouts.Part p) {
         List<String[]> f = a.hub.forecast;
         if (f == null || f.size() < 2) {
@@ -1008,7 +1028,7 @@ final class LayoutView extends View implements Hub.Listener {
             String[] d = f.get(i + 1);
             float cx = p.x + p.w * (i + 0.5f) / n;
             icon(c, d[1], cx - 20, p.y + 8, 40);
-            text(c, d[2], cx, p.y + 66, 16, p.ink, MED, "mm");
+            text(c, d.length > 3 ? d[2] + " / " + d[3] : d[2], cx, p.y + 66, 14, p.ink, MED, "mm");
             text(c, dayName(d[0]), cx, p.y + 92, 13, p.sub, REG, "mm");
         }
     }
