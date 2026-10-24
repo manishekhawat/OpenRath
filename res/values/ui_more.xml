@@ -149,6 +149,7 @@
     <string name="ui_more_settings_fuel_log_and_trips_kept_on_the_unit" formatted="false">Settings, fuel log and trips, kept on the unit</string>
     <string name="ui_more_checks_once_a_day_for_a_new_openrath_and_off" formatted="false">Checks once a day for a new OpenRath and offers it when parked</string>
     <string name="ui_more_which_settings_you_open_and_any_crashes_kept" formatted="false">Which settings you open and any crashes, kept on the unit for you to share</string>
+    <string name="ui_more_tap_to_open" formatted="false">Tap to open</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -297,5 +298,6 @@
         <item>@string/ui_more_settings_fuel_log_and_trips_kept_on_the_unit</item>
         <item>@string/ui_more_checks_once_a_day_for_a_new_openrath_and_off</item>
         <item>@string/ui_more_which_settings_you_open_and_any_crashes_kept</item>
+        <item>@string/ui_more_tap_to_open</item>
     </string-array>
 </resources>
