@@ -146,6 +146,7 @@ final class HomeDock {
                 public void onClick(View x) {
                     Tap.feedback(x, a.prefs);
                     if ("apps".equals(name)) a.startActivity(new Intent(a, AppsActivity.class));
+                    else if (("music".equals(name) || "radio".equals(name)) && a.openMusic(name)) return;
                     else a.openApp(dockKey(name), label);
                 }
             });

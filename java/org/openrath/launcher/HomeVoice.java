@@ -236,6 +236,10 @@ final class HomeVoice {
             Toast.makeText(a, Air.aqi < 0 ? Hindi.t("The air quality isn't known yet.") : Hindi.f("The air quality is %1$s, AQI %2$s.",
                     Hindi.t(Air.band(Air.aqi)).toLowerCase(java.util.Locale.US), String.valueOf(Air.aqi)), Toast.LENGTH_LONG).show();
             a.speak(t);
+        } else if ("musicApp".equals(k)) {
+            boolean radio = "radio".equals(cmd.arg);
+            if (!a.openMusic(radio ? MusicScreen.RADIO : MusicScreen.MUSIC))
+                a.openApp(radio ? "media:radio" : "media:music", radio ? "Radio" : "Music");
         } else if ("music".equals(k)) {
             MediaCard.owner = "music";
             if (!(Player.playing || a.hub.music != null && a.hub.music.playing)) Extras.media(a, "toggle");
