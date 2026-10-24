@@ -1307,6 +1307,13 @@ public final class Tests {
         check("layout is per driver", Profiles.personal("layout") && Profiles.personal("lay:scenery:off"));
         eq("dock key", "media:radio", LayoutView.dockKey("radio"));
         eq("dock label", "Bluetooth", LayoutView.label("bt"));
+        eq("station initials skip Radio", "MH", LayoutView.initials("Radio Mirchi Hindi"));
+        eq("one word, one letter", "S", LayoutView.initials("spotify"));
+        eq("a frequency keeps its number", "98", LayoutView.initials("98.3 FM"));
+        eq("only Radio is kept", "R", LayoutView.initials("Radio"));
+        eq("no name, no letters", "", LayoutView.initials("  "));
+        check("same line twice", LayoutView.same("Radio Mirchi Hindi", " radio mirchi hindi"));
+        check("different lines", !LayoutView.same("Tum Hi Ho", "Arijit Singh"));
     }
 
     static java.util.Calendar day(int y, int m, int d, int h, int min) {

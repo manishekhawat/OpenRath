@@ -564,6 +564,7 @@ final class LayoutView extends View implements Hub.Listener {
     /** What's playing, from our own player, another app, or the radio. */
     static final class Now {
         String title = Hindi.t("Nothing playing"), sub = Hindi.t("Tap to choose music");
+        String name = "";   // the station or app, for the initials on the stand-in cover
         boolean playing, radio, idle = true;
         Bitmap art;
         float progress = -1;
@@ -572,12 +573,81 @@ final class LayoutView extends View implements Hub.Listener {
     }
 
     Now now() {
+        Now n = playing();
+        if (same(n.sub, n.title)) n.sub = "";   // a station that sends its name as both lines: show it once
+        if (n.art != null && plain(n.art)) n.art = null;   // a blank or one-colour picture: use the stand-in
+        if (n.name.isEmpty()) n.name = n.title;
+        return n;
+    }
+
+    private Bitmap plainArt;
+    private boolean plainWas;
+
+    /** True for a picture that is mostly see-through or all one colour (a white blob, not a cover); checked once for each picture. */
+    private boolean plain(Bitmap b) {
+        if (b == plainArt) return plainWas;
+        boolean out = true;
+        try {
+            if (!b.isRecycled() && b.getWidth() > 0 && b.getHeight() > 0) {
+                int seen = 0, lo = 255, hi = 0;
+                for (int i = 0; i < 8; i++)
+                    for (int j = 0; j < 8; j++) {
+                        int px = b.getPixel((int) ((i + 0.5f) * b.getWidth() / 8), (int) ((j + 0.5f) * b.getHeight() / 8));
+                        if ((px >>> 24) < 200) continue;
+                        seen++;
+                        int lum = (((px >> 16) & 0xFF) * 3 + ((px >> 8) & 0xFF) * 6 + (px & 0xFF)) / 10;
+                        lo = Math.min(lo, lum);
+                        hi = Math.max(hi, lum);
+                    }
+                out = seen < 32 || hi - lo < 24;
+            }
+        } catch (Exception e) {
+            out = true;
+        }
+        plainArt = b;
+        plainWas = out;
+        return out;
+    }
+
+    /** One or two letters for a name: "Radio Mirchi Hindi" is "MH", "Spotify" is "S" (words like Radio and FM are skipped). */
+    static String initials(String s) {
+        if (s == null) return "";
+        List<String> words = new ArrayList<>();
+        for (String w : s.trim().split("[\\s\\-_.,:|/()]+")) {
+            if (w.isEmpty() || !Character.isLetterOrDigit(w.codePointAt(0))) continue;
+            words.add(w);
+        }
+        List<String> kept = new ArrayList<>();
+        for (String w : words) {
+            String l = w.toLowerCase(Locale.US);
+            if (!l.equals("radio") && !l.equals("fm") && !l.equals("am") && !l.equals("the")) kept.add(w);
+        }
+        if (kept.isEmpty()) kept = words;
+        StringBuilder out = new StringBuilder();
+        for (int i = 0; i < kept.size() && i < 2; i++) {
+            String w = kept.get(i);
+            if (Character.isDigit(w.codePointAt(0))) {   // a frequency: its whole number, like 98
+                if (i == 0) return w.length() > 3 ? w.substring(0, 3) : w;
+                break;
+            }
+            out.append(new String(Character.toChars(w.codePointAt(0))).toUpperCase(Locale.US));
+        }
+        return out.toString();
+    }
+
+    /** True when two lines say the same thing (ignoring case and spaces around). */
+    static boolean same(String x, String y) {
+        return x != null && y != null && x.trim().equalsIgnoreCase(y.trim());
+    }
+
+    private Now playing() {
         Hub h = a.hub;
         Now n = new Now();
         Player.Track t = Player.mode != null ? Player.current() : null;
         if (t != null) {
             n.title = t.name;
             n.sub = t.sub == null ? "" : t.sub;
+            n.name = t.name;
             n.playing = Player.playing;
             n.radio = Player.WEB.equals(Player.mode);
             n.idle = false;
@@ -597,18 +667,24 @@ final class LayoutView extends View implements Hub.Listener {
             n.art = m.art;
             n.radio = m == h.radio;
             n.idle = false;
+            if (!n.radio && m.controller != null) {   // music: the app's name
+                Object[] info = app(m.controller.getPackageName());
+                if (info[1] != null) n.name = (String) info[1];
+            }
             n.progress = progress(m);
             return n;
         }
         if (h.xt != null && !h.xt.display("").isEmpty()) {
             n.title = h.xt.display("").startsWith("Seek") ? h.xt.display("") : h.xt.display("") + " FM";
             n.sub = h.xt.name;
+            n.name = h.xt.name == null ? "" : h.xt.name;
             n.playing = Boolean.TRUE.equals(h.xt.playing);
             n.radio = true;
             n.idle = false;
         } else if (h.fm != null && h.fm.seen) {
             n.title = h.fm.frequency() + " FM";
             n.sub = h.fm.name;
+            n.name = h.fm.name == null ? "" : h.fm.name;
             n.playing = h.fm.on;
             n.radio = true;
             n.idle = false;
@@ -734,7 +810,7 @@ final class LayoutView extends View implements Hub.Listener {
                     float cx = p.x + p.w * (i + 0.5f) / n, cw = p.w / n;
                     hit(cx - cw / 2, p.y, cw, p.h, dockAction(items.get(i)));
                 }
-                if (p.clock) text(c, time(), p.x + p.w - 10, p.y + p.h / 2, 26, p.ink, MED, "rm");
+                if (p.clock && !timeShown()) text(c, time(), p.x + p.w - 10, p.y + p.h / 2, 26, p.ink, MED, "rm");
             } else if ("apps".equals(kind)) hit(p.x, p.y, p.w, p.h, "dock:apps");
             else if ("gear".equals(kind)) hit(p.x - 8, p.y - 8, p.w + 16, p.h + 16, "settings");
             else if ("places".equals(kind)) {
@@ -745,6 +821,12 @@ final class LayoutView extends View implements Hub.Listener {
     }
 
     // ---- clock
+
+    /** True when one of the layout's own clocks is on screen (then the dock leaves the time out). */
+    private boolean timeShown() {
+        for (Layouts.Part x : lay.parts) if ("clock".equals(x.kind) && on(x)) return true;
+        return false;
+    }
 
     private void clock(Canvas c, Layouts.Part p) {
         float x = p.x, y = p.y, w = p.w, h = p.h, cx = x + w / 2, cy = y + h / 2;
@@ -1021,24 +1103,36 @@ final class LayoutView extends View implements Hub.Listener {
         }
     }
 
-    /** A record: a dark disc with grooves and the album cover (or a warm stand-in) in the middle. */
-    private void disc(Canvas c, float cx, float cy, float r, Bitmap art) {
+    /** A record: a dark disc with grooves and the album cover (or the initials stand-in) in the middle. */
+    private void disc(Canvas c, float cx, float cy, float r, Now n) {
+        disc(c, cx, cy, r, n, true);
+    }
+
+    /** letters false: the stand-in is only its colour (the dial puts its play button there). */
+    private void disc(Canvas c, float cx, float cy, float r, Now n, boolean letters) {
         fill.setShader(null);
         fill.setColor(0xFF101012);
         c.drawCircle(cx, cy, r, fill);
         line.setColor(0xFF28282C);
         line.setStrokeWidth(1);
         for (float f : new float[]{0.92f, 0.84f, 0.76f}) c.drawCircle(cx, cy, r * f, line);
-        cover(c, cx - r * 0.62f, cy - r * 0.62f, r * 1.24f, r * 1.24f, art, true, 0);
+        cover(c, cx - r * 0.62f, cy - r * 0.62f, r * 1.24f, r * 1.24f, n, true, 0, letters);
     }
 
-    private LinearGradient warm;
-    private float warmY, warmH;
+    /** Soft colours for the stand-in cover, one picked for each station or app by its name. */
+    private static final int[] SOFT = {0xFF5B7DB1, 0xFF4E9A8A, 0xFFC07A4E, 0xFF8A6BB0, 0xFFB0607A, 0xFF6B8E4E};
 
-    /** The album cover, or a warm gradient with a soft sun when the app gives none. */
-    private void cover(Canvas c, float x, float y, float w, float h, Bitmap art, boolean circle, float radius) {
-        if (art != null) {
-            image(c, art, x, y, w, h, circle, radius);
+    /**
+     * The album cover, or when there's no real one the station's or app's initials on a soft
+     * coloured circle or square (a music note when nothing is playing).
+     */
+    private void cover(Canvas c, float x, float y, float w, float h, Now n, boolean circle, float radius) {
+        cover(c, x, y, w, h, n, circle, radius, true);
+    }
+
+    private void cover(Canvas c, float x, float y, float w, float h, Now n, boolean circle, float radius, boolean letters) {
+        if (n.art != null) {
+            image(c, n.art, x, y, w, h, circle, radius);
             return;
         }
         c.save();
@@ -1048,17 +1142,15 @@ final class LayoutView extends View implements Hub.Listener {
         if (circle) clip.addOval(r, Path.Direction.CW);
         else clip.addRoundRect(r, radius, radius, Path.Direction.CW);
         c.clipPath(clip);
-        if (warm == null || warmY != y || warmH != h) {
-            warm = new LinearGradient(0, y, 0, y + h, 0xFF283C78, 0xFFDC6E50, Shader.TileMode.CLAMP);
-            warmY = y;
-            warmH = h;
-        }
-        fill.setShader(warm);
-        c.drawRect(r, fill);
+        String ini = n.idle ? "" : initials(n.name);
         fill.setShader(null);
-        fill.setColor(0xFFFABE78);
-        c.drawOval(x + w * .25f, y + h * .2f, x + w * .8f, y + h * .75f, fill);
+        fill.setColor(ini.isEmpty() ? 0xFF5A6270 : SOFT[(ini.hashCode() & 0x7FFFFFFF) % SOFT.length]);
+        c.drawRect(r, fill);
         c.restore();
+        if (!letters) return;
+        float s = Math.min(w, h);
+        if (ini.isEmpty()) glyph(c, "music", x + (w - s * 0.5f) / 2, y + (h - s * 0.5f) / 2, s * 0.5f, 0xFFFFFFFF);
+        else text(c, ini, x + w / 2, y + h / 2, s * (ini.length() > 1 ? 0.36f : 0.44f), 0xFFFFFFFF, MED, "mm");
     }
 
     private void bar(Canvas c, float x0, float x1, float y, float frac, int ink, int track, float wd) {
@@ -1086,35 +1178,37 @@ final class LayoutView extends View implements Hub.Listener {
         hit(x, y, w, h, "media:open");
         String st = p.style;
         if ("pill".equals(st)) {
-            disc(c, x + h / 2, cy, h * 0.38f, n.art);
+            disc(c, x + h / 2, cy, h * 0.38f, n);
             float tx = x + h + 6, tw = w - h - 30;
             glyph(c, n.radio ? "radio" : "music", tx, y + 36, 18, ink);
             text(c, n.radio ? Hindi.t("Radio") : Hindi.t("Music"), tx + 26, y + 45, 15, ink, MED, "lm");
-            text(c, fit(t, 22, tw, MED), tx, y + 88, 22, ink, MED, "lm");
+            float ts = shrink(t, 22, tw, MED);
+            text(c, fit(t, ts, tw, MED), tx, y + 88, ts, ink, MED, "lm");
             fill.setShader(null);
             line.setColor(p.accent);
             line.setStrokeWidth(3);
             c.drawLine(tx, y + 116, tx + 60, y + 116, line);
             controls(c, tx, y + 136, tw, 24, ink, n.playing);
         } else if ("float".equals(st)) {
-            text(c, fit(t, 30, w - 36, BOLD), x + 18, y + 40, 30, ink, BOLD, "lm");
+            float ts = shrink(t, 30, w - 36, BOLD);
+            text(c, fit(t, ts, w - 36, BOLD), x + 18, y + 40, ts, ink, BOLD, "lm");
             text(c, fit(ar, 15, w - 36, REG), x + 18, y + 76, 15, sub, REG, "lm");
             controls(c, x + 18, y + 112, w - 36, 24, ink, n.playing);
         } else if ("card".equals(st)) {
-            cover(c, x + 8, y + 8, w - 16, h - 90, n.art, false, 4);
+            cover(c, x + 8, y + 8, w - 16, h - 90, n, false, 4);
             text(c, fit(t, 20, w - 20, BOLD), cx, y + h - 56, 20, ink, BOLD, "mm");
             text(c, fit(ar, 13, w - 20, REG), cx, y + h - 28, 13, sub, REG, "mm");
             controls(c, x + 10, y + h + 32, w - 20, 30, ink, n.playing);
         } else if ("row".equals(st)) {
             float sz = Math.min(70, h - 64);
-            cover(c, x + 14, y + 12, sz, sz, n.art, false, 6);
+            cover(c, x + 14, y + 12, sz, sz, n, false, 6);
             text(c, fit(t, 17, w - sz - 40, MED), x + 26 + sz, y + 12 + sz * 0.35f, 17, ink, MED, "lm");
             text(c, fit(ar, 12, w - sz - 40, REG), x + 26 + sz, y + 12 + sz * 0.75f, 12, sub, REG, "lm");
             controls(c, x + 10, y + h - 42, w - 20, 22, ink, n.playing);
             bar(c, x + 14, x + w - 14, y + h - 8, n.progress, ink, 0, 3);
         } else if ("dial".equals(st)) {
             float r = w / 2;
-            disc(c, cx, cy, r * 0.62f, n.art);
+            disc(c, cx, cy, r * 0.62f, n, false);
             line.setColor(0xFF5A6A80);
             line.setStrokeWidth(4);
             c.drawCircle(cx, cy, r * .98f, line);
@@ -1128,7 +1222,7 @@ final class LayoutView extends View implements Hub.Listener {
             hit(cx - 36, cy - 36, 72, 72, "media:toggle");
         } else if ("record".equals(st)) {
             float r = Math.min(w, h) * 0.36f;
-            disc(c, cx, y + 10 + r, r, n.art);
+            disc(c, cx, y + 10 + r, r, n);
             text(c, fit(t, 17, w - 10, MED), cx, y + 2 * r + 46, 17, sub, MED, "mm");
             bar(c, x + 10, x + w - 10, y + 2 * r + 72, n.progress, ink, faded(sub, 0.4f), 2);
             controls(c, x + 10, y + 2 * r + 92, w - 20, 30, ink, n.playing);
@@ -1142,10 +1236,13 @@ final class LayoutView extends View implements Hub.Listener {
             c.drawLine(x, y - 10, x + w - 20, y - 10, line);
         } else if ("lyrics".equals(st)) {
             glyph(c, n.radio ? "radio" : "music", x + 24, y + 22, 18, sub);
-            text(c, fit(t + (ar.isEmpty() ? "" : "  ·  " + ar), 14, w - 80, REG), x + 50, y + 31, 14, sub, REG, "lm");
             // the songs around this one, this one large (the words of songs come with the lyrics feature)
             List<String> lines = n.around;
             int at = n.at;
+            // the line on top says what is playing from; the title is already large below
+            String head = n.radio ? Hindi.t("Radio") : Hindi.t("Music");
+            if (lines != null && !lines.isEmpty() && !ar.isEmpty()) head += "  ·  " + ar;
+            text(c, fit(head, 14, w - 80, REG), x + 50, y + 31, 14, sub, REG, "lm");
             if (lines == null || lines.isEmpty()) {
                 lines = new ArrayList<>();
                 lines.add("");
@@ -1163,9 +1260,10 @@ final class LayoutView extends View implements Hub.Listener {
         } else if ("wide".equals(st)) {
             glyph(c, n.radio ? "radio" : "music", x + 22, y + 20, 16, sub);
             text(c, n.radio ? Hindi.t("Radio") : Hindi.t("Music"), x + 46, y + 28, 13, sub, REG, "lm");
-            text(c, fit(t, 26, w * 0.6f, MED), x + 22, y + 72, 26, ink, MED, "lm");
+            float ts = shrink(t, 26, w * 0.6f, MED);
+            text(c, fit(t, ts, w * 0.6f, MED), x + 22, y + 72, ts, ink, MED, "lm");
             controls(c, x + 10, y + 108, w * 0.55f, 28, ink, n.playing);
-            disc(c, x + w - 90, cy + 4, 66, n.art);
+            disc(c, x + w - 90, cy + 4, 66, n);
         }
     }
 
@@ -1213,7 +1311,7 @@ final class LayoutView extends View implements Hub.Listener {
         if (items == null) statsNow.put(p, items = Layouts.statItems(prefs, lay.id, p));
         if (items.isEmpty()) return;
         if ("frame".equals(p.style)) {
-            cover(c, x + 16, y + 16, h - 32, h - 32, now().art, false, 2);
+            cover(c, x + 16, y + 16, h - 32, h - 32, now(), false, 2);
             float step = Math.min(56, (h - 20) / items.size());
             for (int i = 0; i < items.size(); i++) {
                 String[] s = stat(items.get(i));
@@ -1231,9 +1329,16 @@ final class LayoutView extends View implements Hub.Listener {
             line.setColor(p.ink);
             line.setStrokeWidth(3);
             if ("temp".equals(it)) {
-                rect.set(x + 4, yy + 10, x + 44, yy + 50);
-                c.drawArc(rect, 150, 240, false, line);
-                c.drawLine(x + 24, yy + 30, x + 34, yy + 18, line);
+                // a thermometer: a tube on a round bulb, filled part way, with two marks beside it
+                rect.set(x + 19, yy + 6, x + 29, yy + 40);
+                c.drawRoundRect(rect, 5, 5, line);
+                fill.setShader(null);
+                fill.setColor(p.ink);
+                c.drawCircle(x + 24, yy + 43, 8, fill);
+                c.drawLine(x + 24, yy + 43, x + 24, yy + 20, line);
+                line.setStrokeWidth(2);
+                c.drawLine(x + 33, yy + 14, x + 38, yy + 14, line);
+                c.drawLine(x + 33, yy + 22, x + 38, yy + 22, line);
             } else if ("altitude".equals(it)) {
                 Path m = path;
                 m.reset();
@@ -1352,14 +1457,15 @@ final class LayoutView extends View implements Hub.Listener {
                 d.draw(c);
                 text(c, fit((String) info[1], 11, w / 3 - 8, REG), cx, cy + s / 2 + 6, 11, p.ink, REG, "mm");
             } else {
-                fill.setShader(null);
-                fill.setColor(0x33FFFFFF);
-                c.drawRoundRect(r, s * 0.24f, s * 0.24f, fill);
-                line.setColor(p.ink);
-                line.setStrokeWidth(2.5f);
-                c.drawLine(cx - s * 0.18f, ty + s / 2, cx + s * 0.18f, ty + s / 2, line);
-                c.drawLine(cx, ty + s / 2 - s * 0.18f, cx, ty + s / 2 + s * 0.18f, line);
-                text(c, Hindi.t("Add app"), cx, cy + s / 2 + 6, 11, p.ink, REG, "mm");
+                // an empty place: a faint outline with a small +, no words (long-press or tap to choose an app)
+                r.inset(s * 0.12f, s * 0.12f);
+                line.setColor(faded(p.ink, 0.3f));
+                line.setStrokeWidth(1.5f);
+                c.drawRoundRect(r, s * 0.2f, s * 0.2f, line);
+                line.setColor(faded(p.ink, 0.55f));
+                line.setStrokeWidth(2);
+                c.drawLine(cx - s * 0.1f, ty + s / 2, cx + s * 0.1f, ty + s / 2, line);
+                c.drawLine(cx, ty + s / 2 - s * 0.1f, cx, ty + s / 2 + s * 0.1f, line);
             }
         }
     }
@@ -1452,8 +1558,9 @@ final class LayoutView extends View implements Hub.Listener {
             poly(p, 7, 4, 20, 12, 7, 20);
             c.drawPath(p, fill);
         } else if ("pause".equals(name)) {
-            c.drawRect(6, 4, 10, 20, fill);
-            c.drawRect(14, 4, 18, 20, fill);
+            // two bars with a wide gap, so they stay apart (and never read as a stop square) when drawn small
+            c.drawRoundRect(5.5f, 4, 9.5f, 20, 1, 1, fill);
+            c.drawRoundRect(14.5f, 4, 18.5f, 20, 1, 1, fill);
         } else if ("next".equals(name) || "prev".equals(name)) {
             if ("prev".equals(name)) c.scale(-1, 1, 12, 12);
             poly(p, 4, 4, 16, 12, 4, 20);
@@ -1481,6 +1588,13 @@ final class LayoutView extends View implements Hub.Listener {
     float width(String s, float size, Typeface tf) {
         setText(size, 0, tf);
         return text.measureText(s);
+    }
+
+    /** A size for the text that fits maxw: smaller, down to 70%, before fit() has to shorten it. */
+    float shrink(String s, float size, float maxw, Typeface tf) {
+        if (s == null || s.isEmpty()) return size;
+        float wd = width(s, size, tf);
+        return wd <= maxw ? size : Math.max(size * 0.7f, size * maxw / wd);
     }
 
     /** The text shortened with "…" to fit maxw at that size. */
