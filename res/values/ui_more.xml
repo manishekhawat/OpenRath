@@ -150,6 +150,15 @@
     <string name="ui_more_checks_once_a_day_for_a_new_openrath_and_off" formatted="false">Checks once a day for a new OpenRath and offers it when parked</string>
     <string name="ui_more_which_settings_you_open_and_any_crashes_kept" formatted="false">Which settings you open and any crashes, kept on the unit for you to share</string>
     <string name="ui_more_tap_to_open" formatted="false">Tap to open</string>
+    <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">Your trips show here after your first drive</string>
+    <string name="ui_more_last_drive_1_s" formatted="false">LAST DRIVE, %1$s</string>
+    <string name="ui_more_yesterday" formatted="false">YESTERDAY</string>
+    <string name="ui_more_1_s_days_ago" formatted="false">%1$s DAYS AGO</string>
+    <string name="ui_more_parked_1_s" formatted="false">Parked %1$s</string>
+    <string name="ui_more_add_your_first_fill_up_to_see_mileage" formatted="false">Add your first fill-up to see mileage</string>
+    <string name="ui_more_last_heading_while_driving" formatted="false">Last heading while driving</string>
+    <string name="ui_more_next_holiday_1_s" formatted="false">Next holiday: %1$s</string>
+    <string name="ui_more_connect_an_obd_adapter_to_see_engine_data" formatted="false">Connect an OBD adapter to see engine data</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -299,5 +308,14 @@
         <item>@string/ui_more_checks_once_a_day_for_a_new_openrath_and_off</item>
         <item>@string/ui_more_which_settings_you_open_and_any_crashes_kept</item>
         <item>@string/ui_more_tap_to_open</item>
+        <item>@string/ui_more_your_trips_show_here_after_your_first_drive</item>
+        <item>@string/ui_more_last_drive_1_s</item>
+        <item>@string/ui_more_yesterday</item>
+        <item>@string/ui_more_1_s_days_ago</item>
+        <item>@string/ui_more_parked_1_s</item>
+        <item>@string/ui_more_add_your_first_fill_up_to_see_mileage</item>
+        <item>@string/ui_more_last_heading_while_driving</item>
+        <item>@string/ui_more_next_holiday_1_s</item>
+        <item>@string/ui_more_connect_an_obd_adapter_to_see_engine_data</item>
     </string-array>
 </resources>
