@@ -1334,9 +1334,13 @@ public final class Tests {
                 Speak.nextEngine(java.util.Arrays.asList("com.google.android.tts", "com.tw.tts"), java.util.Arrays.asList("com.tw.tts"), "com.google.android.tts"));
         check("weather: a wide low strip puts the facts and days beside the reading", Cards.WeatherCard.wide(1200, 300, 1f));
         check("weather: a normal box keeps rows", !Cards.WeatherCard.wide(600, 400, 1f));
+        check("voice: started but never heard isn't called working", !Speak.state(true, true, false, false, false, false).equals("The voice is working."));
+        eq("voice: heard is working", "The voice is working.", Speak.state(true, true, false, true, false, false));
+        check("voice: an engine that couldn't speak says how to fix", Speak.state(true, true, false, false, true, false).contains("couldn't speak"));
+        check("voice: no English voice says so", Speak.state(true, false, true, false, false, true).contains("no English voice"));
         check("voice: none installed says so", Speak.state(false, false, false).startsWith("No voice engine"));
         check("voice: broken engine says how to fix", Speak.state(true, false, true).contains("doesn't start"));
-        eq("voice: working", "The voice is working.", Speak.state(true, true, false));
+        check("voice: started, not yet heard", Speak.state(true, true, false).contains("Test the voice"));
         eq("status icons off", "", HomeActivity.statusPlace(false, false, true));
         eq("status icons left to Android's bar", "", HomeActivity.statusPlace(true, true, true));
         eq("status icons in the clock box", "clock", HomeActivity.statusPlace(true, false, true));

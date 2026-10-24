@@ -22,6 +22,8 @@ final class Speak {
 
     private static TextToSpeech tts;
     private static boolean ready, failed;
+    /** A sentence was heard to the end; the engine started but couldn't speak; it had no voice data. */
+    private static boolean heard, spokeFail, noVoiceData;
     private static long failedAt;
     private static Context app;
     private static final List<String[]> waiting = new ArrayList<>();   // {text, "long" or ""}
@@ -52,7 +54,7 @@ final class Speak {
             tts = null;
         }
         if (failed) {
-            tell(NO_VOICE);
+            tell(noVoiceData ? NO_DATA : NO_VOICE);
             return;
         }
         if (tts == null) start();
@@ -77,7 +79,10 @@ final class Speak {
      * still have its own, or eSpeak NG.
      */
     private static void start(final String engine) {
-        if (engine == null) tried.clear();
+        if (engine == null) {
+            tried.clear();
+            heard = spokeFail = noVoiceData = false;
+        }
         else tried.add(engine);
         TextToSpeech.OnInitListener l = new TextToSpeech.OnInitListener() {
             @Override
@@ -106,25 +111,64 @@ final class Speak {
                         waiting.clear();
                         return;
                     }
-                    if (tts.setLanguage(new Locale("en", "IN")) < 0) tts.setLanguage(Locale.getDefault());
+                    if (!language()) {
+                        // the engine starts but has no voice for English or the unit's language: it
+                        // stays silent, so try the next engine, else say so
+                        String next = nextEngine(engines(app), tried, engine == null ? defaultEngine() : null);
+                        try {
+                            tts.shutdown();
+                        } catch (Throwable ignored) {
+                            // that engine already failed
+                        }
+                        ready = false;
+                        if (next != null) {
+                            start(next);
+                            return;
+                        }
+                        failed = true;
+                        noVoiceData = true;
+                        failedAt = System.currentTimeMillis();
+                        if (!waiting.isEmpty()) tell(NO_DATA);
+                        waiting.clear();
+                        return;
+                    }
+                    final Prefs prefs = new Prefs(app);
+                    // one listener: Android keeps only the last one set, so the ducking lives here too
                     tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                         @Override
                         public void onStart(String id) {
+                            if (Features.on(prefs, "duck")) Duck.start(app);
                         }
 
                         @Override
                         public void onDone(String id) {
+                            heard = true;
+                            spokeFail = false;
+                            Duck.end(app);
                             if (id.equals(lastId)) finishLong();
+                        }
+
+                        @Override
+                        public void onStop(String id, boolean interrupted) {
+                            Duck.end(app);
                         }
 
                         @Override
                         @SuppressWarnings("deprecation")
                         public void onError(String id) {
+                            onError(id, -1);
+                        }
+
+                        @Override
+                        public void onError(String id, int code) {
+                            Duck.end(app);
                             finishLong();
-                            if (id.startsWith("long")) tell("The voice couldn't read this aloud. Check the stereo's text-to-speech in Android Settings.");
+                            if (heard) return;
+                            spokeFail = true;
+                            Diag.note("voice", new IllegalStateException("speak error " + code));
+                            tell(SPEAK_FAILED);
                         }
                     });
-                    Duck.attach(app, new Prefs(app), tts);
                     for (String[] t : waiting) speak(t[0], false, !t[1].isEmpty());
                     waiting.clear();
                 }
@@ -132,6 +176,20 @@ final class Speak {
         };
         tts = engine == null ? new TextToSpeech(app, l) : new TextToSpeech(app, l, engine);
     }
+
+    /** English (India, then any), else the unit's language. False when the engine has none of them. */
+    private static boolean language() {
+        try {
+            if (tts.setLanguage(new Locale("en", "IN")) >= 0) return true;
+            if (tts.setLanguage(Locale.UK) >= 0 || tts.setLanguage(Locale.US) >= 0) return true;
+            return tts.setLanguage(Locale.getDefault()) >= 0;
+        } catch (Throwable e) {
+            return false;
+        }
+    }
+
+    static final String NO_DATA = "The voice engine has no English voice installed. Settings > Map and navigation > Spoken voice > Android's voice settings downloads one, or get eSpeak NG.";
+    static final String SPEAK_FAILED = "The voice engine started but couldn't speak. Settings > Map and navigation > Spoken voice > Repair it, or get eSpeak NG.";
 
     /** The engine Android uses by default, or null. */
     private static String defaultEngine() {
@@ -231,8 +289,15 @@ final class Speak {
 
     /** How the voice is doing, for Settings: working, not starting, or not tried yet. Pure, for the tests. */
     static String state(boolean installed, boolean ready, boolean failed) {
+        return state(installed, ready, failed, false, false, false);
+    }
+
+    static String state(boolean installed, boolean ready, boolean failed, boolean heard, boolean spokeFail, boolean noData) {
         if (!installed) return "No voice engine is installed, so OpenRath can't speak.";
-        if (ready) return "The voice is working.";
+        if (noData) return "The voice engine has no English voice installed. Download one in Android's voice settings, or get eSpeak NG.";
+        if (ready && spokeFail) return "The voice engine starts but couldn't speak. Repairing it (clear its storage), or eSpeak NG, usually fixes this.";
+        if (ready && heard) return "The voice is working.";
+        if (ready) return "The voice engine has started. Tap Test the voice and listen.";
         if (failed) return "The voice engine is installed but doesn't start. Updating it, or clearing its storage, usually fixes this.";
         return "The voice hasn't been tried yet: tap Test the voice.";
     }
@@ -294,7 +359,7 @@ final class Speak {
         });
         new android.app.AlertDialog.Builder(c, android.R.style.Theme_Material_Dialog_Alert)
                 // a dialog with a message hides its list, so the state goes under the title
-                .setCustomTitle(title(c, Hindi.t("Spoken voice"), Hindi.t(state(!engines(c).isEmpty(), ready, failed))))
+                .setCustomTitle(title(c, Hindi.t("Spoken voice"), Hindi.t(state(!engines(c).isEmpty(), ready, failed, heard, spokeFail, noVoiceData))))
                 .setItems(names.toArray(new String[0]), new android.content.DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(android.content.DialogInterface d, int w) {
@@ -371,7 +436,7 @@ final class Speak {
         if (tts.isLanguageAvailable(lang) < 0) return false;
         tts.setLanguage(lang);
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "phrase");
-        if (tts.setLanguage(new Locale("en", "IN")) < 0) tts.setLanguage(Locale.getDefault());
+        language();
         return true;
     }
 

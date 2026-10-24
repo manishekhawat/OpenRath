@@ -44,7 +44,7 @@ final class Duck {
         });
     }
 
-    private static synchronized void start(Context c) {
+    static synchronized void start(Context c) {
         if (speaking++ > 0) return;
         try {
             ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE)).requestAudioFocus(NONE, AudioManager.STREAM_MUSIC,
@@ -54,7 +54,7 @@ final class Duck {
         }
     }
 
-    private static synchronized void end(Context c) {
+    static synchronized void end(Context c) {
         if (speaking == 0) return;
         if (--speaking > 0) return;
         try {
