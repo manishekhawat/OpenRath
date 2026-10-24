@@ -479,8 +479,7 @@ final class MusicScreen extends FrameLayout {
     }
 
     private void volume(boolean up) {
-        AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
-        am.adjustStreamVolume(AudioManager.STREAM_MUSIC, up ? AudioManager.ADJUST_RAISE : AudioManager.ADJUST_LOWER, 0);
+        Volume.step(getContext(), up);
         refresh(false);
     }
 

@@ -252,8 +252,8 @@ final class HomeVoice {
             android.media.AudioManager am = (android.media.AudioManager) a.getSystemService(android.content.Context.AUDIO_SERVICE);
             int dir = "volUp".equals(k) ? android.media.AudioManager.ADJUST_RAISE
                     : "volDown".equals(k) ? android.media.AudioManager.ADJUST_LOWER : android.media.AudioManager.ADJUST_TOGGLE_MUTE;
-            for (int i = 0; i < ("mute".equals(k) ? 1 : 2); i++)
-                am.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, dir, android.media.AudioManager.FLAG_SHOW_UI);
+            if ("mute".equals(k)) am.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, dir, android.media.AudioManager.FLAG_SHOW_UI);
+            else for (int i = 0; i < 2; i++) Volume.step(a, "volUp".equals(k));
         } else {
             MapCard m = a.mapCard();
             if (m == null) {

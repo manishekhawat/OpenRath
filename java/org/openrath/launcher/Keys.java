@@ -252,9 +252,7 @@ final class Keys {
             return;
         }
         if ("volUp".equals(action) || "volDown".equals(action)) {
-            am.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC,
-                    "volUp".equals(action) ? android.media.AudioManager.ADJUST_RAISE : android.media.AudioManager.ADJUST_LOWER,
-                    android.media.AudioManager.FLAG_SHOW_UI);
+            Volume.step(app, "volUp".equals(action));
             return;
         }
         if ("mute".equals(action)) {

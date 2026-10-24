@@ -1338,6 +1338,9 @@ public final class Tests {
         eq("voice: heard is working", "The voice is working.", Speak.state(true, true, false, true, false, false));
         check("voice: an engine that couldn't speak says how to fix", Speak.state(true, true, false, false, true, false).contains("couldn't speak"));
         check("voice: no English voice says so", Speak.state(true, false, true, false, false, true).contains("no English voice"));
+        eq("volume: the radio service's up command", "volumeUp", Volume.command(java.util.Arrays.asList("getVolume()", "setVolumeMute(boolean)", "volumeUp()", "volumeDown()"), true));
+        eq("volume: the radio service's down command", "volumeDown", Volume.command(java.util.Arrays.asList("getVolume()", "volumeUp()", "volumeDown()"), false));
+        eq("volume: no command, no guess", null, Volume.command(java.util.Arrays.asList("getVolume()", "setVolume(int)"), true));
         check("voice: none installed says so", Speak.state(false, false, false).startsWith("No voice engine"));
         check("voice: broken engine says how to fix", Speak.state(true, false, true).contains("doesn't start"));
         check("voice: started, not yet heard", Speak.state(true, true, false).contains("Test the voice"));
