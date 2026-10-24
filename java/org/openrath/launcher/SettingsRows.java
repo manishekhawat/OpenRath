@@ -218,13 +218,20 @@ final class SettingsRows {
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, final int slot) {
+                        final int[] at = HomeDialogs.offered(a.prefs.slot(slot), Features.on(a.prefs, "soundboard"));
+                        String[] shown = new String[at.length];
+                        int now = -1;
+                        for (int i = 0; i < at.length; i++) {
+                            shown[i] = Hindi.t(Prefs.CONTENT_NAMES[at[i]]);
+                            if (Prefs.CONTENTS[at[i]].equals(a.prefs.slot(slot))) now = i;
+                        }
                         new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                 .setTitle(Hindi.f("%1$s shows", Hindi.t(HomeDialogs.slotName(a, slot))))
-                                .setSingleChoiceItems(tr(Prefs.CONTENT_NAMES), java.util.Arrays.asList(Prefs.CONTENTS).indexOf(a.prefs.slot(slot)),
+                                .setSingleChoiceItems(shown, now,
                                         new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface d2, int which) {
-                                                a.prefs.setSlot(slot, Prefs.CONTENTS[which]);
+                                                a.prefs.setSlot(slot, Prefs.CONTENTS[at[which]]);
                                                 a.build();
                                                 d2.dismiss();
                                             }

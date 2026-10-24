@@ -182,10 +182,11 @@ final class HomeDialogs {
             return;
         }
         String cur = a.prefs.slot(slot);
-        String[] items = new String[Prefs.CONTENTS.length + 2];
+        final int[] at = offered(cur, Features.on(a.prefs, "soundboard"));
+        String[] items = new String[at.length + 2];
         items[0] = "      " + Hindi.t("Choose a widget from another app…");
-        for (int i = 0; i < Prefs.CONTENTS.length; i++) {
-            items[i + 1] = (Prefs.CONTENTS[i].equals(cur) ? "✓  " : "      ") + Hindi.f("Show %1$s here", Hindi.t(Prefs.CONTENT_NAMES[i]).toLowerCase());
+        for (int i = 0; i < at.length; i++) {
+            items[i + 1] = (Prefs.CONTENTS[at[i]].equals(cur) ? "✓  " : "      ") + Hindi.f("Show %1$s here", Hindi.t(Prefs.CONTENT_NAMES[at[i]]).toLowerCase());
         }
         items[items.length - 1] = "      " + Hindi.t("All settings…");
         items = java.util.Arrays.copyOf(items, items.length + 1);
@@ -195,11 +196,11 @@ final class HomeDialogs {
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int which) {
-                        if (which == Prefs.CONTENTS.length + 2) a.startMoving();
-                        else if (which == Prefs.CONTENTS.length + 1) a.openSettings();
+                        if (which == at.length + 2) a.startMoving();
+                        else if (which == at.length + 1) a.openSettings();
                         else if (which == 0) widgetHere(a, slot);
                         else {
-                            String c = Prefs.CONTENTS[which - 1];
+                            String c = Prefs.CONTENTS[at[which - 1]];
                             a.prefs.setSlot(slot, c);
                             a.build();
                             // a widget box with nothing in it yet: go straight to the list of widgets
@@ -209,6 +210,17 @@ final class HomeDialogs {
                 })
                 .setNegativeButton(Hindi.t("Close"), null)
                 .show();
+    }
+
+    /** Which boxes a picker offers, as places in Prefs.CONTENTS: the soundboard only while it is on, or already chosen. Pure, for the tests. */
+    static int[] offered(String cur, boolean sounds) {
+        int[] out = new int[Prefs.CONTENTS.length];
+        int n = 0;
+        for (int i = 0; i < Prefs.CONTENTS.length; i++) {
+            if (Prefs.SOUNDS.equals(Prefs.CONTENTS[i]) && !sounds && !Prefs.SOUNDS.equals(cur)) continue;
+            out[n++] = i;
+        }
+        return java.util.Arrays.copyOf(out, n);
     }
 
     /** Put a widget box here (reusing it if this box already is one) and open the list of widgets. */
