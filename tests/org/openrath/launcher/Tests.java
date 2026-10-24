@@ -469,6 +469,18 @@ public final class Tests {
         eq("music: empty search lists all", 3, MusicLists.search(names, subs, "  ").size());
         eq("music: volume share", 0.5f, MusicLists.share(8, 16));
         eq("music: no volume", 0f, MusicLists.share(3, 0));
+        eq("music: dark glyph on silver", 0xFF101114, MusicLists.inkOn(0xFFD8DCE2));
+        eq("music: dark glyph on white", 0xFF101114, MusicLists.inkOn(0xFFE8E8E2));
+        eq("music: white glyph on blue", 0xFFFFFFFF, MusicLists.inkOn(0xFF5D9BE0));
+        eq("music: white glyph on red", 0xFFFFFFFF, MusicLists.inkOn(0xFFD5525A));
+        int[] dot = new int[25];
+        java.util.Arrays.fill(dot, 0xFF000000);
+        dot[12] = 0xFFFFFFFF;
+        int[] soft = MusicLists.blur(dot, 5, 5, 1);
+        check("music: blur spreads the light", (soft[12] & 255) < 255 && (soft[0] & 255) > 0);
+        check("music: blur keeps it opaque", (soft[6] >>> 24) == 255);
+        eq("music: blur of one colour is that colour", 0xFF336699, MusicLists.blur(new int[]{0xFF336699, 0xFF336699, 0xFF336699, 0xFF336699}, 2, 2, 2)[3]);
+        eq("music: blur leaves the picture", 0xFFFFFFFF, dot[12]);
         eq("voice: open music", "musicApp:music", String.valueOf(Voice.parse("open music")));
         eq("voice: open the radio", "musicApp:radio", String.valueOf(Voice.parse("open the radio")));
         eq("voice: radio kholo", "musicApp:radio", String.valueOf(Voice.parse("रेडियो खोलो")));

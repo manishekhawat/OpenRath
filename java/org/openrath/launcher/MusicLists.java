@@ -12,8 +12,8 @@ import java.util.TreeMap;
 
 /**
  * The sums behind the radio and music screen (MusicScreen): FM presets, tuning a step, favourite
- * stations first, songs grouped by artist or folder, and the search. No Android types, so it is
- * unit-tested.
+ * stations first, songs grouped by artist or folder, the search, and the colour sums of its look
+ * (glyphs on the accent, the blurred backdrop). No Android types, so it is unit-tested.
  */
 final class MusicLists {
 
@@ -171,6 +171,43 @@ final class MusicLists {
     /** "8 of 15" volume as a share of the bar, 0 to 1. */
     static float share(int now, int max) {
         return max <= 0 ? 0 : Math.max(0, Math.min(1, now / (float) max));
+    }
+
+    /** The colour for a glyph or words on a fill of `bg` (ARGB): near black on a light fill, else white. */
+    static int inkOn(int bg) {
+        int r = (bg >> 16) & 255, g = (bg >> 8) & 255, b = bg & 255;
+        return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.62 ? 0xFF101114 : 0xFFFFFFFF;
+    }
+
+    /**
+     * A w x h picture (ARGB, opaque) blurred: three box blurs of `radius` each way, edges held. The
+     * screen's backdrop draws a tiny blurred cover big.
+     */
+    static int[] blur(int[] px, int w, int h, int radius) {
+        int[] a = px.clone(), t = new int[px.length];
+        for (int pass = 0; pass < 3; pass++) {
+            box(a, t, w, h, radius, true);
+            box(t, a, w, h, radius, false);
+        }
+        return a;
+    }
+
+    private static void box(int[] in, int[] out, int w, int h, int rad, boolean across) {
+        int lines = across ? h : w, len = across ? w : h;
+        for (int l = 0; l < lines; l++) {
+            for (int i = 0; i < len; i++) {
+                int r = 0, g = 0, b = 0, n = 0;
+                for (int d = -rad; d <= rad; d++) {
+                    int j = Math.max(0, Math.min(len - 1, i + d));
+                    int p = in[across ? l * w + j : j * w + l];
+                    r += (p >> 16) & 255;
+                    g += (p >> 8) & 255;
+                    b += p & 255;
+                    n++;
+                }
+                out[across ? l * w + i : i * w + l] = 0xFF000000 | (r / n) << 16 | (g / n) << 8 | (b / n);
+            }
+        }
     }
 
     private MusicLists() {
