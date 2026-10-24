@@ -32,6 +32,9 @@ final class CarCard extends Cards.Card {
     final Road road = new Road(getContext());
     Boolean lastOn;
     boolean leftOn, rightOn, lit;
+    /** "Lights: tap to set up" shows on the first few starts only (or until tapped); counted once a start. */
+    static final int HINT_STARTS = 5;
+    private static boolean hintCounted, hintNow;
 
     CarCard(Context c) {
         super(c);
@@ -72,6 +75,8 @@ final class CarCard extends Cards.Card {
             @Override
             public void onClick(View v) {
                 Lights.deep = false;
+                host.prefs().put("lightsHint", String.valueOf(HINT_STARTS));   // seen: no need to say it again
+                hintNow = false;
                 host.setupLights();
             }
         });
@@ -117,7 +122,11 @@ final class CarCard extends Cards.Card {
         camera.setTextSize(0, Math.max(Ui.MIN_TEXT, 10 * s) * Ui.k);
         camera.setLayoutParams(at(-2, -2, Gravity.BOTTOM | Gravity.RIGHT, 0, 0, m, Ui.px(12 * s)));
         summary.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
-        summary.setLayoutParams(at(-2, -2, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0, 0, Ui.px(12 * s)));
+        summary.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        summary.setMaxWidth(w - 2 * m);
+        // a row above the lights and the warnings, so they never run into each other
+        float row = Math.max(Ui.MIN_TEXT, 10 * s) * Ui.k * 1.3f;
+        summary.setLayoutParams(at(-2, -2, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0, 0, Ui.px(16 * s) + Math.round(row)));
     }
 
     /** "12.4 km · 34 min · avg 22 · top 68 km/h", in the owner's speed unit (distance stays in km). */
@@ -147,8 +156,12 @@ final class CarCard extends Cards.Card {
         }
         Prefs p = host.prefs();
         boolean learnt = p.lightSignal() != null || !"auto".equals(p.lights());
-        lights.setText(Hindi.t(!learnt ? "LIGHTS: TAP TO SET UP" : on ? "LIGHTS ON" : "LIGHTS OFF"));
-        lights.setTextColor(on ? Ui.SILVER : Ui.ACCENT);
+        if (!learnt && !hintCounted) {
+            hintCounted = true;
+            int seen = p.num("lightsHint", 0);
+            hintNow = seen < HINT_STARTS;
+            if (hintNow) p.put("lightsHint", String.valueOf(seen + 1));
+        }
         speed.setText(h.speedShown());
         String sp = h.speed();
         road.setSpeed(sp.equals("--") ? 0 : Integer.parseInt(sp));
@@ -163,6 +176,10 @@ final class CarCard extends Cards.Card {
         boolean show = still && now - stoppedAt >= 5000 && Drive.driveKm >= 0.5 && Features.on(p, "stopSummary");
         if (show) summary.setText(summary(Drive.driveKm, Drive.driveSec, Drive.driveTop, Units.mph));
         summary.setVisibility(show ? VISIBLE : GONE);
+        // the set-up hint: on the first few starts, and never beside the drive's summary
+        boolean hint = !learnt && !show && hintNow;
+        lights.setText(Hindi.t(hint ? "LIGHTS: TAP TO SET UP" : on ? "LIGHTS ON" : "LIGHTS OFF"));
+        lights.setTextColor(on ? Ui.SILVER : Ui.ACCENT);
         if (still && !show && !summaryDue && Drive.driveKm >= 0.5 && getContext() instanceof HomeActivity) {
             summaryDue = true;
             postDelayed(new Runnable() {
