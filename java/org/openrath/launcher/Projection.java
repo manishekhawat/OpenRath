@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * The phone-projection app (wireless CarPlay and Android Auto: ZLink, AutoKit, CarbitLink and
+ * The phone-projection app (wireless CarPlay and Android Auto: ZLink, AutoKit, CarbitLink, Headunit Revived and
  * others). The owner can choose it; otherwise it is found by its package name or label, once a
  * minute at most. Many of these apps have no launcher icon, so it opens through Compat.launch.
  */
@@ -19,7 +19,7 @@ final class Projection {
 
     /** Words in the package name or label of projection apps. */
     static final String[] WORDS = {"zlink", "autokit", "carplay", "carbit", "phonelink", "phone link", "easyconn",
-            "androidauto", "android auto", "auto link", "autolink", "carlink"};
+            "androidauto", "android auto", "auto link", "autolink", "carlink", "headunit"};
 
     private static String found;
     private static long foundAt = -60000;

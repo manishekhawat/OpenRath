@@ -76,6 +76,7 @@ public final class Tests {
         check("projection zlink", Projection.looksLike("com.zjinnova.zlink", "ZLink"));
         check("projection autokit label", Projection.looksLike("com.xyz.box", "AutoKit"));
         check("projection carplay", Projection.looksLike("cn.manstep.phonemirrorBox", "CarPlay"));
+        check("projection headunit revived", Projection.looksLike("com.andrerinas.headunitrevived", "Headunit Revived"));
         check("projection not gearhead", !Projection.looksLike("com.google.android.projection.gearhead", "Android Auto"));
         check("projection not maps", !Projection.looksLike("com.google.android.apps.maps", "Maps"));
 
