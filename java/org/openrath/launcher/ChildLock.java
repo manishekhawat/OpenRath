@@ -33,6 +33,9 @@ final class ChildLock {
     /** How long a car last seen moving still counts as moving with no fresh speed (a tunnel, GPS lost). */
     static final long LOST_MS = 10 * 60 * 1000;
 
+    /** Faster than this (km/h) counts as moving. */
+    static final float MOVING_KMH = 8;
+
     static boolean moving() {
         long now = System.currentTimeMillis();
         int obd = Obd.speedNow();
@@ -42,14 +45,36 @@ final class ChildLock {
     }
 
     /**
+     * Every fresh speed reading (the trip service's GPS fixes, with the engine's speed when it has
+     * one) keeps "last seen moving" up to date, so a long drive with nothing asking moving() still
+     * holds the locks when GPS is lost in a tunnel.
+     */
+    static void reading(float kmh, long now) {
+        movingSeen = seen(movingSeen, kmh, now);
+    }
+
+    /** The new "last seen moving" time after a reading of kmh at now. Pure, for the tests. */
+    static long seen(long seenMoving, float kmh, long now) {
+        return kmh > MOVING_KMH ? Math.max(seenMoving, now) : seenMoving;
+    }
+
+    /**
      * Whether the car moves: the engine's own speed when an OBD-II adapter reports it, else a GPS fix
      * under 10 seconds old. With neither, a car seen moving in the last 10 minutes still counts as
      * moving, so losing GPS in a tunnel or a garage doesn't unlock the locks. Pure, for the tests.
      */
     static boolean moving(float gpsKmh, long fixAt, int obdKmh, long now, long seenMoving) {
-        if (obdKmh >= 0) return obdKmh > 8;
-        if (now - fixAt < 10000) return gpsKmh > 8;
+        if (obdKmh >= 0) return obdKmh > MOVING_KMH;
+        if (now - fixAt < 10000) return gpsKmh > MOVING_KMH;
         return seenMoving > 0 && now - seenMoving < LOST_MS;
+    }
+
+    /**
+     * Settings, the app search and the box menu's fiddly actions wait for the car to stop (the
+     * "Settings only when stopped" feature); a passenger can still say so and use them.
+     */
+    static boolean parkedOnly(Prefs p) {
+        return Features.on(p, "parkedSettings") && moving();
     }
 
     static boolean blocked(Prefs p, String pkg) {

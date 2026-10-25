@@ -122,8 +122,12 @@ final class Cards {
 
         @Override
         void fit(int w, int h) {
-            note.setTextSize(0, Math.min(Math.max(w / 22f, 11 * Ui.k), h / 6f));
+            float sz = Math.max(Ui.size(0), Math.min(w / 22f, h / 6f));
+            note.setTextSize(0, sz);
             note.setPadding(w / 12, 0, w / 12, 0);
+            // a low box: fewer lines, ending in "…", rather than words cut off at the edge
+            note.setMaxLines(Math.max(1, (int) (h * 0.85f / (sz * 1.2f))));
+            note.setEllipsize(android.text.TextUtils.TruncateAt.END);
         }
 
         @Override
@@ -189,7 +193,9 @@ final class Cards {
     static final class ClockCard extends Card {
         final TextClock time = new TextClock(getContext()), date = new TextClock(getContext());
         /** Under the date: the next event today, else the weather now. */
-        final TextView next = Ui.text(getContext(), 12, Ui.SILVER_DIM, "sans-serif", Gravity.CENTER);
+        final TextView next = Ui.text(getContext(), Ui.MIN_TEXT, Ui.SILVER_DIM, "sans-serif", Gravity.CENTER);
+        /** Whether the box is tall enough for the line under the date. */
+        boolean roomNext = true;
         final LinearLayout col = new LinearLayout(getContext());
 
         ClockCard(Context c) {
@@ -234,26 +240,35 @@ final class Cards {
             }
             // time, date and the line under it together take at most ~80% of the box height
             float big = Math.min(h * 0.42f, w * 0.17f);
-            float small = Math.min(Math.max(big * 0.22f, 11 * Ui.k), w / 16f);
+            float small = Math.max(Ui.size(0), Math.min(big * 0.22f, w / 16f));
+            float under = Math.max(Ui.size(0), small * 0.92f);
             time.setTextSize(0, big);
             date.setTextSize(0, small);
+            date.setMaxWidth(w - Ui.px(24));
+            date.setEllipsize(android.text.TextUtils.TruncateAt.END);
             LinearLayout.LayoutParams tp = new LinearLayout.LayoutParams(-2, -2);
             LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(-2, -2);
             dp.topMargin = Math.round(big * 0.14f);
             time.setLayoutParams(tp);
             date.setLayoutParams(dp);
-            next.setTextSize(0, small * 0.92f);
+            next.setTextSize(0, under);
             next.setMaxWidth(w - Ui.px(24));
             LinearLayout.LayoutParams np = new LinearLayout.LayoutParams(-2, -2);
             np.topMargin = Math.round(small * 0.5f);
             next.setLayoutParams(np);
+            // a low box: the line under the date goes first, then the date, so the time never runs over
+            float timeH = big * 1.2f, dateH = dp.topMargin + small * 1.2f, nextH = np.topMargin + under * 1.2f;
+            boolean dateFits = timeH + dateH <= h * 0.92f;
+            roomNext = dateFits && timeH + dateH + nextH <= h * 0.92f;
+            date.setVisibility(dateFits ? VISIBLE : GONE);
+            next.setVisibility(roomNext && next.length() > 0 ? VISIBLE : GONE);
         }
 
         @Override
         public void changed(Hub h) {
             String t = nextLine(h, System.currentTimeMillis());
             if (!t.contentEquals(next.getText())) next.setText(t);
-            next.setVisibility(t.isEmpty() ? GONE : VISIBLE);
+            next.setVisibility(t.isEmpty() || !roomNext ? GONE : VISIBLE);
         }
 
         /** "14:30  Dentist" for the next event today (from the calendar box's last read), else "23° Clear", else "". */
@@ -360,35 +375,42 @@ final class Cards {
             int m = Ui.px(20 * Math.min(s, 1));
             int is = Ui.px(64 * s);
             icon.setLayoutParams(new LinearLayout.LayoutParams(is, is));
-            temp.setTextSize(0, 48 * Ui.k * s);
+            temp.setTextSize(0, Ui.size(48 * s));
             ((LinearLayout.LayoutParams) temp.getLayoutParams()).leftMargin = Ui.px(12 * s);
-            desc.setTextSize(0, 17 * Ui.k * s);
-            place.setTextSize(0, 14 * Ui.k * s);
-            rain.setTextSize(0, 13 * Ui.k * s);
-            for (TextView t : new TextView[]{desc, place, rain}) t.setMaxWidth(w / 2 - m);
+            desc.setTextSize(0, Ui.size(17 * s));
+            place.setTextSize(0, Ui.size(14 * s));
+            rain.setTextSize(0, Ui.size(13 * s));
+            for (TextView t : new TextView[]{desc, place, rain}) {
+                t.setMaxWidth(w / 2 - m);
+                t.setEllipsize(android.text.TextUtils.TruncateAt.END);
+            }
             int gs = Ui.px(22 * sw);
             for (int i = 0; i < 3; i++) {
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(gs, gs);
                 lp.rightMargin = Ui.px(6 * sw);
                 factIcon[i].setLayoutParams(lp);
-                factText[i].setTextSize(0, 16 * Ui.k * sw);
+                factText[i].setTextSize(0, Ui.size(16 * sw));
             }
             int ds = Ui.px(32 * sw);
             for (int i = 0; i < 2; i++) {
-                dayName[i].setTextSize(0, 16 * Ui.k * sw);
+                dayName[i].setTextSize(0, Ui.size(16 * sw));
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ds, ds);
                 lp.leftMargin = lp.rightMargin = Ui.px(8 * sw);
                 dayIcon[i].setLayoutParams(lp);
-                dayTemp[i].setTextSize(0, 17 * Ui.k * sw);
+                dayTemp[i].setTextSize(0, Ui.size(17 * sw));
             }
             // which rows fit, from the reading down: facts, then the two days, then the 24-hour curve
-            int topH = Math.round(Math.max(is, 70 * Ui.k * s)), factH = Math.round(30 * Ui.k * sw), dayH = Math.round(40 * Ui.k * sw);
+            int topH = Math.round(Math.max(is, 70 * Ui.k * s));
+            int factH = Math.round(Math.max(30 * Ui.k * sw, Ui.size(16 * sw) * 1.3f));
+            int dayH = Math.round(Math.max(40 * Ui.k * sw, Math.max(ds, Ui.size(17 * sw) * 1.3f)));
             int room = h - 2 * m - topH;
             boolean showFacts = room >= factH;
             if (showFacts) room -= factH;
             boolean showDays = room >= dayH && hasDays;
             if (showDays) room -= dayH;
-            boolean curve = hours.wanted && room >= 60 * Ui.k;
+            boolean curve = hours.wanted && room >= 80 * Ui.k;
+            rightRoom = topH;
+            rightRows();
             facts.setVisibility(showFacts ? VISIBLE : GONE);
             days.setVisibility(showDays ? VISIBLE : GONE);
             hours.setVisibility(curve ? VISIBLE : GONE);
@@ -414,13 +436,18 @@ final class Cards {
             int inner = h - 2 * m;
             int is = Ui.px(64 * s);
             icon.setLayoutParams(new LinearLayout.LayoutParams(is, is));
-            temp.setTextSize(0, 48 * Ui.k * s);
+            temp.setTextSize(0, Ui.size(48 * s));
             ((LinearLayout.LayoutParams) temp.getLayoutParams()).leftMargin = Ui.px(12 * s);
-            desc.setTextSize(0, 17 * Ui.k * s);
-            place.setTextSize(0, 14 * Ui.k * s);
-            rain.setTextSize(0, 13 * Ui.k * s);
+            desc.setTextSize(0, Ui.size(17 * s));
+            place.setTextSize(0, Ui.size(14 * s));
+            rain.setTextSize(0, Ui.size(13 * s));
             int part = (w - 2 * m) / 10;
-            for (TextView t : new TextView[]{desc, place, rain}) t.setMaxWidth(Math.round(1.8f * part));
+            for (TextView t : new TextView[]{desc, place, rain}) {
+                t.setMaxWidth(Math.round(1.8f * part));
+                t.setEllipsize(android.text.TextUtils.TruncateAt.END);
+            }
+            rightRoom = inner;
+            rightRows();
             // three facts one under the other, two days one under the other, each sized to fit its column
             float fs = Math.min(1.5f, Math.min(inner / (3 * 28f * Ui.k), 2.4f * part / (100f * Ui.k)));
             int gs = Ui.px(22 * fs);
@@ -428,20 +455,23 @@ final class Cards {
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(gs, gs);
                 lp.rightMargin = Ui.px(8 * fs);
                 factIcon[i].setLayoutParams(lp);
-                factText[i].setTextSize(0, 16 * Ui.k * fs);
+                factText[i].setTextSize(0, Ui.size(16 * fs));
                 ((LinearLayout) facts.getChildAt(i)).setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
                 facts.getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 1));
+                // a low strip: only as many facts as there are lines for, the first ones kept
+                facts.getChildAt(i).setVisibility(i < Math.max(1, (int) (inner / (Ui.size(16 * fs) * 1.25f))) ? VISIBLE : GONE);
             }
             float ds = Math.min(1.5f, Math.min(inner / (2 * 40f * Ui.k), 3.6f * part / (175f * Ui.k)));
             int di = Ui.px(32 * ds);
             for (int i = 0; i < 2; i++) {
-                dayName[i].setTextSize(0, 16 * Ui.k * ds);
+                dayName[i].setTextSize(0, Ui.size(16 * ds));
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(di, di);
                 lp.leftMargin = lp.rightMargin = Ui.px(8 * ds);
                 dayIcon[i].setLayoutParams(lp);
-                dayTemp[i].setTextSize(0, 17 * Ui.k * ds);
+                dayTemp[i].setTextSize(0, Ui.size(17 * ds));
                 ((LinearLayout) days.getChildAt(i)).setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
                 days.getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 1));
+                days.getChildAt(i).setVisibility(i < Math.max(1, (int) (inner / (Ui.size(17 * ds) * 1.3f))) ? VISIBLE : GONE);
             }
             facts.setVisibility(VISIBLE);
             days.setVisibility(hasDays ? VISIBLE : GONE);
@@ -456,6 +486,22 @@ final class Cards {
         }
 
         boolean hasDays, wideNow;
+        /** The height beside the reading for what it's like, the rain line and the place. */
+        int rightRoom;
+
+        /** What it's like always; then the rain line, then the place, while there is height for them. */
+        void rightRows() {
+            float descH = desc.getTextSize() * 1.2f;
+            boolean rainOn = rain.length() > 0;
+            if (rightRoom <= 0) {   // not laid out yet
+                rain.setVisibility(rainOn ? VISIBLE : GONE);
+                return;
+            }
+            boolean rainFits = descH + rain.getTextSize() * 1.2f <= rightRoom;
+            rain.setVisibility(rainOn && rainFits ? VISIBLE : GONE);
+            float used = descH + (rainOn && rainFits ? rain.getTextSize() * 1.2f : 0);
+            place.setVisibility(used + place.getTextSize() * 1.2f <= rightRoom ? VISIBLE : GONE);
+        }
 
         @Override
         public void changed(Hub h) {
@@ -470,7 +516,7 @@ final class Cards {
             if (h.weatherSaved > 0) r = r.isEmpty() ? Weather.savedNote(h.weatherSaved, System.currentTimeMillis())
                     : r + "  ·  " + Hindi.t("offline");
             rain.setText(r);
-            rain.setVisibility(r.isEmpty() ? GONE : VISIBLE);
+            rightRows();
             if (!h.weatherIcon.equals(lastIcon)) {
                 icon.setImageBitmap(Ui.img(getContext(), h.weatherIcon));
                 lastIcon = h.weatherIcon;
@@ -622,7 +668,7 @@ final class Cards {
                 lo = Math.min(lo, t);
                 hi = Math.max(hi, t);
             }
-            float text = Math.max(9, getHeight() * 0.2f);
+            float text = Math.max(Ui.size(0), getHeight() * 0.2f);
             float top = text * 1.3f, bottom = getHeight() - text * 1.4f, w = getWidth();
             float span = Math.max(4, hi - lo);
             ink.setTextSize(text);
@@ -673,6 +719,8 @@ final class Cards {
         /** Headline rows that fit under the title, and how many headlines the lines were laid out for. */
         int room = News.COUNT, laidFor = -1;
         int shown = -1;
+        /** Whether the box is tall enough for each paper's name under its headline. */
+        boolean papers = true;
         boolean wasSpeaking;
         long lastAge;
 
@@ -746,23 +794,33 @@ final class Cards {
             float s = Math.min(h / (300f * Ui.k), w / (420f * Ui.k));
             s = Math.max(0.55f, Math.min(1.3f, s));
             int m = Ui.px(18 * s);
-            float big, small = 12.5f * Ui.k * s;
-            head.setTextSize(0, small);
-            // a big target: it's pressed while driving
-            read.setTextSize(0, 17 * Ui.k * s);
-            read.setPadding(Ui.px(22 * s), Ui.px(9 * s), Ui.px(22 * s), Ui.px(9 * s));
-            read.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(10 * s), m, 0));
-            // larger headlines, each a soft rounded panel with its paper's name under it
-            big = 17.5f * Ui.k * s;
-            float src = 12.5f * Ui.k * s;
-            int gap = Math.round(big * 0.45f), pad = Math.round(big * 0.45f);
+            // a big target: it's pressed while driving, so at least HomeDock.TARGET tall
+            int target = Ui.px(HomeDock.TARGET);
+            read.setTextSize(0, Ui.size(17 * s));
+            read.setPadding(Ui.px(22 * s), 0, Ui.px(22 * s), 0);
+            read.setGravity(Gravity.CENTER);
+            read.setLayoutParams(at(-2, target, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(4 * s), m, 0));
+            // the heading beside it, read at a glance; what's left of the width is its room
+            read.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+            Ui.heading(head, s, w - 2 * m - read.getMeasuredWidth() - Ui.px(8));
+            int headH = Math.max(Ui.px(44 * s), target + Ui.px(4 * s) - Ui.px(14 * s));
+            // larger headlines, each a soft rounded panel with its paper's name under it, at least a target tall
+            float big = Ui.size(17.5f * s);
+            float src = Ui.size(12.5f * s);
+            int gap = Math.round(big * 0.45f);
+            int pad = Math.max(Math.round(big * 0.45f), Math.round((target - big * 1.2f - src * 1.2f) / 2));
             float row = big * 1.3f + src * 1.35f + gap + 2 * pad;
-            room = Math.max(1, (int) ((h - Ui.px(62 * s) - m) / row));
+            float avail = h - Ui.px(14 * s) - headH - m;
+            // a low box: one headline without its paper's name, its panel only as tall as there is room for
+            papers = avail >= row;
+            if (!papers) pad = Math.max(Ui.px(2), Math.round((avail - big * 1.3f - gap) / 2));
+            room = Math.max(1, (int) (avail / row));
             int badge = Math.round(big * 1.45f);
             for (int i = 0; i < lines.length; i++) {
                 lines[i].setTextSize(0, i == 0 ? big * 1.08f : big);
                 srcs[i].setTextSize(0, src);
-                nums[i].setTextSize(0, big * 0.75f);
+                srcs[i].setVisibility(papers && srcs[i].length() > 0 ? VISIBLE : GONE);
+                nums[i].setTextSize(0, Math.max(Ui.size(0), big * 0.75f));
                 android.graphics.drawable.GradientDrawable dot = new android.graphics.drawable.GradientDrawable();
                 dot.setShape(android.graphics.drawable.GradientDrawable.OVAL);
                 dot.setColor(i == 0 ? Ui.ACCENT : Ui.SILVER_DIM);
@@ -783,7 +841,7 @@ final class Cards {
             laidFor = -1;
             rows();
             col.setLayoutParams(at(-1, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(14 * s), m, 0));
-            head.setLayoutParams(new LinearLayout.LayoutParams(-2, Ui.px(44 * s)));
+            head.setLayoutParams(new LinearLayout.LayoutParams(-2, headH));
             head.setGravity(Gravity.CENTER_VERTICAL);
         }
 
@@ -829,7 +887,7 @@ final class Cards {
                     lines[i].setText(it.title);
                     lines[i].setTextColor(Ui.SILVER);
                     srcs[i].setText(it.source);
-                    srcs[i].setVisibility(it.source.isEmpty() ? GONE : VISIBLE);
+                    srcs[i].setVisibility(it.source.isEmpty() || !papers ? GONE : VISIBLE);
                     nums[i].setVisibility(VISIBLE);
                 } else if (i == 0) {
                     lines[i].setText(!Features.on(p, "news") ? Hindi.t("The news box is switched off in Settings > Features.")
@@ -855,14 +913,17 @@ final class Cards {
             value = Ui.text(c, 30, Ui.SILVER, "sans-serif-light", Gravity.CENTER);
             label = Ui.label(c, Hindi.t(name));
             label.setGravity(Gravity.CENTER);
+            // at the 16 px floor, tighter spacing keeps "LAST TANK KM/L" inside its third of the box
+            label.setLetterSpacing(0.04f);
+            label.setEllipsize(android.text.TextUtils.TruncateAt.END);
             addView(value);
             addView(label);
             value.setText("--");
         }
 
         void size(float s) {
-            value.setTextSize(0, 30 * Ui.k * s);
-            label.setTextSize(0, Math.max(Ui.MIN_TEXT, 10 * s) * Ui.k);
+            value.setTextSize(0, Ui.size(30 * s));
+            label.setTextSize(0, Ui.size(10 * s));
         }
     }
 
@@ -909,24 +970,39 @@ final class Cards {
             if (on && !text.contentEquals(middle.getText())) middle.setText(text);
             middle.setVisibility(on ? VISIBLE : GONE);
             row.setVisibility(on ? INVISIBLE : VISIBLE);
-            foot.setVisibility(on ? INVISIBLE : VISIBLE);
+            foot.setVisibility(!roomFoot ? GONE : on ? INVISIBLE : VISIBLE);
         }
 
         @Override
         void fit(int w, int h) {
             float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
             int m = Ui.px(20 * s);
-            middle.setTextSize(0, Math.max(Ui.MIN_TEXT, 14 * s) * Ui.k);
-            middle.setLayoutParams(at(-1, -2, Gravity.CENTER, m, Ui.px(10 * s), m, 0));
-            head.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
+            Ui.heading(head, s, w - 2 * m);
             head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(12 * s), 0, 0));
             for (Figure f : figs) f.size(s);
             row.setLayoutParams(at(-1, -2, Gravity.CENTER_VERTICAL, m / 2, Ui.px(4 * s), m / 2, 0));
-            foot.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
+            foot.setTextSize(0, Ui.size(11 * s));
             foot.setLayoutParams(at(-1, -2, Gravity.BOTTOM, m, 0, m, Ui.px(10 * s)));
             // in a tall box the figures get room to grow
-            if (h > w * 0.6f) for (Figure f : figs) f.value.setTextSize(0, 38 * Ui.k * s);
+            if (h > w * 0.6f) for (Figure f : figs) f.value.setTextSize(0, Ui.size(38 * s));
+            // a low box: the foot line goes first, then the heading drops to the smallest size, so
+            // the figures in the middle never run into them
+            float rowH = (figs[0].value.getTextSize() + figs[0].label.getTextSize()) * 1.2f;
+            float rowTop = h / 2f + Ui.px(2 * s) - rowH / 2, rowBottom = rowTop + rowH;
+            roomFoot = rowBottom <= h - Ui.px(10 * s) - foot.getTextSize() * 1.2f;
+            if (Ui.px(12 * s) + head.getTextSize() * 1.2f > rowTop) head.setTextSize(0, Ui.size(0));
+            head.setVisibility(Ui.px(12 * s) + head.getTextSize() * 1.2f > rowTop + Ui.px(4) ? GONE : VISIBLE);
+            foot.setVisibility(roomFoot && middle.getVisibility() != VISIBLE ? VISIBLE : roomFoot ? INVISIBLE : GONE);
+            // the friendly line in the middle: as many lines as fit between the heading and the bottom
+            float mid = Ui.size(14 * s);
+            middle.setTextSize(0, mid);
+            middle.setMaxLines(Math.max(1, Math.min(3, (int) ((h - head.getTextSize() * 1.2f - Ui.px(22 * s)) / (mid * 1.2f) - 0.2f))));
+            middle.setEllipsize(android.text.TextUtils.TruncateAt.END);
+            middle.setLayoutParams(at(-1, -2, Gravity.CENTER, m, Math.round(head.getTextSize() * 0.6f), m, 0));
         }
+
+        /** Whether the box is tall enough for the foot line under the figures. */
+        boolean roomFoot = true;
     }
 
     static final class TripCard extends FiguresCard {
@@ -1236,17 +1312,23 @@ final class Cards {
         void fit(int w, int h) {
             float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
             int m = Ui.px(16 * s), g = Ui.px(5 * s);
-            head.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
+            Ui.heading(head, s, w - 2 * m);
             head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(10 * s), 0, 0));
             for (TextView p : pads) {
-                p.setTextSize(0, 13 * Ui.k * s);
+                p.setTextSize(0, Ui.size(13 * s));
                 p.setSingleLine(true);
                 p.setEllipsize(android.text.TextUtils.TruncateAt.END);
                 ((LinearLayout.LayoutParams) p.getLayoutParams()).setMargins(g, g, g, g);
             }
-            grid.setLayoutParams(at(-1, -1, Gravity.TOP, m - g, Ui.px(30 * s), m - g, Ui.px(24 * s)));
-            note.setTextSize(0, Math.max(Ui.MIN_TEXT, 10 * s) * Ui.k);
+            note.setTextSize(0, Ui.size(10 * s));
             note.setLayoutParams(at(-1, -2, Gravity.BOTTOM, m, 0, m, Ui.px(6 * s)));
+            // the pads in rows of three, each row a full touch target tall: a low box shows one row.
+            // The note (only while moving, when the pads are dimmed and don't play) sits over their lower edge.
+            int top = Math.round(Ui.px(10 * s) + head.getTextSize() * 1.2f + Ui.px(4 * s));
+            int bottom = Ui.px(6 * s);
+            int rows = Math.max(1, Math.min(2, (h - top - bottom) / (Ui.px(HomeDock.TARGET) + 2 * g)));
+            for (int i = 0; i < grid.getChildCount(); i++) grid.getChildAt(i).setVisibility(i < rows ? VISIBLE : GONE);
+            grid.setLayoutParams(at(-1, -1, Gravity.TOP, m - g, top, m - g, bottom));
         }
 
         @Override
@@ -1308,12 +1390,15 @@ final class Cards {
         void fit(int w, int h) {
             float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
             int m = Ui.px(16 * s);
-            head.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
+            Ui.heading(head, s, w - 2 * m);
             head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(10 * s), 0, 0));
-            float line = 14 * Ui.k * Math.max(0.8f, Math.min(1.4f, s));
+            float line = Ui.size(14 * Math.max(0.8f, Math.min(1.4f, s)));
             for (TextView t : lines) t.setTextSize(0, line);
-            fitLines = Math.max(1, Math.min(Agenda.MAX, (int) ((h - Ui.px(48 * s)) / (line * 1.35f))));
-            col.setLayoutParams(at(-1, -2, Gravity.TOP, m, Ui.px(30 * s), m, 0));
+            int top = Math.round(Ui.px(10 * s) + head.getTextSize() * 1.2f + Ui.px(4 * s));
+            // the events that fit between the heading and the note line at the bottom
+            float noteH = Ui.size(11 * s) * 1.2f + Ui.px(8 * s);
+            fitLines = Math.max(1, Math.min(Agenda.MAX, (int) ((h - top - noteH) / (line * 1.35f))));
+            col.setLayoutParams(at(-1, -2, Gravity.TOP, m, top, m, 0));
             this.w = w;
             this.h = h;
             placeNote();
@@ -1363,7 +1448,10 @@ final class Cards {
         private void placeNote() {
             float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
             int m = Ui.px(16 * s);
-            note.setTextSize(0, Math.max(Ui.MIN_TEXT, (blank ? 13 : 11) * s) * Ui.k);
+            float sz = Ui.size((blank ? 13 : 11) * s);
+            note.setTextSize(0, sz);
+            note.setMaxLines(blank ? Math.max(1, Math.min(3, (int) ((h - head.getTextSize() * 1.2f - Ui.px(20 * s)) / (sz * 1.2f)))) : 1);
+            note.setEllipsize(android.text.TextUtils.TruncateAt.END);
             note.setLayoutParams(blank ? at(-1, -2, Gravity.CENTER, m, Ui.px(10 * s), m, 0) : at(-1, -2, Gravity.BOTTOM, m, 0, m, Ui.px(8 * s)));
         }
 
@@ -1488,8 +1576,12 @@ final class Cards {
         @Override
         void fit(int w, int h) {
             float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
-            cover.setTextSize(0, 13 * Ui.k * s);
+            float sz = Ui.size(13 * s);
+            cover.setTextSize(0, sz);
             cover.setPadding(Ui.px(16 * s), 0, Ui.px(16 * s), 0);
+            cover.setSingleLine(false);
+            cover.setMaxLines(Math.max(1, (int) (h * 0.85f / (sz * 1.2f))));
+            cover.setEllipsize(android.text.TextUtils.TruncateAt.END);
         }
 
         @Override

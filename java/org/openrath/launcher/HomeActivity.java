@@ -353,6 +353,11 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     @Override
     public void pickWidget(String content) {
+        // a widget box's tap: the list of widgets waits for the car to stop (a passenger has the box menu)
+        if (ChildLock.parkedOnly(prefs)) {
+            android.widget.Toast.makeText(this, Hindi.t("Widgets can be chosen when the car is stopped"), android.widget.Toast.LENGTH_SHORT).show();
+            return;
+        }
         Extras.pickWidget(this, content);
     }
 
@@ -1107,7 +1112,7 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     void openSettings() {
         if (settingsView != null) return;
-        if (Features.on(prefs, "parkedSettings") && !passenger && ChildLock.moving()) {
+        if (!passenger && ChildLock.parkedOnly(prefs)) {
             new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                     .setTitle(Hindi.t("Settings open when the car is stopped"))
                     .setMessage(Hindi.t("Changing settings while driving takes your eyes off the road."))
@@ -1212,7 +1217,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         TextView done = PhoneCard.pill(this, Hindi.t("Done"), 0xFF2A2D32);
         done.setTextSize(0, 16 * Ui.k);
         done.setPadding(Ui.px(20), 0, Ui.px(20), 0);
-        LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(-2, Ui.px(44));
+        LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(-2, Ui.px(HomeDock.TARGET));
         dp.leftMargin = Ui.px(18);
         bar.addView(done, dp);
         done.setOnClickListener(new View.OnClickListener() {
@@ -1224,7 +1229,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         TextView reset = PhoneCard.pill(this, Hindi.t("Usual sizes"), 0xFF2A2D32);
         reset.setTextSize(0, 16 * Ui.k);
         reset.setPadding(Ui.px(20), 0, Ui.px(20), 0);
-        LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(-2, Ui.px(44));
+        LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(-2, Ui.px(HomeDock.TARGET));
         rp.leftMargin = Ui.px(10);
         bar.addView(reset, rp);
         reset.setOnClickListener(new View.OnClickListener() {

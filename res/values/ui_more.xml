@@ -258,6 +258,9 @@
     <string name="ui_more_background_behind_the_glass" formatted="false">Background behind the glass</string>
     <string name="ui_more_add_your_picture" formatted="false">Add your picture</string>
     <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">Copy a picture (JPG or PNG) to %1$s on the unit, with a USB stick or a file manager. Until then the Aurora background shows.</string>
+    <string name="ui_more_your_most_used_apps_search_and_the_full_list" formatted="false">Your most used apps. Search and the full list open when the car is stopped.</string>
+    <string name="ui_more_i_m_a_passenger_widgets_and_moving_boxes" formatted="false">I\'m a passenger: widgets and moving boxes</string>
+    <string name="ui_more_widgets_can_be_chosen_when_the_car_is_stoppe" formatted="false">Widgets can be chosen when the car is stopped</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -515,5 +518,8 @@
         <item>@string/ui_more_background_behind_the_glass</item>
         <item>@string/ui_more_add_your_picture</item>
         <item>@string/ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit</item>
+        <item>@string/ui_more_your_most_used_apps_search_and_the_full_list</item>
+        <item>@string/ui_more_i_m_a_passenger_widgets_and_moving_boxes</item>
+        <item>@string/ui_more_widgets_can_be_chosen_when_the_car_is_stoppe</item>
     </string-array>
 </resources>

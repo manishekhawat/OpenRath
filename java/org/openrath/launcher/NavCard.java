@@ -57,7 +57,7 @@ final class NavCard {
         LinearLayout words = new LinearLayout(a);
         words.setOrientation(LinearLayout.VERTICAL);
         TextView dist = Ui.text(a, 34, Ui.SILVER, "sans-serif-light", Gravity.LEFT);
-        TextView what = Ui.text(a, 22, Ui.SILVER, "sans-serif", Gravity.LEFT);
+        TextView what = Ui.text(a, Ui.READ, Ui.SILVER, "sans-serif", Gravity.LEFT);
         what.setSingleLine(false);
         what.setMaxLines(2);
         what.setEllipsize(android.text.TextUtils.TruncateAt.END);

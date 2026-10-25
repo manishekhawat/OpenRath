@@ -257,4 +257,7 @@
     <string name="ui_more_background_behind_the_glass" formatted="false">शीशे के पीछे का बैकग्राउंड</string>
     <string name="ui_more_add_your_picture" formatted="false">अपनी तस्वीर जोड़ें</string>
     <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">यूनिट पर %1$s में एक तस्वीर (JPG या PNG) कॉपी करें, USB स्टिक या फ़ाइल मैनेजर से। तब तक अरोरा बैकग्राउंड दिखेगा।</string>
+    <string name="ui_more_your_most_used_apps_search_and_the_full_list" formatted="false">आपके सबसे ज़्यादा चलाए ऐप। खोज और पूरी सूची कार रुकने पर खुलती है।</string>
+    <string name="ui_more_i_m_a_passenger_widgets_and_moving_boxes" formatted="false">मैं सवारी हूँ: विजेट और बॉक्स हटाना</string>
+    <string name="ui_more_widgets_can_be_chosen_when_the_car_is_stoppe" formatted="false">विजेट कार रुकने पर चुने जा सकते हैं</string>
 </resources>

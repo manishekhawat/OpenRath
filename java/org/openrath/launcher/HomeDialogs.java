@@ -167,49 +167,86 @@ final class HomeDialogs {
 
     /** Long-press on a box: what it shows, and the way to all settings. */
     static void settings(final HomeActivity a, final int slot) {
+        settings(a, slot, false);
+    }
+
+    /** Box menu actions: 0 and up, a box content to show (its place in offered()); below 0, these. */
+    private static final int WIDGET = -2, ALL = -3, MOVE = -4, PASSENGER = -5;
+
+    /**
+     * The box menu. While the car moves (Settings only when stopped) the actions that need fiddling,
+     * choosing another app's widget and moving boxes, wait for the car to stop, unless the owner says
+     * a passenger is using the screen; a long press off the boxes doesn't open Settings then.
+     */
+    static void settings(final HomeActivity a, final int slot, final boolean passenger) {
         if (Valet.on(a.prefs) && !a.ownerUnlocked) {
             Valet.unlock(a, a.prefs, new Runnable() {
                 @Override
                 public void run() {
                     a.ownerUnlocked = true;
-                    settings(a, slot);
+                    settings(a, slot, passenger);
                 }
             });
             return;
         }
+        boolean locked = !passenger && ChildLock.parkedOnly(a.prefs);
         if (slot < 0) {
-            a.openSettings();
+            if (locked) Toast.makeText(a, Hindi.t("Settings open when the car is stopped"), Toast.LENGTH_SHORT).show();
+            else a.openSettings();
             return;
         }
         String cur = a.prefs.slot(slot);
         final int[] at = offered(cur, Features.on(a.prefs, "soundboard"));
-        String[] items = new String[at.length + 2];
-        items[0] = "      " + Hindi.t("Choose a widget from another app…");
-        for (int i = 0; i < at.length; i++) {
-            items[i + 1] = (Prefs.CONTENTS[at[i]].equals(cur) ? "✓  " : "      ") + Hindi.f("Show %1$s here", Hindi.t(Prefs.CONTENT_NAMES[at[i]]).toLowerCase());
+        final java.util.List<Integer> acts = menu(at.length, locked);
+        String[] items = new String[acts.size()];
+        for (int i = 0; i < items.length; i++) {
+            int act = acts.get(i);
+            if (act == WIDGET) items[i] = "      " + Hindi.t("Choose a widget from another app…");
+            else if (act == ALL) items[i] = "      " + Hindi.t("All settings…");
+            else if (act == MOVE) items[i] = "      " + Hindi.t("Move boxes (drag and drop)…");
+            else if (act == PASSENGER) items[i] = "      " + Hindi.t("I'm a passenger: widgets and moving boxes");
+            else items[i] = (Prefs.CONTENTS[at[act]].equals(cur) ? "✓  " : "      ") + Hindi.f("Show %1$s here", Hindi.t(Prefs.CONTENT_NAMES[at[act]]).toLowerCase());
         }
-        items[items.length - 1] = "      " + Hindi.t("All settings…");
-        items = java.util.Arrays.copyOf(items, items.length + 1);
-        items[items.length - 1] = "      " + Hindi.t("Move boxes (drag and drop)…");
         new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t(slotName(a, slot)))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int which) {
-                        if (which == at.length + 2) a.startMoving();
-                        else if (which == at.length + 1) a.openSettings();
-                        else if (which == 0) widgetHere(a, slot);
+                        int act = acts.get(which);
+                        if (act == MOVE) a.startMoving();
+                        else if (act == ALL) a.openSettings();
+                        else if (act == WIDGET) widgetHere(a, slot);
+                        else if (act == PASSENGER) settings(a, slot, true);
                         else {
-                            String c = Prefs.CONTENTS[at[which - 1]];
+                            String c = Prefs.CONTENTS[at[act]];
                             a.prefs.setSlot(slot, c);
                             a.build();
-                            // a widget box with nothing in it yet: go straight to the list of widgets
-                            if (c.startsWith("widget") && a.prefs.num("widgetId:" + c, -1) < 0) a.pickWidget(c);
+                            // a widget box with nothing in it yet: go straight to the list of widgets (not while driving)
+                            if (c.startsWith("widget") && a.prefs.num("widgetId:" + c, -1) < 0 && !locked(a, passenger)) Extras.pickWidget(a, c);
                         }
                     }
                 })
                 .setNegativeButton(Hindi.t("Close"), null)
                 .show();
+    }
+
+    private static boolean locked(HomeActivity a, boolean passenger) {
+        return !passenger && ChildLock.parkedOnly(a.prefs);
+    }
+
+    /**
+     * The box menu's lines, as actions: the widget picker, a line per box (0 to boxes - 1), All
+     * settings, Move boxes; while locked (moving) no widget picker or Move boxes, and a passenger line
+     * last that brings them back. Pure, for the tests.
+     */
+    static java.util.List<Integer> menu(int boxes, boolean locked) {
+        java.util.List<Integer> out = new java.util.ArrayList<>();
+        if (!locked) out.add(WIDGET);
+        for (int i = 0; i < boxes; i++) out.add(i);
+        out.add(ALL);
+        if (!locked) out.add(MOVE);
+        else out.add(PASSENGER);
+        return out;
     }
 
     /** Which boxes a picker offers, as places in Prefs.CONTENTS: the soundboard only while it is on, or already chosen. Pure, for the tests. */
@@ -236,7 +273,7 @@ final class HomeDialogs {
             a.prefs.setSlot(slot, c);
             a.build();
         }
-        a.pickWidget(c);
+        Extras.pickWidget(a, c);   // the box menu offers this only when stopped, or to a passenger
     }
 
     /** The first of "widget1", "widget2", "widget3"… that no box shows. Pure, for the tests. */
