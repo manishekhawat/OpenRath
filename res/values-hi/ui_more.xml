@@ -257,4 +257,10 @@
     <string name="ui_more_background_behind_the_glass" formatted="false">शीशे के पीछे का बैकग्राउंड</string>
     <string name="ui_more_add_your_picture" formatted="false">अपनी तस्वीर जोड़ें</string>
     <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">यूनिट पर %1$s में एक तस्वीर (JPG या PNG) कॉपी करें, USB स्टिक या फ़ाइल मैनेजर से। तब तक अरोरा बैकग्राउंड दिखेगा।</string>
+    <string name="ui_more_keypad" formatted="false">कीपैड</string>
+    <string name="ui_more_type_a_number" formatted="false">नंबर लिखें</string>
+    <string name="ui_more_allow_phone_calls_then_tap_call_again" formatted="false">फ़ोन कॉल की अनुमति दें, फिर कॉल दोबारा दबाएँ</string>
+    <string name="ui_more_dialing_a_number_is_blocked_while_the_car_is" formatted="false">गाड़ी चलते समय नंबर डायल करना बंद है</string>
+    <string name="ui_more_say_call_and_a_name_instead_or_stop_the_car_" formatted="false">इसकी जगह \"कॉल\" और नाम बोलें, या नंबर लिखने के लिए गाड़ी रोकें।</string>
+    <string name="ui_more_speak" formatted="false">बोलें</string>
 </resources>

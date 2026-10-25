@@ -258,6 +258,12 @@
     <string name="ui_more_background_behind_the_glass" formatted="false">Background behind the glass</string>
     <string name="ui_more_add_your_picture" formatted="false">Add your picture</string>
     <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">Copy a picture (JPG or PNG) to %1$s on the unit, with a USB stick or a file manager. Until then the Aurora background shows.</string>
+    <string name="ui_more_keypad" formatted="false">Keypad</string>
+    <string name="ui_more_type_a_number" formatted="false">Type a number</string>
+    <string name="ui_more_allow_phone_calls_then_tap_call_again" formatted="false">Allow phone calls, then tap Call again</string>
+    <string name="ui_more_dialing_a_number_is_blocked_while_the_car_is" formatted="false">Dialing a number is blocked while the car is moving</string>
+    <string name="ui_more_say_call_and_a_name_instead_or_stop_the_car_" formatted="false">Say \"call\" and a name instead, or stop the car to type a number.</string>
+    <string name="ui_more_speak" formatted="false">Speak</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -515,5 +521,11 @@
         <item>@string/ui_more_background_behind_the_glass</item>
         <item>@string/ui_more_add_your_picture</item>
         <item>@string/ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit</item>
+        <item>@string/ui_more_keypad</item>
+        <item>@string/ui_more_type_a_number</item>
+        <item>@string/ui_more_allow_phone_calls_then_tap_call_again</item>
+        <item>@string/ui_more_dialing_a_number_is_blocked_while_the_car_is</item>
+        <item>@string/ui_more_say_call_and_a_name_instead_or_stop_the_car_</item>
+        <item>@string/ui_more_speak</item>
     </string-array>
 </resources>

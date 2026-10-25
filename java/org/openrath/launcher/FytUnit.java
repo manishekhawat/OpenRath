@@ -274,6 +274,23 @@ final class FytUnit extends Unit {
     }
 
     @Override
+    boolean dialsItself(Context c) {
+        return btM != null || super.dialsItself(c);
+    }
+
+    @Override
+    int callState() {
+        return callState(btM != null, phone);
+    }
+
+    /** The call screen's state from the Bluetooth module's phone state (-1 before it has said). */
+    static int callState(boolean linked, int phone) {
+        if (!linked || phone < 0) return CALL_UNKNOWN;
+        if (phone == PH_RINGING) return CALL_RINGING;
+        return phone == PH_DIALING || phone == PH_TALKING ? CALL_ON : CALL_NONE;
+    }
+
+    @Override
     String caller() {
         return phone == PH_DIALING || phone == PH_RINGING || phone == PH_TALKING ? number : "";
     }

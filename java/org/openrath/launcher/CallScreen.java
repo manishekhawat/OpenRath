@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.view.Gravity;
 import android.view.View;
@@ -16,12 +18,16 @@ import android.widget.TextView;
  * The call screen over any app: when a call rings, a bar along the top shows who is calling (their
  * contact name when the unit has it) with big Answer and End buttons, whatever app is in front, and
  * stays as a slim bar with End during the call. Follows Android's phone state, which Bluetooth
- * hands-free calls report on most units. Needs "Display over other apps".
+ * hands-free calls report on most units, and the stereo maker's own phone service (FYT, MTCD,
+ * Topway) where it has one, whose Answer and End then go through that service. Needs "Display over
+ * other apps".
  */
 final class CallScreen {
 
     private static View shown;
     private static TextView who, what, answer;
+    /** The maker's phone service that reported the call, for Answer and End; null: Android's phone state. */
+    private static Unit by;
 
     static boolean wanted(Prefs p) {
         return Features.on(p, "callScreen");
@@ -47,6 +53,98 @@ final class CallScreen {
         }
     }
 
+    /**
+     * The stereo maker's phone service, watched from the trip service (which runs behind other apps,
+     * while the dashboard's own copy stops): a ring or a call it reports opens the call screen, and
+     * the end of the call closes it. Only with "Stereo maker's services" on and a maker add-on that
+     * knows its calls; plain Android is left to the phone state above.
+     */
+    static final class Units implements Runnable {
+        private final Context app;
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private Unit unit;
+        private Hub hub;
+        private int was = Unit.CALL_NONE;
+        private String said = "";
+        private long checkedAt;
+
+        Units(Context c) {
+            app = c.getApplicationContext();
+        }
+
+        void start() {
+            handler.removeCallbacks(this);
+            handler.post(this);
+        }
+
+        void stop() {
+            handler.removeCallbacks(this);
+            drop();
+        }
+
+        @Override
+        public void run() {
+            try {
+                check();
+            } catch (Throwable e) {
+                Diag.note("call screen", e);
+            }
+            handler.postDelayed(this, unit == null ? 5000 : 700);
+        }
+
+        private void check() {
+            long now = System.currentTimeMillis();
+            if (now - checkedAt > 10000) {
+                checkedAt = now;
+                Prefs p = new Prefs(app);
+                boolean want = wanted(p) && Features.on(p, "maker");
+                if (want && unit == null) pick(p);
+                else if (!want && unit != null) drop();
+            }
+            if (unit == null) return;
+            int st = unit.callState();
+            if (st < 0) return;
+            String num = st == Unit.CALL_NONE ? "" : unit.caller();
+            if (st == was && num.equals(said)) return;
+            boolean ended = st == Unit.CALL_NONE && was != Unit.CALL_NONE;
+            was = st;
+            said = num;
+            if (ended) {
+                if (by == unit) hide(app);
+            } else if (st != Unit.CALL_NONE) {
+                show(app, num, st == Unit.CALL_RINGING, unit);
+            }
+        }
+
+        private void pick(Prefs p) {
+            Hub h = new Hub(app, p);
+            Unit u = Unit.pick(app, p, h);
+            if (u.getClass() == Unit.class) return;   // plain Android: the phone state covers it
+            if (u instanceof TopwayUnit && Compat.isSystemApp(app.getPackageManager(), Xt.PKG)) {
+                h.xt = new Xt(app, new Xt.Listener() {
+                    @Override
+                    public void radioChanged() {
+                        // only its phone getters are read here
+                    }
+                });
+                h.xt.bind();
+            }
+            u.start();
+            hub = h;
+            unit = u;
+            was = Unit.CALL_NONE;
+            said = "";
+        }
+
+        private void drop() {
+            if (unit != null) unit.stop();
+            if (hub != null && hub.xt != null) hub.xt.unbind();
+            if (unit != null && by == unit) by = null;
+            unit = null;
+            hub = null;
+        }
+    }
+
     /** The name to show: the contact, else an OpenRath favourite, else the number, else "Call". */
     static String caller(Context c, Prefs p, String number) {
         if (number == null || number.isEmpty()) return Hindi.t("Call");
@@ -55,8 +153,14 @@ final class CallScreen {
         return n.isEmpty() ? number : n;
     }
 
-    static void show(final Context app, String number, boolean ringing) {
+    static void show(Context app, String number, boolean ringing) {
+        show(app, number, ringing, by);
+    }
+
+    /** Show or update the call screen; `unit` is the maker's phone service that reported it, or null. */
+    static void show(final Context app, String number, boolean ringing, Unit unit) {
         if (!OverMic.allowed(app)) return;
+        by = unit;
         final Prefs p = new Prefs(app);
         if (shown == null) {
             WindowManager wm = (WindowManager) app.getSystemService(Context.WINDOW_SERVICE);
@@ -90,14 +194,18 @@ final class CallScreen {
                 @Override
                 public void onClick(View v) {
                     v.playSoundEffect(android.view.SoundEffectConstants.CLICK);
-                    telecom(app, "acceptRingingCall");
+                    Unit u = by;
+                    if (u != null) u.answer(app);
+                    else telecom(app, "acceptRingingCall");
                 }
             });
             end.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     v.playSoundEffect(android.view.SoundEffectConstants.CLICK);
-                    telecom(app, "endCall");
+                    Unit u = by;
+                    if (u != null) u.hangUp(app);
+                    else telecom(app, "endCall");
                     hide(app);
                 }
             });
@@ -147,6 +255,7 @@ final class CallScreen {
             // not shown any more
         }
         shown = null;
+        by = null;
         who = what = answer = null;
     }
 

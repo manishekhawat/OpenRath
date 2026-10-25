@@ -816,7 +816,10 @@ public class HomeActivity extends Activity implements Cards.Host {
             return;
         }
         Intent i = pkg == null ? null : Compat.launch(getPackageManager(), pkg);
-        if (i == null && "dock:phone".equals(key)) i = new Intent(Intent.ACTION_DIAL);
+        if (i == null && "dock:phone".equals(key)) {
+            Keypad.show(this, hub.unit);   // no phone app chosen: OpenRath's own keypad, through the stereo's phone
+            return;
+        }
         if (i != null) {
             try {
                 startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
