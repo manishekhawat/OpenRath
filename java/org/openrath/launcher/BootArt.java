@@ -228,11 +228,24 @@ final class BootArt {
 
     /** One frame at time t (seconds) on a w x h canvas cleared to black. */
     static void draw(Canvas c, int w, int h, float t, Mark m, String brand, String name, Typeface light) {
+        draw(c, w, h, t, m, brand, name, light, null);
+    }
+
+    /** As above; with `wall` (the Glass look's blurred wallpaper) the mark sits on a frosted glass card over it. */
+    static void draw(Canvas c, int w, int h, float t, Mark m, String brand, String name, Typeface light, Bitmap wall) {
         float k = Math.min(h / 600f, w / 700f), cx = w / 2f;
         float oy = (h - 600 * k) / 2;   // centred on a portrait or tall screen
         float cy = oy + 222 * k, lineY = oy + 378 * k, brandY = oy + 424 * k, nameY = oy + 496 * k;
         if (name.isEmpty() && brand.isEmpty()) cy = h / 2f;
         Paint p = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+        if (wall != null) {
+            Glass.backdrop(c, wall, w, h, Math.min(1, t / 0.6f));
+            float in = ease(t / 0.9f);
+            boolean words = !(brand.isEmpty() && name.isEmpty());
+            RectF card = new RectF(cx - 300 * k, (words ? oy + 70 * k : cy - 150 * k) + (1 - in) * 14 * k,
+                    cx + 300 * k, (words ? oy + 540 * k : cy + 150 * k) + (1 - in) * 14 * k);
+            Glass.card(c, card, 40 * k, in, false);
+        }
 
         // a faint glow behind the mark
         float g = 0.10f * ease((t - 0.8f) / 1.5f);
@@ -341,6 +354,14 @@ final class BootArt {
         } catch (RuntimeException e) {
             light = Typeface.create("sans-serif-light", Typeface.NORMAL);
         }
+        Bitmap wall = null;
+        if (Glass.wanted(p)) {
+            try {
+                wall = Glass.wallpaper(c, p);
+            } catch (Throwable e) {
+                Diag.note("boot glass", e);
+            }
+        }
         Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas cv = new Canvas(bm);
         File zip = new File(dir, "bootanimation.zip"), logo = new File(dir, "bootlogo.bmp");
@@ -350,7 +371,7 @@ final class BootArt {
             ByteArrayOutputStream png = new ByteArrayOutputStream();
             for (int i = 0; i <= FRAMES; i++) {
                 bm.eraseColor(0xFF000000);
-                draw(cv, w, h, i / (float) FPS, m, brand, name, light);
+                draw(cv, w, h, i / (float) FPS, m, brand, name, light, wall);
                 png.reset();
                 bm.compress(Bitmap.CompressFormat.PNG, 100, png);
                 // part0 is the animation; part1 is the last frame, held until boot completes
