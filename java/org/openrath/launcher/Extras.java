@@ -533,7 +533,7 @@ final class Extras {
         final List<String> devs = Obd.paired();
         if (devs.isEmpty()) {
             new Glass.Builder(a, DIALOG).setTitle(Hindi.t("No paired Bluetooth devices"))
-                    .setMessage(Hindi.t("Plug the OBD adapter (often sold as ELM327) into the socket under the steering wheel, switch the ignition on, "
+                    .setMessage(Hindi.t("Plug the engine-data plug (sold as an OBD-II adapter, ELM327) into the socket under the steering wheel, switch the ignition on, "
                             + "and pair it in the unit's Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here."))
                     .setPositiveButton(Hindi.t("Bluetooth settings"), new DialogInterface.OnClickListener() {
                         @Override
@@ -794,6 +794,12 @@ final class Extras {
                 screenOff(a);
             }
         }));
+        r.add(new SettingsView.Row("Dashboard", "Screen brightness for all apps", a.brightnessState(), new Runnable() {
+            @Override
+            public void run() {
+                a.brightnessSettings();
+            }
+        }));
 
         // ---- Engine and tyres
         String g = "Engine and tyres";
@@ -817,6 +823,18 @@ final class Extras {
                 new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Live engine readings"))
                         .setMessage(now.isEmpty() ? Hindi.f("Not connected to the adapter: %1$s", Hindi.t(Obd.status)) : now)
                         .setPositiveButton(Hindi.t("OK"), null).show();
+            }
+        }));
+        r.add(new SettingsView.Row(g, "Your own engine readings", Obd.mine(p.str("obdMine", "")).length == 0 ? "add more to Live engine readings"
+                : Hindi.f("%1$s added", Obd.mine(p.str("obdMine", "")).length), new Runnable() {
+            @Override
+            public void run() {
+                Obd.chooseMine(a, p, new Runnable() {
+                    @Override
+                    public void run() {
+                        if (a.settingsView != null) a.settingsView.refresh();
+                    }
+                });
             }
         }));
         r.add(new SettingsView.Row(g, "Clear fault codes", "after a repair", new Runnable() {
@@ -1087,6 +1105,21 @@ final class Extras {
                         a.nightDrive(a.hub);
                     }
                 }, 15500);
+            }
+        }));
+
+        // ---- Reversing camera picture, your own route server
+        r.add(new SettingsView.Row("Car signals", "Camera picture in reverse", ReverseView.chosen(p), new Runnable() {
+            @Override
+            public void run() {
+                ReverseView.choose(a);
+            }
+        }));
+        r.add(new SettingsView.Row("Driving", "Your own route server", MapCard.routeBase(p.str("routeServer", "")).isEmpty()
+                ? "the free public ones" : MapCard.routeHost(p.str("routeServer", "")), new Runnable() {
+            @Override
+            public void run() {
+                MapCard.chooseRouteServer(a);
             }
         }));
 
@@ -1515,6 +1548,18 @@ final class Extras {
             @Override
             public void run() {
                 restore(a);
+            }
+        }));
+        r.add(new SettingsView.Row(g, "Move to another stereo", "a QR code when the settings fit one, or share the file", new Runnable() {
+            @Override
+            public void run() {
+                Backup.move(a);
+            }
+        }));
+        r.add(new SettingsView.Row(g, "Read settings from another stereo", "open the file it sent", new Runnable() {
+            @Override
+            public void run() {
+                Backup.pickIn(a);
             }
         }));
         long at = 0;

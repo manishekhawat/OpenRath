@@ -625,7 +625,11 @@ public class HomeActivity extends Activity implements Cards.Host {
                 root.addView(dimmer, root.indexOfChild(layoutView != null ? layoutView : dash) + 1,
                         new android.widget.FrameLayout.LayoutParams(-1, -1));
             }
-            // the backlight itself goes down where Android lets an app set it; else a dark layer on top
+            // Android's own brightness when the owner allowed it (holds over other apps too), switched by
+            // the night dimming choice or, with that off, the headlights; else this window's backlight
+            // where Android lets an app set it; else a dark layer on top
+            boolean system = systemBrightness("off".equals(mode) ? h.lightsOn() : night);
+            if (system) night = false;
             boolean backlit = backlight(night ? prefs.num("dimLevel", 40) : 0);
             dimmer.setAlpha(night && !backlit ? prefs.num("dimLevel", 40) / 100f : 0f);
             dimmer.setVisibility(night && !backlit ? View.VISIBLE : View.GONE);
@@ -660,6 +664,151 @@ public class HomeActivity extends Activity implements Cards.Host {
         getWindow().setAttributes(lp);
         backlitBy = Math.max(0, percent);
         return true;
+    }
+
+    // ------------------------------------------------------------------ brightness for all apps
+
+    /** Android's brightness (1 to 255) for a level in percent. Pure, for the tests. */
+    static int systemLevel(int percent) {
+        return Math.max(1, Math.min(255, Math.round(percent * 255 / 100f)));
+    }
+
+    /** Whether Android lets OpenRath change its own settings (the owner allows it once). */
+    static boolean canWriteSettings(android.content.Context c) {
+        return android.os.Build.VERSION.SDK_INT < 23 || android.provider.Settings.System.canWrite(c);
+    }
+
+    /** The level last written to Android's settings; -1 = none yet. */
+    private int systemSet = -1;
+
+    /**
+     * Set Android's own screen brightness to the owner's day or night level, so it holds over the
+     * other apps too. Written only when it changes, so the owner can still move it by hand in
+     * between. False when it is off or not allowed: then the dashboard dims only itself, as before.
+     */
+    private boolean systemBrightness(boolean night) {
+        if (!"on".equals(prefs.str("sysBright", "off")) || !canWriteSettings(this)) {
+            systemSet = -1;
+            return false;
+        }
+        int want = systemLevel(night ? prefs.num("brightNight", 25) : prefs.num("brightDay", 80));
+        if (want == systemSet) return true;
+        try {
+            android.content.ContentResolver cr = getContentResolver();
+            android.provider.Settings.System.putInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE,
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+            android.provider.Settings.System.putInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS, want);
+            systemSet = want;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /** "day 80%, night 25%", "off", or that Android's permission is still missing; for Settings. */
+    String brightnessState() {
+        if (!"on".equals(prefs.str("sysBright", "off"))) return Hindi.t("off; only the dashboard dims at night");
+        if (!canWriteSettings(this)) return Hindi.t("waiting for your OK in Android; the dashboard dims meanwhile");
+        return Hindi.f("day %1$s%%, night %2$s%%", prefs.num("brightDay", 80), prefs.num("brightNight", 25));
+    }
+
+    /** Settings > Screen brightness for all apps: explain and ask once, then the day and night levels. */
+    void brightnessSettings() {
+        if (!"on".equals(prefs.str("sysBright", "off"))) {
+            new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Screen brightness for all apps"))
+                    .setMessage(Hindi.t("OpenRath can set the unit's own screen brightness: one level by day and a lower one at night, "
+                            + "switched by the headlights (or at sunset, as chosen in Night dimming). Then the night level also holds "
+                            + "over the map, music and camera apps, not only on the dashboard.") + "\n\n" + Hindi.t("For this, Android asks you once to "
+                            + "allow OpenRath to change system settings. Without it, only the dashboard dims, as now."))
+                    .setPositiveButton(Hindi.t("Turn on"), new android.content.DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(android.content.DialogInterface d, int w) {
+                            rememberOwnBrightness();
+                            prefs.put("sysBright", "on");
+                            if (!canWriteSettings(HomeActivity.this)) askWriteSettings();
+                            else brightnessLevels();
+                            hub.notifyIfChanged(true);
+                            if (settingsView != null) settingsView.refresh();
+                        }
+                    }).setNegativeButton(Hindi.t("Cancel"), null).show();
+            return;
+        }
+        brightnessLevels();
+    }
+
+    private void brightnessLevels() {
+        final boolean allowed = canWriteSettings(this);
+        final String[] items = {Hindi.f("Day level: %1$s%%", prefs.num("brightDay", 80)), Hindi.f("Night level: %1$s%%", prefs.num("brightNight", 25)),
+                allowed ? Hindi.t("Turn off") : Hindi.t("Allow it in Android"), Hindi.t("Turn off")};
+        new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Screen brightness for all apps"))
+                .setItems(allowed ? java.util.Arrays.copyOf(items, 3) : items, new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface d, int w) {
+                        if (w == 0) brightnessStep("brightDay", 80, new int[]{40, 50, 60, 70, 80, 90, 100}, "How bright by day");
+                        else if (w == 1) brightnessStep("brightNight", 25, new int[]{5, 10, 15, 20, 25, 30, 40, 50}, "How bright at night");
+                        else if (w == 2 && !allowed) askWriteSettings();
+                        else {
+                            prefs.put("sysBright", "off");
+                            giveBackOwnBrightness();
+                            hub.notifyIfChanged(true);
+                            if (settingsView != null) settingsView.refresh();
+                        }
+                    }
+                }).setNegativeButton(Hindi.t("Close"), null).show();
+    }
+
+    private void brightnessStep(final String key, int def, final int[] steps, String title) {
+        String[] names = new String[steps.length];
+        int at = -1;
+        for (int i = 0; i < steps.length; i++) {
+            names[i] = steps[i] + "%";
+            if (steps[i] == prefs.num(key, def)) at = i;
+        }
+        new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t(title))
+                .setSingleChoiceItems(names, at, new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface d, int w) {
+                        prefs.put(key, String.valueOf(steps[w]));
+                        d.dismiss();
+                        systemSet = -1;   // write the new level now
+                        hub.notifyIfChanged(true);
+                        if (settingsView != null) settingsView.refresh();
+                    }
+                }).show();
+    }
+
+    /** Android's own screen for "Modify system settings", on OpenRath's page. */
+    private void askWriteSettings() {
+        try {
+            startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                    android.net.Uri.parse("package:" + getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            Toast.makeText(this, Hindi.t("Switch on \"Modify system settings\" for OpenRath, then come back."), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(this, Hindi.t("This unit has no screen to allow that, so only the dashboard dims at night."), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /** The brightness the owner had before OpenRath took it over, to give back when it is turned off. */
+    private void rememberOwnBrightness() {
+        try {
+            android.content.ContentResolver cr = getContentResolver();
+            prefs.put("brightWas", String.valueOf(android.provider.Settings.System.getInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS)));
+            prefs.put("brightWasMode", String.valueOf(android.provider.Settings.System.getInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE, 0)));
+        } catch (Exception ignored) {
+            // unreadable: nothing to give back later
+        }
+    }
+
+    private void giveBackOwnBrightness() {
+        systemSet = -1;
+        if (!canWriteSettings(this) || prefs.str("brightWas", "").isEmpty()) return;
+        try {
+            android.content.ContentResolver cr = getContentResolver();
+            android.provider.Settings.System.putInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS, prefs.num("brightWas", 200));
+            android.provider.Settings.System.putInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE, prefs.num("brightWasMode", 0));
+        } catch (Exception ignored) {
+            // left as it is
+        }
     }
 
     // ------------------------------------------------------------------ night-drive mode and valet badge

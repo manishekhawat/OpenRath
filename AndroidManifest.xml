@@ -38,6 +38,8 @@
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!-- Android's own screen brightness, day and night, when the owner allows it (Settings > Screen brightness for all apps) -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!-- wireless Android Auto: its own Wi-Fi Direct network for the phone -->
     <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation"/>
     <!-- OpenRath's own broadcasts (key actions, trip and player updates) are sent and received with
@@ -85,6 +87,27 @@
                 <action android:name="android.service.notification.NotificationListenerService"/>
             </intent-filter>
         </service>
+        <!-- moving to another stereo: settings shared from one unit and taken by the other (it asks first) -->
+        <activity android:name="org.openrath.launcher.Backup$Receive" android:label="OpenRath settings" android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" android:excludeFromRecents="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="application/zip"/>
+                <data android:mimeType="application/x-zip-compressed"/>
+                <data android:mimeType="application/octet-stream"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="content"/>
+                <data android:mimeType="application/zip"/>
+                <data android:mimeType="application/x-zip-compressed"/>
+            </intent-filter>
+        </activity>
+        <provider android:name="org.openrath.launcher.Backup$Files" android:authorities="org.openrath.launcher.move"
+            android:exported="false" android:grantUriPermissions="true"/>
         <receiver android:name="org.openrath.launcher.Updates$Done" android:exported="false"/>
         <receiver android:name="org.openrath.launcher.Resume$Boot" android:exported="true">
             <intent-filter>

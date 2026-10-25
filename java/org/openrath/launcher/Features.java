@@ -165,7 +165,7 @@ final class Features {
             new F("view360", "360 view of your car", "Car", true, "Your car in 3D in its shape, colour and number plate, from any side; opens the stereo's 360 camera app when it has one"),
             new F("cam360Turn", "360 camera on turn signals", "Car", false, "Below 15 km/h the indicator opens the stereo's 360 camera app (needs the indicators set up in Car signals)"),
             new F("care", "Car service", "Car", true, "Oil, tyres, service, insurance and PUC reminders, the nearest workshops, and a call to book"),
-            new F("obd", "OBD-II engine data", "Car", true, "Needs a small plug-in OBD adapter (Bluetooth or Wi-Fi, often sold as ELM327)"),
+            new F("obd", "OBD-II engine data", "Car", true, "Needs a small engine-data plug (Bluetooth or Wi-Fi) in the socket under the steering wheel"),
             new F("faultWords", "Fault codes in plain words", "Car", true, "Each fault code with what it means, what to check and how urgent it is, from a table kept on the unit"),
             new F("askCar", "Ask the car by voice", "Car", true, "\"How's the engine?\", \"how much fuel?\", \"any faults?\" answered from the engine data"),
             new F("ledStrip", "LED light strip", "Car", false, "A Bluetooth ELK-BLEDOM strip takes the theme's colour, dims at night and turns red for a warning"),

@@ -73,6 +73,7 @@ final class Obd {
 
     static void start(final Context c, final Prefs p) {
         final String mac = p.str("obdMac", "");
+        mine = mine(p.str("obdMine", ""));
         if (mac.isEmpty()) {
             status = Hindi.t("Not set up");
             return;
@@ -222,6 +223,7 @@ final class Obd {
                 changed(c);
                 int round = 0;
                 int[] misses = new int[EXTRA.length];
+                java.util.Map<String, Integer> mineMisses = new java.util.HashMap<>();
                 while (!stop.get()) {
                     String job = pending;
                     if (job != null) {
@@ -262,6 +264,18 @@ final class Obd {
                         float v = extra(EXTRA[x], r);
                         misses[x] = v == NONE ? misses[x] + 1 : 0;
                         if (v != NONE || misses[x] >= 3) store(EXTRA[x], v);
+                    }
+                    // the owner's own readings, one a round, dropped the same way
+                    String[] own = mine;
+                    if (own.length > 0) {
+                        String id = own[round % own.length];
+                        Integer m = mineMisses.get(id);
+                        if (m == null || m < 3) {
+                            float v = custom(id, ask(in, out, ws, id, 1500));
+                            int miss = v == NONE ? (m == null ? 1 : m + 1) : 0;
+                            mineMisses.put(id, miss);
+                            if (v != NONE || miss >= 3) mineNow.put(id, v);
+                        }
                     }
                     readAt = System.currentTimeMillis();
                     round++;
@@ -427,6 +441,176 @@ final class Obd {
         return maf < 0 ? -1 : maf * 3600f / (14.7f * 745f);
     }
 
+    // ------------------------------------------------------------------ the owner's own readings
+
+    /**
+     * Common mode 01 readings from the SAE J1979 standard, for the owner to add to the live readings:
+     * {PID, name, unit, formula}. A and B are the first two data bytes of the answer; the formulas:
+     * "pct" A*100/255, "temp" A-40, "trim" (A-128)*100/128, "a" A, "a3" 3A, "ab" 256A+B, "rpm" (256A+B)/4,
+     * "maf" (256A+B)/100, "adv" A/2-64, "rail" (256A+B)*0.079, "ab10" (256A+B)*10, "cat" (256A+B)/10-40,
+     * "volt" (256A+B)/1000, "abpct" (256A+B)*100/255, "lambda" (256A+B)*2/65536, "o2" A/200,
+     * "inj" (256A+B)/128-210, "rate" (256A+B)/20, "torque" A-125.
+     */
+    static final String[][] PIDS = {
+            {"0104", "Engine load", "%", "pct"},
+            {"0105", "Coolant temperature", "°C", "temp"},
+            {"0106", "Fuel trim now (bank 1)", "%", "trim"},
+            {"0107", "Fuel trim learnt (bank 1)", "%", "trim"},
+            {"0108", "Fuel trim now (bank 2)", "%", "trim"},
+            {"0109", "Fuel trim learnt (bank 2)", "%", "trim"},
+            {"010A", "Fuel pressure", "kPa", "a3"},
+            {"010B", "Manifold pressure", "kPa", "a"},
+            {"010C", "Engine speed", "rpm", "rpm"},
+            {"010D", "Speed", "km/h", "a"},
+            {"010E", "Ignition timing", "°", "adv"},
+            {"010F", "Intake air temperature", "°C", "temp"},
+            {"0110", "Air flow", "g/s", "maf"},
+            {"0111", "Throttle", "%", "pct"},
+            {"0114", "Oxygen sensor 1 (bank 1)", "V", "o2"},
+            {"0115", "Oxygen sensor 2 (bank 1)", "V", "o2"},
+            {"011F", "Time since the engine started", "s", "ab"},
+            {"0121", "Distance driven with the engine light on", "km", "ab"},
+            {"0122", "Fuel rail pressure (to the manifold)", "kPa", "rail"},
+            {"0123", "Fuel rail pressure", "kPa", "ab10"},
+            {"012C", "EGR asked for", "%", "pct"},
+            {"012D", "EGR error", "%", "trim"},
+            {"012E", "Fuel vapour purge", "%", "pct"},
+            {"012F", "Fuel tank level", "%", "pct"},
+            {"0130", "Warm-ups since the codes were cleared", "", "a"},
+            {"0131", "Distance since the codes were cleared", "km", "ab"},
+            {"0133", "Air pressure outside", "kPa", "a"},
+            {"013C", "Catalytic converter temperature", "°C", "cat"},
+            {"0142", "Engine computer voltage", "V", "volt"},
+            {"0143", "Absolute engine load", "%", "abpct"},
+            {"0144", "Air-fuel ratio asked for (lambda)", "", "lambda"},
+            {"0145", "Throttle (relative)", "%", "pct"},
+            {"0146", "Outside air temperature", "°C", "temp"},
+            {"0147", "Throttle (sensor B)", "%", "pct"},
+            {"0149", "Accelerator pedal (sensor D)", "%", "pct"},
+            {"014A", "Accelerator pedal (sensor E)", "%", "pct"},
+            {"014C", "Throttle motor asked for", "%", "pct"},
+            {"014D", "Time run with the engine light on", "min", "ab"},
+            {"014E", "Time since the codes were cleared", "min", "ab"},
+            {"0152", "Ethanol in the fuel", "%", "pct"},
+            {"0159", "Fuel rail pressure (absolute)", "kPa", "ab10"},
+            {"015A", "Accelerator pedal (relative)", "%", "pct"},
+            {"015B", "Hybrid battery life left", "%", "pct"},
+            {"015C", "Engine oil temperature", "°C", "temp"},
+            {"015D", "Fuel injection timing", "°", "inj"},
+            {"015E", "Fuel used", "L/h", "rate"},
+            {"0161", "Engine torque asked for", "%", "torque"},
+            {"0162", "Engine torque", "%", "torque"},
+            {"0163", "Engine torque at 100%", "Nm", "ab"},
+    };
+
+    /** Readings the live list always shows, so they aren't offered again. */
+    private static final String BUILT_IN = ",0104,0105,0106,0107,010B,010C,010D,010F,0110,0111,012F,";
+
+    /** The table's row for a PID ("0146"), or null. */
+    static String[] pid(String id) {
+        for (String[] r : PIDS) if (r[0].equals(id)) return r;
+        return null;
+    }
+
+    /** The PIDs the owner can add: the table less the built-in readings. */
+    static List<String[]> offered() {
+        List<String[]> out = new ArrayList<>();
+        for (String[] r : PIDS) if (!BUILT_IN.contains("," + r[0] + ",")) out.add(r);
+        return out;
+    }
+
+    /** A formula applied to the data bytes; NONE when the answer is too short. Pure, for the tests. */
+    static float formula(String kind, int[] b) {
+        if (b == null || b.length < 1) return NONE;
+        int a = b[0];
+        if ("pct".equals(kind)) return a * 100 / 255f;
+        if ("temp".equals(kind)) return a - 40;
+        if ("trim".equals(kind)) return (a - 128) * 100 / 128f;
+        if ("a".equals(kind)) return a;
+        if ("a3".equals(kind)) return 3 * a;
+        if ("adv".equals(kind)) return a / 2f - 64;
+        if ("o2".equals(kind)) return a / 200f;
+        if ("torque".equals(kind)) return a - 125;
+        if (b.length < 2) return NONE;
+        int ab = a * 256 + b[1];
+        switch (kind) {
+            case "ab": return ab;
+            case "rpm": return ab / 4f;
+            case "maf": return ab / 100f;
+            case "rail": return ab * 0.079f;
+            case "ab10": return ab * 10f;
+            case "cat": return ab / 10f - 40;
+            case "volt": return ab / 1000f;
+            case "abpct": return ab * 100 / 255f;
+            case "lambda": return ab * 2 / 65536f;
+            case "inj": return ab / 128f - 210;
+            case "rate": return ab / 20f;
+            default: return NONE;
+        }
+    }
+
+    /** One of the table's readings from the car's answer, or NONE. Pure, for the tests. */
+    static float custom(String id, String reply) {
+        String[] row = pid(id);
+        return row == null ? NONE : formula(row[3], bytes(reply, "41" + id.substring(2)));
+    }
+
+    /** "Outside air temperature: 31 °C", with the decimals the reading needs. Pure, for the tests. */
+    static String customLine(String[] row, float v) {
+        String k = row[3];
+        int dec = "volt".equals(k) || "o2".equals(k) || "lambda".equals(k) || "maf".equals(k) ? 2
+                : "adv".equals(k) || "rail".equals(k) || "cat".equals(k) || "inj".equals(k) || "rate".equals(k) ? 1 : 0;
+        String n = String.format(Locale.US, "%." + dec + "f", v);
+        if (n.equals("-0")) n = "0";
+        return Hindi.t(row[1]) + ": " + n + (row[2].isEmpty() ? "" : row[2].startsWith("°") || row[2].equals("%") ? row[2] : " " + row[2]);
+    }
+
+    /** The owner's own readings ("0146,015C"), asked in turn with the extra ones. */
+    static volatile String[] mine = new String[0];
+    /** Their latest values; NONE when the car didn't answer. */
+    static final java.util.Map<String, Float> mineNow = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** The owner's list from a setting: known PIDs only, each once. Pure, for the tests. */
+    static String[] mine(String setting) {
+        List<String> out = new ArrayList<>();
+        for (String s : (setting == null ? "" : setting).split(",")) {
+            String id = s.trim().toUpperCase(Locale.US);
+            if (pid(id) != null && !out.contains(id)) out.add(id);
+        }
+        return out.toArray(new String[0]);
+    }
+
+    /** Settings > Your own engine readings: tick the readings to add. */
+    static void chooseMine(final android.app.Activity a, final Prefs p, final Runnable done) {
+        final List<String[]> rows = offered();
+        String[] names = new String[rows.size()];
+        final boolean[] on = new boolean[rows.size()];
+        List<String> now = java.util.Arrays.asList(mine(p.str("obdMine", "")));
+        for (int i = 0; i < rows.size(); i++) {
+            names[i] = Hindi.t(rows.get(i)[1]) + (rows.get(i)[2].isEmpty() ? "" : "  (" + rows.get(i)[2] + ")");
+            on[i] = now.contains(rows.get(i)[0]);
+        }
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Your own engine readings"))
+                .setMultiChoiceItems(names, on, new android.content.DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface d, int w, boolean checked) {
+                        on[w] = checked;
+                    }
+                })
+                .setPositiveButton(Hindi.t("Save"), new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface d, int w) {
+                        StringBuilder b = new StringBuilder();
+                        for (int i = 0; i < rows.size(); i++) if (on[i]) b.append(b.length() == 0 ? "" : ",").append(rows.get(i)[0]);
+                        p.put("obdMine", b.toString());
+                        mine = mine(b.toString());
+                        mineNow.clear();
+                        if (done != null) done.run();
+                    }
+                })
+                .setNegativeButton(Hindi.t("Cancel"), null).show();
+    }
+
     /** The live readings, as lines for Settings. */
     static String readings() {
         StringBuilder b = new StringBuilder();
@@ -441,6 +625,12 @@ final class Obd {
         if (longTrim > -999) b.append(Hindi.f("Fuel trim learnt: %1$s%%", longTrim)).append('\n');
         if (fuel >= 0) b.append(Hindi.f("Fuel tank: %1$s%%", fuel)).append('\n');
         if (volts > 0) b.append(Hindi.f("Battery: %1$s V", Fuel.fmt(volts))).append('\n');
+        for (String id : mine) {
+            String[] row = pid(id);
+            Float v = mineNow.get(id);
+            if (row == null || v == null) continue;   // not asked yet
+            b.append(v == NONE ? Hindi.f("%1$s: the car doesn't give this", Hindi.t(row[1])) : customLine(row, v)).append('\n');
+        }
         return b.toString().trim();
     }
 

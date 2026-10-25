@@ -112,7 +112,7 @@ final class Cab {
     }
 
     static String rs(double v) {
-        return Money.shown("₹") + java.text.NumberFormat.getIntegerInstance(new Locale("en", "IN")).format(Math.round(v));
+        return Money.shown("₹") + Money.group(Math.round(v));
     }
 
     static String hm(long ms) {
