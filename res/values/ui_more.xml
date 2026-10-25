@@ -150,6 +150,33 @@
     <string name="ui_more_checks_once_a_day_for_a_new_openrath_and_off" formatted="false">Checks once a day for a new OpenRath and offers it when parked</string>
     <string name="ui_more_which_settings_you_open_and_any_crashes_kept" formatted="false">Which settings you open and any crashes, kept on the unit for you to share</string>
     <string name="ui_more_yesterday" formatted="false">yesterday</string>
+    <string name="ui_more_map_look" formatted="false">Map look</string>
+    <string name="ui_more_light_by_day_dark_at_night" formatted="false">light by day, dark at night</string>
+    <string name="ui_more_always_light" formatted="false">always light</string>
+    <string name="ui_more_always_dark" formatted="false">always dark</string>
+    <string name="ui_more_no_voice_engine_is_installed_so_openrath_can" formatted="false">No voice engine is installed, so OpenRath can\'t speak.</string>
+    <string name="ui_more_the_voice_is_working" formatted="false">The voice is working.</string>
+    <string name="ui_more_the_voice_engine_is_installed_but_doesn_t_st" formatted="false">The voice engine is installed but doesn\'t start. Updating it, or clearing its storage, usually fixes this.</string>
+    <string name="ui_more_the_voice_hasn_t_been_tried_yet_tap_test_the" formatted="false">The voice hasn\'t been tried yet: tap Test the voice.</string>
+    <string name="ui_more_test_the_voice" formatted="false">Test the voice</string>
+    <string name="ui_more_hello_the_openrath_voice_is_working" formatted="false">Hello. The OpenRath voice is working.</string>
+    <string name="ui_more_update_speech_services_by_google" formatted="false">Update Speech Services by Google</string>
+    <string name="ui_more_get_speech_services_by_google_speaks_hindi" formatted="false">Get Speech Services by Google (speaks Hindi)</string>
+    <string name="ui_more_repair_it_open_its_app_info_to_enable_it_or_" formatted="false">Repair it: open its app info to enable it or clear its storage</string>
+    <string name="ui_more_get_espeak_ng_instead_free_no_google_needed" formatted="false">Get eSpeak NG instead (free, no Google needed)</string>
+    <string name="ui_more_android_s_voice_settings" formatted="false">Android\'s voice settings</string>
+    <string name="ui_more_spoken_voice" formatted="false">Spoken voice</string>
+    <string name="ui_more_speech_services_by_google_tap_to_test_or_fix" formatted="false">Speech Services by Google; tap to test or fix it</string>
+    <string name="ui_more_the_voice_engine_has_no_english_voice_instal" formatted="false">The voice engine has no English voice installed. Download one in Android\'s voice settings, or get eSpeak NG.</string>
+    <string name="ui_more_the_voice_engine_starts_but_couldn_t_speak_r" formatted="false">The voice engine starts but couldn\'t speak. Repairing it (clear its storage), or eSpeak NG, usually fixes this.</string>
+    <string name="ui_more_the_voice_engine_has_started_tap_test_the_vo" formatted="false">The voice engine has started. Tap Test the voice and listen.</string>
+    <string name="ui_more_the_voice_engine_has_no_english_voice_instal2" formatted="false">The voice engine has no English voice installed. Settings &gt; Map and navigation &gt; Spoken voice &gt; Android\'s voice settings downloads one, or get eSpeak NG.</string>
+    <string name="ui_more_the_voice_engine_started_but_couldn_t_speak_" formatted="false">The voice engine started but couldn\'t speak. Settings &gt; Map and navigation &gt; Spoken voice &gt; Repair it, or get eSpeak NG.</string>
+    <string name="ui_more_1_s_settings_2_s_system_properties_3_s_backl" formatted="false">%1$s settings, %2$s system properties, %3$s backlight files, %4$s broadcast values, %5$s, %6$s received</string>
+    <string name="ui_more_no_topway_radio_service" formatted="false">no Topway radio service</string>
+    <string name="ui_more_1_s_light_values_from_the_topway_radio_servi" formatted="false">%1$s light values from the Topway radio service</string>
+    <string name="ui_more_not_tried" formatted="false">not tried</string>
+    <string name="ui_more_download_the_english_voice_opens_google_s_vo" formatted="false">Download the English voice (opens Google\'s voice download)</string>
     <string name="ui_more_tap_to_open" formatted="false">Tap to open</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">Your trips show here after your first drive</string>
     <string name="ui_more_last_drive_1_s" formatted="false">LAST DRIVE, %1$s</string>
@@ -160,6 +187,77 @@
     <string name="ui_more_last_heading_while_driving" formatted="false">Last heading while driving</string>
     <string name="ui_more_next_holiday_1_s" formatted="false">Next holiday: %1$s</string>
     <string name="ui_more_connect_an_obd_adapter_to_see_engine_data" formatted="false">Connect an OBD adapter to see engine data</string>
+    <string name="ui_more_radio_and_music_screen" formatted="false">Radio and music screen</string>
+    <string name="ui_more_a_tap_on_the_music_or_radio_box_opens_a_full" formatted="false">A tap on the music or radio box opens a full screen for FM, online radio, your music files and music apps</string>
+    <string name="ui_more_search_when_the_car_is_stopped" formatted="false">Search when the car is stopped</string>
+    <string name="ui_more_pick_a_station_or_a_song" formatted="false">Pick a station or a song</string>
+    <string name="ui_more_radio_and_music" formatted="false">RADIO AND MUSIC</string>
+    <string name="ui_more_volume" formatted="false">Volume</string>
+    <string name="ui_more_scan" formatted="false">Scan</string>
+    <string name="ui_more_save_a_station_or_scan_to_keep_it_here" formatted="false">Save a station, or scan, to keep it here</string>
+    <string name="ui_more_1_s_fm_taken_off_the_presets" formatted="false">%1$s FM taken off the presets</string>
+    <string name="ui_more_opens_your_radio_app" formatted="false">Opens your radio app</string>
+    <string name="ui_more_online_radio_needs_the_internet" formatted="false">Online radio needs the internet</string>
+    <string name="ui_more_look_again" formatted="false">Look again</string>
+    <string name="ui_more_after_putting_in_a_usb_stick_or_sd_card" formatted="false">After putting in a USB stick or SD card</string>
+    <string name="ui_more_1_song" formatted="false">1 song</string>
+    <string name="ui_more_1_s_songs" formatted="false">%1$s songs</string>
+    <string name="ui_more_nothing_matches_the_search" formatted="false">Nothing matches the search</string>
+    <string name="ui_more_where_the_boxes_play_from" formatted="false">WHERE THE BOXES PLAY FROM</string>
+    <string name="ui_more_music_box" formatted="false">Music box</string>
+    <string name="ui_more_online_radio_music_files_or_a_music_app" formatted="false">Online radio, music files or a music app</string>
+    <string name="ui_more_radio_box" formatted="false">Radio box</string>
+    <string name="ui_more_fm_online_radio_or_a_radio_app" formatted="false">FM, online radio or a radio app</string>
+    <string name="ui_more_music_apps" formatted="false">MUSIC APPS</string>
+    <string name="ui_more_playing_1_s" formatted="false">Playing: %1$s</string>
+    <string name="ui_more_paused_1_s" formatted="false">Paused: %1$s</string>
+    <string name="ui_more_no_music_apps_found_allow_notification_acces" formatted="false">No music apps found. Allow notification access for OpenRath to see what other apps play.</string>
+    <string name="ui_more_1_s_more_when_the_car_is_stopped" formatted="false">%1$s more when the car is stopped</string>
+    <string name="ui_more_artists" formatted="false">Artists</string>
+    <string name="ui_more_folders" formatted="false">Folders</string>
+    <string name="ui_more_seek_down" formatted="false">Seek down</string>
+    <string name="ui_more_seek_up" formatted="false">Seek up</string>
+    <string name="ui_more_stop_fm" formatted="false">Stop FM</string>
+    <string name="ui_more_play_fm" formatted="false">Play FM</string>
+    <string name="ui_more_saved" formatted="false">"★  Saved"</string>
+    <string name="ui_more_save_station" formatted="false">"☆  Save station"</string>
+    <string name="ui_more_all_artists" formatted="false">"‹  All artists"</string>
+    <string name="ui_more_all_folders" formatted="false">"‹  All folders"</string>
+    <string name="ui_more_unknown_artist" formatted="false">Unknown artist</string>
+    <string name="ui_more_other_files" formatted="false">Other files</string>
+    <string name="ui_more_tap_to_choose_from_its_library" formatted="false">Tap to choose from its library</string>
+    <string name="ui_more_no_head_unit_certificate_install_headunit_re" formatted="false">No head unit certificate: install Headunit Revived, or copy its two files to OpenRath\'s androidauto folder</string>
+    <string name="ui_more_the_phone_left_android_auto" formatted="false">The phone left Android Auto</string>
+    <string name="ui_more_connecting_to_the_phone" formatted="false">Connecting to the phone…</string>
+    <string name="ui_more_starting_android_auto_on_the_phone" formatted="false">Starting Android Auto on the phone…</string>
+    <string name="ui_more_the_phone_didn_t_accept_this_head_unit_s_cer" formatted="false">The phone didn\'t accept this head unit\'s certificate</string>
+    <string name="ui_more_the_phone_ended_android_auto" formatted="false">The phone ended Android Auto</string>
+    <string name="ui_more_android_auto_ended" formatted="false">Android Auto ended</string>
+    <string name="ui_more_this_unit_can_t_show_the_phone_s_picture" formatted="false">This unit can\'t show the phone\'s picture</string>
+    <string name="ui_more_android_auto_needs_a_head_unit_certificate_w" formatted="false">Android Auto needs a head unit certificate, which OpenRath can\'t include. Install the Headunit Revived app on this unit (OpenRath uses its certificate), or copy cert.pem and privkey.pem into the androidauto folder inside OpenRath\'s folder.</string>
+    <string name="ui_more_plug_your_phone_into_the_unit_s_usb_port_to_" formatted="false">Plug your phone into the unit\'s USB port to start Android Auto</string>
+    <string name="ui_more_android_auto_built_in" formatted="false">Android Auto built in</string>
+    <string name="ui_more_plug_in_your_phone_with_its_cable_and_androi" formatted="false">Plug in your phone with its cable and Android Auto shows on this screen; needs Headunit Revived installed for its certificate</string>
+    <string name="ui_more_the_phone_was_unplugged" formatted="false">The phone was unplugged</string>
+    <string name="ui_more_wireless_android_auto" formatted="false">Wireless Android Auto</string>
+    <string name="ui_more_a_paired_phone_starts_android_auto_by_itself" formatted="false">A paired phone starts Android Auto by itself over Bluetooth and Wi-Fi, without the cable; needs Android Auto built in</string>
+    <string name="ui_more_or_keep_bluetooth_on_a_paired_phone_with_wir" formatted="false">Or keep Bluetooth on: a paired phone with wireless Android Auto connects by itself in a minute</string>
+    <string name="ui_more_live" formatted="false">LIVE</string>
+    <string name="ui_more_previous" formatted="false">Previous</string>
+    <string name="ui_more_pause" formatted="false">Pause</string>
+    <string name="ui_more_play" formatted="false">Play</string>
+    <string name="ui_more_glass_look" formatted="false">Glass look</string>
+    <string name="ui_more_on_see_through_frosted_panels_on_a_soft_colo" formatted="false">on; see-through frosted panels on a soft colourful background</string>
+    <string name="ui_more_off_tap_for_see_through_frosted_panels_on_a_" formatted="false">off; tap for see-through frosted panels on a soft colourful background</string>
+    <string name="ui_more_glass_background" formatted="false">Glass background</string>
+    <string name="ui_more_aurora" formatted="false">Aurora</string>
+    <string name="ui_more_sunset" formatted="false">Sunset</string>
+    <string name="ui_more_ocean" formatted="false">Ocean</string>
+    <string name="ui_more_my_picture" formatted="false">My picture</string>
+    <string name="ui_more_my_picture_blurred" formatted="false">My picture (blurred)</string>
+    <string name="ui_more_background_behind_the_glass" formatted="false">Background behind the glass</string>
+    <string name="ui_more_add_your_picture" formatted="false">Add your picture</string>
+    <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">Copy a picture (JPG or PNG) to %1$s on the unit, with a USB stick or a file manager. Until then the Aurora background shows.</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -309,6 +407,33 @@
         <item>@string/ui_more_checks_once_a_day_for_a_new_openrath_and_off</item>
         <item>@string/ui_more_which_settings_you_open_and_any_crashes_kept</item>
         <item>@string/ui_more_yesterday</item>
+        <item>@string/ui_more_map_look</item>
+        <item>@string/ui_more_light_by_day_dark_at_night</item>
+        <item>@string/ui_more_always_light</item>
+        <item>@string/ui_more_always_dark</item>
+        <item>@string/ui_more_no_voice_engine_is_installed_so_openrath_can</item>
+        <item>@string/ui_more_the_voice_is_working</item>
+        <item>@string/ui_more_the_voice_engine_is_installed_but_doesn_t_st</item>
+        <item>@string/ui_more_the_voice_hasn_t_been_tried_yet_tap_test_the</item>
+        <item>@string/ui_more_test_the_voice</item>
+        <item>@string/ui_more_hello_the_openrath_voice_is_working</item>
+        <item>@string/ui_more_update_speech_services_by_google</item>
+        <item>@string/ui_more_get_speech_services_by_google_speaks_hindi</item>
+        <item>@string/ui_more_repair_it_open_its_app_info_to_enable_it_or_</item>
+        <item>@string/ui_more_get_espeak_ng_instead_free_no_google_needed</item>
+        <item>@string/ui_more_android_s_voice_settings</item>
+        <item>@string/ui_more_spoken_voice</item>
+        <item>@string/ui_more_speech_services_by_google_tap_to_test_or_fix</item>
+        <item>@string/ui_more_the_voice_engine_has_no_english_voice_instal</item>
+        <item>@string/ui_more_the_voice_engine_starts_but_couldn_t_speak_r</item>
+        <item>@string/ui_more_the_voice_engine_has_started_tap_test_the_vo</item>
+        <item>@string/ui_more_the_voice_engine_has_no_english_voice_instal2</item>
+        <item>@string/ui_more_the_voice_engine_started_but_couldn_t_speak_</item>
+        <item>@string/ui_more_1_s_settings_2_s_system_properties_3_s_backl</item>
+        <item>@string/ui_more_no_topway_radio_service</item>
+        <item>@string/ui_more_1_s_light_values_from_the_topway_radio_servi</item>
+        <item>@string/ui_more_not_tried</item>
+        <item>@string/ui_more_download_the_english_voice_opens_google_s_vo</item>
         <item>@string/ui_more_tap_to_open</item>
         <item>@string/ui_more_your_trips_show_here_after_your_first_drive</item>
         <item>@string/ui_more_last_drive_1_s</item>
@@ -319,5 +444,76 @@
         <item>@string/ui_more_last_heading_while_driving</item>
         <item>@string/ui_more_next_holiday_1_s</item>
         <item>@string/ui_more_connect_an_obd_adapter_to_see_engine_data</item>
+        <item>@string/ui_more_radio_and_music_screen</item>
+        <item>@string/ui_more_a_tap_on_the_music_or_radio_box_opens_a_full</item>
+        <item>@string/ui_more_search_when_the_car_is_stopped</item>
+        <item>@string/ui_more_pick_a_station_or_a_song</item>
+        <item>@string/ui_more_radio_and_music</item>
+        <item>@string/ui_more_volume</item>
+        <item>@string/ui_more_scan</item>
+        <item>@string/ui_more_save_a_station_or_scan_to_keep_it_here</item>
+        <item>@string/ui_more_1_s_fm_taken_off_the_presets</item>
+        <item>@string/ui_more_opens_your_radio_app</item>
+        <item>@string/ui_more_online_radio_needs_the_internet</item>
+        <item>@string/ui_more_look_again</item>
+        <item>@string/ui_more_after_putting_in_a_usb_stick_or_sd_card</item>
+        <item>@string/ui_more_1_song</item>
+        <item>@string/ui_more_1_s_songs</item>
+        <item>@string/ui_more_nothing_matches_the_search</item>
+        <item>@string/ui_more_where_the_boxes_play_from</item>
+        <item>@string/ui_more_music_box</item>
+        <item>@string/ui_more_online_radio_music_files_or_a_music_app</item>
+        <item>@string/ui_more_radio_box</item>
+        <item>@string/ui_more_fm_online_radio_or_a_radio_app</item>
+        <item>@string/ui_more_music_apps</item>
+        <item>@string/ui_more_playing_1_s</item>
+        <item>@string/ui_more_paused_1_s</item>
+        <item>@string/ui_more_no_music_apps_found_allow_notification_acces</item>
+        <item>@string/ui_more_1_s_more_when_the_car_is_stopped</item>
+        <item>@string/ui_more_artists</item>
+        <item>@string/ui_more_folders</item>
+        <item>@string/ui_more_seek_down</item>
+        <item>@string/ui_more_seek_up</item>
+        <item>@string/ui_more_stop_fm</item>
+        <item>@string/ui_more_play_fm</item>
+        <item>@string/ui_more_saved</item>
+        <item>@string/ui_more_save_station</item>
+        <item>@string/ui_more_all_artists</item>
+        <item>@string/ui_more_all_folders</item>
+        <item>@string/ui_more_unknown_artist</item>
+        <item>@string/ui_more_other_files</item>
+        <item>@string/ui_more_tap_to_choose_from_its_library</item>
+        <item>@string/ui_more_no_head_unit_certificate_install_headunit_re</item>
+        <item>@string/ui_more_the_phone_left_android_auto</item>
+        <item>@string/ui_more_connecting_to_the_phone</item>
+        <item>@string/ui_more_starting_android_auto_on_the_phone</item>
+        <item>@string/ui_more_the_phone_didn_t_accept_this_head_unit_s_cer</item>
+        <item>@string/ui_more_the_phone_ended_android_auto</item>
+        <item>@string/ui_more_android_auto_ended</item>
+        <item>@string/ui_more_this_unit_can_t_show_the_phone_s_picture</item>
+        <item>@string/ui_more_android_auto_needs_a_head_unit_certificate_w</item>
+        <item>@string/ui_more_plug_your_phone_into_the_unit_s_usb_port_to_</item>
+        <item>@string/ui_more_android_auto_built_in</item>
+        <item>@string/ui_more_plug_in_your_phone_with_its_cable_and_androi</item>
+        <item>@string/ui_more_the_phone_was_unplugged</item>
+        <item>@string/ui_more_wireless_android_auto</item>
+        <item>@string/ui_more_a_paired_phone_starts_android_auto_by_itself</item>
+        <item>@string/ui_more_or_keep_bluetooth_on_a_paired_phone_with_wir</item>
+        <item>@string/ui_more_live</item>
+        <item>@string/ui_more_previous</item>
+        <item>@string/ui_more_pause</item>
+        <item>@string/ui_more_play</item>
+        <item>@string/ui_more_glass_look</item>
+        <item>@string/ui_more_on_see_through_frosted_panels_on_a_soft_colo</item>
+        <item>@string/ui_more_off_tap_for_see_through_frosted_panels_on_a_</item>
+        <item>@string/ui_more_glass_background</item>
+        <item>@string/ui_more_aurora</item>
+        <item>@string/ui_more_sunset</item>
+        <item>@string/ui_more_ocean</item>
+        <item>@string/ui_more_my_picture</item>
+        <item>@string/ui_more_my_picture_blurred</item>
+        <item>@string/ui_more_background_behind_the_glass</item>
+        <item>@string/ui_more_add_your_picture</item>
+        <item>@string/ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit</item>
     </string-array>
 </resources>

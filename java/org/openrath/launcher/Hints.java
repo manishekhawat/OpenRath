@@ -54,7 +54,7 @@ final class Hints {
         boolean[] on = on(a.prefs);
         List<String> rows = new ArrayList<>();
         for (int i = 0; i < ALL.length; i++) if (on[i]) rows.add("•  " + Hindi.t(ALL[i][0]));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Hidden shortcuts"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Hidden shortcuts"))
                 .setMessage(android.text.TextUtils.join("\n\n", rows))
                 .setPositiveButton(Hindi.t("OK"), null).show();
     }

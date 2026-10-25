@@ -76,6 +76,7 @@ public final class Tests {
         check("projection zlink", Projection.looksLike("com.zjinnova.zlink", "ZLink"));
         check("projection autokit label", Projection.looksLike("com.xyz.box", "AutoKit"));
         check("projection carplay", Projection.looksLike("cn.manstep.phonemirrorBox", "CarPlay"));
+        check("projection headunit revived", Projection.looksLike("com.andrerinas.headunitrevived", "Headunit Revived"));
         check("projection not gearhead", !Projection.looksLike("com.google.android.projection.gearhead", "Android Auto"));
         check("projection not maps", !Projection.looksLike("com.google.android.apps.maps", "Maps"));
 
@@ -424,8 +425,122 @@ public final class Tests {
         launcherReview();
         buildFixes();
         finishFixes();
+        musicScreen();
+        androidAuto();
+        glassLook();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
+    }
+
+    /** The Glass look: the wallpaper's blur, its colours and the see-through mixing of glass panels. */
+    private static void glassLook() {
+        // the blur: spreads a light, keeps one colour and opacity, leaves the input alone
+        int[] dot = new int[9 * 9];
+        java.util.Arrays.fill(dot, 0xFF000000);
+        dot[40] = 0xFFFFFFFF;
+        int[] soft = Glass.blur(dot, 9, 9, 2);
+        check("glass: blur softens the light", (soft[40] & 255) < 255 && (soft[40] & 255) > 0);
+        check("glass: blur spreads it", (soft[38] & 255) > 0 && (soft[22] & 255) > 0);
+        check("glass: blur keeps it opaque", (soft[0] >>> 24) == 255 && (soft[40] >>> 24) == 255);
+        eq("glass: blur leaves the picture", 0xFFFFFFFF, dot[40]);
+        int[] flat = new int[12 * 5];
+        java.util.Arrays.fill(flat, 0xFF336699);
+        eq("glass: blur of one colour is that colour", 0xFF336699, Glass.blur(flat, 12, 5, 4)[33]);
+        eq("glass: blur radius 0 changes nothing", 0xFFFFFFFF, Glass.blur(dot, 9, 9, 0)[40]);
+        int[] wide = Glass.blur(dot, 9, 9, 20);   // a radius bigger than the picture holds the edges
+        check("glass: big blur stays in range", (wide[0] & 255) >= 0 && (wide[0] & 255) < 40);
+        long sum = 0;
+        for (int p : soft) sum += p & 255;
+        check("glass: blur keeps about the same light", sum > 200 && sum < 300);
+
+        // the alpha-aware mix glass panels need, and what it looks like over the wallpaper
+        eq("glass: mix halves the alpha too", 0x80FFFFFF, Glass.mix(0xFFFFFFFF, 0x00FFFFFF, 0.5f));
+        eq("glass: mix of opaque colours is Ui.mix", Ui.mix(0xFF6F8FC8, 0xFF101114, 0.3f), Glass.mix(0xFF6F8FC8, 0xFF101114, 0.3f));
+        eq("glass: mix ends", 0x26FFFFFF, Glass.mix(0xFF000000, Glass.DAY_FILL, 0f));
+        eq("glass: white 15% over black", 0xFF262626, Glass.over(0x26FFFFFF, 0xFF000000));
+        eq("glass: see-through nothing over a colour", 0xFF336699, Glass.over(0x00FFFFFF, 0xFF336699));
+        boolean was = Glass.on;
+        Glass.on = true;
+        int lit = Ui.mix(0xFF5D9BE0, Glass.DAY_FILL, 0.13f);
+        check("glass: a lit row on glass stays see-through", (lit >>> 24) < 0xFF && (lit >>> 24) > (Glass.DAY_FILL >>> 24));
+        Glass.on = false;
+        eq("glass: off, Ui.mix is opaque as before", 0xFF000000, Ui.mix(0xFF5D9BE0, Glass.DAY_FILL, 0.13f) & 0xFF000000);
+        Glass.on = was;
+
+        // the built-in wallpapers: opaque, colourful, different, and dark enough for white text once shaded
+        for (int i = 0; i < 3; i++) {
+            int[] w = Glass.paint(i, 64, 36);
+            check("glass: wallpaper " + i + " is opaque", (w[0] >>> 24) == 255 && (w[w.length - 1] >>> 24) == 255);
+            int avg = Glass.average(Glass.shade(w, Glass.DAY_SHADE));
+            double lum = (0.299 * ((avg >> 16) & 255) + 0.587 * ((avg >> 8) & 255) + 0.114 * (avg & 255)) / 255;
+            check("glass: wallpaper " + i + " is dark enough for white text (" + lum + ")", lum < 0.4);
+            check("glass: wallpaper " + i + " isn't flat", w[0] != w[w.length / 2 + 32]);
+        }
+        check("glass: wallpapers differ", Glass.paint(0, 16, 9)[40] != Glass.paint(1, 16, 9)[40]);
+        eq("glass: unknown wallpaper is the first", Glass.paint(0, 8, 4)[5], Glass.paint(7, 8, 4)[5]);
+        eq("glass: shade halves", 0xFF402010, Glass.shade(new int[]{0xFF804020}, 0.5f)[0]);
+        eq("glass: average", 0xFF7F7F7F, Glass.average(new int[]{0xFF000000, 0xFFFFFFFF, 0xFF808080, 0xFF808080}));
+        eq("glass: night glass is darker", true, Glass.NIGHT_SHADE < Glass.DAY_SHADE && (Glass.NIGHT_FILL & 0xFFFFFF) == 0);
+    }
+
+    /** The radio and music screen: FM presets and tuning, favourite stations, songs by artist or folder, search, voice. */
+    private static void musicScreen() {
+        eq("music: preset plain", "98.3", MusicLists.freq("98.3"));
+        eq("music: preset with FM", "91.1", MusicLists.freq(" 91.1 FM"));
+        eq("music: preset with a comma", "93.5", MusicLists.freq("93,5"));
+        eq("music: preset in tenths", "98.3", MusicLists.freq("983"));
+        eq("music: preset in hundredths", "104.8", MusicLists.freq("10480"));
+        eq("music: preset in kHz", "92.7", MusicLists.freq("92700"));
+        eq("music: not FM", "", MusicLists.freq("1500"));
+        eq("music: not a number", "", MusicLists.freq("Mirchi"));
+        eq("music: presets merged, sorted, once each", "[91.1, 93.5, 98.3, 104.8]",
+                MusicLists.presets("98.3, 91.1 FM,junk,,98.3", Arrays.asList("104.8", "93.5", "91.1", "150")).toString());
+        eq("music: no presets", "[]", MusicLists.presets("", null).toString());
+        eq("music: tune up", "98.4", MusicLists.step("98.3", 1));
+        eq("music: tune down", "98.2", MusicLists.step("98.3", -1));
+        eq("music: tune past the top", "87.5", MusicLists.step("108.0", 1));
+        eq("music: tune past the bottom", "108.0", MusicLists.step("87.5", -1));
+        eq("music: tune from nothing", "98.4", MusicLists.step("", 1));
+        eq("music: save a preset", "91.1,98.3", MusicLists.toggle("91.1", "98.3", ","));
+        eq("music: unsave a preset", "91.1", MusicLists.toggle("91.1,98.3", "98.3", ","));
+        eq("music: take out", "Radio City", MusicLists.without("Radio City\nMirchi", "Mirchi", "\n"));
+        eq("music: station names with commas", 2, MusicLists.items("Radio City, Hindi\nMirchi\n\n", "\n").size());
+        java.util.Set<String> favs = new java.util.HashSet<>(Arrays.asList("Mirchi", "Vividh Bharati"));
+        eq("music: favourites first", "[1, 3, 0, 2]",
+                MusicLists.favFirst(Arrays.asList("Radio City", "Mirchi", "Red FM", "Vividh Bharati"), favs).toString());
+        eq("music: folder", "Old Hindi", MusicLists.folder("/storage/usb0/Old Hindi/Lag Ja Gale.mp3"));
+        eq("music: folder at the root", "", MusicLists.folder("song.mp3"));
+        eq("music: artist from the list", "Lata Mangeshkar", MusicLists.artist("Lata Mangeshkar", "/sdcard/Music/a.mp3"));
+        eq("music: walked file has no artist", "", MusicLists.artist("Old Hindi", "/storage/usb0/Old Hindi/a.mp3"));
+        java.util.Map<String, List<Integer>> g = MusicLists.group(Arrays.asList("Kishore", "lata", "", "Lata", "Kishore"));
+        eq("music: groups A to Z, case ignored", "[, Kishore, lata]", g.keySet().toString());
+        eq("music: grouped songs", "[1, 3]", g.get("Lata").toString());
+        List<String> names = Arrays.asList("Lag Ja Gale", "Tujhe Dekha", "Gale Lag Ja"), subs = Arrays.asList("Lata", "Kumar Sanu", "Asha");
+        eq("music: search every word", "[0, 2]", MusicLists.search(names, subs, "lag GALE").toString());
+        eq("music: search the artist", "[1]", MusicLists.search(names, subs, "sanu").toString());
+        eq("music: empty search lists all", 3, MusicLists.search(names, subs, "  ").size());
+        eq("music: volume share", 0.5f, MusicLists.share(8, 16));
+        eq("music: no volume", 0f, MusicLists.share(3, 0));
+        eq("music: dark glyph on silver", 0xFF101114, MusicLists.inkOn(0xFFD8DCE2));
+        eq("music: dark glyph on white", 0xFF101114, MusicLists.inkOn(0xFFE8E8E2));
+        eq("music: white glyph on blue", 0xFFFFFFFF, MusicLists.inkOn(0xFF5D9BE0));
+        eq("music: white glyph on red", 0xFFFFFFFF, MusicLists.inkOn(0xFFD5525A));
+        int[] dot = new int[25];
+        java.util.Arrays.fill(dot, 0xFF000000);
+        dot[12] = 0xFFFFFFFF;
+        int[] soft = MusicLists.blur(dot, 5, 5, 1);
+        check("music: blur spreads the light", (soft[12] & 255) < 255 && (soft[0] & 255) > 0);
+        check("music: blur keeps it opaque", (soft[6] >>> 24) == 255);
+        eq("music: blur of one colour is that colour", 0xFF336699, MusicLists.blur(new int[]{0xFF336699, 0xFF336699, 0xFF336699, 0xFF336699}, 2, 2, 2)[3]);
+        eq("music: blur leaves the picture", 0xFFFFFFFF, dot[12]);
+        eq("voice: open music", "musicApp:music", String.valueOf(Voice.parse("open music")));
+        eq("voice: open the radio", "musicApp:radio", String.valueOf(Voice.parse("open the radio")));
+        eq("voice: radio kholo", "musicApp:radio", String.valueOf(Voice.parse("रेडियो खोलो")));
+        eq("voice: gaane kholo", "musicApp:music", String.valueOf(Voice.parse("gaane kholo")));
+        eq("voice: play music still plays", "music", String.valueOf(Voice.parse("play music")));
+        eq("voice: radio still plays FM", "fm", String.valueOf(Voice.parse("radio")));
+        Features.F f = Features.get("musicApp");
+        check("music: screen switch", f != null && f.def && "Radio and music".equals(f.group) && f.level == Features.SIMPLE);
     }
 
     /** Vendor code loading, key-action tokens, the map page, backups, downloads and file names. */
@@ -523,7 +638,7 @@ public final class Tests {
             check("map CSP no eval", !csp.contains("unsafe-eval"));
             java.util.regex.Matcher u = java.util.regex.Pattern.compile("'(https://[a-z0-9.-]+)/").matcher(html);
             while (u.find()) {
-                if (u.group(1).equals("https://maps.google.com")) continue;   // inside a QR code, never loaded
+                if (u.group(1).equals("https://www.google.com")) continue;   // inside a QR code, never loaded
                 check("map CSP allows " + u.group(1), csp.contains(u.group(1)));
             }
         } catch (Exception e) {
@@ -845,7 +960,7 @@ public final class Tests {
             else if (x.level == Features.CUSTOM) c++;
             else d++;
         }
-        eq("levels: simple count", 18, s);   // "longKeys" registered beside "keys"; "navTurns" and "parkedSettings" from the launcher review
+        eq("levels: simple count", 19, s);   // "longKeys" registered beside "keys"; "navTurns" and "parkedSettings" from the launcher review; "musicApp"
         eq("levels: custom count", 8, c);
         eq("levels: dev count", 2, d);
         check("levels: full has the most", f > s && f > c);
@@ -1266,6 +1381,44 @@ public final class Tests {
 
     static void batch2() {
         // distances and "ahead"
+        eq("Topway headlights: the illumination getter wins", "getIllState",
+                Xt.headlightGetter(java.util.Arrays.asList("getNightMode()", "isLightFromMCU()", "getIllState()", "lightUp()")));
+        eq("Topway headlights: light-from-MCU before night mode", "isLightFromMCU",
+                Xt.headlightGetter(java.util.Arrays.asList("getNightMode()", "isLightFromMCU()", "getBrightness()")));
+        eq("Topway headlights: brightness and setters are never used", null,
+                Xt.headlightGetter(java.util.Arrays.asList("getBrightness()", "lightValue(int)", "getLightValue()", "getBacklightLevel()")));
+        eq("Topway headlights: first answer is not trusted", "getIllState:on", Xt.seenAfter("", "getIllState", true));
+        eq("Topway headlights: trusted once seen on and off", "getIllState:both", Xt.seenAfter("getIllState:on", "getIllState", false));
+        eq("Topway headlights: same answer again", "getIllState:on", Xt.seenAfter("getIllState:on", "getIllState", true));
+        eq("Topway headlights: a new getter starts again", "isLightFromMCU:off", Xt.seenAfter("getIllState:both", "isLightFromMCU", false));
+        check("copy theme apps", Peek.themeLike("com.tw.theme") && Peek.themeLike("com.ilauncher.car") && !Peek.themeLike("com.android.theme.color.red"));
+        eq("voice: after Google fails, the stereo's own engine is tried", "com.tw.tts",
+                Speak.nextEngine(java.util.Arrays.asList("com.google.android.tts", "com.tw.tts"), new java.util.ArrayList<String>(), "com.google.android.tts"));
+        eq("voice: nothing left to try", null,
+                Speak.nextEngine(java.util.Arrays.asList("com.google.android.tts", "com.tw.tts"), java.util.Arrays.asList("com.tw.tts"), "com.google.android.tts"));
+        check("weather: a wide low strip puts the facts and days beside the reading", Cards.WeatherCard.wide(1200, 300, 1f));
+        check("weather: a normal box keeps rows", !Cards.WeatherCard.wide(600, 400, 1f));
+        check("voice: started but never heard isn't called working", !Speak.state(true, true, false, false, false, false).equals("The voice is working."));
+        eq("voice: heard is working", "The voice is working.", Speak.state(true, true, false, true, false, false));
+        check("voice: an engine that couldn't speak says how to fix", Speak.state(true, true, false, false, true, false).contains("couldn't speak"));
+        check("voice: no English voice says so", Speak.state(true, false, true, false, false, true).contains("no English voice"));
+        eq("volume: the radio service's up command", "volumeUp", Volume.command(java.util.Arrays.asList("getVolume()", "setVolumeMute(boolean)", "volumeUp()", "volumeDown()"), true));
+        eq("volume: the radio service's down command", "volumeDown", Volume.command(java.util.Arrays.asList("getVolume()", "volumeUp()", "volumeDown()"), false));
+        eq("volume: no command, no guess", null, Volume.command(java.util.Arrays.asList("getVolume()", "setVolume(int)"), true));
+        check("voice: none installed says so", Speak.state(false, false, false).startsWith("No voice engine"));
+        check("voice: broken engine says how to fix", Speak.state(true, false, true).contains("doesn't start"));
+        check("voice: started, not yet heard", Speak.state(true, true, false).contains("Test the voice"));
+        eq("status icons off", "", HomeActivity.statusPlace(false, false, true));
+        eq("status icons left to Android's bar", "", HomeActivity.statusPlace(true, true, true));
+        eq("status icons in the clock box", "clock", HomeActivity.statusPlace(true, false, true));
+        eq("status icons in the dock without a clock", "dock", HomeActivity.statusPlace(true, false, false));
+        eq("AQI good is green", 0xFF4CAF50, Cards.aqiColour(42));
+        eq("AQI poor is orange", 0xFFFFB02E, Cards.aqiColour(197));
+        eq("AQI severe is purple", 0xFFAB47BC, Cards.aqiColour(420));
+        eq("forecast day name", "Mon", Weather.dayName("2026-10-26"));
+        eq("not a date stays", "x", Weather.dayName("x"));
+        eq("maps link opens the app", "https://www.google.com/maps/search/?api=1&query=28.48068,76.96826", Geo.mapsLink(28.48068, 76.96826));
+        eq("walk back link", "https://www.google.com/maps/dir/?api=1&destination=28.48068,76.96826&travelmode=walking", Geo.walkLink(28.48068, 76.96826));
         near("1 km north", 1000, Geo.dist(28.6, 77.2, 28.6 + 1 / 111.195, 77.2), 2);
         near("bearing east", 90, Geo.bearing(28.6, 77.2, 28.6, 77.3), 0.5);
         check("ahead when heading at it", Geo.ahead(28.6, 77.2, 0, 28.603, 77.2, 700));
@@ -1412,8 +1565,8 @@ public final class Tests {
         eq("text signal on", true, Lights.isOn("1", new String[]{"prop:x", "0", "1"}));
         eq("text signal off", false, Lights.isOn("0", new String[]{"prop:x", "0", "1"}));
         eq("missing reading", false, Lights.isOn(null, sig));
-        boolean[][] m = Qr.modules(Geo.mapsLink(28.6139, 77.209));
-        eq("parking code stays version 3", 29, m.length);
+        boolean[][] m = Qr.modules(Geo.walkLink(28.6139, 77.209));
+        check("parking code stays small enough to scan (version 5 or less)", m.length <= 37);
         eq("finder corner dark", true, m[0][0]);
     }
 
@@ -1832,9 +1985,206 @@ public final class Tests {
                 }
             }
             check("finish: caught errors noted for Diagnostics", notes > 70);
-            check("finish: few threads of their own", threads <= 3);
+            // Bg's pool, the boot logo, OBD-II, Android Auto's reader and wireless Android Auto
+            check("finish: few threads of their own", threads <= 5);
         } catch (Exception x) {
             check("finish fixes: " + x, false);
         }
     }
+    private static String hex(byte[] b) {
+        StringBuilder sb = new StringBuilder();
+        for (byte x : b) sb.append(String.format("%02x", x & 0xFF));
+        return sb.toString();
+    }
+
+    /** Android Auto: protobuf, framing, joining split messages, the picture's size and touches, phones on USB. */
+    private static void androidAuto() {
+        // protobuf varints and fields
+        eq("aa varint 1", "01", hex(AaProto.varint(1)));
+        eq("aa varint 300", "ac02", hex(AaProto.varint(300)));
+        eq("aa varint -1 is ten bytes", 10, AaProto.varint(-1).length);
+        eq("aa field 150", "089601", hex(new AaProto.Writer().num(1, 150).bytes()));
+        eq("aa text field", "120774657374696e67", hex(new AaProto.Writer().text(2, "testing").bytes()));
+        eq("aa sint -1", "0801", hex(new AaProto.Writer().sint(1, -1).bytes()));
+        eq("aa sint 1", "0802", hex(new AaProto.Writer().sint(1, 1).bytes()));
+        eq("aa bool", "1801", hex(new AaProto.Writer().bool(3, true).bytes()));
+        byte[] msg = new AaProto.Writer().num(1, 150).text(2, "hi").msg(3, new AaProto.Writer().num(1, -7)).sint(4, -3)
+                .num(5, 1L << 40).bytes();
+        AaProto.Reader r = new AaProto.Reader(msg);
+        long a = 0, inner = 0, big = 0;
+        String t = null;
+        int z = 0, fields = 0;
+        while (r.next()) {
+            fields++;
+            if (r.field == 1) a = r.num();
+            else if (r.field == 2) t = r.text();
+            else if (r.field == 3) inner = AaProto.find(r.bytes(), 0, 1000, 1, 0);
+            else if (r.field == 4) z = r.sint();
+            else if (r.field == 5) big = r.num();
+        }
+        eq("aa read fields", 5, fields);
+        eq("aa read number", 150L, a);
+        eq("aa read text", "hi", t);
+        eq("aa read negative inside", -7L, inner);
+        eq("aa read sint", -3, z);
+        eq("aa read 64 bits", 1L << 40, big);
+        r = new AaProto.Reader(msg);
+        int seen = 0;
+        while (r.next()) seen++;   // fields skipped unread
+        eq("aa skip unread fields", 5, seen);
+        eq("aa find missing", 9L, AaProto.find(msg, 0, msg.length, 7, 9));
+        check("aa broken message ends", !new AaProto.Reader(new byte[]{0x12, 0x7f, 0x01}).next()
+                || new AaProto.Reader(new byte[]{0x12, 0x7f, 0x01}).bytes().length == 0);
+
+        // frame headers and flags
+        eq("aa flags control", 0x0b, AaFrame.flagsFor(0, AaMessages.DISCOVERY_RESPONSE, true));
+        eq("aa flags control on another channel", 0x0f, AaFrame.flagsFor(3, AaMessages.OPEN_RESPONSE, true));
+        eq("aa flags media", 0x0b, AaFrame.flagsFor(2, AaMessages.VIDEO_FOCUS, true));
+        eq("aa flags plain", 0x03, AaFrame.flagsFor(0, AaMessages.VERSION_REQUEST, false));
+        byte[] f = AaFrame.frame(2, AaFrame.FIRST | AaFrame.ENCRYPTED, new byte[300], 0, 300);
+        eq("aa frame size", 304, f.length);
+        eq("aa frame channel", 2, AaFrame.channel(f));
+        eq("aa frame flags", 0x09, AaFrame.flags(f));
+        eq("aa frame length", 300, AaFrame.length(f));
+        check("aa first has total", AaFrame.hasTotal(0x09));
+        check("aa whole has no total", !AaFrame.hasTotal(0x0b));
+        check("aa last has no total", !AaFrame.hasTotal(0x0a));
+        check("aa middle has no total", !AaFrame.hasTotal(0x08));
+        eq("aa int32", 0x01020304, AaFrame.int32(new byte[]{1, 2, 3, 4}, 0));
+        eq("aa version request bytes", "000300060001" + "00010002", hex(AaFrame.frame(0, 3, AaMessages.versionRequest(), 0, 6)));
+        eq("aa auth complete", "00040800", hex(AaMessages.authComplete()));
+        eq("aa version ok", 0, AaMessages.versionStatus(new byte[]{0, 2, 0, 1, 0, 6, 0, 0}));
+        eq("aa version refused", -1, AaMessages.versionStatus(new byte[]{0, 2, 0, 1, 0, 6, (byte) 0xff, (byte) 0xff}));
+        byte[] media = AaFrame.media(0x0102030405L, new byte[]{9, 8}, 0, 2);
+        eq("aa media type", 0, AaFrame.type(media, media.length));
+        eq("aa media timestamp", 0x0102030405L, AaFrame.timestamp(media));
+        eq("aa media sound", 9, (int) media[10]);
+
+        // joining split messages
+        AaFrame.Joiner j = new AaFrame.Joiner();
+        byte[] whole = j.add(0, 0x0b, new byte[]{0, 5, 1}, 0, 3, 0);
+        eq("aa join whole", "000501", whole == null ? null : hex(whole));
+        check("aa join first", j.add(2, 0x09, new byte[]{0, 0}, 0, 2, 6) == null);
+        check("aa join other channel between", j.add(3, 0x0b, new byte[]{0, 1}, 0, 2, 0) != null);
+        check("aa join middle", j.add(2, 0x08, new byte[]{1, 2}, 0, 2, 0) == null);
+        byte[] joined = j.add(2, 0x0a, new byte[]{3, 4}, 0, 2, 0);
+        eq("aa join last", "000001020304", joined == null ? null : hex(joined));
+        check("aa join orphan middle", j.add(2, 0x08, new byte[]{1}, 0, 1, 0) == null);
+        check("aa join orphan last", j.add(2, 0x0a, new byte[]{1}, 0, 1, 0) == null);
+        j.add(4, 0x09, new byte[]{0, 0}, 0, 2, 5);
+        check("aa join short run dropped", j.add(4, 0x0a, new byte[]{1}, 0, 1, 0) == null);
+        j.add(4, 0x09, new byte[]{0, 0}, 0, 2, 3);
+        check("aa join long run dropped", j.add(4, 0x0a, new byte[]{1, 2}, 0, 2, 0) == null);
+        check("aa join silly total", j.add(4, 0x09, new byte[]{0, 0}, 0, 2, AaFrame.MAX_MESSAGE + 1) == null
+                && j.add(4, 0x0a, new byte[]{0}, 0, 1, 0) == null);
+
+        // the picture's size and where touches land
+        eq("aa size 1024x600", AaScreen.SD, AaScreen.pick(1024, 600));
+        eq("aa size 1280x720", AaScreen.HD, AaScreen.pick(1280, 720));
+        eq("aa size 2000x1200", AaScreen.FULL_HD, AaScreen.pick(2000, 1200));
+        eq("aa size portrait", AaScreen.SD, AaScreen.pick(600, 1024));
+        eq("aa size widths", "800x480 1280x720 1920x1080", AaScreen.width(1) + "x" + AaScreen.height(1) + " "
+                + AaScreen.width(2) + "x" + AaScreen.height(2) + " " + AaScreen.width(3) + "x" + AaScreen.height(3));
+        int[] fit = AaScreen.fit(1024, 600, 800, 480);
+        eq("aa fit 1024x600", "12 0 1000 600", fit[0] + " " + fit[1] + " " + fit[2] + " " + fit[3]);
+        fit = AaScreen.fit(1280, 800, 1280, 720);
+        eq("aa fit 1280x800", "0 40 1280 720", fit[0] + " " + fit[1] + " " + fit[2] + " " + fit[3]);
+        eq("aa touch middle", 400, AaScreen.toVideo(500, 0, 1000, 800));
+        eq("aa touch scaled", 799, AaScreen.toVideo(1000, 0, 1000, 800));
+        eq("aa touch left bar", 0, AaScreen.toVideo(5, 12, 1000, 800));
+        eq("aa touch offset", 400, AaScreen.toVideo(512, 12, 1000, 800));
+        eq("aa touch no view", 0, AaScreen.toVideo(5, 0, 0, 800));
+        byte[] touch = AaMessages.touch(5, 0, 0, new int[]{0}, new int[]{400}, new int[]{240});
+        eq("aa touch type", AaMessages.INPUT_EVENT, AaFrame.type(touch, touch.length));
+        r = new AaProto.Reader(touch, 2, touch.length - 2);
+        long x = -1, act = -1;
+        while (r.next()) {
+            if (r.field != 3) continue;
+            AaProto.Reader te = r.msg();
+            while (te.next()) {
+                if (te.field == 1) x = AaProto.find(te.bytes(), 0, 100, 1, -1);
+                else if (te.field == 3) act = te.num();
+            }
+        }
+        eq("aa touch x", 400L, x);
+        eq("aa touch action", 0L, act);
+
+        // what the head unit offers
+        AaMessages.Car car = new AaMessages.Car();
+        car.model = "Dzire";
+        byte[] d = AaMessages.discovery(car);
+        eq("aa discovery type", AaMessages.DISCOVERY_RESPONSE, AaFrame.type(d, d.length));
+        r = new AaProto.Reader(d, 2, d.length - 2);
+        int services = 0;
+        String model = null;
+        java.util.Set<Long> ids = new java.util.HashSet<>();
+        while (r.next()) {
+            if (r.field == 1) {
+                services++;
+                ids.add(AaProto.find(r.bytes(), 0, 100000, 1, -1));
+            } else if (r.field == 3) model = r.text();
+        }
+        eq("aa discovery services", 7, services);
+        check("aa discovery channels", ids.containsAll(java.util.Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L)));
+        eq("aa discovery model", "Dzire", model);
+        eq("aa focus gain", AaMessages.STATE_GAIN, AaMessages.focusAnswer(AaMessages.FOCUS_GAIN));
+        eq("aa focus release", AaMessages.STATE_LOSS, AaMessages.focusAnswer(AaMessages.FOCUS_RELEASE));
+        check("aa right hand India", AaSession.rightHand("IN", "UTC"));
+        check("aa right hand US locale in India", AaSession.rightHand("US", "Asia/Kolkata"));
+        check("aa left hand US", !AaSession.rightHand("US", "America/New_York"));
+        check("aa left hand Germany", !AaSession.rightHand("DE", "Europe/Berlin"));
+
+        // phones on USB
+        check("aa usb accessory", AaUsb.looksLikePhone(0x18D1, 0x2D01, 0, new int[0][]));
+        check("aa usb phone file transfer", AaUsb.looksLikePhone(0x04E8, 0x6860, 0, new int[][]{{0xFF, 0xFF, 0}}));
+        check("aa usb phone adb", AaUsb.looksLikePhone(0x2717, 0xFF48, 0, new int[][]{{0xFF, 0x42, 1}}));
+        check("aa usb not apple", !AaUsb.looksLikePhone(0x05AC, 0x12A8, 0, new int[][]{{6, 1, 1}}));
+        check("aa usb not a memory stick", !AaUsb.looksLikePhone(0x0781, 0x5567, 0, new int[][]{{8, 6, 0x50}}));
+        check("aa usb not a hub", !AaUsb.looksLikePhone(0x05E3, 0x0608, 9, new int[][]{{9, 0, 0}}));
+        check("aa usb not an obd cable", !AaUsb.looksLikePhone(0x0403, 0x6001, 0, new int[][]{{0xFF, 0xFF, 0xFF}}));
+        check("aa usb not a ch340", !AaUsb.looksLikePhone(0x1A86, 0x7523, 0, new int[][]{{0xFF, 0xFF, 0}}));
+
+        // the certificate files
+        eq("aa der short", "040201ff", hex(AaCert.der(4, new byte[]{1, (byte) 0xff})));
+        byte[] long1 = AaCert.der(4, new byte[200]);
+        eq("aa der long", "0481c8", hex(java.util.Arrays.copyOf(long1, 3)));
+        byte[] long2 = AaCert.der(0x30, new byte[1200]);
+        eq("aa der longer", "308204b0", hex(java.util.Arrays.copyOf(long2, 4)));
+        byte[] p8 = AaCert.pkcs8(new byte[]{0x30, 0x00});
+        eq("aa pkcs8 wrap", "3016020100300d06092a864886f70d010101050004023000", hex(p8));
+        eq("aa pem", "010203", hex(AaCert.pem("x\n-----BEGIN PRIVATE KEY-----\nAQID\n-----END PRIVATE KEY-----\n", "PRIVATE KEY")));
+        check("aa pem other kind", AaCert.pem("-----BEGIN RSA PRIVATE KEY-----\nAQID\n-----END RSA PRIVATE KEY-----", "PRIVATE KEY") == null);
+        check("aa feature registered", Features.get("androidAuto") != null && !Features.get("androidAuto").def);
+
+        // wireless: the Bluetooth messages that start the phone
+        byte[] wf = AaWireless.frame(AaWireless.START_REQUEST, new byte[]{1, 2, 3});
+        eq("aa wireless frame", "0003000101" + "0203", hex(wf));
+        byte[] start = AaWireless.startRequest("192.168.49.1", AaWireless.PORT);
+        r = new AaProto.Reader(start);
+        String sip = null;
+        long sport = 0;
+        while (r.next()) {
+            if (r.field == 1) sip = r.text();
+            else if (r.field == 2) sport = r.num();
+        }
+        eq("aa wireless start ip", "192.168.49.1", sip);
+        eq("aa wireless start port", 5288L, sport);
+        byte[] info = AaWireless.infoResponse("DIRECT-ab-OpenRath", "secret12", null);
+        r = new AaProto.Reader(info);
+        String wssid = null, wkey = null, wbssid = null;
+        long sec = 0;
+        while (r.next()) {
+            if (r.field == 1) wssid = r.text();
+            else if (r.field == 2) wkey = r.text();
+            else if (r.field == 3) wbssid = r.text();
+            else if (r.field == 4) sec = r.num();
+        }
+        eq("aa wireless ssid", "DIRECT-ab-OpenRath", wssid);
+        eq("aa wireless key", "secret12", wkey);
+        eq("aa wireless empty bssid", "", wbssid);
+        eq("aa wireless wpa2", 8L, sec);
+        eq("aa wireless version", 4L, AaProto.find(AaWireless.versionRequest(new AaMessages.Car()), 0, 1000, 1, 0));
+        check("aa wireless feature registered", Features.get("androidAutoWireless") != null && !Features.get("androidAutoWireless").def);
+    }
+
 }

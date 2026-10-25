@@ -293,7 +293,7 @@ final class Extras {
         s.setPadding(Ui.px(18), Ui.px(10), Ui.px(18), Ui.px(10));
         GradientDrawable g = new GradientDrawable();
         g.setCornerRadius(Ui.RADIUS * Ui.k);
-        g.setColor(Ui.PANEL_TOP | 0xFF000000);
+        g.setColor(Ui.solidPanel());
         g.setStroke(Math.max(1, Ui.px(1.5f)), Ui.ACCENT);
         s.setBackground(g);
         s.setElevation(Ui.px(8));
@@ -385,7 +385,7 @@ final class Extras {
             sorted.add(all.get(order.get(k)));
             items[k + 1] = names.get(order.get(k));
         }
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(all.isEmpty() ? "No apps on the unit offer widgets" : "Choose a widget"))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t(all.isEmpty() ? "No apps on the unit offer widgets" : "Choose a widget"))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -470,7 +470,7 @@ final class Extras {
         String mac = p.str("obdMac", "");
         String[] items = {Hindi.f("Adapter: %1$s", mac.isEmpty() ? Hindi.t("choose…") : p.str("obdName", mac)), Hindi.t("Read fault codes"),
                 Hindi.t("Clear fault codes…"), Hindi.f("Status: %1$s", Hindi.t(Obd.status) + (Obd.protocol.isEmpty() ? "" : " (" + Obd.protocol + ")"))};
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Engine (OBD-II)")).setItems(items, new DialogInterface.OnClickListener() {
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Engine (OBD-II)")).setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 if (w == 0) chooseAdapter(a);
@@ -481,7 +481,7 @@ final class Extras {
     }
 
     static void chooseAdapter(final HomeActivity a) {
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("What kind of OBD-II adapter?"))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("What kind of OBD-II adapter?"))
                 .setItems(new String[]{Hindi.t("Bluetooth"), Hindi.t("Wi-Fi")}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -497,7 +497,7 @@ final class Extras {
         e.setSingleLine(true);
         String now = a.prefs.str("obdMac", "");
         e.setText(now.startsWith("wifi:") ? now.substring(5) : Obd.WIFI_DEFAULT);
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Wi-Fi adapter address"))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Wi-Fi adapter address"))
                 .setMessage(Hindi.t("First join the adapter's Wi-Fi in the unit's Wi-Fi settings. Most adapters are at 192.168.0.10, port 35000."))
                 .setView(e)
                 .setPositiveButton(Hindi.t("Connect"), new DialogInterface.OnClickListener() {
@@ -532,7 +532,7 @@ final class Extras {
     static void chooseBluetooth(final HomeActivity a) {
         final List<String> devs = Obd.paired();
         if (devs.isEmpty()) {
-            new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("No paired Bluetooth devices"))
+            new Glass.Builder(a, DIALOG).setTitle(Hindi.t("No paired Bluetooth devices"))
                     .setMessage(Hindi.t("Plug the OBD adapter (often sold as ELM327) into the socket under the steering wheel, switch the ignition on, "
                             + "and pair it in the unit's Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here."))
                     .setPositiveButton(Hindi.t("Bluetooth settings"), new DialogInterface.OnClickListener() {
@@ -549,7 +549,7 @@ final class Extras {
         }
         String[] names = new String[devs.size()];
         for (int i = 0; i < names.length; i++) names[i] = devs.get(i).replace("|", "   ");
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Which one is the OBD-II adapter?")).setItems(names, new DialogInterface.OnClickListener() {
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Which one is the OBD-II adapter?")).setItems(names, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 String[] f = devs.get(w).split("\\|");
@@ -591,7 +591,7 @@ final class Extras {
                         for (String c : Obd.pendingCodes) sb.append(c).append("  ").append(Obd.meaning(c)).append('\n');
                     }
                 }
-                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Obd.codesAt < asked ? "No answer from the engine computer"
+                new Glass.Builder(a, DIALOG).setTitle(Hindi.t(Obd.codesAt < asked ? "No answer from the engine computer"
                         : sb.length() == 0 ? "No fault codes" : "Fault codes"))
                         .setMessage(sb.length() == 0 ? Hindi.t("The engine computer reports nothing stored.") : sb.toString().trim()
                                 + Hindi.t("\n\nA code points at where to look; a mechanic can confirm the cause."))
@@ -601,7 +601,7 @@ final class Extras {
     }
 
     static void clearCodes(final HomeActivity a) {
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Clear the fault codes?"))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Clear the fault codes?"))
                 .setMessage(Hindi.t("This also turns off the check-engine light until the fault is seen again. Only clear codes after "
                         + "the problem has been fixed. Do it with the engine off and the ignition on."))
                 .setPositiveButton(Hindi.t("Clear"), new DialogInterface.OnClickListener() {
@@ -617,7 +617,7 @@ final class Extras {
         final Prefs p = a.prefs;
         String[] items = {Hindi.t("Find my tyre sensors"), Hindi.f("Units: %1$s", p.str("tpmsUnit", "psi")), Hindi.f("Warn below %1$s psi", p.num("tpmsLow", 28)),
                 Hindi.f("Status: %1$s", Hindi.t(Tpms.status))};
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Tyre pressure")).setItems(items, new DialogInterface.OnClickListener() {
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Tyre pressure")).setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 if (w == 0) findSensors(a);
@@ -642,7 +642,7 @@ final class Extras {
         t.setPadding(Ui.px(24), Ui.px(16), Ui.px(24), Ui.px(8));
         t.setText(Hindi.t("Listening… Sensors send every few seconds while the car moves, and less often when parked. "
                 + "Driving slowly or letting a little air out wakes them up."));
-        final AlertDialog dlg = new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Finding tyre sensors")).setView(t)
+        final AlertDialog dlg = new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Finding tyre sensors")).setView(t)
                 .setPositiveButton(Hindi.t("Assign wheels"), null).setNegativeButton(Hindi.t("Close"), null).show();
         final Runnable tick = new Runnable() {
             @Override
@@ -691,11 +691,11 @@ final class Extras {
             return;
         }
         final String[] items = ids.toArray(new String[0]);
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Tap a sensor to choose its wheel")).setItems(items, new DialogInterface.OnClickListener() {
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Tap a sensor to choose its wheel")).setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 final String id = items[w];
-                new AlertDialog.Builder(a, DIALOG).setTitle(id).setItems(tr(new String[]{"Front left", "Front right", "Rear left", "Rear right"}),
+                new Glass.Builder(a, DIALOG).setTitle(id).setItems(tr(new String[]{"Front left", "Front right", "Rear left", "Rear right"}),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d2, int wheel) {
@@ -722,7 +722,7 @@ final class Extras {
         android.widget.FrameLayout box = new android.widget.FrameLayout(a);
         box.setPadding(pad, pad / 2, pad, 0);
         box.addView(e);
-        new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t(title)).setView(box)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t(title)).setView(box)
                 .setPositiveButton(Hindi.t("Save"), new android.content.DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(android.content.DialogInterface d, int w) {
@@ -814,7 +814,7 @@ final class Extras {
             @Override
             public void run() {
                 String now = Obd.connected ? Obd.readings() : "";
-                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Live engine readings"))
+                new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Live engine readings"))
                         .setMessage(now.isEmpty() ? Hindi.f("Not connected to the adapter: %1$s", Hindi.t(Obd.status)) : now)
                         .setPositiveButton(Hindi.t("OK"), null).show();
             }
@@ -1048,7 +1048,7 @@ final class Extras {
                     OverMic.ask(a);
                     return;
                 }
-                new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Mic button"))
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Mic button"))
                         .setSingleChoiceItems(tr(micNames), java.util.Arrays.asList(micPlaces).indexOf(Features.micPlace(p)), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -1063,7 +1063,7 @@ final class Extras {
         r.add(new SettingsView.Row(g, "What you can say", "radio, calls, music, volume, places", new Runnable() {
             @Override
             public void run() {
-                new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("What you can say"))
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("What you can say"))
                         .setMessage(Hindi.t("Radio: \"FM 91.1\", \"radio chalao\", \"रेडियो 98.3\"\n"
                                 + "Calls: \"call Mom\", \"papa ko call karo\", \"मम्मी को फोन लगाओ\" (uses your favourites)\n"
                                 + "Music: \"play music\", \"gaana chalao\", \"next\", \"अगला\", \"pause\", \"रोको\"\n"
@@ -1204,7 +1204,7 @@ final class Extras {
         r.add(new SettingsView.Row(g, "Speed breakers learnt", Hindi.f("%1$s (%2$s places seen); tap to forget them", learnt, bumps.size()), new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, DIALOG).setMessage(Hindi.t("Forget all learnt speed breakers?"))
+                new Glass.Builder(a, DIALOG).setMessage(Hindi.t("Forget all learnt speed breakers?"))
                         .setPositiveButton(Hindi.t("Forget"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -1216,7 +1216,7 @@ final class Extras {
         r.add(new SettingsView.Row(g, "Stops learnt", Hindi.f("%1$s signals and toll plazas; tap to forget them", waits.size()), new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, DIALOG).setMessage(Hindi.t("Forget all learnt waiting times?"))
+                new Glass.Builder(a, DIALOG).setMessage(Hindi.t("Forget all learnt waiting times?"))
                         .setPositiveButton(Hindi.t("Forget"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -1263,7 +1263,7 @@ final class Extras {
         if (Money.india()) r.add(new SettingsView.Row("Dashboard", "Holidays ahead", android.text.TextUtils.join(";  ", Holidays.upcoming(java.util.Calendar.getInstance(), 3)), new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Holidays with heavy traffic"))
+                new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Holidays with heavy traffic"))
                         .setMessage(android.text.TextUtils.join("\n", Holidays.upcoming(java.util.Calendar.getInstance(), 12))
                                 + "")
                         .setPositiveButton(Hindi.t("OK"), null).show();
@@ -1283,7 +1283,7 @@ final class Extras {
             @Override
             public void run() {
                 if (spots == 0) return;
-                new AlertDialog.Builder(a, DIALOG).setMessage(Hindi.f("Clear all %1$s waterlogging spots?", spots))
+                new Glass.Builder(a, DIALOG).setMessage(Hindi.f("Clear all %1$s waterlogging spots?", spots))
                         .setPositiveButton(Hindi.t("Clear"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -1350,7 +1350,7 @@ final class Extras {
                 e.setInputType(android.text.InputType.TYPE_CLASS_PHONE);
                 String[] m = p.str("myService", "").split("\\|", -1);
                 e.setText(m.length == 2 ? m[1] : "");
-                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Service centre's phone number")).setView(e)
+                new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Service centre's phone number")).setView(e)
                         .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -1400,7 +1400,7 @@ final class Extras {
                     final String[] presets = new String[Eq.PRESETS.length];
                     presets[0] = Hindi.t("Your equalizer");
                     for (int i = 1; i < presets.length; i++) presets[i] = Hindi.t(Eq.PRESETS[i - 1]);
-                    new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.f("%1$s sound: equalizer", Hindi.t(nice)))
+                    new Glass.Builder(a, DIALOG).setTitle(Hindi.f("%1$s sound: equalizer", Hindi.t(nice)))
                             .setItems(presets, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface d, int w) {
@@ -1467,7 +1467,7 @@ final class Extras {
                 + (lf.length > 1 && !lf[1].isEmpty() ? " (0–60 " + lf[1] + " s)" : "") + Hindi.f("  ·  best %1$s s", p.str("accelBest", "-")), new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("0–100 km/h timer"))
+                new Glass.Builder(a, DIALOG).setTitle(Hindi.t("0–100 km/h timer"))
                         .setMessage(Hindi.t("Stop completely, then accelerate. The time is spoken when you pass 100 km/h. It uses GPS (or OBD-II speed "
                                 + "when connected), so it is good to about half a second. Only on a safe, empty road."))
                         .setPositiveButton(Hindi.t("OK"), null).setNeutralButton(Hindi.t("Forget the best time"), new DialogInterface.OnClickListener() {
@@ -1488,7 +1488,7 @@ final class Extras {
         r.add(new SettingsView.Row(g, "Delete recorded routes", null, new Runnable() {
             @Override
             public void run() {
-                new AlertDialog.Builder(a, DIALOG).setMessage(Hindi.t("Delete every recorded route on the unit?"))
+                new Glass.Builder(a, DIALOG).setMessage(Hindi.t("Delete every recorded route on the unit?"))
                         .setPositiveButton(Hindi.t("Delete"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d, int w) {
@@ -1581,7 +1581,7 @@ final class Extras {
     static void offerSetup(final HomeActivity a, final String id) {
         Prefs p = a.prefs;
         if (("overStrip".equals(id) || "callScreen".equals(id)) && !OverMic.allowed(a)) {
-            new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Features.get(id).name))
+            new Glass.Builder(a, DIALOG).setTitle(Hindi.t(Features.get(id).name))
                     .setMessage(Hindi.t("This needs \"Display over other apps\" for OpenRath. Allow it now?"))
                     .setPositiveButton(Hindi.t("Allow"), new DialogInterface.OnClickListener() {
                         @Override
@@ -1598,7 +1598,7 @@ final class Extras {
         boolean proj = !("projection".equals(id) || "projectionAuto".equals(id)) || Projection.app(a, p) != null;
         String q = needs(id, ind, lights, !p.str("obdMac", "").isEmpty(), tyres, proj);
         if (q == null) return;
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t(Features.get(id).name)).setMessage(Hindi.t(q))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t(Features.get(id).name)).setMessage(Hindi.t(q))
                 .setPositiveButton(Hindi.t("Set up now"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -1642,7 +1642,7 @@ final class Extras {
     }
 
     private static void learnButton(final HomeActivity a) {
-        final AlertDialog dlg = new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Press the steering-wheel button now"))
+        final AlertDialog dlg = new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Press the steering-wheel button now"))
                 .setMessage(Hindi.t("Press and release it once. Waiting for up to 15 seconds…"))
                 .setNegativeButton(Hindi.t("Cancel"), new DialogInterface.OnClickListener() {
                     @Override
@@ -1679,7 +1679,7 @@ final class Extras {
     private static void chooseAction(final HomeActivity a, final String sig, final String label, boolean existing) {
         String[] items = tr(existing ? java.util.Arrays.copyOf(Keys.ACTION_NAMES, Keys.ACTION_NAMES.length + 1) : Keys.ACTION_NAMES);
         if (existing) items[items.length - 1] = Hindi.t("Forget this button");
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.f("What should %1$s do?", label))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.f("What should %1$s do?", label))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -1691,7 +1691,7 @@ final class Extras {
     private static void chooseLong(final HomeActivity a, final String sig, final String label) {
         final String[] items = tr(java.util.Arrays.copyOf(Keys.ACTION_NAMES, Keys.ACTION_NAMES.length + 1));
         items[items.length - 1] = Hindi.t("Nothing extra");
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.f("Holding %1$s down should", label))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.f("Holding %1$s down should", label))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -1717,7 +1717,7 @@ final class Extras {
         final List<String> chosen = Ticker.apps(p);
         final boolean[] on = new boolean[pkgs.size()];
         for (int i = 0; i < on.length; i++) on[i] = chosen.contains(pkgs.get(i));
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Show messages from"))
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Show messages from"))
                 .setMultiChoiceItems(names.toArray(new String[0]), on, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w, boolean v) {
@@ -1808,7 +1808,7 @@ final class Extras {
         });
         Features.set(p, "eq", true);
         Eq.apply(a, p, 0);
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Equalizer")).setView(col)
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Equalizer")).setView(col)
                 .setMessage(Hindi.t(Eq.status.startsWith("This unit") ? Eq.status : Eq.REACH))
                 .setPositiveButton(Hindi.t("Done"), null)
                 .setNeutralButton(Hindi.t("Turn off"), new DialogInterface.OnClickListener() {
@@ -1830,7 +1830,7 @@ final class Extras {
         final String[] items = new String[days.size() + 1];
         items[0] = Hindi.f("All %1$s days", days.size());
         for (int i = 0; i < days.size(); i++) items[i + 1] = days.get(i);
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Export which day?")).setItems(items, new DialogInterface.OnClickListener() {
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Export which day?")).setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 int n = 0;
@@ -1857,10 +1857,10 @@ final class Extras {
         }
         String[] names = new String[files.size()];
         for (int i = 0; i < names.length; i++) names[i] = files.get(i).getName();
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Restore which backup?")).setItems(names, new DialogInterface.OnClickListener() {
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Restore which backup?")).setItems(names, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, final int w) {
-                new AlertDialog.Builder(a, DIALOG).setTitle(Backup.label(files.get(w)))
+                new Glass.Builder(a, DIALOG).setTitle(Backup.label(files.get(w)))
                         .setMessage(Hindi.t("Replace every setting, the fuel log and trip history with this backup? "
                         + "A copy of what's here now is saved first."))
                         .setPositiveButton(Hindi.t("Restore"), new DialogInterface.OnClickListener() {

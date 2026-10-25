@@ -83,6 +83,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         sys.addAction(Intent.ACTION_SCREEN_ON);   // back from the stereo's sleep: check at once (Wake)
         Compat.fromSystem(this, events, sys);
         PhoneLink.listen(this);
+        AaUsb.listen(this);   // a phone plugged in starts Android Auto (when switched on)
         build();
         root.post(new Runnable() {
             @Override
@@ -207,9 +208,14 @@ public class HomeActivity extends Activity implements Cards.Host {
         else if ("answer".equals(a)) hub.unit.answer(this);
         else if ("hangup".equals(a)) hub.unit.hangUp(this);
         else if ("navi".equals(a)) openApp("dock:navi", "Navigation");
-        else if ("radio".equals(a)) openApp("media:radio", "Radio");
-        else if ("music".equals(a)) openApp("media:music", "Music");
-        else if ("dash".equals(a)) closeSettings();
+        else if ("radio".equals(a)) {
+            if (!openMusic(MusicScreen.RADIO)) openApp("media:radio", "Radio");
+        } else if ("music".equals(a)) {
+            if (!openMusic(MusicScreen.MUSIC)) openApp("media:music", "Music");
+        } else if ("dash".equals(a)) {
+            closeMusic();
+            closeSettings();
+        }
         else if ("screen".equals(a)) Extras.screenOff(this);
         else if ("page".equals(a)) turnPage(1);
         else if ("voice".equals(a)) voiceSearch(mapCard());
@@ -272,7 +278,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             Toast.makeText(this, Hindi.t("No parking spot saved yet"), Toast.LENGTH_SHORT).show();
             return;
         }
-        Qr.show(this, Hindi.t("Where the car is parked"), Geo.mapsLink(Drive.parkLat, Drive.parkLon),
+        Qr.show(this, Hindi.t("Where the car is parked"), Geo.walkLink(Drive.parkLat, Drive.parkLon),
                 Hindi.t("Scan with your phone to open the spot in Google Maps and walk back to the car."));
     }
 
@@ -416,6 +422,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             android.graphics.drawable.BitmapDrawable bd = new android.graphics.drawable.BitmapDrawable(getResources(), wall);
             dash.setBackground(new CenterCrop(bd));
         }
+        if (Glass.on) dash.setBackground(Glass.backdrop());   // the blurred wallpaper, under glass boxes
         if (Prefs.page >= prefs.pages()) Prefs.page = 0;
         dash.pages = prefs.pages();
         dash.page = Prefs.page;
@@ -551,6 +558,32 @@ public class HomeActivity extends Activity implements Cards.Host {
             });
         }
         micShown();
+    }
+
+    /** Whether Android's own status bar shows over the launcher: then OpenRath's status icons would only repeat it. */
+    boolean systemBarShown() {
+        try {
+            android.view.WindowInsets in = getWindow().getDecorView().getRootWindowInsets();
+            return in != null && in.getSystemWindowInsetTop() > 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Where OpenRath's Wi-Fi, Bluetooth, GPS and battery icons go: "" nowhere (switched off, or Android's
+     * status bar already shows them), "clock" along the top of the clock box when this page has one, else
+     * "dock" in the buttons bar. Pure, for the tests.
+     */
+    static String statusPlace(boolean on, boolean systemBar, boolean clockOnPage) {
+        if (!on || systemBar) return "";
+        return clockOnPage ? "clock" : "dock";
+    }
+
+    String statusPlace() {
+        boolean clock = false;
+        if (layoutView == null) for (int i = 0; i < Prefs.SLOTS; i++) if (Prefs.CLOCK.equals(prefs.slot(i))) clock = true;
+        return statusPlace(Features.on(prefs, "dockStatus"), systemBarShown(), clock);
     }
 
     /**
@@ -844,7 +877,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     public void tripMenu() {
         String[] items = {Hindi.t("Start today's trip again"), Hindi.t("Save the parking spot here"), Hindi.t("Fuel log and fill-ups"),
                 Hindi.t("Trip history and driving score"), Hindi.t("Add a toll payment")};
-        new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Today %1$s km  ·  GPS odometer %2$s km", String.format(java.util.Locale.US, "%.1f", Drive.todayKm), String.valueOf(Math.round(Drive.odoKm))))
                 .setItems(items, new android.content.DialogInterface.OnClickListener() {
                     @Override
@@ -1033,6 +1066,38 @@ public class HomeActivity extends Activity implements Cards.Host {
     }
 
     SettingsView settingsView;
+    MusicScreen musicScreen;
+
+    /**
+     * The radio and music screen, on the Radio, Music or Apps list (null: the last one). False when
+     * its switch in Settings > Features is off, so the caller does what it did before.
+     */
+    boolean openMusic(String tab) {
+        if (!Features.on(prefs, "musicApp")) return false;
+        if (musicScreen != null) {
+            if (tab != null) MusicScreen.tab = tab;
+            musicScreen.refresh(true);
+            return true;
+        }
+        musicScreen = new MusicScreen(this, tab, new MusicScreen.Closed() {
+            @Override
+            public void closed() {
+                closeMusic();
+            }
+        });
+        root.addView(musicScreen, new android.widget.FrameLayout.LayoutParams(-1, -1));
+        return true;
+    }
+
+    /** Back to the dashboard from the radio and music screen; false when it wasn't open. */
+    boolean closeMusic() {
+        if (musicScreen == null) return false;
+        musicScreen.gone();
+        root.removeView(musicScreen);
+        musicScreen = null;
+        hub.notifyIfChanged(true);
+        return true;
+    }
 
     /** The owner entered the valet PIN: Settings and box menus open until Settings is closed. */
     boolean ownerUnlocked;
@@ -1043,7 +1108,7 @@ public class HomeActivity extends Activity implements Cards.Host {
     void openSettings() {
         if (settingsView != null) return;
         if (Features.on(prefs, "parkedSettings") && !passenger && ChildLock.moving()) {
-            new android.app.AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+            new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                     .setTitle(Hindi.t("Settings open when the car is stopped"))
                     .setMessage(Hindi.t("Changing settings while driving takes your eyes off the road."))
                     .setPositiveButton(Hindi.t("OK"), null)
@@ -1138,7 +1203,9 @@ public class HomeActivity extends Activity implements Cards.Host {
         LinearLayout bar = new LinearLayout(this);
         bar.setGravity(Gravity.CENTER_VERTICAL);
         bar.setPadding(Ui.px(18), Ui.px(8), Ui.px(8), Ui.px(8));
-        bar.setBackground(Ui.panel());
+        android.graphics.drawable.GradientDrawable barBg = Ui.panel();
+        if (Glass.on) barBg.setColors(new int[]{Glass.solid(), Glass.solid()});   // over the boxes: solid, to read
+        bar.setBackground(barBg);
         TextView t = Ui.text(this, 16, Ui.SILVER, "sans-serif", Gravity.LEFT);
         t.setText(Hindi.t("Drag a box onto another to swap them, or drag a bar between boxes to resize them"));
         bar.addView(t);
@@ -1269,6 +1336,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         Reports.maybeSend(versionName());
         Updates.resumed(this);
         Wake.watch(this);
+        AaUsb.check(this, false);
         highwayStrip();
         if (Setup.showing() != null) Setup.showing().render();   // back from Android's settings: show what changed
         // once per return to the dashboard: a quick back-and-forth doesn't queue them up again
@@ -1370,6 +1438,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             setup.back();
             return;
         }
+        if (closeMusic()) return;
         if (dash.editing()) stopMoving();
         else closeSettings();
     }

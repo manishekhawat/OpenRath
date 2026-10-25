@@ -218,7 +218,7 @@ final class Coach {
     static void show(Activity a, Prefs p) {
         List<Trip> all = trips(p);
         if (all.isEmpty()) {
-            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Mileage coach"))
+            new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Mileage coach"))
                     .setMessage(Hindi.t("No drives recorded yet. After your next drive of a kilometre or more, this shows "
                             + "which drives used the most extra fuel, and why."))
                     .setPositiveButton(Hindi.t("OK"), null).show();
@@ -256,7 +256,7 @@ final class Coach {
             }
         }
         s.append("\n\n").append(Hindi.f("Estimates for a 1.2 litre petrol engine, using %1$s km/l.", Fuel.fmt(kmpl)));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Mileage coach"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Mileage coach"))
                 .setMessage(s.toString()).setPositiveButton(Hindi.t("OK"), null).show();
     }
 

@@ -77,11 +77,11 @@ final class About {
         }
         String[] names = new String[files.size()];
         for (int i = 0; i < names.length; i++) names[i] = files.get(i).getName();
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Crash reports")).setItems(names, new DialogInterface.OnClickListener() {
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Crash reports")).setItems(names, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
                 final String body = Crash.read(files.get(w));
-                new AlertDialog.Builder(a, DIALOG).setTitle(files.get(w).getName()).setMessage(body)
+                new Glass.Builder(a, DIALOG).setTitle(files.get(w).getName()).setMessage(body)
                         .setPositiveButton(Hindi.t("Share"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface d2, int x) {
@@ -106,7 +106,7 @@ final class About {
     /** The opt-in usage report: what it holds, to read and share. */
     static void usage(final HomeActivity a) {
         final String body = Reports.text(a.versionName());
-        new AlertDialog.Builder(a, DIALOG).setTitle(Hindi.t("Usage report")).setMessage(body)
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Usage report")).setMessage(body)
                 .setPositiveButton(Hindi.t("Share"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int x) {
@@ -134,7 +134,7 @@ final class About {
         t.setPadding(Ui.px(24), Ui.px(12), Ui.px(24), Ui.px(12));
         ScrollView sv = new ScrollView(a);
         sv.addView(t);
-        new AlertDialog.Builder(a, DIALOG).setTitle(title).setView(sv).setPositiveButton(Hindi.t("OK"), null).show();
+        new Glass.Builder(a, DIALOG).setTitle(title).setView(sv).setPositiveButton(Hindi.t("OK"), null).show();
     }
 
     private About() {

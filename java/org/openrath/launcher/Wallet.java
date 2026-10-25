@@ -54,7 +54,7 @@ final class Wallet {
         String[] rows = new String[DOCS.length + 1];
         for (int i = 0; i < DOCS.length; i++) rows[i] = Hindi.t(NAMES[i]) + (file(a, i).exists() ? "" : Hindi.t("  (not added)"));
         rows[DOCS.length] = Hindi.t("Import from OpenRath/documents");
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Car documents"))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override
@@ -67,7 +67,7 @@ final class Wallet {
     }
 
     private static void one(final Activity a, final int i) {
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t(NAMES[i]))
                 .setItems(new String[]{Hindi.t("Show"), Hindi.t("Replace with another photo"), Hindi.t("Remove")}, new DialogInterface.OnClickListener() {
                     @Override
@@ -87,7 +87,7 @@ final class Wallet {
             a.startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT).setType("image/*")
                     .addCategory(Intent.CATEGORY_OPENABLE), CODE + i);
         } catch (Exception e) {
-            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+            new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                     .setMessage(Hindi.f("No picture picker on this unit. Copy the photo to %1$s named %2$s.jpg, then use Import.", folder().getPath(), DOCS[i]))
                     .setPositiveButton(Hindi.t("OK"), null).show();
         }
@@ -159,7 +159,7 @@ final class Wallet {
                 }
             }
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setMessage(got.isEmpty() ? Hindi.f("Nothing to import. Put photos named rc, insurance, puc or licence (.jpg or .png) in %1$s.", folder().getPath())
                         : Hindi.f("Imported: %1$s. You can delete the copies in OpenRath/documents now.", android.text.TextUtils.join(", ", got)))
                 .setPositiveButton(Hindi.t("OK"), null).show();

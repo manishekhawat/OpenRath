@@ -71,7 +71,7 @@ final class CallScreen {
             s.setPadding(Ui.px(22), Ui.px(12), Ui.px(12), Ui.px(12));
             GradientDrawable g = new GradientDrawable();
             g.setCornerRadius(Ui.RADIUS * Ui.k);
-            g.setColor(Ui.PANEL_TOP | 0xFF000000);
+            g.setColor(Ui.solidPanel());
             g.setStroke(Math.max(1, Ui.px(2)), 0xFF2E9E62);
             s.setBackground(g);
             LinearLayout words = new LinearLayout(app);

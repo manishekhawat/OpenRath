@@ -107,7 +107,7 @@ final class Places {
         names.add(Hindi.t("Save where I am now…"));
         names.add(Hindi.f("Open %1$s", Hindi.t("Navigation")));
         names.add(Hindi.t("Change the navigation app"));
-        AlertDialog d = new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        AlertDialog d = new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Saved places"))
                 .setItems(names.toArray(new String[0]), new DialogInterface.OnClickListener() {
                     @Override
@@ -172,7 +172,7 @@ final class Places {
         final EditText e = new EditText(a);
         e.setSingleLine(true);
         e.setHint(Hindi.t(saveHere ? "Name, like Gym" : "Address or place"));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t(saveHere ? "Save where I am now…" : "Type an address…"))
                 .setView(e)
                 .setPositiveButton(Hindi.t(saveHere ? "Save" : "Go"), new DialogInterface.OnClickListener() {

@@ -32,7 +32,7 @@ Each of these can be switched off under **Turn on or off** in its Settings secti
 | Cab SOS (only when you trigger it) | Your two SOS contacts, by SMS from the stereo's SIM | Your name, vehicle number, a Google Maps link to where the car is, and the time |
 | Place name for the weather box | BigDataCloud (api.bigdatacloud.net), only when the unit has no built-in geocoder | Position rounded to about 10 m |
 | Speed limits, cameras, toll plazas, petrol pumps | Overpass API (overpass-api.de, OpenStreetMap) | The map area around the car or the route |
-| Map | Esri (server.arcgisonline.com) for the dark map, and tile.openstreetmap.org if Esri's tiles don't load | The map tiles on screen, which shows the area being looked at |
+| Map | Esri (server.arcgisonline.com) for the light and night maps, then tile.openstreetmap.org if Esri's tiles don't load | The map tiles on screen, which shows the area being looked at |
 | Routes | OSRM demo server (router.project-osrm.org), and when it is busy or down the OSM Germany route server (routing.openstreetmap.de) | Start and destination |
 | Place search | Photon (photon.komoot.io), and Nominatim (nominatim.openstreetmap.org) if Photon doesn't answer | What was typed or said, and the map centre (Photon only) |
 | Voice search | The unit's speech recogniser, usually Google | The spoken words |

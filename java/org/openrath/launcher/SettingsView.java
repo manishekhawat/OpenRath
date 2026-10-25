@@ -204,7 +204,7 @@ final class SettingsView extends FrameLayout {
     SettingsView(Context c, Source s) {
         super(c);
         source = s;
-        setBackgroundColor(Ui.BACKGROUND);
+        Glass.screen(this);
         setClickable(true);   // nothing reaches the dashboard underneath
 
         LinearLayout side = new LinearLayout(c);
@@ -285,6 +285,15 @@ final class SettingsView extends FrameLayout {
     }
 
     private static GradientDrawable pill(boolean on) {
+        if (Glass.on) {
+            // a glass pill: brighter when picked, edged in the accent
+            GradientDrawable g = Glass.pane(18);
+            if (on) {
+                g.setColors(new int[]{Glass.mix(Ui.ACCENT, Ui.PANEL_TOP, 0.22f), Glass.mix(Ui.ACCENT, Ui.PANEL, 0.16f), Glass.mix(Ui.ACCENT, Ui.PANEL, 0.16f)});
+                g.setStroke(Math.max(1, Ui.px(1.5f)), Ui.mix(Ui.ACCENT, 0xFFFFFFFF, 0.6f));
+            }
+            return g;
+        }
         GradientDrawable g = new GradientDrawable();
         g.setCornerRadius(12 * Ui.k);
         g.setColor(on ? Ui.PANEL_TOP : Ui.PANEL);

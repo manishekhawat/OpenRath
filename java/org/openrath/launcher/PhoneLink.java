@@ -108,7 +108,7 @@ final class PhoneLink {
         }
         String[] rows = new String[names.size()];
         for (int i = 0; i < rows.length; i++) rows[i] = (driver.equals(driverFor(p, names.get(i))) ? "✓  " : "     ") + names.get(i);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.f("%1$s's phone", driver))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.f("%1$s's phone", driver))
                 .setItems(rows, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {

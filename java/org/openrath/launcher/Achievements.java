@@ -116,7 +116,7 @@ final class Achievements {
         for (int i = 0; i < BADGES.length; i++) {
             rows[i] = (got.contains(BADGES[i][0]) ? "★  " : "☆  ") + Hindi.t(BADGES[i][1]) + "\n     " + Hindi.t(BADGES[i][2]);
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Badges: %1$s of %2$s", got.size(), BADGES.length))
                 .setItems(rows, null)
                 .setPositiveButton(Hindi.t("Close"), null).show();

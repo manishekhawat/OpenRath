@@ -219,6 +219,7 @@ final class Theme {
         Ui.ICONS = look.icons;
         Ui.ROAD_FILL = look.roadFill;
         Ui.ROAD_LINE = look.roadLine;
+        Glass.apply(c, p);   // the Glass look, when chosen, over the theme's colours (the accent stays)
         // the pictures depend on the theme, the car's brand and body, and the colours they are tinted in
         String pics = loadedFor + "|" + Ui.brand + "|" + Ui.body + "|" + Ui.ICONS + "|" + Ui.CHROME + "|" + Ui.SILVER;
         if (!pics.equals(imagesFor)) {

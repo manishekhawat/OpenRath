@@ -167,6 +167,7 @@ final class Dashboard extends ViewGroup {
 
     @Override
     protected void dispatchDraw(android.graphics.Canvas c) {
+        if (Glass.on && !editing) glassShadows(c);
         super.dispatchDraw(c);
         if (editing && grid) handles(c);
         if (pages < 2) return;
@@ -236,6 +237,24 @@ final class Dashboard extends ViewGroup {
         return true;
     }
 
+    /** With Glass on: a soft shadow under each glass box and the floating dock. */
+    private void glassShadows(android.graphics.Canvas c) {
+        float r = Ui.RADIUS * Ui.k;
+        for (int i = 0; i < getChildCount(); i++) {
+            View v = getChildAt(i);
+            if (v.getVisibility() != VISIBLE || v.getWidth() == 0 || v.getBackground() == null && v != dock) continue;
+            if (v == dock) {
+                // the dock's glass bar sits inside its padding
+                View bar = v instanceof ViewGroup && ((ViewGroup) v).getChildCount() > 0 ? ((ViewGroup) v).getChildAt(0) : v;
+                if (bar.getBackground() == null) continue;
+                Glass.shadow(c, v.getLeft() + bar.getLeft(), v.getTop() + bar.getTop(), v.getLeft() + bar.getRight(), v.getTop() + bar.getBottom(),
+                        Math.min(r * 1.2f, Math.min(bar.getWidth(), bar.getHeight()) / 2f));
+                continue;
+            }
+            Glass.shadow(c, v.getLeft(), v.getTop(), v.getRight(), v.getBottom(), r);
+        }
+    }
+
     /** In move mode: a short bar on each space between boxes that can be dragged to resize them. */
     private void handles(android.graphics.Canvas c) {
         dot.setColor(resizing >= 0 ? Ui.SILVER : Ui.mix(Ui.SILVER, Ui.BACKGROUND, 0.35f));
@@ -261,7 +280,7 @@ final class Dashboard extends ViewGroup {
 
     Dashboard(Context c) {
         super(c);
-        setBackgroundColor(Ui.BACKGROUND);
+        Glass.screen(this);
     }
 
     @Override

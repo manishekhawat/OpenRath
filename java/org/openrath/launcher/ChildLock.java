@@ -74,7 +74,7 @@ final class ChildLock {
         Set<String> chosen = apps(p);
         final boolean[] on = new boolean[pkgs.size()];
         for (int i = 0; i < on.length; i++) on[i] = chosen.contains(pkgs.get(i));
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Lock these apps while moving"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Lock these apps while moving"))
                 .setMultiChoiceItems(names.toArray(new String[0]), on, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w, boolean v) {

@@ -531,6 +531,56 @@ final class Xt {
         return m;
     }
 
+    /**
+     * The getter that says whether the headlights (the illumination wire) are on, picked by name the
+     * way the stock theme apps use it: illumination and headlight getters first, then the service's
+     * light-from-MCU and night flags. Brightness and level getters are left out: they give a number
+     * for the screen, not on/off. Null when the service has none.
+     */
+    static String headlightGetter(List<String> sigs) {
+        String best = null;
+        int bestRank = 0;
+        for (String sig : sigs) {
+            if (!sig.endsWith("()")) continue;
+            String n = sig.substring(0, sig.length() - 2), l = n.toLowerCase(Locale.US);
+            if (!(l.startsWith("get") || l.startsWith("is")) || l.contains("bright") || l.contains("level") || l.contains("value")) continue;
+            int r = l.matches("(get|is)(ill|illum|illumination|headlights?|headlamp)(state|status|on)?") ? 4
+                    : l.contains("illum") || l.contains("headl") || l.matches(".*(^|[a-z])ill(state|status|on)?$") ? 3
+                    : l.contains("lightfrommcu") || l.matches("(get|is)(light|lamp)(state|status|on)") ? 2
+                    : l.matches("(get|is)(night|daynight)(mode|state|status)?") ? 1 : 0;
+            if (r > bestRank) {
+                best = n;
+                bestRank = r;
+            }
+        }
+        return best;
+    }
+
+    /**
+     * The headlights as the service reports them, or null when it has no such getter, the answer
+     * isn't on/off, or the getter hasn't yet been seen both on and off (a flag that never changes
+     * is a setting, not the headlights, and the sunset guess is better than it).
+     */
+    Boolean headlights(Prefs p) {
+        String g = headlightGetter(methods);
+        if (g == null) return null;
+        Object v = value(g);
+        Boolean on = v instanceof Boolean ? (Boolean) v
+                : v instanceof Number && (((Number) v).intValue() == 0 || ((Number) v).intValue() == 1) ? ((Number) v).intValue() == 1 : null;
+        if (on == null) return null;
+        String seen = p.str("xtLightSeen", "");
+        String now = seenAfter(seen, g, on);
+        if (!now.equals(seen)) p.put("xtLightSeen", now);
+        return now.equals(g + ":both") ? on : null;
+    }
+
+    /** "getter:on", "getter:off" or "getter:both" after seeing the getter answer `on`. */
+    static String seenAfter(String seen, String getter, boolean on) {
+        String mine = getter + (on ? ":on" : ":off");
+        if (seen.equals(getter + ":both") || seen.equals(mine)) return seen;
+        return seen.startsWith(getter + ":") ? getter + ":both" : mine;
+    }
+
     /** A getter's answer as on/off: true, a number other than 0, or text such as "1" or "connected". */
     boolean on(String name) {
         return truthy(value(name));

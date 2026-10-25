@@ -99,6 +99,11 @@ final class Voice {
             return c("volUp", "");
         }
 
+        // the radio and music screen: "open music", "show the radio", "gaane kholo", "रेडियो खोलो"
+        if (has(s, "^(open|show)( the| my)? (music|songs|radio|fm|गाने|रेडियो)( app| screen| player)?$")
+                || has(s, "^(music|songs|gaane|gane|radio|fm|गाने|म्यूजिक|म्यूज़िक|रेडियो)( app)? (kholo|खोलो|dikhao|दिखाओ)$"))
+            return c("musicApp", has(s, RADIO) ? "radio" : "music");
+
         // music and radio on, next, previous, stop
         if (has(s, "^(next|agla|अगला|aage|आगे)( (song|gaana|गाना|station|track|channel))?$") || has(s, "^(next song|next station|अगला गाना)"))
             return c("next", "");

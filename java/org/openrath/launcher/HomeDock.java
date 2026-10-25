@@ -85,7 +85,14 @@ final class HomeDock {
             });
             bar.addView(ic, new LinearLayout.LayoutParams(Ui.px(64), Ui.px(64)));
         }
-        return bar;
+        if (!Glass.on) return bar;
+        // Glass: the bar floats over the wallpaper as a glass pill
+        bar.setBackground(Glass.pane(32));
+        bar.setPadding(Ui.px(20), 0, Ui.px(10), 0);
+        android.widget.FrameLayout wrap = new android.widget.FrameLayout(a);
+        wrap.setPadding(Ui.px(18), Ui.px(2), Ui.px(18), Ui.px(8));
+        wrap.addView(bar, new android.widget.FrameLayout.LayoutParams(-1, -1));
+        return wrap;
     }
 
     /** The Wide map bar's apps: chosen ones, else the navigation, music, phone and radio apps. */
@@ -146,6 +153,7 @@ final class HomeDock {
                 public void onClick(View x) {
                     Tap.feedback(x, a.prefs);
                     if ("apps".equals(name)) a.startActivity(new Intent(a, AppsActivity.class));
+                    else if (("music".equals(name) || "radio".equals(name)) && a.openMusic(name)) return;
                     else a.openApp(dockKey(name), label);
                 }
             });
@@ -172,7 +180,7 @@ final class HomeDock {
             });
             d.addView(v);
         }
-        if (Features.on(a.prefs, "dockStatus")) {
+        if ("dock".equals(a.statusPlace())) {
             d.addView(new StatusIcons(a, across), across ? new LinearLayout.LayoutParams(0, Ui.px(62), 1.5f)
                     : new LinearLayout.LayoutParams(Ui.px(62), 0, 1.5f));
         }
@@ -190,8 +198,18 @@ final class HomeDock {
         d.addView(gear);
         android.widget.FrameLayout wrap = new android.widget.FrameLayout(a);
         wrap.addView(d, new android.widget.FrameLayout.LayoutParams(-1, -1));
-        // the thin rule sits on the edge facing the boxes
         String at = a.dash.dockAt;
+        if (Glass.on) {
+            // Glass: a floating glass bar, lined up with the boxes, instead of the edge and its rule
+            d.setBackground(Glass.pane(28));
+            int edge = Ui.px(10), in = Ui.px(4), along = Ui.px(18);
+            if (across) wrap.setPadding(along, "top".equals(at) ? edge : in, along, "top".equals(at) ? in : edge);
+            else wrap.setPadding("right".equals(at) ? in : edge, along, "right".equals(at) ? edge : in, along);
+            if (across) d.setPadding(Ui.px(10), 0, Ui.px(10), 0);
+            else d.setPadding(0, Ui.px(8), 0, Ui.px(8));
+            return wrap;
+        }
+        // the thin rule sits on the edge facing the boxes
         int thin = Math.max(1, Ui.px(1.2f));
         android.widget.FrameLayout.LayoutParams lp = across
                 ? new android.widget.FrameLayout.LayoutParams(-1, thin, "top".equals(at) ? Gravity.BOTTOM : Gravity.TOP)

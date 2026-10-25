@@ -185,7 +185,7 @@ final class View360 {
     }
 
     private static void colour(HomeActivity a, final CarView car) {
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Car colour"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Car colour"))
                 .setItems(Cab.tr(Car3D.COLOUR_NAMES), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface di, int w) {
@@ -196,7 +196,7 @@ final class View360 {
     }
 
     private static void shape(HomeActivity a, final CarView car) {
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Car shape"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Car shape"))
                 .setItems(Cab.tr(Car3D.SHAPE_NAMES), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface di, int w) {
@@ -211,7 +211,7 @@ final class View360 {
         e.setSingleLine(true);
         e.setText(Car3D.plate(car.prefs));
         e.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Number plate (e.g. DL 3C AB 1234)")).setView(e)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Number plate (e.g. DL 3C AB 1234)")).setView(e)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface di, int w) {

@@ -57,7 +57,7 @@ final class HomeVoice {
     static void confirmReply(final HomeActivity a, final String words) {
         final String to = Ticker.title.isEmpty() ? Ticker.app : Ticker.title;
         a.speak("Send to " + to + ": " + words + "?");
-        new android.app.AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Reply to %1$s", to)).setMessage(words)
                 .setPositiveButton(Hindi.t("Send"), new android.content.DialogInterface.OnClickListener() {
                     @Override
@@ -236,6 +236,10 @@ final class HomeVoice {
             Toast.makeText(a, Air.aqi < 0 ? Hindi.t("The air quality isn't known yet.") : Hindi.f("The air quality is %1$s, AQI %2$s.",
                     Hindi.t(Air.band(Air.aqi)).toLowerCase(java.util.Locale.US), String.valueOf(Air.aqi)), Toast.LENGTH_LONG).show();
             a.speak(t);
+        } else if ("musicApp".equals(k)) {
+            boolean radio = "radio".equals(cmd.arg);
+            if (!a.openMusic(radio ? MusicScreen.RADIO : MusicScreen.MUSIC))
+                a.openApp(radio ? "media:radio" : "media:music", radio ? "Radio" : "Music");
         } else if ("music".equals(k)) {
             MediaCard.owner = "music";
             if (!(Player.playing || a.hub.music != null && a.hub.music.playing)) Extras.media(a, "toggle");
@@ -248,8 +252,8 @@ final class HomeVoice {
             android.media.AudioManager am = (android.media.AudioManager) a.getSystemService(android.content.Context.AUDIO_SERVICE);
             int dir = "volUp".equals(k) ? android.media.AudioManager.ADJUST_RAISE
                     : "volDown".equals(k) ? android.media.AudioManager.ADJUST_LOWER : android.media.AudioManager.ADJUST_TOGGLE_MUTE;
-            for (int i = 0; i < ("mute".equals(k) ? 1 : 2); i++)
-                am.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, dir, android.media.AudioManager.FLAG_SHOW_UI);
+            if ("mute".equals(k)) am.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, dir, android.media.AudioManager.FLAG_SHOW_UI);
+            else for (int i = 0; i < 2; i++) Volume.step(a, "volUp".equals(k));
         } else {
             MapCard m = a.mapCard();
             if (m == null) {

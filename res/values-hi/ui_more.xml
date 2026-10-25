@@ -149,6 +149,33 @@
     <string name="ui_more_checks_once_a_day_for_a_new_openrath_and_off" formatted="false">दिन में एक बार नया OpenRath खोजता है और खड़े होने पर देता है</string>
     <string name="ui_more_which_settings_you_open_and_any_crashes_kept" formatted="false">आप कौन सी सेटिंग खोलते हैं और कोई क्रैश, यूनिट पर रखा जाता है ताकि आप भेज सकें</string>
     <string name="ui_more_yesterday" formatted="false">कल</string>
+    <string name="ui_more_map_look" formatted="false">नक्शे का रूप</string>
+    <string name="ui_more_light_by_day_dark_at_night" formatted="false">दिन में हल्का, रात में गहरा</string>
+    <string name="ui_more_always_light" formatted="false">हमेशा हल्का</string>
+    <string name="ui_more_always_dark" formatted="false">हमेशा गहरा</string>
+    <string name="ui_more_no_voice_engine_is_installed_so_openrath_can" formatted="false">कोई आवाज़ इंजन इंस्टॉल नहीं है, इसलिए OpenRath बोल नहीं सकता।</string>
+    <string name="ui_more_the_voice_is_working" formatted="false">आवाज़ काम कर रही है।</string>
+    <string name="ui_more_the_voice_engine_is_installed_but_doesn_t_st" formatted="false">आवाज़ इंजन इंस्टॉल है पर शुरू नहीं होता। इसे अपडेट करने या इसकी स्टोरेज साफ़ करने से अक्सर ठीक हो जाता है।</string>
+    <string name="ui_more_the_voice_hasn_t_been_tried_yet_tap_test_the" formatted="false">आवाज़ अभी आज़माई नहीं गई: आवाज़ जाँचें पर टैप करें।</string>
+    <string name="ui_more_test_the_voice" formatted="false">आवाज़ जाँचें</string>
+    <string name="ui_more_hello_the_openrath_voice_is_working" formatted="false">नमस्ते। OpenRath की आवाज़ काम कर रही है।</string>
+    <string name="ui_more_update_speech_services_by_google" formatted="false">Speech Services by Google अपडेट करें</string>
+    <string name="ui_more_get_speech_services_by_google_speaks_hindi" formatted="false">Speech Services by Google पाएँ (हिन्दी बोलता है)</string>
+    <string name="ui_more_repair_it_open_its_app_info_to_enable_it_or_" formatted="false">ठीक करें: ऐप जानकारी खोलकर इसे चालू करें या स्टोरेज साफ़ करें</string>
+    <string name="ui_more_get_espeak_ng_instead_free_no_google_needed" formatted="false">इसकी जगह eSpeak NG पाएँ (मुफ़्त, Google की ज़रूरत नहीं)</string>
+    <string name="ui_more_android_s_voice_settings" formatted="false">Android की आवाज़ सेटिंग</string>
+    <string name="ui_more_spoken_voice" formatted="false">बोली जाने वाली आवाज़</string>
+    <string name="ui_more_speech_services_by_google_tap_to_test_or_fix" formatted="false">Speech Services by Google; जाँचने या ठीक करने के लिए टैप करें</string>
+    <string name="ui_more_the_voice_engine_has_no_english_voice_instal" formatted="false">वॉइस इंजन में अंग्रेज़ी आवाज़ इंस्टॉल नहीं है। Android की आवाज़ सेटिंग में एक डाउनलोड करें, या eSpeak NG लें।</string>
+    <string name="ui_more_the_voice_engine_starts_but_couldn_t_speak_r" formatted="false">वॉइस इंजन शुरू होता है पर बोल नहीं पाया। इसे ठीक करना (इसका स्टोरेज साफ़ करना), या eSpeak NG, आमतौर पर इसे ठीक कर देता है।</string>
+    <string name="ui_more_the_voice_engine_has_started_tap_test_the_vo" formatted="false">वॉइस इंजन शुरू हो गया है। आवाज़ जाँचें दबाएँ और सुनें।</string>
+    <string name="ui_more_the_voice_engine_has_no_english_voice_instal2" formatted="false">वॉइस इंजन में अंग्रेज़ी आवाज़ इंस्टॉल नहीं है। सेटिंग &gt; मैप और नेविगेशन &gt; बोली जाने वाली आवाज़ &gt; Android की आवाज़ सेटिंग से एक डाउनलोड करें, या eSpeak NG लें।</string>
+    <string name="ui_more_the_voice_engine_started_but_couldn_t_speak_" formatted="false">वॉइस इंजन शुरू हुआ पर बोल नहीं पाया। सेटिंग &gt; मैप और नेविगेशन &gt; बोली जाने वाली आवाज़ &gt; इसे ठीक करें, या eSpeak NG लें।</string>
+    <string name="ui_more_1_s_settings_2_s_system_properties_3_s_backl" formatted="false">%1$s सेटिंग, %2$s सिस्टम प्रॉपर्टी, %3$s बैकलाइट फ़ाइलें, %4$s ब्रॉडकास्ट मान, %5$s, %6$s मिले</string>
+    <string name="ui_more_no_topway_radio_service" formatted="false">Topway रेडियो सेवा नहीं</string>
+    <string name="ui_more_1_s_light_values_from_the_topway_radio_servi" formatted="false">Topway रेडियो सेवा से %1$s लाइट मान</string>
+    <string name="ui_more_not_tried" formatted="false">आज़माया नहीं गया</string>
+    <string name="ui_more_download_the_english_voice_opens_google_s_vo" formatted="false">अंग्रेज़ी आवाज़ डाउनलोड करें (Google का आवाज़ डाउनलोड खुलेगा)</string>
     <string name="ui_more_tap_to_open" formatted="false">खोलने के लिए टैप करें</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">आपकी पहली ड्राइव के बाद यहाँ यात्राएँ दिखेंगी</string>
     <string name="ui_more_last_drive_1_s" formatted="false">पिछली ड्राइव, %1$s</string>
@@ -159,4 +186,75 @@
     <string name="ui_more_last_heading_while_driving" formatted="false">चलते समय की आख़िरी दिशा</string>
     <string name="ui_more_next_holiday_1_s" formatted="false">अगली छुट्टी: %1$s</string>
     <string name="ui_more_connect_an_obd_adapter_to_see_engine_data" formatted="false">इंजन की जानकारी देखने के लिए OBD अडैप्टर जोड़ें</string>
+    <string name="ui_more_radio_and_music_screen" formatted="false">रेडियो और संगीत स्क्रीन</string>
+    <string name="ui_more_a_tap_on_the_music_or_radio_box_opens_a_full" formatted="false">संगीत या रेडियो बॉक्स पर टैप करने से FM, ऑनलाइन रेडियो, आपकी संगीत फ़ाइलों और संगीत ऐप्स के लिए पूरी स्क्रीन खुलती है</string>
+    <string name="ui_more_search_when_the_car_is_stopped" formatted="false">गाड़ी रुकने पर खोजें</string>
+    <string name="ui_more_pick_a_station_or_a_song" formatted="false">कोई स्टेशन या गाना चुनें</string>
+    <string name="ui_more_radio_and_music" formatted="false">रेडियो और संगीत</string>
+    <string name="ui_more_volume" formatted="false">आवाज़</string>
+    <string name="ui_more_scan" formatted="false">स्कैन</string>
+    <string name="ui_more_save_a_station_or_scan_to_keep_it_here" formatted="false">स्टेशन यहाँ रखने के लिए उसे सेव करें या स्कैन करें</string>
+    <string name="ui_more_1_s_fm_taken_off_the_presets" formatted="false">%1$s FM सेव किए स्टेशनों से हटाया</string>
+    <string name="ui_more_opens_your_radio_app" formatted="false">आपका रेडियो ऐप खोलता है</string>
+    <string name="ui_more_online_radio_needs_the_internet" formatted="false">ऑनलाइन रेडियो के लिए इंटरनेट चाहिए</string>
+    <string name="ui_more_look_again" formatted="false">फिर से देखें</string>
+    <string name="ui_more_after_putting_in_a_usb_stick_or_sd_card" formatted="false">USB स्टिक या SD कार्ड लगाने के बाद</string>
+    <string name="ui_more_1_song" formatted="false">1 गाना</string>
+    <string name="ui_more_1_s_songs" formatted="false">%1$s गाने</string>
+    <string name="ui_more_nothing_matches_the_search" formatted="false">खोज से कुछ नहीं मिला</string>
+    <string name="ui_more_where_the_boxes_play_from" formatted="false">बॉक्स कहाँ से बजते हैं</string>
+    <string name="ui_more_music_box" formatted="false">संगीत बॉक्स</string>
+    <string name="ui_more_online_radio_music_files_or_a_music_app" formatted="false">ऑनलाइन रेडियो, संगीत फ़ाइलें या कोई संगीत ऐप</string>
+    <string name="ui_more_radio_box" formatted="false">रेडियो बॉक्स</string>
+    <string name="ui_more_fm_online_radio_or_a_radio_app" formatted="false">FM, ऑनलाइन रेडियो या कोई रेडियो ऐप</string>
+    <string name="ui_more_music_apps" formatted="false">संगीत ऐप्स</string>
+    <string name="ui_more_playing_1_s" formatted="false">चल रहा है: %1$s</string>
+    <string name="ui_more_paused_1_s" formatted="false">रुका है: %1$s</string>
+    <string name="ui_more_no_music_apps_found_allow_notification_acces" formatted="false">कोई संगीत ऐप नहीं मिला। दूसरे ऐप्स में क्या बज रहा है यह देखने के लिए OpenRath को सूचना की अनुमति दें।</string>
+    <string name="ui_more_1_s_more_when_the_car_is_stopped" formatted="false">गाड़ी रुकने पर %1$s और</string>
+    <string name="ui_more_artists" formatted="false">कलाकार</string>
+    <string name="ui_more_folders" formatted="false">फ़ोल्डर</string>
+    <string name="ui_more_seek_down" formatted="false">पीछे खोजें</string>
+    <string name="ui_more_seek_up" formatted="false">आगे खोजें</string>
+    <string name="ui_more_stop_fm" formatted="false">FM बंद करें</string>
+    <string name="ui_more_play_fm" formatted="false">FM चलाएँ</string>
+    <string name="ui_more_saved" formatted="false">"★  सेव है"</string>
+    <string name="ui_more_save_station" formatted="false">"☆  स्टेशन सेव करें"</string>
+    <string name="ui_more_all_artists" formatted="false">"‹  सभी कलाकार"</string>
+    <string name="ui_more_all_folders" formatted="false">"‹  सभी फ़ोल्डर"</string>
+    <string name="ui_more_unknown_artist" formatted="false">अज्ञात कलाकार</string>
+    <string name="ui_more_other_files" formatted="false">अन्य फ़ाइलें</string>
+    <string name="ui_more_tap_to_choose_from_its_library" formatted="false">इसकी लाइब्रेरी से चुनने के लिए टैप करें</string>
+    <string name="ui_more_no_head_unit_certificate_install_headunit_re" formatted="false">हेड यूनिट का सर्टिफ़िकेट नहीं है: Headunit Revived इंस्टॉल करें, या उसकी दो फ़ाइलें OpenRath के androidauto फ़ोल्डर में डालें</string>
+    <string name="ui_more_the_phone_left_android_auto" formatted="false">फ़ोन Android Auto से हट गया</string>
+    <string name="ui_more_connecting_to_the_phone" formatted="false">फ़ोन से जुड़ रहे हैं…</string>
+    <string name="ui_more_starting_android_auto_on_the_phone" formatted="false">फ़ोन पर Android Auto शुरू हो रहा है…</string>
+    <string name="ui_more_the_phone_didn_t_accept_this_head_unit_s_cer" formatted="false">फ़ोन ने इस हेड यूनिट का सर्टिफ़िकेट नहीं माना</string>
+    <string name="ui_more_the_phone_ended_android_auto" formatted="false">फ़ोन ने Android Auto बंद कर दिया</string>
+    <string name="ui_more_android_auto_ended" formatted="false">Android Auto बंद हुआ</string>
+    <string name="ui_more_this_unit_can_t_show_the_phone_s_picture" formatted="false">यह यूनिट फ़ोन की स्क्रीन नहीं दिखा सकता</string>
+    <string name="ui_more_android_auto_needs_a_head_unit_certificate_w" formatted="false">Android Auto को हेड यूनिट का सर्टिफ़िकेट चाहिए, जो OpenRath साथ नहीं दे सकता। इस यूनिट पर Headunit Revived ऐप इंस्टॉल करें (OpenRath उसका सर्टिफ़िकेट इस्तेमाल करेगा), या cert.pem और privkey.pem को OpenRath फ़ोल्डर के अंदर androidauto फ़ोल्डर में कॉपी करें।</string>
+    <string name="ui_more_plug_your_phone_into_the_unit_s_usb_port_to_" formatted="false">Android Auto शुरू करने के लिए फ़ोन को यूनिट के USB पोर्ट में लगाएँ</string>
+    <string name="ui_more_android_auto_built_in" formatted="false">Android Auto, OpenRath में ही</string>
+    <string name="ui_more_plug_in_your_phone_with_its_cable_and_androi" formatted="false">फ़ोन को केबल से लगाएँ और Android Auto इसी स्क्रीन पर दिखेगा; सर्टिफ़िकेट के लिए Headunit Revived इंस्टॉल होना चाहिए</string>
+    <string name="ui_more_the_phone_was_unplugged" formatted="false">फ़ोन निकाल दिया गया</string>
+    <string name="ui_more_wireless_android_auto" formatted="false">बिना तार Android Auto</string>
+    <string name="ui_more_a_paired_phone_starts_android_auto_by_itself" formatted="false">पेयर किया फ़ोन बिना केबल के, Bluetooth और Wi-Fi से अपने आप Android Auto शुरू करता है; Android Auto, OpenRath में ही चालू होना चाहिए</string>
+    <string name="ui_more_or_keep_bluetooth_on_a_paired_phone_with_wir" formatted="false">या Bluetooth चालू रखें: बिना तार Android Auto वाला पेयर किया फ़ोन एक मिनट में अपने आप जुड़ जाएगा</string>
+    <string name="ui_more_live" formatted="false">लाइव</string>
+    <string name="ui_more_previous" formatted="false">पिछला</string>
+    <string name="ui_more_pause" formatted="false">रोकें</string>
+    <string name="ui_more_play" formatted="false">चलाएँ</string>
+    <string name="ui_more_glass_look" formatted="false">ग्लास लुक</string>
+    <string name="ui_more_on_see_through_frosted_panels_on_a_soft_colo" formatted="false">चालू; हल्के रंगीन बैकग्राउंड पर धुंधले शीशे जैसे पारदर्शी पैनल</string>
+    <string name="ui_more_off_tap_for_see_through_frosted_panels_on_a_" formatted="false">बंद; हल्के रंगीन बैकग्राउंड पर धुंधले शीशे जैसे पारदर्शी पैनल के लिए टैप करें</string>
+    <string name="ui_more_glass_background" formatted="false">ग्लास के पीछे का बैकग्राउंड</string>
+    <string name="ui_more_aurora" formatted="false">अरोरा</string>
+    <string name="ui_more_sunset" formatted="false">सूर्यास्त</string>
+    <string name="ui_more_ocean" formatted="false">समुद्र</string>
+    <string name="ui_more_my_picture" formatted="false">मेरी तस्वीर</string>
+    <string name="ui_more_my_picture_blurred" formatted="false">मेरी तस्वीर (धुंधली)</string>
+    <string name="ui_more_background_behind_the_glass" formatted="false">शीशे के पीछे का बैकग्राउंड</string>
+    <string name="ui_more_add_your_picture" formatted="false">अपनी तस्वीर जोड़ें</string>
+    <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">यूनिट पर %1$s में एक तस्वीर (JPG या PNG) कॉपी करें, USB स्टिक या फ़ाइल मैनेजर से। तब तक अरोरा बैकग्राउंड दिखेगा।</string>
 </resources>

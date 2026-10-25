@@ -20,7 +20,7 @@ final class HomeSettings {
     /** Settings: try OpenRath's own FM tuner, and keep it if it plays. */
     static void tryTuner(final HomeActivity a) {
         if (Tuner.chosen(a.prefs)) {
-            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+            new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                     .setTitle(Hindi.t("Built-in FM tuner is on"))
                     .setPositiveButton(Hindi.t("Keep it"), null)
                     .setNegativeButton(Hindi.t("Use the stock radio again"), new android.content.DialogInterface.OnClickListener() {
@@ -39,14 +39,14 @@ final class HomeSettings {
         if (err != null) {
             Tuner.stop(a);
             a.prefs.put("fmTuner", "no");
-            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+            new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                     .setTitle(Hindi.t("The built-in tuner can't play on this unit"))
                     .setMessage(report + "\n\n" + Hindi.t("OpenRath keeps using the stock radio app for FM. Please send a photo of this."))
                     .setPositiveButton(Hindi.t("OK"), null).show();
             if (a.settingsView != null) a.settingsView.refresh();
             return;
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Can you hear FM %1$s?", Tuner.freqText()))
                 .setMessage(report + "\n\n" + Hindi.t("Turn the volume up if it's quiet. If it plays, OpenRath will play FM by itself from now on: "
                         + "no stock radio app, no screen opening."))
@@ -148,7 +148,7 @@ final class HomeSettings {
         String exit = Crash.lastExit(a);
         if (exit != null) b.append("Last closed because ").append(exit).append("\n");
         b.append("Weather: ").append(a.hub.temp).append(" ").append(a.hub.weather).append(" ").append(a.hub.place);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Diagnostics")).setMessage(b.toString()).setPositiveButton(Hindi.t("OK"), null).show();
     }
 
@@ -191,7 +191,7 @@ final class HomeSettings {
         final int[] pick = {first ? Features.SIMPLE : Features.level(a.prefs)};
         String[] items = new String[Features.LEVELS.length];
         for (int i = 0; i < items.length; i++) items[i] = Hindi.t(Features.LEVEL_NAMES[i]) + "\n" + Hindi.t(Features.LEVEL_ABOUT[i]);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(first ? Hindi.t("How much should OpenRath show?") : Hindi.t("OpenRath level"))
                 .setSingleChoiceItems(items, pick[0], new DialogInterface.OnClickListener() {
                     @Override
@@ -220,7 +220,7 @@ final class HomeSettings {
     static void pickPicture(final HomeActivity a, final int which) {
         final java.io.File mine = Ui.customFile(a, HomeActivity.ALL_PICTURES[which]);
         if (mine.exists()) {
-            new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+            new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                     .setItems(new String[]{Hindi.t("Choose another picture"), Hindi.t("Use the built-in one")}, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface d, int w) {
@@ -261,7 +261,7 @@ final class HomeSettings {
         }
         box.addView(name);
         box.addView(num);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Favourite %1$s (empty to remove)", String.valueOf(i + 1)))
                 .setView(box)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
@@ -286,7 +286,7 @@ final class HomeSettings {
         e.setText(a.prefs.welcome());
         e.setSingleLine(true);
         e.setSelectAllOnFocus(true);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Your name, on the home screen (empty to hide)"))
                 .setView(e)
                 .setPositiveButton(Hindi.t("Save"), new DialogInterface.OnClickListener() {
@@ -335,7 +335,7 @@ final class HomeSettings {
             Player.Track t = list.get(i);
             names[i] = t.sub.isEmpty() ? t.name : t.name + "  ·  " + t.sub;
         }
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(web ? Hindi.t("Online radio") : Hindi.t("Songs"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override

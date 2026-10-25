@@ -317,17 +317,17 @@ final class Lights {
             }
         }
         m.put("uimode:night", night(c));
-        int[] n = new int[5];
+        int[] n = new int[6];
         for (String k : m.keySet()) {
             if (k.startsWith("prop:")) n[0]++;
             else if (k.startsWith("bcast:")) n[1]++;
             else if (k.startsWith("tw:")) n[4]++;
             else if (k.startsWith("file:")) n[2]++;
-            else if (k.startsWith("xtget:")) n[1]++;
+            else if (k.startsWith("xtget:")) n[5]++;
             else if (!k.startsWith("uimode") && !k.startsWith("tw:")) n[3]++;
         }
-        lastCounts = Hindi.f("%1$s settings, %2$s system properties, %3$s backlight files, %4$s broadcast values, %5$s received",
-                n[3], n[0], n[2], n[1], setupSpy == null ? Hindi.f("no Topway MCU link (%1$s)", Tw.spyError)
+        lastCounts = Hindi.f("%1$s settings, %2$s system properties, %3$s backlight files, %4$s broadcast values, %5$s, %6$s received",
+                n[3], n[0], n[2], n[1], x == null || !x.ready() ? Hindi.t("no Topway radio service") : Hindi.f("%1$s light values from the Topway radio service", n[5]), setupSpy == null ? Hindi.f("no Topway MCU link (%1$s)", Tw.spyError.isEmpty() ? Hindi.t("not tried") : Tw.spyError)
                 : Hindi.f("%1$s Topway MCU values from %2$s codes", n[4], Tw.spyCodesOpen));
         return m;
     }
@@ -468,9 +468,12 @@ final class Lights {
             wideRunning = true;
         }
         setupReceiver = listen(c, actions);
-        if (deep) {
+        // the Topway MCU carries the illumination wire, and the stock theme apps read it there, so
+        // the headlight setup always listens to it on Topway units (guardedSpy skips it for good
+        // if it ever took the app down)
+        if (deep || Tw.available()) {
             setupSpy = Tw.guardedSpy(Tw.spyCodes());
-            Crash.begin("deep search listening");   // guardedSpy ended its own step; mark ours again
+            if (deep) Crash.begin("deep search listening");   // guardedSpy ended its own step; mark ours again
         }
     }
 
@@ -520,7 +523,7 @@ final class Lights {
 
     private static void step(final Activity a, final Prefs prefs, final Done done,
                              final List<Map<String, String>> shots, final String[] steps, final int i) {
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("%1$s setup  %2$s/3", Hindi.t(noun()).substring(0, 1).toUpperCase(Locale.US) + Hindi.t(noun()).substring(1), i + 1))
                 .setMessage(Hindi.t(steps[i]))
                 .setCancelable(false)
@@ -559,7 +562,7 @@ final class Lights {
 
     private static void finish(final Activity a, final Prefs prefs, final Done done, final List<Candidate> found) {
         stopListening(a);
-        AlertDialog.Builder b = new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert);
+        AlertDialog.Builder b = new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert);
         if (found.isEmpty()) {
             b.setTitle(Hindi.f("No %1$s signal found", Hindi.t(noun())))
                     .setMessage(("lights".equals(kind) ? Hindi.t("Nothing this app can read changed with the headlights, so the unit may not pass the "
@@ -715,7 +718,7 @@ final class Lights {
                 "Switch both indicators OFF (and the hazard lights). Tap Next and wait 4 seconds.",
                 "Switch the LEFT indicator on. Tap Next and leave it blinking for 4 seconds.",
                 "Switch the left one off and the RIGHT indicator on. Tap Next and leave it blinking for 4 seconds."};
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Indicator setup  %1$s/3", i + 1))
                 .setMessage(Hindi.t(steps[i]))
                 .setCancelable(false)
@@ -757,7 +760,7 @@ final class Lights {
         stopListening(a);
         final Side l = bestSide(runs.get(0), runs.get(1), runs.get(2), "left");
         final Side r = bestSide(runs.get(0), runs.get(2), runs.get(1), "right");
-        AlertDialog.Builder b = new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert);
+        AlertDialog.Builder b = new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert);
         if (l == null && r == null) {
             b.setTitle(Hindi.t("No indicator signal found"))
                     .setMessage(Hindi.t("Nothing this app can read changed with the indicators. Many units only get the "

@@ -71,6 +71,7 @@ final class MediaCard extends Cards.Card {
             android.graphics.drawable.GradientDrawable pill = new android.graphics.drawable.GradientDrawable();
             pill.setCornerRadius(999);
             pill.setStroke(Math.max(1, Ui.px(1.5f)), Ui.EDGE);
+            if (Glass.on) pill.setColor(Ui.PANEL_TOP);   // a glass pill
             scan.setBackground(pill);
             scan.setText(Hindi.t("SCAN"));
             scan.setVisibility(GONE);
@@ -92,6 +93,7 @@ final class MediaCard extends Cards.Card {
             android.graphics.drawable.GradientDrawable pill = new android.graphics.drawable.GradientDrawable();
             pill.setCornerRadius(999);
             pill.setStroke(Math.max(1, Ui.px(1.5f)), Ui.EDGE);
+            if (Glass.on) pill.setColor(Ui.PANEL_TOP);   // a glass pill
             phone.setBackground(pill);
             phone.setText(Hindi.t("PHONE"));
             phone.setVisibility(GONE);
@@ -131,11 +133,22 @@ final class MediaCard extends Cards.Card {
                 changed.run();
             }
         });
-        clickable(text, new OnClickListener() {
+        OnClickListener body = new OnClickListener() {
             @Override
             public void onClick(View v) {
+                // the radio and music screen, when its switch is on; else as before
+                if (getContext() instanceof HomeActivity && ((HomeActivity) getContext()).openMusic(radio ? MusicScreen.RADIO : MusicScreen.MUSIC))
+                    return;
                 if ("app".equals(source)) host.openApp(key, name);
                 else Player.send(getContext(), Player.TOGGLE, source);
+            }
+        };
+        clickable(text, body);
+        // the rest of the box opens the screen too (with its switch off it stays as it was)
+        clickable(this, new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getContext() instanceof HomeActivity) ((HomeActivity) getContext()).openMusic(radio ? MusicScreen.RADIO : MusicScreen.MUSIC);
             }
         });
         clickable(prev, new OnClickListener() {

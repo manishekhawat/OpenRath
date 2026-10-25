@@ -11,15 +11,16 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * The phone-projection app (wireless CarPlay and Android Auto: ZLink, AutoKit, CarbitLink and
+ * The phone-projection app (wireless CarPlay and Android Auto: ZLink, AutoKit, CarbitLink, Headunit Revived and
  * others). The owner can choose it; otherwise it is found by its package name or label, once a
  * minute at most. Many of these apps have no launcher icon, so it opens through Compat.launch.
+ * With the androidAuto switch on and no app chosen, it is OpenRath's own Android Auto screen.
  */
 final class Projection {
 
     /** Words in the package name or label of projection apps. */
     static final String[] WORDS = {"zlink", "autokit", "carplay", "carbit", "phonelink", "phone link", "easyconn",
-            "androidauto", "android auto", "auto link", "autolink", "carlink"};
+            "androidauto", "android auto", "auto link", "autolink", "carlink", "headunit"};
 
     private static String found;
     private static long foundAt = -60000;
@@ -38,6 +39,8 @@ final class Projection {
         PackageManager pm = c.getPackageManager();
         String chosen = p.app("projection");
         if (chosen != null && Compat.launch(pm, chosen) != null) return chosen;
+        // OpenRath's own Android Auto, when it is switched on and no other app is chosen
+        if (Features.on(p, "androidAuto")) return c.getPackageName();
         long now = SystemClock.elapsedRealtime();
         if (now - foundAt < 60000) return found;
         foundAt = now;
@@ -66,6 +69,10 @@ final class Projection {
     /** Opens the projection app; false when there's none. */
     static boolean open(Context c, Prefs p) {
         String pkg = app(c, p);
+        if (c.getPackageName().equals(pkg)) {
+            AaActivity.open(c);
+            return true;
+        }
         Intent i = Compat.launch(c.getPackageManager(), pkg);
         if (i == null) {
             Toast.makeText(c, Hindi.t("No phone projection app found; choose one in Settings, Radio and music"), Toast.LENGTH_LONG).show();

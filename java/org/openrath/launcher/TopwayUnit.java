@@ -61,6 +61,13 @@ final class TopwayUnit extends Unit {
         return xt != null && xt.has("getReverseStatus") ? xt.on("getReverseStatus") : null;
     }
 
+    @Override
+    Boolean lights() {
+        // the stock theme apps switch day and night from the service's illumination getter
+        Xt xt = xt();
+        return xt == null ? null : xt.headlights(new Prefs(ctx));
+    }
+
     // ------------------------------------------------------------------ phone
 
     @Override

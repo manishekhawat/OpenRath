@@ -56,6 +56,14 @@ final class MapCard extends Cards.Card {
     double lastLat, lastLon;
     long lastPark = -1;
     boolean ready;
+    /** The look last sent to the page: "day" or "night" ("" once it reloads). */
+    private String lastStyle = "";
+
+    /** The map's look: the owner's choice, else night with the headlights or after sunset. Pure, for the tests. */
+    static String style(String chosen, boolean night) {
+        if ("day".equals(chosen) || "night".equals(chosen)) return chosen;
+        return night ? "night" : "day";
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     MapCard(Context c) {
@@ -117,6 +125,7 @@ final class MapCard extends Cards.Card {
                 ready = true;
                 lastLat = lastLon = 0;
                 lastPark = -1;
+                lastStyle = "";
             }
 
             // The page is served from a made-up https address so the map tile servers see a
@@ -354,7 +363,7 @@ final class MapCard extends Cards.Card {
     private void confirmCall(String number) {
         final String n = number == null ? "" : number.replaceAll("[^0-9+]", "");
         if (n.isEmpty() || !(getContext() instanceof android.app.Activity)) return;
-        new android.app.AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert)
                 .setMessage(Hindi.f("Call %1$s?", n))
                 .setPositiveButton(Hindi.t("Call"), new android.content.DialogInterface.OnClickListener() {
                     @Override
@@ -382,6 +391,13 @@ final class MapCard extends Cards.Card {
 
     @Override
     public void changed(Hub h) {
+        if (ready && host != null) {
+            String st = style(host.prefs().str("mapStyle", "auto"), ThemeAuto.night(host.prefs(), h, System.currentTimeMillis()));
+            if (!st.equals(lastStyle)) {
+                lastStyle = st;
+                web.evaluateJavascript("setStyle('" + st + "')", null);
+            }
+        }
         if (ready && Drive.parkAt != lastPark) {
             lastPark = Drive.parkAt;
             if (Drive.parkAt > 0) web.evaluateJavascript(String.format(Locale.US, "setPark(%.6f,%.6f,%d)",

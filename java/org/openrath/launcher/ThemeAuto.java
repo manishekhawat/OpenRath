@@ -33,8 +33,13 @@ final class ThemeAuto {
      * too), else sunset at the dashboard's position, else the clock (a may be null).
      */
     static boolean night(HomeActivity a, long now) {
-        if (a != null && a.hub != null && a.prefs.lightSignal() != null) return a.hub.lightsOn();
-        android.location.Location f = a == null || a.hub == null ? null : a.hub.fix;
+        return night(a == null ? null : a.prefs, a == null ? null : a.hub, now);
+    }
+
+    /** The same from the settings and the hub (either may be null). */
+    static boolean night(Prefs p, Hub hub, long now) {
+        if (p != null && hub != null && p.lightSignal() != null) return hub.lightsOn();
+        android.location.Location f = hub == null ? null : hub.fix;
         if (f != null) return Care.dark(f.getLatitude(), f.getLongitude(), now);
         int h = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
         return h >= 19 || h < 6;
@@ -75,8 +80,14 @@ final class ThemeAuto {
             want = pick(p.str("nightTheme", ""), p.str("phoneThemeName", ""), p.str("phoneTheme", ""),
                     night(a, System.currentTimeMillis()), phone);
         }
+        // the Glass look darkens after sunset (or with the headlights) and brightens again in the morning
         String now = Theme.override;
-        if (want == null ? now == null : want.equals(now)) return;
+        boolean same = want == null ? now == null : want.equals(now);
+        if (Glass.setNight(night(a, System.currentTimeMillis())) && same && a.settingsView == null) {
+            a.restyle();
+            return;
+        }
+        if (same) return;
         Theme.override = want;
         if (a.settingsView == null) a.restyle();
     }
@@ -90,7 +101,7 @@ final class ThemeAuto {
         String[] items = {Hindi.f("At night: %1$s", nameOf(packs, a.prefs.str("nightTheme", ""))),
                 Hindi.f("When %1$s connects: %2$s", a.prefs.str("phoneThemeName", "").isEmpty() ? Hindi.t("a phone") : a.prefs.str("phoneThemeName", ""),
                         nameOf(packs, a.prefs.str("phoneTheme", "")))};
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Theme changes by itself"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Theme changes by itself"))
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -106,7 +117,7 @@ final class ThemeAuto {
     }
 
     private static void choose(final HomeActivity a, final String key, final List<Theme.Pack> packs, String[] names) {
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which theme?"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which theme?"))
                 .setItems(names, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
@@ -125,7 +136,7 @@ final class ThemeAuto {
         }
         String[] shown = new String[devs.size()];
         for (int i = 0; i < shown.length; i++) shown[i] = devs.get(i).split("\\|")[0];
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which phone?"))
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Which phone?"))
                 .setItems(shown, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {

@@ -90,7 +90,7 @@ final class Listen {
             pill.setPadding(Ui.px(28), Ui.px(16), Ui.px(28), Ui.px(16));
             GradientDrawable g = new GradientDrawable();
             g.setCornerRadius(999);
-            g.setColor(Ui.PANEL_TOP | 0xFF000000);
+            g.setColor(Ui.solidPanel());
             g.setStroke(Math.max(1, Ui.px(2)), Ui.ACCENT);
             pill.setBackground(g);
             pill.setElevation(Ui.px(12));

@@ -131,7 +131,7 @@ final class Updates {
             return;
         }
         if (ChildLock.moving() || Drive.kmhNow > Fixes.STILL_KMH) return;
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("OpenRath %1$s is ready", ready.substring(bar + 1)))
                 .setMessage(Hindi.t("It was downloaded and checked. Install it now? Your settings stay."))
                 .setPositiveButton(Hindi.t("Install"), new DialogInterface.OnClickListener() {

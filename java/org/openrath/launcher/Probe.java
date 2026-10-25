@@ -245,7 +245,7 @@ final class Probe {
         t.setPadding(pad, pad, pad, pad);
         ScrollView sv = new ScrollView(a);
         sv.addView(t);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle("Unit report (photograph each screen)")
                 .setView(sv)
                 .setPositiveButton("OK", null).show();

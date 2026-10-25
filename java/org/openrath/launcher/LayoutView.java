@@ -164,6 +164,7 @@ final class LayoutView extends View implements Hub.Listener {
             if ("apps".equals(n)) a.startActivity(new Intent(a, AppsActivity.class));
             else if ("settings".equals(n)) a.openSettings();
             else if ("user".equals(n)) user();
+            else if (("music".equals(n) || "radio".equals(n)) && a.openMusic(n)) return;
             else if ("dash".equals(n)) {
                 prefs.put("layout", Layouts.BOXES);   // back to the boxes
                 a.build();
@@ -172,7 +173,8 @@ final class LayoutView extends View implements Hub.Listener {
             String m = action.substring(6);
             if ("open".equals(m)) {
                 Now n = now();
-                a.openApp(n.radio ? "media:radio" : "media:music", n.radio ? "Radio" : "Music");
+                if (!a.openMusic(n.radio ? MusicScreen.RADIO : MusicScreen.MUSIC))
+                    a.openApp(n.radio ? "media:radio" : "media:music", n.radio ? "Radio" : "Music");
             } else Extras.media(a, m);
             postInvalidateDelayed(300);
         } else if (action.startsWith("place:")) {
@@ -461,6 +463,10 @@ final class LayoutView extends View implements Hub.Listener {
         if (!has) return;
         RectF r = rect;
         r.set(p.x, p.y, p.x + p.w, p.y + p.h);
+        if (Glass.on) {
+            glassShape(c, p, r);
+            return;
+        }
         fill.setShader(new LinearGradient(0, p.y, 0, p.y + p.h, p.fill, p.fill2, Shader.TileMode.CLAMP));   // the still layer: drawn once
         fill.setAlpha(Math.round(255 * p.alpha));
         if (shadow) fill.setShadowLayer(10, 0, 6, 0x40000000);
@@ -469,6 +475,54 @@ final class LayoutView extends View implements Hub.Listener {
         fill.clearShadowLayer();
         fill.setShader(null);
         fill.setAlpha(255);
+    }
+
+    private Bitmap frost;
+    private Bitmap frostOf;
+    private final Paint glassEdge = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+    /**
+     * A part as frosted glass (the Glass look): its soft shadow, the layout's picture behind it
+     * blurred, see-through white over that (whiter on light layouts, for their dark text) and a thin
+     * light edge. Drawn into the still layer, so once.
+     */
+    private void glassShape(Canvas c, Layouts.Part p, RectF r) {
+        float rad = "circle".equals(p.shape) ? Math.min(p.w, p.h) / 2 : p.r;
+        Glass.shadow(c, r.left, r.top, r.right, r.bottom, rad);
+        if (bg != null && frostOf != bg) {
+            frost = Glass.frost(bg);
+            frostOf = bg;
+        }
+        c.save();
+        clip.reset();
+        clip.addRoundRect(r, rad, rad, Path.Direction.CW);
+        c.clipPath(clip);
+        if (frost != null) {
+            // back to screen pixels, and the blurred copy where the picture itself is drawn
+            c.save();
+            c.scale(1 / k, 1 / k);
+            c.translate(-ox, -oy);
+            int w = getWidth(), h = getHeight();
+            float s = Math.max(w / (float) frost.getWidth(), h / (float) frost.getHeight());
+            float fw = frost.getWidth() * s, fh = frost.getHeight() * s;
+            RectF to = new RectF((w - fw) / 2, (h - fh) / 2, (w + fw) / 2, (h + fh) / 2);
+            fill.setShader(null);
+            fill.setAlpha(255);
+            c.drawBitmap(frost, null, to, fill);
+            c.restore();
+        }
+        boolean light = lay.light && !Glass.night;
+        fill.setShader(new LinearGradient(0, p.y, 0, p.y + p.h, light ? 0x80FFFFFF : Ui.PANEL_TOP, light ? 0x59FFFFFF : Ui.PANEL,
+                Shader.TileMode.CLAMP));
+        c.drawRect(r, fill);
+        fill.setShader(null);
+        c.restore();
+        glassEdge.setStyle(Paint.Style.STROKE);
+        glassEdge.setStrokeWidth(1.2f);
+        glassEdge.setColor(light ? 0x99FFFFFF : Ui.EDGE);
+        RectF e = new RectF(r);
+        e.inset(0.6f, 0.6f);
+        c.drawRoundRect(e, rad, rad, glassEdge);
     }
 
     private void image(Canvas c, Bitmap b, float x, float y, float w, float h, boolean circle, float radius) {
@@ -1140,7 +1194,7 @@ final class LayoutView extends View implements Hub.Listener {
     }
 
     /** Soft colours for the stand-in cover, one picked for each station or app by its name. */
-    private static final int[] SOFT = {0xFF5B7DB1, 0xFF4E9A8A, 0xFFC07A4E, 0xFF8A6BB0, 0xFFB0607A, 0xFF6B8E4E};
+    static final int[] SOFT = {0xFF5B7DB1, 0xFF4E9A8A, 0xFFC07A4E, 0xFF8A6BB0, 0xFFB0607A, 0xFF6B8E4E};
 
     /**
      * The album cover, or when there's no real one the station's or app's initials on a soft

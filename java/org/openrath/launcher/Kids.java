@@ -209,7 +209,7 @@ final class Kids {
         e.setSingleLine(true);
         e.setText(player(p, i));
         e.setSelectAllOnFocus(true);
-        new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Player's name")).setView(e)
                 .setPositiveButton(Hindi.t("OK"), new DialogInterface.OnClickListener() {
                     @Override
@@ -314,7 +314,7 @@ final class Kids {
                 e.setSingleLine(true);
                 e.setHint(Hindi.t("e.g. Nani's house"));
                 e.setText(p.str("destNick", ""));
-                new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+                new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                         .setTitle(Hindi.t("Call this place")).setView(e)
                         .setPositiveButton(Hindi.t("OK"), new DialogInterface.OnClickListener() {
                             @Override

@@ -153,7 +153,7 @@ final class CabMeter {
         Cab.version++;
         final boolean log = Cab.on(p, "cabEarnings");
         final String upi = p.str("upiId", "");
-        AlertDialog.Builder b = new AlertDialog.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
+        AlertDialog.Builder b = new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.f("Fare %1$s", Cab.rs(f))).setMessage(said + (log ? "\n\n" + Hindi.t("Save it to the earnings log?") : ""))
                 .setPositiveButton(Hindi.t(log ? "Paid in cash" : "OK"), new DialogInterface.OnClickListener() {
                     @Override
