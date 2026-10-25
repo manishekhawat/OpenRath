@@ -212,7 +212,7 @@ final class HomeSettings {
                 .setNegativeButton(first ? Hindi.t("Not now") : Hindi.t("Cancel"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
-                        if (first) a.prefs.put("level", "custom");   // asked once; everything stays as it was
+                        if (first) Features.keepLevel(a.prefs);   // asked once; everything stays as it was
                     }
                 }).show();
     }

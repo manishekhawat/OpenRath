@@ -412,6 +412,7 @@ public final class Tests {
 
     public static void main(String[] args) {
         levels();
+        fuelTypes();
         hindi();
         fleets();
         obd();
@@ -1057,7 +1058,7 @@ public final class Tests {
             else if (x.level == Features.CUSTOM) c++;
             else d++;
         }
-        eq("levels: simple count", 19, s);   // "longKeys" registered beside "keys"; "navTurns" and "parkedSettings" from the launcher review; "musicApp"
+        eq("levels: simple count", 27, s);   // the must-haves, plus the quiet helpers (setup, wake, smooth speed, status icons, call screen)
         eq("levels: custom count", 8, c);
         eq("levels: dev count", 2, d);
         check("levels: full has the most", f > s && f > c);
@@ -1083,6 +1084,103 @@ public final class Tests {
         check("levels: cab stays as the owner set it", Features.onAt(cab, Features.FULL, true) && !Features.onAt(cab, Features.FULL, false));
         check("levels: obd off in simple", !Features.onAt(obd, Features.SIMPLE, true));
         check("levels: obd not forced on", !Features.onAt(obd, Features.CUSTOM, false));
+
+        // a new install starts at Simple; one with anything saved keeps what it has
+        check("start: nothing saved is new", Features.fresh(java.util.Collections.<String>emptyList()));
+        check("start: managed and language keys are still new", Features.fresh(java.util.Arrays.asList("x:m:lockLevel", "x:m:levelApplied", "x:lang")));
+        check("start: a feature switch means an old install", !Features.fresh(java.util.Arrays.asList("x:lang", "x:feat:weather")));
+        check("start: finished setup means an old install", !Features.fresh(java.util.Arrays.asList("x:setupDone")));
+        check("start: chosen boxes mean an old install", !Features.fresh(java.util.Arrays.asList("slot2")));
+        check("start: chosen apps mean an old install", !Features.fresh(java.util.Arrays.asList("app:dock:navi")));
+        check("start: an earlier version means an old install", !Features.fresh(java.util.Arrays.asList("x:crashForgiven")));
+        check("start: a fill-up means an old install", !Features.fresh(java.util.Arrays.asList("fuel")));
+        int startOn = 0;
+        for (Features.F x : Features.ALL) if (x.level != Features.DEV && Features.startsOn(x, x.def)) startOn++;
+        check("start: simple is a short set (" + startOn + ")", startOn >= 15 && startOn <= 30 && startOn < Features.ALL.length / 3);
+        for (String id : new String[]{"setup", "wake", "speedAlerts", "reverse", "musicApp", "callScreen", "backup", "dockStatus"})
+            check("start: " + id + " on in simple", Features.startsOn(Features.get(id), false));
+        for (String id : new String[]{"score", "cab", "obd", "dashcam", "eq", "widgets", "reports", "news"})
+            check("start: " + id + " off in simple", !Features.startsOn(Features.get(id), Features.get(id).def));
+        check("start: developer switch untouched", Features.startsOn(maker, true) && !Features.startsOn(maker, false));
+
+        // Settings: switches of features that are off fold under More features, and stay reachable
+        java.util.List<SettingsView.Row> rows = new java.util.ArrayList<>();
+        SettingsView.Row onRow = new SettingsView.Row("Features", "Driving score", "", null).toggle(true, "score");
+        SettingsView.Row offRow = new SettingsView.Row("Features", "Badges for good driving", "", null).toggle(false, "achievements");
+        SettingsView.Row offRow2 = new SettingsView.Row("Features", "0–100 km/h timer", "", null).toggle(false, "accel");
+        SettingsView.Row lock = new SettingsView.Row("Features", "Child-lock for apps", "", null).toggle(false, "childLock");
+        rows.add(onRow);
+        rows.add(offRow);
+        rows.add(offRow2);
+        rows.add(lock);
+        java.util.Map<String, java.util.List<Object>> placed = SettingsView.place(rows, new java.util.HashSet<String>());
+        java.util.List<Object> driving = placed.get("Your driving");
+        check("more: switch that's on stays", driving != null && driving.contains(onRow));
+        check("more: switches that are off fold away", driving != null && !driving.contains(offRow) && !driving.contains(offRow2));
+        SettingsView.Row link = null;
+        if (driving != null) for (Object o : driving) if (o instanceof SettingsView.Row && SettingsView.MORE.equals(((SettingsView.Row) o).title)) link = (SettingsView.Row) o;
+        check("more: one row for them", link != null && link.value.startsWith("2 "));
+        java.util.List<Object> more = placed.get(SettingsView.MORE);
+        check("more: every switch that's off is listed", more != null && more.contains(offRow) && more.contains(offRow2) && more.contains(lock));
+        check("more: under its section's name", more != null && more.indexOf("Your driving") >= 0 && more.indexOf("Your driving") < more.indexOf(offRow));
+        check("more: valet and children keeps its switches", placed.get(SettingsView.FAMILY) != null && placed.get(SettingsView.FAMILY).contains(lock));
+        if (link != null) link.action.run();
+        check("more: a tap opens them out", SettingsView.opened.contains("Your driving"));
+        java.util.Map<String, java.util.List<Object>> open = SettingsView.place(rows, SettingsView.opened);
+        check("more: opened out in place", open.get("Your driving").contains(offRow) && open.get("Your driving").contains(offRow2));
+        SettingsView.opened.clear();
+        check("more: nothing off, no entry", !SettingsView.place(java.util.Collections.singletonList(onRow), new java.util.HashSet<String>()).containsKey(SettingsView.MORE));
+        check("more: a switch turned off where it is stays there",
+                SettingsView.place(rows, new java.util.HashSet<String>(java.util.Arrays.asList("#accel"))).get("Your driving").contains(offRow2));
+        check("family: section named", "Valet and children".equals(SettingsView.sectionOf(Features.get("kids"))));
+        check("family: games say they're for passengers", Features.get("kids").name.toLowerCase(java.util.Locale.US).contains("passengers"));
+    }
+
+    private static void fuelTypes() {
+        try {
+            fuelTypesIn();
+        } catch (Exception e) {
+            check("cng merge: runs " + e, false);
+        }
+    }
+
+    private static void fuelTypesIn() throws Exception {
+        org.json.JSONArray fuel = new org.json.JSONArray("[{\"t\":100,\"l\":30,\"rs\":3000,\"odo\":1000,\"full\":true},"
+                + "{\"t\":300,\"l\":25,\"rs\":2500,\"odo\":1400,\"full\":true}]");
+        org.json.JSONArray cng = new org.json.JSONArray("[{\"t\":200,\"kg\":8,\"rs\":600,\"odo\":1200},{\"t\":400,\"kg\":7,\"rs\":520,\"odo\":1450}]");
+        org.json.JSONArray m = Fuel.merged(fuel, cng);
+        eq("cng merge: one history", 4, m.length());
+        eq("cng merge: in time order", "100,200,300,400", m.optJSONObject(0).optLong("t") + "," + m.optJSONObject(1).optLong("t") + ","
+                + m.optJSONObject(2).optLong("t") + "," + m.optJSONObject(3).optLong("t"));
+        check("cng merge: marked CNG", Fuel.isCng(m.optJSONObject(1)) && Fuel.isCng(m.optJSONObject(3)));
+        check("cng merge: petrol stays petrol", !Fuel.isCng(m.optJSONObject(0)) && !Fuel.isCng(m.optJSONObject(2)));
+        near("cng merge: kg kept", 8, m.optJSONObject(1).optDouble("kg"), 0.001);
+        eq("cng merge: twice adds nothing", 4, Fuel.merged(m, cng).length());
+        eq("cng merge: petrol fills", 2, Fuel.of(m, false).length());
+        eq("cng merge: cng fills", 2, Fuel.of(m, true).length());
+        double[] st = Cab.cngStats(Fuel.of(m, true));
+        near("cng merge: km per kg from the merged log", 250 / 7.0, st[0], 0.01);
+        eq("cng merge: petrol mileage unchanged", 1, Fuel.fullTankKmpl(Fuel.of(m, false)).size());
+        near("cng merge: petrol km per litre", 16, Fuel.fullTankKmpl(Fuel.of(m, false)).get(0), 0.01);
+        eq("cng merge: empty old log", 2, Fuel.merged(fuel, new org.json.JSONArray()).length());
+        eq("cng merge: into an empty log", 2, Fuel.of(Fuel.merged(new org.json.JSONArray(), cng), true).length());
+
+        // long-press tips: once each, remembered
+        String seen = Hints.markSeen("", "bar");
+        check("hints: seen", Hints.seen(seen, "bar"));
+        check("hints: others not seen", !Hints.seen(seen, "navi") && !Hints.seen("", "bar"));
+        seen = Hints.markSeen(seen, "navi");
+        check("hints: two seen", Hints.seen(seen, "bar") && Hints.seen(seen, "navi"));
+        eq("hints: marking again changes nothing", seen, Hints.markSeen(seen, "bar"));
+        check("hints: one id isn't part of another", !Hints.seen(",navigation,", "navi"));
+        eq("hints: apps button", "apps", Hints.dockTip("apps", true));
+        eq("hints: navigation with places", "navi", Hints.dockTip("navi", true));
+        eq("hints: navigation without places", "bar", Hints.dockTip("navi", false));
+        eq("hints: music button", "bar", Hints.dockTip("music", true));
+        java.util.Set<String> ids = new java.util.HashSet<>();
+        for (String[] tip : Hints.ALL) check("hints: id once " + tip[2], ids.add(tip[2]));
+        float[] at = Hints.spot(76, 200, 7, 3);
+        check("hints: mark top-right of the picture", at[0] > 38 && at[0] <= 73 && at[1] < 100 && at[1] > 60);
     }
 
     static void obd() {

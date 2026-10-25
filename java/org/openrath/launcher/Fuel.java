@@ -19,7 +19,8 @@ import java.util.Locale;
 /**
  * Fuel log: each fill-up has litres, amount paid, odometer and whether the tank was filled.
  * Mileage per tank is the distance between two full fill-ups over the litres put in since the
- * first of them (the standard "full to full" method).
+ * first of them (the standard "full to full" method). CNG fills (by kg, type "cng") are kept in the
+ * same log, so there is one fuel history; mileage and the petrol range use only the petrol fills.
  */
 final class Fuel {
 
@@ -43,12 +44,92 @@ final class Fuel {
         return Errands.fullTankKmpl(km, litres, full);
     }
 
-    static JSONArray log(Prefs p) {
+    /** The fuel type of a CNG fill: it has "kg" where a petrol or diesel fill has "l". */
+    static final String CNG = "cng";
+
+    static boolean isCng(JSONObject e) {
+        return e != null && CNG.equals(e.optString("type", ""));
+    }
+
+    /** One fuel type's fills from a log, in order: CNG ones, or the petrol (or diesel) ones. Pure, for the tests. */
+    static JSONArray of(JSONArray l, boolean cng) {
+        JSONArray out = new JSONArray();
+        for (int i = 0; i < l.length(); i++) {
+            JSONObject e = l.optJSONObject(i);
+            if (e != null && isCng(e) == cng) out.put(e);
+        }
+        return out;
+    }
+
+    private static JSONArray parse(String json) {
         try {
-            return new JSONArray(p.fuelLog());
+            return new JSONArray(json);
         } catch (Exception e) {
             return new JSONArray();
         }
+    }
+
+    /** Every fill, petrol and CNG, oldest first: the one fuel history. */
+    static JSONArray all(Prefs p) {
+        mergeCng(p);
+        return parse(p.fuelLog());
+    }
+
+    /** The petrol (or diesel) fills, which the mileage, range and price come from. */
+    static JSONArray log(Prefs p) {
+        return of(all(p), false);
+    }
+
+    /** The CNG fills (cab drivers' km per kg). */
+    static JSONArray cng(Prefs p) {
+        return of(all(p), true);
+    }
+
+    /** Add a fill (of either type) at the end of the history. */
+    static void put(Prefs p, JSONObject e) {
+        JSONArray l = all(p);
+        l.put(e);
+        p.setFuelLog(l.toString());
+    }
+
+    /**
+     * The fuel log with the cab tools' old separate CNG log merged in: each CNG fill becomes a fill of type
+     * CNG, in time order among the others, and a fill already there (same time) isn't added twice. Pure, for the tests.
+     */
+    static JSONArray merged(JSONArray fuel, JSONArray oldCng) {
+        java.util.List<JSONObject> l = new java.util.ArrayList<>();
+        java.util.Set<Long> had = new java.util.HashSet<>();
+        for (int i = 0; i < fuel.length(); i++) {
+            JSONObject e = fuel.optJSONObject(i);
+            if (e == null) continue;
+            l.add(e);
+            if (isCng(e)) had.add(e.optLong("t"));
+        }
+        for (int i = 0; i < oldCng.length(); i++) {
+            JSONObject e = oldCng.optJSONObject(i);
+            if (e == null || !had.add(e.optLong("t"))) continue;
+            try {
+                JSONObject c = new JSONObject(e.toString());
+                c.put("type", CNG);
+                // in time order: after every fill that isn't later (the old logs were each in order already)
+                int at = l.size();
+                while (at > 0 && l.get(at - 1).optLong("t") > c.optLong("t")) at--;
+                l.add(at, c);
+            } catch (Exception ex) {
+                // a broken entry: left out
+            }
+        }
+        JSONArray out = new JSONArray();
+        for (JSONObject e : l) out.put(e);
+        return out;
+    }
+
+    /** Once, after an update (or a restored older backup): the cab's CNG log moves into this one. */
+    private static void mergeCng(Prefs p) {
+        String old = p.str("cabCng", "");
+        if (old.isEmpty() || "[]".equals(old)) return;
+        p.setFuelLog(merged(parse(p.fuelLog()), parse(old)).toString());
+        p.put("cabCng", "[]");
     }
 
     static Stats stats(Prefs p) {
@@ -156,7 +237,9 @@ final class Fuel {
         box.setOrientation(LinearLayout.VERTICAL);
         int pad = (int) (20 * a.getResources().getDisplayMetrics().density);
         box.setPadding(pad, pad / 2, pad, 0);
-        final EditText litres = field(a, box, Hindi.t("Litres"), "");
+        // CNG fills go in the same log, by kg, once the car uses CNG (cab CNG tools on, or a CNG fill already logged)
+        final boolean cngToo = Cab.on(p, "cabCng") || cng(p).length() > 0;
+        final EditText litres = field(a, box, Hindi.t(cngToo ? "Litres, or kg for CNG" : "Litres"), "");
         double pr = price(p);
         final EditText rupees = field(a, box, pr > 0 ? Hindi.f("Amount paid (₹), or leave empty for ₹%1$s a litre", fmt(pr)) : Hindi.t("Amount paid (₹)"), "");
         final EditText odo = field(a, box, Hindi.t("Odometer (km)"), String.valueOf((long) suggestOdo(p)));
@@ -164,6 +247,9 @@ final class Fuel {
         full.setText(Hindi.t("Filled the tank to full"));
         full.setChecked(true);
         box.addView(full);
+        final CheckBox gas = new CheckBox(a);
+        gas.setText(Hindi.t("This was CNG (kg)"));
+        if (cngToo) box.addView(gas);
         new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                 .setTitle(Hindi.t("Add a fill-up"))
                 .setView(box)
@@ -173,20 +259,30 @@ final class Fuel {
                         try {
                             JSONObject e = new JSONObject();
                             e.put("t", System.currentTimeMillis());
-                            e.put("l", Double.parseDouble(litres.getText().toString().trim()));
                             String rs = rupees.getText().toString().trim();
+                            if (gas.isChecked()) {
+                                double kg = Double.parseDouble(litres.getText().toString().trim());
+                                if (kg <= 0) throw new NumberFormatException();
+                                e.put("type", CNG);
+                                e.put("kg", kg);
+                                e.put("rs", rs.isEmpty() ? 0 : Math.max(0, Double.parseDouble(rs)));
+                                e.put("odo", Double.parseDouble(odo.getText().toString().trim()));
+                                e.put("gps", Drive.odoKm);
+                                put(p, e);
+                                done.run();
+                                return;
+                            }
+                            e.put("l", Double.parseDouble(litres.getText().toString().trim()));
                             // left empty: work it out from the litres and the known price
                             e.put("rs", rs.isEmpty() ? Math.round(e.getDouble("l") * price(p)) : Double.parseDouble(rs));
                             e.put("city", p.str("city", ""));
                             e.put("odo", Double.parseDouble(odo.getText().toString().trim()));
                             e.put("gps", Drive.odoKm);
                             e.put("full", full.isChecked());
-                            JSONArray l = log(p);
-                            l.put(e);
-                            p.setFuelLog(l.toString());
+                            put(p, e);
                             done.run();
                             if (full.isChecked() && Features.on(p, "fuelCheck")) {
-                                String warn = Errands.fuelDrop(fullTankKmpl(l));
+                                String warn = Errands.fuelDrop(fullTankKmpl(log(p)));
                                 if (warn != null) new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)
                                         .setTitle(Hindi.t("Mileage dropped")).setMessage(warn).setPositiveButton(Hindi.t("OK"), null).show();
                             }
@@ -210,12 +306,13 @@ final class Fuel {
     }
 
     static void history(final Activity a, final Prefs p, final Runnable changed) {
-        final JSONArray l = log(p);
+        final JSONArray l = all(p);   // petrol and CNG together, newest first
         String[] rows = new String[l.length()];
         SimpleDateFormat f = new SimpleDateFormat("d MMM yyyy", Locale.getDefault());
         for (int i = 0; i < rows.length; i++) {
             JSONObject e = l.optJSONObject(l.length() - 1 - i);
-            rows[i] = f.format(new Date(e.optLong("t"))) + "   " + fmt(e.optDouble("l")) + " L   " + Money.shown("₹") + Math.round(e.optDouble("rs"))
+            String amount = isCng(e) ? fmt(e.optDouble("kg")) + " kg CNG" : fmt(e.optDouble("l")) + " L";
+            rows[i] = f.format(new Date(e.optLong("t"))) + "   " + amount + "   " + Money.shown("₹") + Math.round(e.optDouble("rs"))
                     + "   " + Math.round(e.optDouble("odo")) + " km" + (e.optBoolean("full", true) ? "" : "   " + Hindi.t("(part fill)"));
         }
         new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert)

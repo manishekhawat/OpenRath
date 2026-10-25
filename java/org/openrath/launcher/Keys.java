@@ -23,7 +23,7 @@ final class Keys {
             "Volume up", "Volume down", "Answer call", "End call", "Voice command", "Open navigation",
             "Open the radio", "Open music", "Show the dashboard", "Screen off / on", "Next dashboard page",
             "Save the dashcam clip", "Mark a waterlogging spot", "Next driver", "Show the car documents",
-            "Fog mode on / off", "Trip games for children", "Share the trip (QR code)", "Split the cost (UPI QR)",
+            "Fog mode on / off", "Games for passengers", "Share the trip (QR code)", "Split the cost (UPI QR)",
             "Paid parking reminder", "Guest Wi-Fi code", "Read the news aloud",
             "Cab menu", "Fare meter start / stop", "Cab SOS"};
     static final String ACTION = "org.openrath.launcher.KEY_ACTION";

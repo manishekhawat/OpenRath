@@ -25,6 +25,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         super.onCreate(b);
         Fm.app = getApplicationContext();
         prefs = new Prefs(this);
+        Features.start(prefs);   // a new install starts at Simple; before anything else is saved
         Managed.apply(this, prefs);   // a fleet's managed settings, if the unit has any
         Reports.install(this, prefs);
         Hindi.load(this, prefs);   // before the dashboard is built, so it starts in the owner's language

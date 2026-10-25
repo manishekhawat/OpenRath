@@ -1003,9 +1003,9 @@ final class Extras {
             }
         }));
 
-        // ---- Kids or valet mode
+        // ---- Valet mode
         g = "Valet";
-        r.add(new SettingsView.Row(g, "Kids or valet mode", Valet.on(p) ? "On: Settings need the PIN" : "Limits volume and speed, locks Settings", new Runnable() {
+        r.add(new SettingsView.Row(g, "Valet mode", Valet.on(p) ? "On: Settings need the PIN" : "When someone else drives: caps the volume and speed, and Settings need your PIN", new Runnable() {
             @Override
             public void run() {
                 Valet.toggle(a, p, new Runnable() {
@@ -1391,7 +1391,7 @@ final class Extras {
 
         // ---- Child-lock and driver profiles
         g = "Family";
-        r.add(new SettingsView.Row(g, "Trip games for children", "spot the colour, number plates, how far", new Runnable() {
+        r.add(new SettingsView.Row(g, "Play a game now", "spot the colour, number plates, how far", new Runnable() {
             @Override
             public void run() {
                 if (Features.on(p, "kids")) {
