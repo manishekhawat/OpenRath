@@ -351,7 +351,7 @@ final class Setup extends FrameLayout {
                     @Override
                     public void onClick(DialogInterface d, int w) {
                         save();
-                        if (!Features.levelPicked(p)) p.put("level", "custom");
+                        Features.keepLevel(p);
                         done();
                     }
                 })

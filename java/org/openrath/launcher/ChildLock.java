@@ -17,7 +17,8 @@ import java.util.Set;
 /**
  * Child-lock for apps: chosen apps (video, browser, games) can't be opened while the car is
  * moving. The app drawer and the dashboard refuse them, and with the steering-wheel accessibility
- * service on, the lock also sends the screen home if one is opened any other way.
+ * service on, the lock also sends the screen home if one is opened any other way. Unlike valet
+ * mode (Valet) it needs no PIN and leaves the volume, speed and Settings alone.
  */
 final class ChildLock {
 
