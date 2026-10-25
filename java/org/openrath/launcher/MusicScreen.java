@@ -1069,7 +1069,7 @@ final class MusicScreen extends FrameLayout {
             triedSongs = true;
         }
         final Context c = getContext().getApplicationContext();
-        Bg.run(new Runnable() {
+        Bg.run(web, new Runnable() {
             @Override
             public void run() {
                 final List<Player.Track> l = web ? Player.fetchStations(c) : Player.scanSongs(c);

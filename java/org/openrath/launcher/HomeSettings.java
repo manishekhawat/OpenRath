@@ -307,7 +307,7 @@ final class HomeSettings {
         if (list.isEmpty()) {
             final android.app.ProgressDialog wait = android.app.ProgressDialog.show(a, null,
                     web ? Hindi.t("Finding stations…") : Hindi.t("Looking for music…"), true);
-            Bg.run(new Runnable() {
+            Bg.run(web, new Runnable() {
                 @Override
                 public void run() {
                     final java.util.List<Player.Track> l = web ? Player.fetchStations(a)

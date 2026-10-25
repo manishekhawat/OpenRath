@@ -813,7 +813,7 @@ final class Hub implements LocationListener {
     private long weatherLive;
 
     private void fetchWeather(final double lat, final double lon) {
-        Bg.run(new Runnable() {
+        Bg.net(new Runnable() {
             @Override
             public void run() {
                 try {

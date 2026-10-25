@@ -371,7 +371,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
         changed();
         final String m = mode;
         final Context c = getApplicationContext();
-        Bg.run(new Runnable() {
+        Bg.run(WEB.equals(m), new Runnable() {
             @Override
             public void run() {
                 final List<Track> l = WEB.equals(m) ? fetchStations(c) : scanSongs(c);

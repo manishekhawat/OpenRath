@@ -81,6 +81,8 @@ public class HomeActivity extends Activity implements Cards.Host {
         // managed settings changed: sent by the system, which needs no permission of OpenRath's
         android.content.IntentFilter sys = new android.content.IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
         sys.addAction(Intent.ACTION_SCREEN_ON);   // back from the stereo's sleep: check at once (Wake)
+        sys.addAction(Intent.ACTION_SCREEN_OFF);   // the light strip and the freeze watch rest meanwhile
+        Watchdog.start();
         Compat.fromSystem(this, events, sys);
         PhoneLink.listen(this);
         AaUsb.listen(this);   // a phone plugged in starts Android Auto (when switched on)
@@ -108,7 +110,12 @@ public class HomeActivity extends Activity implements Cards.Host {
             } else if (Ticker.CHANGED.equals(i.getAction())) Extras.ticker(HomeActivity.this);
             else if (NavTurn.CHANGED.equals(i.getAction())) NavCard.update(HomeActivity.this);
             else if (Intent.ACTION_SCREEN_ON.equals(i.getAction())) {
+                Watchdog.start();
+                LedStrip.check(HomeActivity.this);
                 if (visible) Wake.sleptNow(HomeActivity.this);
+            } else if (Intent.ACTION_SCREEN_OFF.equals(i.getAction())) {
+                Watchdog.stop();
+                LedStrip.sleep();
             }
             else if (Drive.REST.equals(i.getAction())) restStop();
             else if (Drive.HIGHWAY.equals(i.getAction())) highwayStrip();
@@ -295,8 +302,82 @@ public class HomeActivity extends Activity implements Cards.Host {
     void turnPage(int dir) {
         int n = prefs.pages();
         if (n < 2) return;
+        int from = Prefs.page;
         Prefs.page = (Prefs.page + dir + n) % n;
-        build();
+        if (!showPage(from)) build();
+    }
+
+    /** Boxes of the pages turned away from, by page, shown again on the way back; emptied by build(). */
+    private final Cards.Card[][] keptPages = new Cards.Card[Prefs.MAX_PAGES][];
+    /** What each box of a kept page shows, and what each box on screen shows, as they were made. */
+    private final String[][] keptWhat = new String[Prefs.MAX_PAGES][];
+    private final String[] shownWhat = new String[Prefs.SLOTS];
+    /** Where the status icons were when the dock was made (see statusPlace). */
+    private String dockPlace;
+
+    /**
+     * A box that can be kept off screen and shown again as it is. Not the map (one kept map serves
+     * every page, see Cards.map) and not a video, whose picture is gone once it leaves the screen.
+     */
+    static boolean keepable(String content) {
+        return content != null && !Prefs.MAP.equals(content) && !Prefs.VIDEO.equals(content);
+    }
+
+    /** Whether a kept page's boxes still show what the settings now say for that page. Pure, for the tests. */
+    static boolean samePage(String[] kept, String[] now) {
+        return kept != null && java.util.Arrays.equals(kept, now);
+    }
+
+    /**
+     * Swap the boxes on screen for those of the page now chosen, without building the whole
+     * dashboard: the boxes turned away from are kept, and a kept page whose boxes still show the same
+     * comes back as it was (with its timers, which stop while a box is off screen). False when the
+     * dashboard must be built instead: a picture layout, or the box mover open.
+     */
+    private boolean showPage(int from) {
+        int to = Prefs.page;
+        if (layoutView != null || dash.dock == null || dash.editing() || from != dash.page
+                || from < 0 || from >= keptPages.length || to >= keptPages.length) return false;
+        Cards.Card[] had = new Cards.Card[Prefs.SLOTS];
+        for (int i = 0; i < Prefs.SLOTS; i++) {
+            if (!(dash.slots[i] instanceof Cards.Card) || shownWhat[i] == null) return false;
+            had[i] = (Cards.Card) dash.slots[i];
+        }
+        String[] want = new String[Prefs.SLOTS];
+        for (int i = 0; i < Prefs.SLOTS; i++) want[i] = prefs.slot(i);
+        Cards.Card[] back = samePage(keptWhat[to], want) ? keptPages[to] : null;
+        keptPages[to] = null;
+        keptWhat[to] = null;
+        hub.clearListeners();
+        for (int i = 0; i < Prefs.SLOTS; i++) {
+            dash.removeView(had[i]);
+            if (!keepable(shownWhat[i])) had[i] = null;   // made again when this page comes back
+        }
+        keptPages[from] = had;
+        keptWhat[from] = shownWhat.clone();
+        for (int i = 0; i < Prefs.SLOTS; i++) {
+            Cards.Card c = back != null && keepable(want[i]) ? back[i] : null;
+            if (c == null) c = Prefs.MAP.equals(want[i]) && !firstFrame && keptMap == null ? mapLater(i) : Cards.make(want[i], this, this, i);
+            dash.slots[i] = c;
+            dash.addView(c);
+            hub.add(c);
+            shownWhat[i] = want[i];
+        }
+        dash.page = to;
+        String place = statusPlace();
+        if (!place.equals(dockPlace)) {   // the status icons move between the dock and this page's clock
+            dash.removeView(dash.dock);
+            dash.dock = dash.wide ? HomeDock.wideBar(this) : HomeDock.dock(this);
+            dash.addView(dash.dock, 0);
+            dockPlace = place;
+        }
+        keepMap(true);
+        hub.add(overlays);
+        dash.requestLayout();
+        dash.invalidate();   // the page dots
+        micShown();
+        hub.notifyIfChanged(true);   // boxes coming back show the figures of now
+        return true;
     }
 
     @Override
@@ -339,11 +420,22 @@ public class HomeActivity extends Activity implements Cards.Host {
         dash.removeCallbacks(chores);
         dash.removeCallbacks(questions);
         Wake.stop(this);
+        Watchdog.stop();   // a new dashboard starts it again
         Extras.closed(this);
         LedStrip.closed(this);
         if (keptMap != null) keptMap.destroy();
         keptMap = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        // memory is short: let go of the other pages' boxes (made again when turned to)
+        if (level >= TRIM_MEMORY_RUNNING_LOW && level != TRIM_MEMORY_UI_HIDDEN) {
+            java.util.Arrays.fill(keptPages, null);
+            java.util.Arrays.fill(keptWhat, null);
+        }
     }
 
     @Override
@@ -373,6 +465,10 @@ public class HomeActivity extends Activity implements Cards.Host {
     void build() {
         hub.clearListeners();
         dash.removeAllViews();
+        // a setting, the theme or the screen changed: the boxes kept for other pages are made again too
+        java.util.Arrays.fill(keptPages, null);
+        java.util.Arrays.fill(keptWhat, null);
+        java.util.Arrays.fill(shownWhat, null);
         Motion.load(prefs);
         Units.load(prefs);
         Fixes.stillKmh = prefs.num("speedFilter", 2);
@@ -435,6 +531,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         dash.setWillNotDraw(false);
         dash.dock = dash.wide ? HomeDock.wideBar(this) : HomeDock.dock(this);
         dash.addView(dash.dock);
+        dockPlace = statusPlace();
         for (int i = 0; i < Prefs.SLOTS; i++) {
             String content = prefs.slot(i);
             // a new map page waits until the dashboard has been drawn once, so the first screen comes up sooner
@@ -442,6 +539,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             dash.slots[i] = c;
             dash.addView(c);
             hub.add(c);
+            shownWhat[i] = content;
         }
         keepMap(true);
         dash.requestLayout();
