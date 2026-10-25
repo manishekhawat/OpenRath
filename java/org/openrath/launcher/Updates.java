@@ -77,7 +77,7 @@ final class Updates {
     static void check(final HomeActivity a, final boolean told) {
         final Context app = a.getApplicationContext();
         final Prefs p = a.prefs;
-        Bg.run(new Runnable() {
+        Bg.net(new Runnable() {
             @Override
             public void run() {
                 String msg;

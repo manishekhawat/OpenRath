@@ -391,7 +391,45 @@ final class LayoutView extends View implements Hub.Listener {
         c.restore();
 
         if ((road || drift) && moving && Motion.frame() > 0) postInvalidateDelayed(Motion.frame());
-        else postInvalidateDelayed(1000 - System.currentTimeMillis() % 1000 + 10);   // the clocks' second hands
+        else {
+            // the clocks: just their second hands every second while one is shown, everything at the next minute
+            long t = System.currentTimeMillis();
+            boolean secs = secondHands();
+            long wait = nextTick(t, secs);
+            if (secs && !newMinute(t, wait)) postInvalidateDelayed(wait, tickArea.left, tickArea.top, tickArea.right, tickArea.bottom);
+            else postInvalidateDelayed(wait);
+        }
+    }
+
+    private final android.graphics.Rect tickArea = new android.graphics.Rect();
+
+    /** Whether a clock with a second hand is on screen; tickArea is then where the clocks are, in view pixels. */
+    private boolean secondHands() {
+        boolean any = false;
+        tickArea.setEmpty();
+        for (Layouts.Part p : lay.parts) {
+            if (!"clock".equals(p.kind) || !on(p) || !secondHand(p.style)) continue;
+            any = true;
+            tickArea.union((int) Math.floor(ox + p.x * k) - 2, (int) Math.floor(oy + p.y * k) - 2,
+                    (int) Math.ceil(ox + (p.x + p.w) * k) + 2, (int) Math.ceil(oy + (p.y + p.h) * k) + 2);
+        }
+        return any;
+    }
+
+    /** A clock style that draws a second hand (the analog faces; the default digital one doesn't). */
+    static boolean secondHand(String style) {
+        return style != null && (style.contains("analog") || "wall".equals(style));
+    }
+
+    /** Ms until just after the next second (seconds shown) or the next minute. */
+    static long nextTick(long now, boolean seconds) {
+        long unit = seconds ? 1000 : 60000;
+        return unit - now % unit + 10;
+    }
+
+    /** Whether waiting `wait` ms from now crosses into a new minute (then the whole view is redrawn). */
+    static boolean newMinute(long now, long wait) {
+        return (now + wait) / 60000 != now / 60000;
     }
 
     // ------------------------------------------------------------------ the still layer

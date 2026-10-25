@@ -334,6 +334,35 @@ public final class Tests {
         for (String id : new String[]{"faultWords", "askCar", "autoTheme", "ledStrip", "achievements"}) check("feature " + id, Features.get(id) != null);
     }
 
+    private static void speedIdeas() {
+        // the freeze watch: told once per freeze, quiet while answers come
+        Watchdog.Beat b = new Watchdog.Beat();
+        check("first ping", b.ask(1000));
+        eq("answered quickly", 0L, b.frozen(1100, 10000));
+        b.answer(1050);
+        check("next ping", b.ask(6000));
+        check("no second ping while waiting", !b.ask(11000));
+        eq("not yet frozen", 0L, b.frozen(15000, 10000));
+        eq("frozen", 10000L, b.frozen(16000, 10000));
+        eq("told once", 0L, b.frozen(21000, 10000));
+        b.answer(22000);
+        check("ping again after the answer", b.ask(23000));
+        eq("a new freeze is told again", 11000L, b.frozen(34000, 10000));
+        // the picture layouts' clocks
+        check("analog has a second hand", LayoutView.secondHand("analog-big") && LayoutView.secondHand("digital-analog") && LayoutView.secondHand("wall"));
+        check("digital has none", !LayoutView.secondHand("") && !LayoutView.secondHand("digital") && !LayoutView.secondHand("digital-line"));
+        eq("next second", 510L, LayoutView.nextTick(60500, true));
+        eq("next minute", 30010L, LayoutView.nextTick(90000, false));
+        check("into a new minute", LayoutView.newMinute(119500, LayoutView.nextTick(119500, true)));
+        check("same minute", !LayoutView.newMinute(100500, LayoutView.nextTick(100500, true)));
+        // kept dashboard pages
+        String[] page = {"car", "clock", "weather", "map", "music"};
+        check("same boxes come back", HomeActivity.samePage(page.clone(), page));
+        check("changed boxes are made again", !HomeActivity.samePage(new String[]{"car", "clock", "trip", "map", "music"}, page));
+        check("nothing kept", !HomeActivity.samePage(null, page));
+        check("the map isn't kept with a page", !HomeActivity.keepable(Prefs.MAP) && !HomeActivity.keepable(Prefs.VIDEO) && HomeActivity.keepable(Prefs.CLOCK));
+    }
+
     private static void miniAaIdeas() {
         // deep sleep: the boot clock moves on, the awake clock doesn't
         eq("slept", 300000L, Wake.slept(1000, 1000, 1000 + 315000, 1000 + 15000));
@@ -416,6 +445,7 @@ public final class Tests {
         settingsLook();
         femtoIdeas();
         miniAaIdeas();
+        speedIdeas();
         nebulaIdeas();
         intro();
         setupScreens();
@@ -1987,8 +2017,8 @@ public final class Tests {
                 }
             }
             check("finish: caught errors noted for Diagnostics", notes > 70);
-            // Bg's pool, the boot logo, OBD-II, Android Auto's reader and wireless Android Auto
-            check("finish: few threads of their own", threads <= 5);
+            // Bg's pools, the boot logo, OBD-II, Android Auto's reader, wireless Android Auto and the freeze watch
+            check("finish: few threads of their own", threads <= 6);
         } catch (Exception x) {
             check("finish fixes: " + x, false);
         }

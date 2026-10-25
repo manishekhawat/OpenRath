@@ -215,7 +215,7 @@ final class Ahead {
         qAt = System.currentTimeMillis();
         qLat = lat;
         qLon = lon;
-        Bg.run(new Runnable() {
+        Bg.net(new Runnable() {
             @Override
             public void run() {
                 try {

@@ -98,7 +98,7 @@ final class Reports {
         if (!on()) return;
         final String url = prefs.str("reportUrl", "");
         if (!sendable(url) || System.currentTimeMillis() - sp.getLong("sent", 0) < 24 * 3600_000L) return;
-        Bg.run(new Runnable() {
+        Bg.net(new Runnable() {
             @Override
             public void run() {
                 try {

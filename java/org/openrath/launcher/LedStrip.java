@@ -89,12 +89,17 @@ final class LedStrip {
         dash = new java.lang.ref.WeakReference<>(a);
         if (tick != null) return;
         final Context app = a.getApplicationContext();
+        if (!screenOn(app)) return;   // started again when the screen comes back (HomeActivity, Wake)
         final Prefs prefs = new Prefs(app);
         if (main == null) main = new Handler(Looper.getMainLooper());
         tick = new Runnable() {
             @Override
             public void run() {
                 if (tick != this) return;
+                if (!screenOn(app)) {   // the unit sleeps: no colours and no reconnecting until it wakes
+                    tick = null;
+                    return;
+                }
                 follow(prefs, app);
                 main.postDelayed(this, TICK_MS);
             }
@@ -103,6 +108,20 @@ final class LedStrip {
     }
 
     private static java.lang.ref.WeakReference<HomeActivity> dash;
+
+    /** The screen went off: stop the colour updates and the connection retries until check() runs again. */
+    static void sleep() {
+        tick = null;
+    }
+
+    private static boolean screenOn(Context c) {
+        try {
+            android.os.PowerManager pm = (android.os.PowerManager) c.getSystemService(Context.POWER_SERVICE);
+            return pm == null || pm.isInteractive();
+        } catch (Throwable e) {
+            return true;
+        }
+    }
 
     /** The dashboard was closed for good: stop following until the next one checks again. */
     static void closed(HomeActivity a) {

@@ -245,7 +245,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         if (Features.on(prefs, "tpms")) Tpms.start(this, prefs);
         else Tpms.stop();
         if (Features.on(prefs, "backup")) {
-            Bg.run(new Runnable() {
+            Bg.save(new Runnable() {
                 @Override
                 public void run() {
                     Backup.daily(Drive.this, prefs);
@@ -398,8 +398,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         }
     }
 
-    /** Writes to the "drive" settings, one after another off the main thread. */
-    private final Bg.Serial writer = Bg.serial();
+    /** Writes to the "drive" settings, one after another on the saving thread (Bg.saves). */
+    private final Bg.Serial writer = new Bg.Serial(Bg.saves());
     /** The day-by-day history, kept read in memory (only the writer touches it). */
     private JSONObject hist;
     private String savedTrip = "";
@@ -772,7 +772,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         if (wantLimit) queriedAt = l;
         final double lat = l.getLatitude(), lon = l.getLongitude();
         final java.io.File dir = new java.io.File(getCacheDir(), "overpass");
-        Bg.run(new Runnable() {
+        Bg.net(new Runnable() {
             @Override
             public void run() {
                 long now = System.currentTimeMillis();
