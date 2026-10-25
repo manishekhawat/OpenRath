@@ -909,6 +909,37 @@ public final class Tests {
         eq("volume: new source gets its own", 12, Resume.volumeFor("com.spotify.music", "web", 8, 12));
         eq("volume: never played before", -1, Resume.volumeFor("com.spotify.music", "web", 8, -1));
         eq("volume: already right", -1, Resume.volumeFor("files", "web", 8, 8));
+        eq("resume wake: music app", "com.spotify.music", Resume.wakePkg("app:com.spotify.music"));
+        eq("resume wake: fm", null, Resume.wakePkg("fm"));
+        eq("resume wake: empty app", null, Resume.wakePkg("app:"));
+        eq("resume wake: nothing", null, Resume.wakePkg(null));
+
+        float[] mid = Player.sides(0, 1f), right = Player.sides(5, 1f), left = Player.sides(-10, 1f), duck = Player.sides(5, 0.2f);
+        check("balance: centre is full both sides", mid[0] == 1f && mid[1] == 1f);
+        near("balance: right fades the left", 0.5, right[0], 1e-6);
+        near("balance: right keeps the right", 1.0, right[1], 1e-6);
+        check("balance: all left", left[0] == 1f && left[1] == 0f);
+        near("balance: ducked too", 0.1, duck[0], 1e-6);
+        check("balance: past the end is the end", Player.sides(99, 1f)[0] == 0f);
+
+        check("resume key: what played", Prefs.resumeKey("resume") && Prefs.resumeKey("resumeVol") && Prefs.resumeKey("sleptAt"));
+        check("resume key: navigation and source volume", Prefs.resumeKey("navAt") && Prefs.resumeKey("vol:com.spotify.music"));
+        check("resume key: a setting stays", !Prefs.resumeKey("volume") && !Prefs.resumeKey("balance") && !Prefs.resumeKey("eqPreset"));
+        eq("resume keys moved", Arrays.asList("x:resume", "x:vol:web", "x:sleptAt"),
+                Prefs.resumeKeysIn(Arrays.asList("slot0", "x:resume", "x:eqPreset", "x:vol:web", "resume", "x:sleptAt", "x:balance")));
+
+        java.util.List<String> src = Browse.sources(Arrays.asList("com.spotify.music", "org.openrath.launcher", "com.spotify.music", "com.gaana"), "org.openrath.launcher");
+        eq("music chips", Arrays.asList("com.spotify.music", "com.gaana", Player.FILES, Player.WEB, "fm"), src);
+        eq("music chips: all fit", src, MediaCard.shown(src, 6, MediaCard.FIXED_CHIPS));
+        eq("music chips: radio kept", Arrays.asList("com.spotify.music", Player.FILES, Player.WEB, "fm"), MediaCard.shown(src, 4, MediaCard.FIXED_CHIPS));
+        eq("music chips: very narrow", Arrays.asList(Player.WEB, "fm"), MediaCard.shown(src, 2, MediaCard.FIXED_CHIPS));
+        eq("music chips: no room", 0, MediaCard.shown(src, 0, MediaCard.FIXED_CHIPS).size());
+        eq("music chips across", 4, MediaCard.chipCount(76 * 4 + 8 * 3, 76, 8));
+        eq("music chips: narrower than one", 0, MediaCard.chipCount(60, 76, 8));
+        check("music chips: tall box has room", MediaCard.chipRoom(260, 40, 76, 30, 8));
+        check("music chips: short box hasn't", !MediaCard.chipRoom(180, 40, 76, 30, 8));
+        eq("music buttons: three fit", 3, MediaCard.buttonCount(228, 76));
+        eq("music buttons: play alone when narrow", 1, MediaCard.buttonCount(200, 76));
         java.util.List<String> drivers = Arrays.asList("Asha", "Ravi");
         check("phone: switch to the phone's driver", PhoneLink.switchDriver("Ravi", "Asha", drivers));
         check("phone: already driving", !PhoneLink.switchDriver("Asha", "Asha", drivers));
