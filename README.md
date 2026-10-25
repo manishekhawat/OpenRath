@@ -12,6 +12,19 @@ A free, open source home screen for any Android-based aftermarket car stereo, wh
 
 Taken on a 1024 x 600 screen, the usual 7 inch stereo size.
 
+**Frosted glass, the default look** (design previews at 1280 x 720)
+
+<table>
+<tr>
+<td align="center"><img src="docs/screenshots/glass-dashboard.png" alt="Glass dashboard" width="400"><br>Dashboard</td>
+<td align="center"><img src="docs/screenshots/glass-dashboard-night.png" alt="Glass dashboard at night" width="400"><br>At night</td>
+</tr>
+<tr>
+<td align="center"><img src="docs/screenshots/glass-music.png" alt="Glass music screen" width="400"><br>Music</td>
+<td align="center"><img src="docs/screenshots/glass-settings.png" alt="Glass settings" width="400"><br>Settings</td>
+</tr>
+</table>
+
 **Dashboards**
 
 <table>
