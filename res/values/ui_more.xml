@@ -178,6 +178,15 @@
     <string name="ui_more_not_tried" formatted="false">not tried</string>
     <string name="ui_more_download_the_english_voice_opens_google_s_vo" formatted="false">Download the English voice (opens Google\'s voice download)</string>
     <string name="ui_more_tap_to_open" formatted="false">Tap to open</string>
+    <string name="ui_more_balance_left_and_right" formatted="false">Balance (left and right)</string>
+    <string name="ui_more_openrath_s_own_music_only" formatted="false">OpenRath\'s own music only</string>
+    <string name="ui_more_centre" formatted="false">Centre</string>
+    <string name="ui_more_left_1_s" formatted="false">Left %1$s</string>
+    <string name="ui_more_right_1_s" formatted="false">Right %1$s</string>
+    <string name="ui_more_balance" formatted="false">Balance</string>
+    <string name="ui_more_only_openrath_s_own_online_radio_and_music_f" formatted="false">Only OpenRath\'s own online radio and music files. Other music apps, FM and the front and rear fader follow the unit\'s own sound settings.</string>
+    <string name="ui_more_files" formatted="false">FILES</string>
+    <string name="ui_more_online" formatted="false">ONLINE</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">Your trips show here after your first drive</string>
     <string name="ui_more_last_drive_1_s" formatted="false">LAST DRIVE, %1$s</string>
     <string name="ui_more_yesterday2" formatted="false">YESTERDAY</string>
@@ -258,16 +267,36 @@
     <string name="ui_more_background_behind_the_glass" formatted="false">Background behind the glass</string>
     <string name="ui_more_add_your_picture" formatted="false">Add your picture</string>
     <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">Copy a picture (JPG or PNG) to %1$s on the unit, with a USB stick or a file manager. Until then the Aurora background shows.</string>
-    <string name="ui_more_tap_to_open2" formatted="false">Tap to open</string>
-    <string name="ui_more_balance_left_and_right" formatted="false">Balance (left and right)</string>
-    <string name="ui_more_openrath_s_own_music_only" formatted="false">OpenRath\'s own music only</string>
-    <string name="ui_more_centre" formatted="false">Centre</string>
-    <string name="ui_more_left_1_s" formatted="false">Left %1$s</string>
-    <string name="ui_more_right_1_s" formatted="false">Right %1$s</string>
-    <string name="ui_more_balance" formatted="false">Balance</string>
-    <string name="ui_more_only_openrath_s_own_online_radio_and_music_f" formatted="false">Only OpenRath\'s own online radio and music files. Other music apps, FM and the front and rear fader follow the unit\'s own sound settings.</string>
-    <string name="ui_more_files" formatted="false">FILES</string>
-    <string name="ui_more_online" formatted="false">ONLINE</string>
+    <string name="ui_more_keypad" formatted="false">Keypad</string>
+    <string name="ui_more_type_a_number" formatted="false">Type a number</string>
+    <string name="ui_more_allow_phone_calls_then_tap_call_again" formatted="false">Allow phone calls, then tap Call again</string>
+    <string name="ui_more_dialing_a_number_is_blocked_while_the_car_is" formatted="false">Dialing a number is blocked while the car is moving</string>
+    <string name="ui_more_say_call_and_a_name_instead_or_stop_the_car_" formatted="false">Say \"call\" and a name instead, or stop the car to type a number.</string>
+    <string name="ui_more_speak" formatted="false">Speak</string>
+    <string name="ui_more_games_for_passengers" formatted="false">Games for passengers</string>
+    <string name="ui_more_spot_the_colour_number_plates_and_how_far_to" formatted="false">Spot the colour, number plates and how far to go, for children on a trip; nothing is locked</string>
+    <string name="ui_more_only_the_apps_you_choose_won_t_open_while_th" formatted="false">Only the apps you choose won\'t open while the car moves; nothing else is limited</string>
+    <string name="ui_more_nearest_cng_stations_and_km_per_kg_from_your" formatted="false">Nearest CNG stations, and km per kg from your CNG fills in the fuel log</string>
+    <string name="ui_more_valet_and_children" formatted="false">Valet and children</string>
+    <string name="ui_more_valet_mode_app_lock_passenger_games_drivers" formatted="false">Valet mode, app lock, passenger games, drivers</string>
+    <string name="ui_more_valet_mode" formatted="false">Valet mode</string>
+    <string name="ui_more_children_and_drivers" formatted="false">Children and drivers</string>
+    <string name="ui_more_when_someone_else_drives_caps_the_volume_and" formatted="false">When someone else drives: caps the volume and speed, and Settings need your PIN</string>
+    <string name="ui_more_play_a_game_now" formatted="false">Play a game now</string>
+    <string name="ui_more_more_features" formatted="false">More features</string>
+    <string name="ui_more_everything_that_s_off_ready_to_turn_on" formatted="false">Everything that\'s off, ready to turn on</string>
+    <string name="ui_more_1_s_more_feature_you_can_turn_on" formatted="false">%1$s more feature you can turn on</string>
+    <string name="ui_more_1_s_more_features_you_can_turn_on" formatted="false">%1$s more features you can turn on</string>
+    <string name="ui_more_1_s_is_on_its_settings_are_in_2_s" formatted="false">%1$s is on. Its settings are in %2$s</string>
+    <string name="ui_more_this_was_cng_kg" formatted="false">This was CNG (kg)</string>
+    <string name="ui_more_litres_or_kg_for_cng" formatted="false">Litres, or kg for CNG</string>
+    <string name="ui_more_all_fill_ups" formatted="false">All fill-ups</string>
+    <string name="ui_more_your_most_used_apps_search_and_the_full_list" formatted="false">Your most used apps. Search and the full list open when the car is stopped.</string>
+    <string name="ui_more_i_m_a_passenger_widgets_and_moving_boxes" formatted="false">I\'m a passenger: widgets and moving boxes</string>
+    <string name="ui_more_widgets_can_be_chosen_when_the_car_is_stoppe" formatted="false">Widgets can be chosen when the car is stopped</string>
+    <string name="ui_more_needs_a_small_engine_data_plug_bluetooth_or_" formatted="false">Needs a small engine-data plug (Bluetooth or Wi-Fi) in the socket under the steering wheel</string>
+    <string name="ui_more_plug_the_engine_data_plug_sold_as_an_obd_ii_" formatted="false">Plug the engine-data plug (sold as an OBD-II adapter, ELM327) into the socket under the steering wheel, switch the ignition on, and pair it in the unit\'s Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here.</string>
+    <string name="ui_more_this_unit_has_no_direct_radio_control" formatted="false">this unit has no direct radio control</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -445,6 +474,15 @@
         <item>@string/ui_more_not_tried</item>
         <item>@string/ui_more_download_the_english_voice_opens_google_s_vo</item>
         <item>@string/ui_more_tap_to_open</item>
+        <item>@string/ui_more_balance_left_and_right</item>
+        <item>@string/ui_more_openrath_s_own_music_only</item>
+        <item>@string/ui_more_centre</item>
+        <item>@string/ui_more_left_1_s</item>
+        <item>@string/ui_more_right_1_s</item>
+        <item>@string/ui_more_balance</item>
+        <item>@string/ui_more_only_openrath_s_own_online_radio_and_music_f</item>
+        <item>@string/ui_more_files</item>
+        <item>@string/ui_more_online</item>
         <item>@string/ui_more_your_trips_show_here_after_your_first_drive</item>
         <item>@string/ui_more_last_drive_1_s</item>
         <item>@string/ui_more_yesterday2</item>
@@ -525,15 +563,35 @@
         <item>@string/ui_more_background_behind_the_glass</item>
         <item>@string/ui_more_add_your_picture</item>
         <item>@string/ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit</item>
-        <item>@string/ui_more_tap_to_open2</item>
-        <item>@string/ui_more_balance_left_and_right</item>
-        <item>@string/ui_more_openrath_s_own_music_only</item>
-        <item>@string/ui_more_centre</item>
-        <item>@string/ui_more_left_1_s</item>
-        <item>@string/ui_more_right_1_s</item>
-        <item>@string/ui_more_balance</item>
-        <item>@string/ui_more_only_openrath_s_own_online_radio_and_music_f</item>
-        <item>@string/ui_more_files</item>
-        <item>@string/ui_more_online</item>
+        <item>@string/ui_more_keypad</item>
+        <item>@string/ui_more_type_a_number</item>
+        <item>@string/ui_more_allow_phone_calls_then_tap_call_again</item>
+        <item>@string/ui_more_dialing_a_number_is_blocked_while_the_car_is</item>
+        <item>@string/ui_more_say_call_and_a_name_instead_or_stop_the_car_</item>
+        <item>@string/ui_more_speak</item>
+        <item>@string/ui_more_games_for_passengers</item>
+        <item>@string/ui_more_spot_the_colour_number_plates_and_how_far_to</item>
+        <item>@string/ui_more_only_the_apps_you_choose_won_t_open_while_th</item>
+        <item>@string/ui_more_nearest_cng_stations_and_km_per_kg_from_your</item>
+        <item>@string/ui_more_valet_and_children</item>
+        <item>@string/ui_more_valet_mode_app_lock_passenger_games_drivers</item>
+        <item>@string/ui_more_valet_mode</item>
+        <item>@string/ui_more_children_and_drivers</item>
+        <item>@string/ui_more_when_someone_else_drives_caps_the_volume_and</item>
+        <item>@string/ui_more_play_a_game_now</item>
+        <item>@string/ui_more_more_features</item>
+        <item>@string/ui_more_everything_that_s_off_ready_to_turn_on</item>
+        <item>@string/ui_more_1_s_more_feature_you_can_turn_on</item>
+        <item>@string/ui_more_1_s_more_features_you_can_turn_on</item>
+        <item>@string/ui_more_1_s_is_on_its_settings_are_in_2_s</item>
+        <item>@string/ui_more_this_was_cng_kg</item>
+        <item>@string/ui_more_litres_or_kg_for_cng</item>
+        <item>@string/ui_more_all_fill_ups</item>
+        <item>@string/ui_more_your_most_used_apps_search_and_the_full_list</item>
+        <item>@string/ui_more_i_m_a_passenger_widgets_and_moving_boxes</item>
+        <item>@string/ui_more_widgets_can_be_chosen_when_the_car_is_stoppe</item>
+        <item>@string/ui_more_needs_a_small_engine_data_plug_bluetooth_or_</item>
+        <item>@string/ui_more_plug_the_engine_data_plug_sold_as_an_obd_ii_</item>
+        <item>@string/ui_more_this_unit_has_no_direct_radio_control</item>
     </string-array>
 </resources>

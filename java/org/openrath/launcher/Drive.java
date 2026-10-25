@@ -205,6 +205,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         android.content.IntentFilter sf = new android.content.IntentFilter(Intent.ACTION_SCREEN_OFF);
         Compat.fromSystem(this, screen, sf);
         Compat.fromSystem(this, ringing, new android.content.IntentFilter(android.telephony.TelephonyManager.ACTION_PHONE_STATE_CHANGED));
+        makerCalls = new CallScreen.Units(this);
+        makerCalls.start();
         handler.postDelayed(volumes, VOLUMES_MS);
     }
 
@@ -230,6 +232,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
 
     /** Calls ringing and ending, for the call screen over other apps. */
     private final CallScreen.Watch ringing = new CallScreen.Watch();
+    /** The same from the stereo maker's own phone service, on units that have one. */
+    private CallScreen.Units makerCalls;
 
     private Resume.Screen screen;
     private boolean hotWarned;
@@ -1086,6 +1090,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     @Override
     public void onDestroy() {
         handler.removeCallbacks(volumes);
+        if (makerCalls != null) makerCalls.stop();
         save(true);
         if (Features.on(prefs, "coach")) Coach.save(prefs, drives.close(System.currentTimeMillis()));
         Dashcam.stop();

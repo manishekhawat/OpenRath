@@ -8,20 +8,27 @@ import android.widget.TextView;
 
 /**
  * Bluetooth phone through Topway's service: who is calling (from its Bluetooth callback),
- * answer and hang up, up to three favourite numbers to call with one tap, and the unit's contacts.
+ * answer and hang up, up to three favourite numbers to call with one tap, the unit's contacts and
+ * OpenRath's keypad. Its buttons are driving-sized (HomeDock.TARGET tall) wherever the box has the
+ * room; a short box drops the heading and the second line first, and a narrow one its favourites.
  */
 final class PhoneCard extends Cards.Card {
     final TextView head = Ui.label(getContext(), Hindi.t("PHONE"));
     final TextView title = Ui.text(getContext(), 24, Ui.SILVER, "sans-serif-light", Gravity.LEFT);
     final TextView sub = Ui.text(getContext(), 13, Ui.SILVER_DIM, "sans-serif", Gravity.LEFT);
     final LinearLayout row = new LinearLayout(getContext());
-    final TextView answer, end, people;
+    final TextView answer, end, people, pad;
     final TextView[] favs = new TextView[3];
     /** The last calls, while a phone is connected; tap one to call back. */
     final LinearLayout calls = new LinearLayout(getContext());
     final TextView[] callRows = new TextView[5];
     java.util.List<String[]> recentCalls = new java.util.ArrayList<>();
     int callRoom = 5;
+    /** The box's size and scale from the last fit, for fitting the buttons to what is showing. */
+    int boxW, boxH;
+    float scale = 1;
+    /** Room for the heading and the second line in this box (see fit). */
+    boolean headRoom = true, subRoom = true;
     String callsKey = "";
     long callsAt;
     Unit unit;
@@ -57,6 +64,14 @@ final class PhoneCard extends Cards.Card {
             });
         }
         row.addView(people);
+        pad = pill(c, Hindi.t("Keypad"), 0);
+        clickable(pad, new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getContext() instanceof HomeActivity) Keypad.show((HomeActivity) getContext(), unit);
+            }
+        });
+        row.addView(pad);
         addView(head);
         addView(title);
         addView(sub);
@@ -140,36 +155,92 @@ final class PhoneCard extends Cards.Card {
 
     @Override
     void fit(int w, int h) {
+        boxW = w;
+        boxH = h;
         float s = Math.min(h / (134f * Ui.k), w / (330f * Ui.k));
+        scale = s;
         int m = Ui.px(18 * s);
-        head.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
-        head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(12 * s), 0, 0));
-        title.setTextSize(0, 24 * Ui.k * s);
+        float headSize = Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k, titleSize = Math.max(24, 24 * s) * Ui.k, subSize = Math.max(16, 12 * s) * Ui.k;
+        head.setTextSize(0, headSize);
+        title.setTextSize(0, titleSize);
+        sub.setTextSize(0, subSize);
         title.setMaxWidth(w - 2 * m);
-        title.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(30 * s), m, 0));
-        sub.setTextSize(0, 12 * Ui.k * s);
         sub.setMaxWidth(w - 2 * m);
-        sub.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(60 * s), m, 0));
-        int bh = Ui.px(34 * s);
+        // from the top: the heading, the title and the second line, then the buttons along the bottom,
+        // dropping the heading, then the second line, then button height until they fit
+        int top = Ui.px(10 * s), bottom = Ui.px(10 * s), gap = Math.max(Ui.px(3), Ui.px(5 * s));
+        int headH = Math.round(headSize * 1.3f), titleH = Math.round(titleSize * 1.3f), subH = Math.round(subSize * 1.35f);
+        int bh = Math.max(Ui.px(HomeDock.TARGET), Ui.px(34 * s));
+        int room = h - top - bottom - bh;
+        headRoom = room >= headH + titleH + subH + 3 * gap;
+        subRoom = headRoom || room >= titleH + subH + 2 * gap;
+        if (room < titleH + gap) bh = Math.max(Ui.px(34 * s), h - top - bottom - titleH - gap);
+        int y = top;
+        head.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, y, 0, 0));
+        if (headRoom) y += headH + gap;
+        title.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, y, m, 0));
+        int listTop = y;
+        y += titleH + gap;
+        sub.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, y, m, 0));
         for (int i = 0; i < row.getChildCount(); i++) {
-            TextView t = (TextView) row.getChildAt(i);
-            t.setTextSize(0, 13 * Ui.k * s);
-            t.setPadding(Ui.px(12 * s), 0, Ui.px(12 * s), 0);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-2, bh);
-            lp.rightMargin = Ui.px(8 * s);
-            t.setLayoutParams(lp);
+            lp.rightMargin = Math.max(Ui.px(6), Ui.px(8 * s));
+            row.getChildAt(i).setLayoutParams(lp);
         }
-        row.setLayoutParams(at(-1, -2, Gravity.BOTTOM | Gravity.LEFT, m, 0, m, Ui.px(12 * s)));
-        // the call list: from under the heading down to the favourites, as many rows as fit (up to 5)
-        int top = Ui.px(32 * s), rowH = Ui.px(19 * s);
-        int bottomRoom = Ui.px(12 * s) + bh + Ui.px(6 * s);
-        callRoom = Math.max(1, Math.min(callRows.length, (h - top - bottomRoom) / rowH));
+        row.setLayoutParams(at(-1, -2, Gravity.BOTTOM | Gravity.LEFT, m, 0, m, bottom));
+        // the call list: from under the heading down to the buttons, in rows as tall as the buttons;
+        // with room for just one, the title shows the last call instead
+        int rowH = Ui.px(HomeDock.TARGET);
+        int fits = (h - bottom - bh - gap - listTop) / rowH;
+        callRoom = fits >= 2 ? Math.min(callRows.length, fits) : 0;
         for (TextView t : callRows) {
-            t.setTextSize(0, 13 * Ui.k * s);
+            t.setTextSize(0, titleSize);
             t.setLayoutParams(new LinearLayout.LayoutParams(-1, rowH));
             t.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         }
-        calls.setLayoutParams(at(-1, -2, Gravity.TOP | Gravity.LEFT, m, top, m, 0));
+        calls.setLayoutParams(at(-1, -2, Gravity.TOP | Gravity.LEFT, m, listTop, m, 0));
+        fitRow();
+    }
+
+    /**
+     * The buttons showing, at driving size (24 px text) when they fit across the box: else the text
+     * gets smaller down to 16 px, then the favourites go from the right.
+     */
+    void fitRow() {
+        if (boxW <= 0) return;
+        float s = scale;
+        int m = Ui.px(18 * s), across = boxW - 2 * m;
+        int padX = Math.max(Ui.px(12), Ui.px(14 * s)), gap = Math.max(Ui.px(6), Ui.px(8 * s));
+        int minW = Ui.px(HomeDock.TARGET);
+        java.util.List<TextView> on = new java.util.ArrayList<>();
+        for (int i = 0; i < row.getChildCount(); i++) {
+            TextView t = (TextView) row.getChildAt(i);
+            if (t.getVisibility() == VISIBLE) on.add(t);
+        }
+        float size = Math.max(24, 13 * s) * Ui.k, least = 16 * Ui.k;
+        android.graphics.Paint paint = new android.graphics.Paint(answer.getPaint());
+        while (true) {
+            int need = 0;
+            paint.setTextSize(size);
+            for (TextView t : on) need += Math.max(minW, (int) paint.measureText(t.getText().toString()) + 2 * padX) + gap;
+            if (need - gap <= across) break;
+            if (size > least) {
+                size = Math.max(least, size - Ui.k);
+                continue;
+            }
+            // still too wide at the smallest text: the right-most favourite goes
+            TextView drop = null;
+            for (TextView t : on) if (t == favs[0] || t == favs[1] || t == favs[2]) drop = t;
+            if (drop == null) break;
+            drop.setVisibility(GONE);
+            on.remove(drop);
+            size = Math.max(24, 13 * s) * Ui.k;
+        }
+        for (TextView t : on) {
+            if (Math.abs(t.getTextSize() - size) > 0.5f) t.setTextSize(0, size);
+            t.setPadding(padX, 0, padX, 0);
+            t.setMinWidth(minW);
+        }
     }
 
     @Override
@@ -186,6 +257,8 @@ final class PhoneCard extends Cards.Card {
             head.setText(Hindi.t("PHONE"));
             title.setText(Hindi.t("Phone"));
             sub.setText(Hindi.t(down));
+            head.setVisibility(headRoom ? VISIBLE : GONE);
+            fitRow();
             return;
         }
         String said = unit.caller();
@@ -208,6 +281,7 @@ final class PhoneCard extends Cards.Card {
         answer.setVisibility(call ? VISIBLE : GONE);
         end.setVisibility(call ? VISIBLE : GONE);
         people.setVisibility(call ? GONE : VISIBLE);
+        pad.setVisibility(call ? GONE : VISIBLE);
         // connected and no call on: the last five calls instead of just the last one
         String key = p.str("callHistory", "").hashCode() + "/" + h.btConnected + call;
         if (!key.equals(callsKey) || System.currentTimeMillis() - callsAt > 15000) {
@@ -215,10 +289,12 @@ final class PhoneCard extends Cards.Card {
             callsAt = System.currentTimeMillis();
             recentCalls = h.btConnected && !call ? Calls.recent(getContext(), p, callRows.length) : new java.util.ArrayList<String[]>();
         }
-        boolean list = !recentCalls.isEmpty();
+        boolean list = !recentCalls.isEmpty() && callRoom > 0;
         calls.setVisibility(list ? VISIBLE : GONE);
         title.setVisibility(list ? GONE : VISIBLE);
-        sub.setVisibility(list ? GONE : VISIBLE);
+        sub.setVisibility(list || !subRoom ? GONE : VISIBLE);
+        head.setVisibility(headRoom ? VISIBLE : GONE);
+        fitRow();
         for (int i = 0; i < callRows.length; i++) {
             boolean show = list && i < recentCalls.size() && i < callRoom;
             callRows[i].setVisibility(show ? VISIBLE : GONE);

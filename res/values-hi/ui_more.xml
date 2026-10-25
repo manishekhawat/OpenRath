@@ -177,6 +177,15 @@
     <string name="ui_more_not_tried" formatted="false">आज़माया नहीं गया</string>
     <string name="ui_more_download_the_english_voice_opens_google_s_vo" formatted="false">अंग्रेज़ी आवाज़ डाउनलोड करें (Google का आवाज़ डाउनलोड खुलेगा)</string>
     <string name="ui_more_tap_to_open" formatted="false">खोलने के लिए टैप करें</string>
+    <string name="ui_more_balance_left_and_right" formatted="false">बैलेंस (बाएँ और दाएँ)</string>
+    <string name="ui_more_openrath_s_own_music_only" formatted="false">सिर्फ़ OpenRath का अपना संगीत</string>
+    <string name="ui_more_centre" formatted="false">बीच में</string>
+    <string name="ui_more_left_1_s" formatted="false">बाएँ %1$s</string>
+    <string name="ui_more_right_1_s" formatted="false">दाएँ %1$s</string>
+    <string name="ui_more_balance" formatted="false">बैलेंस</string>
+    <string name="ui_more_only_openrath_s_own_online_radio_and_music_f" formatted="false">सिर्फ़ OpenRath का अपना ऑनलाइन रेडियो और संगीत फ़ाइलें। दूसरे संगीत ऐप, FM और आगे-पीछे का फ़ेडर यूनिट की अपनी साउंड सेटिंग से चलते हैं।</string>
+    <string name="ui_more_files" formatted="false">फ़ाइलें</string>
+    <string name="ui_more_online" formatted="false">ऑनलाइन</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">आपकी पहली ड्राइव के बाद यहाँ यात्राएँ दिखेंगी</string>
     <string name="ui_more_last_drive_1_s" formatted="false">पिछली ड्राइव, %1$s</string>
     <string name="ui_more_yesterday2" formatted="false">कल</string>
@@ -257,14 +266,34 @@
     <string name="ui_more_background_behind_the_glass" formatted="false">शीशे के पीछे का बैकग्राउंड</string>
     <string name="ui_more_add_your_picture" formatted="false">अपनी तस्वीर जोड़ें</string>
     <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">यूनिट पर %1$s में एक तस्वीर (JPG या PNG) कॉपी करें, USB स्टिक या फ़ाइल मैनेजर से। तब तक अरोरा बैकग्राउंड दिखेगा।</string>
-    <string name="ui_more_tap_to_open2" formatted="false">खोलने के लिए टैप करें</string>
-    <string name="ui_more_balance_left_and_right" formatted="false">बैलेंस (बाएँ और दाएँ)</string>
-    <string name="ui_more_openrath_s_own_music_only" formatted="false">सिर्फ़ OpenRath का अपना संगीत</string>
-    <string name="ui_more_centre" formatted="false">बीच में</string>
-    <string name="ui_more_left_1_s" formatted="false">बाएँ %1$s</string>
-    <string name="ui_more_right_1_s" formatted="false">दाएँ %1$s</string>
-    <string name="ui_more_balance" formatted="false">बैलेंस</string>
-    <string name="ui_more_only_openrath_s_own_online_radio_and_music_f" formatted="false">सिर्फ़ OpenRath का अपना ऑनलाइन रेडियो और संगीत फ़ाइलें। दूसरे संगीत ऐप, FM और आगे-पीछे का फ़ेडर यूनिट की अपनी साउंड सेटिंग से चलते हैं।</string>
-    <string name="ui_more_files" formatted="false">फ़ाइलें</string>
-    <string name="ui_more_online" formatted="false">ऑनलाइन</string>
+    <string name="ui_more_keypad" formatted="false">कीपैड</string>
+    <string name="ui_more_type_a_number" formatted="false">नंबर लिखें</string>
+    <string name="ui_more_allow_phone_calls_then_tap_call_again" formatted="false">फ़ोन कॉल की अनुमति दें, फिर कॉल दोबारा दबाएँ</string>
+    <string name="ui_more_dialing_a_number_is_blocked_while_the_car_is" formatted="false">गाड़ी चलते समय नंबर डायल करना बंद है</string>
+    <string name="ui_more_say_call_and_a_name_instead_or_stop_the_car_" formatted="false">इसकी जगह \"कॉल\" और नाम बोलें, या नंबर लिखने के लिए गाड़ी रोकें।</string>
+    <string name="ui_more_speak" formatted="false">बोलें</string>
+    <string name="ui_more_games_for_passengers" formatted="false">यात्रियों के लिए खेल</string>
+    <string name="ui_more_spot_the_colour_number_plates_and_how_far_to" formatted="false">रंग पहचानो, नंबर प्लेट, और कितना दूर जाना है, सफ़र में बच्चों के लिए; कुछ भी लॉक नहीं होता</string>
+    <string name="ui_more_only_the_apps_you_choose_won_t_open_while_th" formatted="false">गाड़ी चलते समय सिर्फ़ आपके चुने ऐप्स नहीं खुलेंगे; बाकी कुछ सीमित नहीं होता</string>
+    <string name="ui_more_nearest_cng_stations_and_km_per_kg_from_your" formatted="false">पास के CNG स्टेशन, और फ़्यूल लॉग में CNG भराई से किमी प्रति किलो</string>
+    <string name="ui_more_valet_and_children" formatted="false">वैले और बच्चे</string>
+    <string name="ui_more_valet_mode_app_lock_passenger_games_drivers" formatted="false">वैले मोड, ऐप लॉक, यात्रियों के खेल, ड्राइवर</string>
+    <string name="ui_more_valet_mode" formatted="false">वैले मोड</string>
+    <string name="ui_more_children_and_drivers" formatted="false">बच्चे और ड्राइवर</string>
+    <string name="ui_more_when_someone_else_drives_caps_the_volume_and" formatted="false">जब कोई और चलाए: आवाज़ और रफ़्तार की सीमा, और सेटिंग्स के लिए आपका PIN</string>
+    <string name="ui_more_play_a_game_now" formatted="false">अभी एक खेल खेलें</string>
+    <string name="ui_more_more_features" formatted="false">और फ़ीचर</string>
+    <string name="ui_more_everything_that_s_off_ready_to_turn_on" formatted="false">जो कुछ बंद है, चालू करने के लिए तैयार</string>
+    <string name="ui_more_1_s_more_feature_you_can_turn_on" formatted="false">%1$s और फ़ीचर जिसे आप चालू कर सकते हैं</string>
+    <string name="ui_more_1_s_more_features_you_can_turn_on" formatted="false">%1$s और फ़ीचर जिन्हें आप चालू कर सकते हैं</string>
+    <string name="ui_more_1_s_is_on_its_settings_are_in_2_s" formatted="false">%1$s चालू है। इसकी सेटिंग्स %2$s में हैं</string>
+    <string name="ui_more_this_was_cng_kg" formatted="false">यह CNG था (किलो)</string>
+    <string name="ui_more_litres_or_kg_for_cng" formatted="false">लीटर, या CNG के लिए किलो</string>
+    <string name="ui_more_all_fill_ups" formatted="false">सभी भराई</string>
+    <string name="ui_more_your_most_used_apps_search_and_the_full_list" formatted="false">आपके सबसे ज़्यादा चलाए ऐप। खोज और पूरी सूची कार रुकने पर खुलती है।</string>
+    <string name="ui_more_i_m_a_passenger_widgets_and_moving_boxes" formatted="false">मैं सवारी हूँ: विजेट और बॉक्स हटाना</string>
+    <string name="ui_more_widgets_can_be_chosen_when_the_car_is_stoppe" formatted="false">विजेट कार रुकने पर चुने जा सकते हैं</string>
+    <string name="ui_more_needs_a_small_engine_data_plug_bluetooth_or_" formatted="false">स्टीयरिंग के नीचे वाले सॉकेट में एक छोटा इंजन-डेटा प्लग चाहिए (Bluetooth या Wi-Fi)</string>
+    <string name="ui_more_plug_the_engine_data_plug_sold_as_an_obd_ii_" formatted="false">इंजन-डेटा प्लग (OBD-II अडैप्टर, ELM327 नाम से बिकता है) को स्टीयरिंग के नीचे वाले सॉकेट में लगाएँ, इग्निशन चालू करें, और यूनिट की Bluetooth सेटिंग्स में पेयर करें (PIN अक्सर 1234 या 0000 होता है)। फिर यहाँ लौटें।</string>
+    <string name="ui_more_this_unit_has_no_direct_radio_control" formatted="false">इस यूनिट में रेडियो का सीधा कंट्रोल नहीं है</string>
 </resources>

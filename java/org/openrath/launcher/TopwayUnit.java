@@ -84,10 +84,30 @@ final class TopwayUnit extends Unit {
     }
 
     @Override
+    boolean dialsItself(Context c) {
+        return xt() != null || super.dialsItself(c);
+    }
+
+    @Override
     void answer(Context c) {
         Xt xt = xt();
         if (xt != null) xt.run("btAccept");
         else super.answer(c);
+        answeredAt = System.currentTimeMillis();
+    }
+
+    private volatile long answeredAt;
+
+    @Override
+    int callState() {
+        Xt xt = xt();
+        Object ps = xt == null ? null : xt.value("btGetPhoneStatus");
+        if (ps == null) return CALL_UNKNOWN;
+        boolean on = ps instanceof Number ? ((Number) ps).intValue() != 0 : ps instanceof Boolean && (Boolean) ps;
+        if (!on) return CALL_NONE;
+        // the status is just "a call is on": ringing while a call in was heard lately and not answered
+        boolean ringing = "in".equals(xt.callDir) && System.currentTimeMillis() - xt.callAt < 45000 && answeredAt < xt.callAt;
+        return ringing ? CALL_RINGING : CALL_ON;
     }
 
     @Override

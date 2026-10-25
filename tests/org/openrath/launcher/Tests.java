@@ -458,8 +458,44 @@ public final class Tests {
         musicScreen();
         androidAuto();
         glassLook();
+        phoneKeypad();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
+    }
+
+    /** The phone's own keypad (what it takes and how it shows the number) and the maker services' call states. */
+    private static void phoneKeypad() {
+        eq("keypad: digit", "98", Keypad.press("9", '8'));
+        eq("keypad: plus first", "+", Keypad.press("", '+'));
+        eq("keypad: no plus inside", "98", Keypad.press("98", '+'));
+        eq("keypad: star and hash", "*1#", Keypad.press(Keypad.press("*", '1'), '#'));
+        eq("keypad: not a key", "9", Keypad.press("9", 'a'));
+        String full = "123456789012345678";
+        eq("keypad: at most MAX", full, Keypad.press(full, '9'));
+        eq("keypad: back", "9", Keypad.back("98"));
+        eq("keypad: back on empty", "", Keypad.back(""));
+        eq("keypad: mobile", "98765 43210", Keypad.show("9876543210"));
+        eq("keypad: while typing", "98765 4", Keypad.show("987654"));
+        eq("keypad: short", "100", Keypad.show("100"));
+        eq("keypad: +91", "+91 98765 43210", Keypad.show("+919876543210"));
+        eq("keypad: +91 alone", "+91", Keypad.show("+91"));
+        eq("keypad: leading 0", "0 98765 43210", Keypad.show("09876543210"));
+        eq("keypad: other country", "+447 911 123 456", Keypad.show("+447911123456"));
+        eq("keypad: codes as typed", "*123#", Keypad.show("*123#"));
+        eq("keypad: empty", "", Keypad.show(""));
+        eq("fyt: not linked", Unit.CALL_UNKNOWN, FytUnit.callState(false, FytUnit.PH_RINGING));
+        eq("fyt: not said yet", Unit.CALL_UNKNOWN, FytUnit.callState(true, -1));
+        eq("fyt: ringing", Unit.CALL_RINGING, FytUnit.callState(true, FytUnit.PH_RINGING));
+        eq("fyt: talking", Unit.CALL_ON, FytUnit.callState(true, FytUnit.PH_TALKING));
+        eq("fyt: dialling", Unit.CALL_ON, FytUnit.callState(true, FytUnit.PH_DIALING));
+        eq("fyt: connected, no call", Unit.CALL_NONE, FytUnit.callState(true, FytUnit.PH_CONNECTED));
+        long now = 1000000;
+        eq("mtc: not linked", Unit.CALL_UNKNOWN, MtcUnit.callState(false, now, "in", 0, false, now));
+        eq("mtc: ringing", Unit.CALL_RINGING, MtcUnit.callState(true, now - 2000, "in", 0, false, now));
+        eq("mtc: answered", Unit.CALL_ON, MtcUnit.callState(true, now - 2000, "in", now - 1000, false, now));
+        eq("mtc: calling out", Unit.CALL_ON, MtcUnit.callState(true, now - 2000, "out", 0, false, now));
+        eq("mtc: long over", Unit.CALL_NONE, MtcUnit.callState(true, now - MtcUnit.CALL_MS - 1, "in", 0, false, now));
+        eq("mtc: on by Android", Unit.CALL_ON, MtcUnit.callState(true, 0, "", 0, true, now));
     }
 
     /** The Glass look: the wallpaper's blur, its colours and the see-through mixing of glass panels. */
