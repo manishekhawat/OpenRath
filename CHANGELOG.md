@@ -2,8 +2,16 @@
 
 Newest first.
 
-## Unreleased: On the road
+## 1.44: On the road
 
+- **Glass is the default look,** and the opening logo and boot animation follow it: the wheel and name sit on a frosted card over the blurred background. Settings > Look > Themes > Glass look turns it off.
+- **Music and radio, redesigned:** OpenRath's own music and radio screen looks like a full app, with big artwork, a progress bar, a queue and station lists, and its volume buttons now change the stereo's volume.
+- **Android Auto, wired and wireless,** from the dashboard, with a guide for pairing the phone wirelessly.
+- **Map looks like Google Maps,** with street colours that darken at night and no API key needed.
+- **Weather box** shows the altitude, the direction you face, the air quality and the next two days, and lays out as a wide strip where there is room.
+- **Spoken voice works on more stereos:** speech plays through the music speakers, OpenRath says what is wrong when a voice is missing, falls back to Hindi, and can download the English voice.
+- **Headlights are detected on Topway stereos** (TS7 and similar).
+- **Parking QR and the news box** fixed, and the status icons redrawn.
 - **Glass look:** Settings > Look > Themes > Glass look turns every screen into frosted glass, like a phone: see-through panels with a light edge and big round corners over a soft, blurred, colourful background (Aurora, Sunset, Ocean, or your own picture blurred). The dock floats as a glass bar, and the music and radio screen, Settings, the app list and pop-ups follow. Your theme's accent colour stays, and the glass turns darker at night. It is drawn once, so it costs nothing on slow stereos.
 - **Next turn from your navigation app:** when Google Maps, Waze, OsmAnd or another navigation app guides you, its next turn shows in a card on the dashboard, and in a small strip over other apps along with what's playing (play, pause, next). Tap the card to go back to the app; hold it to hide it for the trip.
 - **Call screen over any app:** an incoming call shows who it is, with big Answer and End buttons, whatever app is in front.
