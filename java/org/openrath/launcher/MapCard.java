@@ -53,6 +53,69 @@ final class MapCard extends Cards.Card {
             return false;
         }
     }
+
+    /**
+     * The owner's route server as the page asks it: "https://osrm.example.in" becomes
+     * "https://osrm.example.in/route/v1/driving/", a typed ".../route/v1/car" is kept as it is.
+     * "" when nothing is typed or it isn't a plain https address (the map page is https, so it can
+     * reach nothing else). Pure, for the tests.
+     */
+    static String routeBase(String typed) {
+        String t = typed == null ? "" : typed.trim();
+        while (t.endsWith("/")) t = t.substring(0, t.length() - 1);
+        if (!t.matches("(?i)https://[a-z0-9]([a-z0-9.-]*[a-z0-9])?(:[0-9]{1,5})?(/[A-Za-z0-9._~%-]+)*")) return "";
+        return t.contains("/route/v1/") ? t + "/" : t + "/route/v1/driving/";
+    }
+
+    /** "osrm.example.in" from the owner's route server, for Settings; "" for none. Pure, for the tests. */
+    static String routeHost(String typed) {
+        String b = routeBase(typed);
+        if (b.isEmpty()) return "";
+        String h = b.substring("https://".length());
+        return h.substring(0, h.indexOf('/'));
+    }
+
+    /** The map page with the owner's route server let through its content rules. Pure, for the tests. */
+    static String withRouteServer(String page, String typed) {
+        String b = routeBase(typed);
+        if (b.isEmpty()) return page;
+        return page.replace("connect-src 'self'", "connect-src 'self' https://" + routeHost(typed));
+    }
+
+    /** Settings > Your own route server: an address, or empty for the free public servers. */
+    static void chooseRouteServer(final HomeActivity a) {
+        final android.widget.EditText e = new android.widget.EditText(a);
+        e.setSingleLine(true);
+        e.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_URI);
+        e.setHint("https://");
+        e.setText(a.prefs.str("routeServer", ""));
+        int pad = (int) (20 * a.getResources().getDisplayMetrics().density);
+        android.widget.LinearLayout box = new android.widget.LinearLayout(a);
+        box.setOrientation(android.widget.LinearLayout.VERTICAL);
+        box.setPadding(pad, pad / 2, pad, 0);
+        android.widget.TextView about = new android.widget.TextView(a);
+        about.setText(Hindi.t("Routes come from two free public servers. If you or your company run your own (OSRM, or one that "
+                + "answers the same way), type its https address here and the map asks it first. Leave it empty for the public ones."));
+        box.addView(about);
+        box.addView(e);
+        new Glass.Builder(a, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Your own route server")).setView(box)
+                .setPositiveButton(Hindi.t("Save"), new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface d, int w) {
+                        String v = e.getText().toString().trim();
+                        if (!v.isEmpty() && routeBase(v).isEmpty()) {
+                            android.widget.Toast.makeText(a, Hindi.t("That isn't an https address, so the public servers stay."), android.widget.Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        a.prefs.put("routeServer", v);
+                        MapCard m = a.mapCard();
+                        if (m != null) m.web.reload();   // the page's rules let the new server through
+                        if (a.settingsView != null) a.settingsView.refresh();
+                    }
+                })
+                .setNegativeButton(Hindi.t("Cancel"), null).show();
+    }
+
     double lastLat, lastLon;
     long lastPark = -1;
     boolean ready;
@@ -141,6 +204,17 @@ final class MapCard extends Cards.Card {
                 String type = name.endsWith(".js") ? "application/javascript"
                         : name.endsWith(".css") ? "text/css" : name.endsWith(".png") ? "image/png" : "text/html";
                 try {
+                    String own = host == null ? "" : host.prefs().str("routeServer", "");
+                    if ("map.html".equals(name) && !routeBase(own).isEmpty()) {
+                        java.io.InputStream in = assets.open("map/" + name);
+                        java.io.ByteArrayOutputStream o = new java.io.ByteArrayOutputStream();
+                        byte[] b = new byte[16384];
+                        int n;
+                        while ((n = in.read(b)) > 0) o.write(b, 0, n);
+                        in.close();
+                        return new android.webkit.WebResourceResponse(type, "UTF-8",
+                                new java.io.ByteArrayInputStream(withRouteServer(o.toString("UTF-8"), own).getBytes("UTF-8")));
+                    }
                     return new android.webkit.WebResourceResponse(type, "UTF-8", assets.open("map/" + name));
                 } catch (java.io.IOException e) {
                     return null;
@@ -346,6 +420,20 @@ final class MapCard extends Cards.Card {
         @android.webkit.JavascriptInterface
         public boolean serviceFinder() {
             return ownPage && Features.on(host.prefs(), "serviceFinder");
+        }
+
+        /** The owner's own OSRM-style route server ("https://…/route/v1/driving/"), or "" for the public ones. */
+        @android.webkit.JavascriptInterface
+        public String routeServer() {
+            return ownPage ? routeBase(host.prefs().str("routeServer", "")) : "";
+        }
+
+        /** The navigation app the trip is handed to when no route can be found ("" when none is chosen). */
+        @android.webkit.JavascriptInterface
+        public String navAppName() {
+            if (!ownPage) return "";
+            String pkg = host.prefs().app("dock:navi");
+            return pkg == null ? "" : OfflineNav.label(getContext(), pkg);
         }
 
         @android.webkit.JavascriptInterface

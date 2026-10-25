@@ -429,14 +429,18 @@
       $('route').style.display = 'flex';
     }
     var path = from[1] + ',' + from[0] + ';' + dest.lon + ',' + dest.lat + '?overview=full&geometries=geojson&steps=true';
-    // the OSRM demo server first; when it is busy or down, the OSM Germany one (the same answers)
+    // the owner's own server first when one is set in Settings; then the OSRM demo server; when it
+    // is busy or down, the OSM Germany one (the same answers)
     function ask(base) {
       return fetch(base + path).then(function (r) { return r.json(); }).then(function (j) {
         if (j.code !== 'Ok' || !j.routes || !j.routes.length) throw new Error(j.code || 'no route');
         return j;
       });
     }
-    return ask('https://router.project-osrm.org/route/v1/driving/').catch(function () {
+    var own = app && app.routeServer ? app.routeServer() : '';
+    routeFailed = false;
+    var first = function () { return ask('https://router.project-osrm.org/route/v1/driving/'); };
+    return (own ? ask(own).catch(first) : first()).catch(function () {
       return ask('https://routing.openstreetmap.de/routed-car/route/v1/driving/');
     }).then(function (j) {
       var r = j.routes[0];
@@ -446,11 +450,15 @@
     }).catch(function () {
       plan = null;
       draw([from, [dest.lat, dest.lon]], !keepNav);
+      if (!offline()) routeFailed = true;   // online, but no server answered: Go hands the trip to the navigation app
       if (!keepNav) $('rinfo').textContent = km(map.distance(from, [dest.lat, dest.lon])) + ' away' +
         (offline() ? (app.offlineNavName() ? ' (no internet: Go opens ' + app.offlineNavName() + ')' : ' (no internet: no route)')
-                   : ' (route service unreachable)');
+                   : ' (the route service didn\'t answer: Go opens ' + navAppName() + ')');
+      if (!keepNav && routeFailed) $('go').textContent = 'Open ' + navAppName();
     });
   }
+  var routeFailed = false;
+  function navAppName() { return (app && app.navAppName && app.navAppName()) || 'your navigation app'; }
 
   function draw(pts, fit) {
     if (line) { map.removeLayer(line); map.removeLayer(casing); }
@@ -479,6 +487,7 @@
     if (!dest) return;
     if (guideName() === 'Google Maps') { if (app) app.navigate(dest.lat, dest.lon, dest.name); }
     else if (!plan && offline()) app.navigateOffline(dest.lat, dest.lon, dest.name);   // an offline map app guides
+    else if (!plan && routeFailed) { if (app) app.navigate(dest.lat, dest.lon, dest.name); }   // no route service: the owner's navigation app guides
     else startNav();
   });
 

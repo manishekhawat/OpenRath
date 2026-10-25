@@ -16,14 +16,72 @@ final class Money {
 
     static String country = "IN";
 
+    /** The SIM's or the mobile network's country ("in", "gb"), read once; "" when there is neither. */
+    static String phoneCountry = "";
+
+    /** The first two-letter country of: the owner's choice, the unit's language, the SIM, the network; else IN. Pure. */
+    static String pick(String... tries) {
+        String c = first(tries);
+        return c.isEmpty() ? "IN" : c;
+    }
+
+    /** The first two-letter country code among these, in capitals; "" when there is none. */
+    private static String first(String... tries) {
+        for (String c : tries) {
+            String t = c == null ? "" : c.trim();
+            if (t.length() == 2 && Character.isLetter(t.charAt(0)) && Character.isLetter(t.charAt(1))) return t.toUpperCase(Locale.US);
+        }
+        return "";
+    }
+
     static String country(Prefs p) {
-        String c = p.str("country", "");
-        if (c.isEmpty()) c = Locale.getDefault().getCountry();
-        return c == null || c.length() != 2 ? "IN" : c.toUpperCase(Locale.US);
+        return pick(p.str("country", ""), Locale.getDefault().getCountry(), phoneCountry);
+    }
+
+    /** Reads the SIM's country, then the network's, for a unit whose language names no country. */
+    static void phone(android.content.Context c) {
+        if (!phoneCountry.isEmpty() || c == null) return;
+        try {
+            android.telephony.TelephonyManager t = (android.telephony.TelephonyManager) c.getSystemService(android.content.Context.TELEPHONY_SERVICE);
+            if (t == null) return;
+            // the network's country is unreliable on CDMA phones, so only the SIM's counts there
+            String net = t.getPhoneType() == android.telephony.TelephonyManager.PHONE_TYPE_CDMA ? "" : t.getNetworkCountryIso();
+            phoneCountry = first(t.getSimCountryIso(), net);
+        } catch (Exception e) {
+            // no phone service on this unit
+        }
     }
 
     static void load(Prefs p) {
         country = country(p);
+    }
+
+    static void load(android.content.Context c, Prefs p) {
+        phone(c);
+        load(p);
+    }
+
+    /** Countries that group digits the South Asian way: 1,00,000 for a lakh. */
+    private static final String LAKH = ",IN,PK,BD,NP,";
+    /** Countries that write 1.000 for a thousand. */
+    private static final String DOTS = ",DE,IT,ES,NL,BE,AT,PT,GR,SI,HR,ID,BR,AR,TR,DK,";
+
+    /** A whole amount with the country's digit grouping: "1,00,000" in India, "100,000" in the UK, "100.000" in Germany. Pure. */
+    static String group(long v, String cc) {
+        String s = Long.toString(Math.abs(v)), sep = cc != null && DOTS.contains("," + cc + ",") ? "." : ",";
+        boolean lakh = cc == null || LAKH.contains("," + cc + ",");
+        StringBuilder b = new StringBuilder();
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            int left = n - i;   // digits still to write, this one included
+            if (i > 0 && (left == 3 || (left > 3 && (lakh ? (left - 3) % 2 == 0 : left % 3 == 0)))) b.append(sep);
+            b.append(s.charAt(i));
+        }
+        return (v < 0 ? "-" : "") + b;
+    }
+
+    static String group(long v) {
+        return group(v, country);
     }
 
     static boolean india() {

@@ -35,7 +35,7 @@ final class Hindi {
 
     /** Called when Settings opens: reads the words once, when Hindi is chosen. */
     static void load(Context c, Prefs p) {
-        Money.load(p);
+        Money.load(c, p);
         on = "hi".equals(lang(p));
         if (!on || words != null) return;
         words = new HashMap<>();

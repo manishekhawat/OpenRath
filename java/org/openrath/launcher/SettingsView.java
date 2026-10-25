@@ -127,7 +127,7 @@ final class SettingsView extends FrameLayout {
             {"Play a game now", "kids"}, {"Apps locked while moving", "childLock"}, {"Who's driving", "profiles"},
             {"Volume limit", "valet"}, {"Speed limit in valet mode", "valet"}, {"Change the PIN", "valet"}, {"Choose the PIN", "valet"},
             {"Car documents", "wallet"}, {"Service reminders", "care"}, {"Your service centre", "care"},
-            {"OBD-II adapter", "obd"}, {"Read fault codes", "obdReady"}, {"Live engine readings", "obdReady"},
+            {"Camera picture in reverse", "reverse"}, {"OBD-II adapter", "obd"}, {"Read fault codes", "obdReady"}, {"Live engine readings", "obdReady"}, {"Your own engine readings", "obd"},
             {"Clear fault codes", "obdReady"}, {"Warn when the coolant is above", "obdReady"},
             {"Tyre sensors", "tpms"}, {"Tyre pressure units", "tpms"}, {"Warn when a tyre is below", "tpms"},
             {"LED light strip", "ledStrip"}, {"Learn a button", "keys"}, {"Buttons work in other apps too", "keys"},

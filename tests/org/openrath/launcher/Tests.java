@@ -467,6 +467,7 @@ public final class Tests {
         androidAuto();
         glassLook();
         phoneKeypad();
+        reviewMisc();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
     }
@@ -504,6 +505,150 @@ public final class Tests {
         eq("mtc: calling out", Unit.CALL_ON, MtcUnit.callState(true, now - 2000, "out", 0, false, now));
         eq("mtc: long over", Unit.CALL_NONE, MtcUnit.callState(true, now - MtcUnit.CALL_MS - 1, "in", 0, false, now));
         eq("mtc: on by Android", Unit.CALL_ON, MtcUnit.callState(true, 0, "", 0, true, now));
+    }
+
+    /** Brightness, routing, the reversing camera, engine readings, moving to another stereo, holidays and money. */
+    private static void reviewMisc() {
+        // brightness for all apps
+        eq("brightness: full", 255, HomeActivity.systemLevel(100));
+        eq("brightness: night quarter", 64, HomeActivity.systemLevel(25));
+        eq("brightness: never black", 1, HomeActivity.systemLevel(0));
+        eq("brightness: capped", 255, HomeActivity.systemLevel(140));
+
+        // the owner's route server
+        eq("route server: host only", "https://osrm.example.in/route/v1/driving/", MapCard.routeBase("https://osrm.example.in"));
+        eq("route server: trailing slash", "https://osrm.example.in/route/v1/driving/", MapCard.routeBase(" https://osrm.example.in/ "));
+        eq("route server: its own profile", "https://r.example.in:8443/route/v1/car/", MapCard.routeBase("https://r.example.in:8443/route/v1/car"));
+        eq("route server: a path before", "https://example.in/osrm/route/v1/driving/", MapCard.routeBase("https://example.in/osrm"));
+        eq("route server: empty is the public ones", "", MapCard.routeBase(""));
+        eq("route server: http refused", "", MapCard.routeBase("http://192.168.1.5:5000"));
+        eq("route server: no tricks in the rules", "", MapCard.routeBase("https://a.in; script-src *"));
+        eq("route server: no query", "", MapCard.routeBase("https://a.in/x?y=1"));
+        eq("route server: host shown", "r.example.in:8443", MapCard.routeHost("https://r.example.in:8443/route/v1/car"));
+        String csp = "<meta content=\"default-src 'self'; connect-src 'self' https://router.project-osrm.org; object-src 'none'\">";
+        check("route server: let through the page's rules", MapCard.withRouteServer(csp, "https://osrm.example.in").contains("connect-src 'self' https://osrm.example.in https://router.project-osrm.org;"));
+        eq("route server: none leaves the page", csp, MapCard.withRouteServer(csp, "nonsense"));
+        try {
+            String page = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get("assets/map/map.html")), "UTF-8");
+            check("route server: the map page has the rule to widen", page.contains("connect-src 'self' "));
+            check("route server: the map page asks it", page.contains("app.routeServer"));
+            check("route service down: hands over to the navigation app", page.contains("routeFailed") && page.contains("app.navAppName"));
+        } catch (Exception e) {
+            check("map page readable " + e, false);
+        }
+
+        // the reversing camera
+        eq("reverse camera: none on the unit", -1, ReverseView.pick("auto", new boolean[0]));
+        eq("reverse camera: the one facing back", 1, ReverseView.pick("auto", new boolean[]{false, true}));
+        eq("reverse camera: the only one", 0, ReverseView.pick("auto", new boolean[]{false}));
+        eq("reverse camera: two, neither back", -1, ReverseView.pick("auto", new boolean[]{false, false}));
+        eq("reverse camera: owner's choice", 0, ReverseView.pick("0", new boolean[]{false, true}));
+        eq("reverse camera: chosen one gone", -1, ReverseView.pick("3", new boolean[]{true}));
+        eq("reverse camera: lines only", -1, ReverseView.pick("none", new boolean[]{true}));
+
+        // the owner's own engine readings: the SAE J1979 formulas
+        near("pid: outside air", 31, Obd.custom("0146", "41 46 47"), 0.01);
+        near("pid: oil temperature", 95, Obd.custom("015C", "41 5C 87"), 0.01);
+        near("pid: computer volts", 14.2, Obd.custom("0142", "41 42 37 78"), 0.001);
+        near("pid: rpm", 1726, Obd.custom("010C", "41 0C 1A F8"), 0.01);
+        near("pid: timing advance", 9.5, Obd.custom("010E", "41 0E 93"), 0.01);
+        near("pid: catalyst", 463.6, Obd.custom("013C", "41 3C 13 AC"), 0.01);
+        near("pid: lambda", 1.0, Obd.custom("0144", "41 44 80 00"), 0.0001);
+        near("pid: oxygen sensor", 0.45, Obd.custom("0114", "41 14 5A FF"), 0.001);
+        near("pid: fuel rate", 3.2, Obd.custom("015E", "41 5E 00 40"), 0.001);
+        near("pid: rail pressure", 5050, Obd.custom("0123", "41 23 01 F9"), 0.01);
+        near("pid: relative rail pressure", 25.28, Obd.custom("0122", "41 22 01 40"), 0.01);
+        near("pid: injection timing", -10, Obd.custom("015D", "41 5D 64 00"), 0.01);
+        near("pid: torque", 25, Obd.custom("0162", "41 62 96"), 0.01);
+        near("pid: absolute load", 100, Obd.custom("0143", "41 43 00 FF"), 0.01);
+        near("pid: fuel pressure", 300, Obd.custom("010A", "41 0A 64"), 0.01);
+        near("pid: trim", -25, Obd.custom("0108", "41 08 60"), 0.01);
+        near("pid: barometer", 101, Obd.custom("0133", "41 33 65"), 0.01);
+        near("pid: distance since cleared", 1000, Obd.custom("0131", "41 31 03 E8"), 0.01);
+        check("pid: two bytes wanted", Obd.custom("0142", "41 42 37") == Obd.NONE);
+        check("pid: no answer", Obd.custom("0146", "NO DATA") == Obd.NONE);
+        check("pid: unknown", Obd.custom("01FF", "41 FF 00") == Obd.NONE);
+        for (String[] row : Obd.PIDS) {
+            check("pid: known formula " + row[0], Obd.formula(row[3], new int[]{100, 100}) != Obd.NONE);
+            check("pid: mode 01 " + row[0], row[0].length() == 4 && row[0].startsWith("01"));
+        }
+        eq("pid: line", "Outside air temperature: 31°C", Obd.customLine(Obd.pid("0146"), 31));
+        eq("pid: line with decimals", "Engine computer voltage: 14.20 V", Obd.customLine(Obd.pid("0142"), 14.2f));
+        eq("pid: setting read back", "0146,015C", String.join(",", Obd.mine("0146, 015c,zz,0146")));
+        check("pid: built-in ones not offered again", Obd.offered().size() < Obd.PIDS.length && Obd.pid("010C") != null);
+        for (String[] row : Obd.offered()) check("pid: not offered twice " + row[0], !"010C".equals(row[0]) && !"0105".equals(row[0]));
+
+        // moving to another stereo
+        try {
+            String json = "{\"app\":\"OpenRath\",\"format\":1,\"prefs\":{\"home\":{\"carModel\":[\"s\",\"Dzire\"],\"saverMin\":[\"s\",\"5\"]}}}";
+            String code = Backup.pack(json);
+            check("move: code starts with its mark", code.startsWith(Backup.CODE));
+            eq("move: code read back", json, Backup.unpack(code));
+            eq("move: code inside other text", json, Backup.unpack("Scanned text: " + code + " (end)"));
+            check("move: code cut short", Backup.unpack(code.substring(0, code.length() - 6)) == null);
+            check("move: not ours", Backup.unpack("hello") == null && Backup.unpack(null) == null);
+            check("move: not settings", Backup.unpack(Backup.pack("{\"x\":1}")) == null);
+            check("move: small settings fit a QR code", Qr.fits(code, Backup.QR_VERSION));
+            StringBuilder big = new StringBuilder();
+            java.util.Random rnd = new java.util.Random(7);
+            for (int i = 0; i < 3000; i++) big.append((char) ('a' + rnd.nextInt(26)));
+            check("move: big settings don't", !Qr.fits(Backup.pack("{\"prefs\":{\"x\":\"" + big + "\"}}"), Backup.QR_VERSION));
+            check("move: PINs never in a backup", !Backup.backedUp("x:valetPin") && !Backup.backedUp("x:apPass"));
+        } catch (Exception e) {
+            check("move: " + e, false);
+        }
+
+        // holidays: any year for the fixed ones and Good Friday, the moon's ones to 2035
+        eq("easter 2026", "2026-04-05", ymd(Holidays.easter(2026)));
+        eq("easter 2027", "2027-03-28", ymd(Holidays.easter(2027)));
+        eq("easter 2035", "2035-03-25", ymd(Holidays.easter(2035)));
+        eq("easter 2038", "2038-04-25", ymd(Holidays.easter(2038)));
+        check("good friday 2026 kept", names(2026).contains("Good Friday 2026-04-03"));
+        check("good friday 2040", names(2040).contains("Good Friday 2040-03-30"));
+        check("republic day 2040", names(2040).contains("Republic Day 2040-01-26"));
+        check("diwali 2031", names(2031).contains("Diwali 2031-11-14"));
+        check("diwali 2035", names(2035).contains("Diwali 2035-10-30"));
+        String last = "";
+        for (String[] m : Holidays.MOVING) {
+            check("holiday years in order " + m[0], m[0].substring(0, 4).compareTo(last) >= 0);
+            check("holiday date valid " + m[0], m[0].matches("20(2[6-9]|3[0-5])-[01][0-9]-[0-3][0-9]"));
+            last = m[0].substring(0, 4);
+        }
+        String was = Money.country;
+        Money.country = "IN";
+        check("upcoming in 2034 still finds holidays", Holidays.upcoming(day(2034, 1, 2, 9, 0), 3).size() == 3);
+        Money.country = was;
+
+        // money: digit grouping by country, and the country when the unit's language has none
+        eq("group: lakh", "1,00,000", Money.group(100000, "IN"));
+        eq("group: crore", "1,23,45,678", Money.group(12345678, "IN"));
+        eq("group: thousand", "1,000", Money.group(1000, "IN"));
+        eq("group: small", "999", Money.group(999, "IN"));
+        eq("group: uk", "100,000", Money.group(100000, "GB"));
+        eq("group: us million", "1,234,567", Money.group(1234567, "US"));
+        eq("group: germany", "1.234.567", Money.group(1234567, "DE"));
+        eq("group: pakistan", "12,34,567", Money.group(1234567, "PK"));
+        eq("group: negative", "-12,500", Money.group(-12500, "IN"));
+        Money.country = "GB";
+        eq("cab amount abroad", "£150,000", Cab.rs(150000));
+        Money.country = "IN";
+        eq("cab amount in India", "₹1,50,000", Cab.rs(150000));
+        Money.country = was;
+        eq("country: chosen", "GB", Money.pick("gb", "IN", "in"));
+        eq("country: unit's language", "AE", Money.pick("", "AE", "in"));
+        eq("country: SIM when the language has none", "NP", Money.pick("", "", "np"));
+        eq("country: nothing known", "IN", Money.pick("", "", ""));
+        eq("country: junk", "IN", Money.pick("1", null, "419"));
+    }
+
+    private static String ymd(java.util.Calendar c) {
+        return String.format(java.util.Locale.US, "%04d-%02d-%02d", c.get(java.util.Calendar.YEAR), c.get(java.util.Calendar.MONTH) + 1, c.get(java.util.Calendar.DAY_OF_MONTH));
+    }
+
+    private static List<String> names(int year) {
+        List<String> out = new java.util.ArrayList<>();
+        for (Holidays.Day d : Holidays.of(year)) out.add(d.name + " " + ymd(d.date));
+        return out;
     }
 
     /** The Glass look: the wallpaper's blur, its colours and the see-through mixing of glass panels. */
