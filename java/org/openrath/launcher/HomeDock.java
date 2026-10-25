@@ -17,7 +17,7 @@ final class HomeDock {
     static View wideBar(final HomeActivity a) {
         LinearLayout bar = new LinearLayout(a);
         bar.setGravity(Gravity.CENTER_VERTICAL);
-        bar.setPadding(Ui.px(24), Ui.px(4), Ui.px(18), Ui.px(8));
+        bar.setPadding(Ui.px(24), 0, Ui.px(18), Ui.px(2));   // the buttons get (nearly) the bar's 84: over HomeDock.TARGET
         android.widget.TextClock clock = new android.widget.TextClock(a);
         clock.setFormat12Hour("h:mm");
         clock.setFormat24Hour("HH:mm");
@@ -34,7 +34,7 @@ final class HomeDock {
             if (pkg == null && i > apps.size()) break;   // one "add" button after the apps
             ImageView v = new ImageView(a);
             v.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            v.setPadding(Ui.px(6), Ui.px(6), Ui.px(6), Ui.px(6));
+            v.setPadding(Ui.px(8), Ui.px(8), Ui.px(8), Ui.px(8));
             if (pkg != null) {
                 try {
                     v.setImageDrawable(a.getPackageManager().getApplicationIcon(pkg));
@@ -69,8 +69,9 @@ final class HomeDock {
                 }
             });
             if (pkg != null) Hints.mark(v, Ui.px(6));   // a hold changes the app
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(Ui.px(72), Ui.px(72));
-            lp.leftMargin = lp.rightMargin = Ui.px(6);
+            // each takes touches across a full target, the bar's whole height
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(Ui.px(TARGET), -1);
+            lp.leftMargin = lp.rightMargin = Ui.px(2);
             bar.addView(v, lp);
         }
         View gap = new View(a);
@@ -86,14 +87,14 @@ final class HomeDock {
                     else a.openSettings();
                 }
             });
-            bar.addView(ic, new LinearLayout.LayoutParams(Ui.px(64), Ui.px(64)));
+            bar.addView(ic, new LinearLayout.LayoutParams(Ui.px(TARGET), -1));
         }
         if (!Glass.on) return bar;
         // Glass: the bar floats over the wallpaper as a glass pill
         bar.setBackground(Glass.pane(32));
         bar.setPadding(Ui.px(20), 0, Ui.px(10), 0);
         android.widget.FrameLayout wrap = new android.widget.FrameLayout(a);
-        wrap.setPadding(Ui.px(18), Ui.px(2), Ui.px(18), Ui.px(8));
+        wrap.setPadding(Ui.px(18), 0, Ui.px(18), Ui.px(4));
         wrap.addView(bar, new android.widget.FrameLayout.LayoutParams(-1, -1));
         return wrap;
     }

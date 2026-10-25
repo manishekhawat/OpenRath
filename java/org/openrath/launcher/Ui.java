@@ -105,11 +105,35 @@ final class Ui {
     }
 
     /** The smallest text OpenRath draws (design px): smaller is hard to read at a glance in a moving car. */
-    static final float MIN_TEXT = 12;
+    static final float MIN_TEXT = 16;
+
+    /**
+     * Text a driver reads while moving (box headings, the song, the next turn, the speed, a call), in
+     * design px: the car guidelines ask for this much where the box has room.
+     */
+    static final float READ = 24;
+
+    /** A design text size in screen px, never under MIN_TEXT. */
+    static float size(float design) {
+        return Math.max(MIN_TEXT, design) * k;
+    }
+
+    /** Text read while moving, for a box drawn at `scale` of its design size: READ in a full-size box, never under MIN_TEXT. */
+    static float read(float scale) {
+        return size(READ * Math.min(1, scale));
+    }
+
+    /** A box heading at the read-while-moving size, spaced a little tighter and cut short with "…" rather than run past maxW px. */
+    static void heading(TextView t, float scale, int maxW) {
+        t.setTextSize(TypedValue.COMPLEX_UNIT_PX, read(scale));
+        t.setLetterSpacing(0.08f);
+        t.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        t.setMaxWidth(Math.max(1, maxW));
+    }
 
     static TextView text(Context c, float size, int colour, String family, int gravity) {
         TextView t = new TextView(c);
-        t.setTextSize(TypedValue.COMPLEX_UNIT_PX, Math.max(MIN_TEXT, size) * k);
+        t.setTextSize(TypedValue.COMPLEX_UNIT_PX, size(size));
         t.setTextColor(colour);
         t.setTypeface(Typeface.create(family, Typeface.NORMAL));
         t.setGravity(gravity);
@@ -125,7 +149,7 @@ final class Ui {
     }
 
     static TextView label(Context c, String s) {
-        TextView t = text(c, 12, ACCENT, "sans-serif-medium", Gravity.LEFT);
+        TextView t = text(c, MIN_TEXT, ACCENT, "sans-serif-medium", Gravity.LEFT);
         t.setLetterSpacing(0.16f);
         t.setText(s);
         return t;

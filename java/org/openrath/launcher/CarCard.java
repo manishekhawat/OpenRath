@@ -29,6 +29,8 @@ final class CarCard extends Cards.Card {
     final TextView summary = Ui.text(getContext(), 11, Ui.SILVER_DIM, "sans-serif", Gravity.CENTER);
     long stoppedAt;
     boolean summaryDue;
+    /** Whether the box is tall enough for the welcome lines above the car. */
+    boolean roomWelcome = true;
     final Road road = new Road(getContext());
     Boolean lastOn;
     boolean leftOn, rightOn, lit;
@@ -87,17 +89,23 @@ final class CarCard extends Cards.Card {
         float s = Math.min(h / (268f * Ui.k), w / (388f * Ui.k));
         int m = Ui.px(18 * s);
         brand.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, Ui.px(24 * s)));
-        carName.setTextSize(0, 18 * Ui.k * s);
+        carName.setTextSize(0, Ui.size(18 * s));
         LinearLayout.LayoutParams np = new LinearLayout.LayoutParams(-2, -2);
         np.leftMargin = Ui.px(12 * s);
         carName.setLayoutParams(np);
         carName.setMaxWidth(w / 2);
         brandRow.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.LEFT, m, Ui.px(16 * s), 0, 0));
-        speed.setTextSize(0, 44 * Ui.k * s);
-        unit.setTextSize(0, 13 * Ui.k * s);
+        // the speed is read while moving: never under Ui.READ, even in a small box
+        float sp = Ui.size(Math.max(Ui.READ, 44 * s));
+        speed.setTextSize(0, sp);
+        unit.setTextSize(0, Ui.size(13 * s));
         unit.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(30 * s), m, 0));
-        speed.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(10 * s), m + Ui.px(42 * s), 0));
-        lights.setTextSize(0, Math.max(Ui.MIN_TEXT, 10 * s) * Ui.k);
+        int unitW = Math.max(Ui.px(42 * s), Math.round(unit.getPaint().measureText(Units.speedLabel()) + Ui.px(6)));
+        speed.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(10 * s), m + unitW, 0));
+        lights.setTextSize(0, Ui.size(10 * s));
+        lights.setLetterSpacing(0.06f);
+        lights.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        lights.setMaxWidth(Math.round((w - 2 * m) * 0.45f));
         lights.setLayoutParams(at(-2, -2, Gravity.BOTTOM | Gravity.LEFT, m, 0, 0, Ui.px(12 * s)));
         int side = Ui.px(34 * s);
         int bottom = Ui.px(34 * s), top = Ui.px(98 * s);
@@ -110,18 +118,27 @@ final class CarCard extends Cards.Card {
         int as = Ui.px(26 * s), mid = (top - bottom) / 2;
         left.setLayoutParams(at(as, as, Gravity.CENTER_VERTICAL | Gravity.LEFT, m, mid, 0, 0));
         right.setLayoutParams(at(as, as, Gravity.CENTER_VERTICAL | Gravity.RIGHT, 0, mid, m, 0));
-        welcome.setTextSize(0, 18 * Ui.k * s);
+        welcome.setTextSize(0, Ui.size(18 * s));
         welcome.setMaxWidth(w - 2 * (m + Ui.px(40 * s)));
-        welcome.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, Ui.px(68 * s), 0, 0));
-        hello.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
-        hello.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, Ui.px(52 * s), 0, 0));
-        int ls = Ui.px(34 * s);
-        limit.setTextSize(0, 14 * Ui.k * s);
+        hello.setTextSize(0, Ui.size(11 * s));
+        int helloTop = Ui.px(52 * s);
+        int welcomeTop = Math.max(Ui.px(68 * s), Math.round(helloTop + hello.getTextSize() * 1.2f + Ui.px(2)));
+        hello.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, helloTop, 0, 0));
+        welcome.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, welcomeTop, 0, 0));
+        // a low box: the welcome lines would run into the car, so they go
+        roomWelcome = welcomeTop + welcome.getTextSize() * 1.2f <= top + Ui.px(4);
+        welcome.setVisibility(roomWelcome ? VISIBLE : GONE);
+        if (!roomWelcome) hello.setVisibility(GONE);
+        limit.setTextSize(0, Ui.size(14 * s));
+        int ls = Math.max(Ui.px(34 * s), Math.round(limit.getTextSize() * 2.1f));
         ((android.graphics.drawable.GradientDrawable) limit.getBackground()).setStroke(Math.max(2, Ui.px(4 * s)), 0xFFD42A2A);
-        limit.setLayoutParams(at(ls, ls, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(60 * s), m, 0));
-        camera.setTextSize(0, Math.max(Ui.MIN_TEXT, 10 * s) * Ui.k);
+        limit.setLayoutParams(at(ls, ls, Gravity.TOP | Gravity.RIGHT, 0, Math.max(Ui.px(60 * s), Math.round(Ui.px(10 * s) + sp * 1.2f)), m, 0));
+        camera.setTextSize(0, Ui.size(10 * s));
+        camera.setLetterSpacing(0.06f);
+        camera.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        camera.setMaxWidth(Math.round((w - 2 * m) * 0.55f) - Ui.px(8));
         camera.setLayoutParams(at(-2, -2, Gravity.BOTTOM | Gravity.RIGHT, 0, 0, m, Ui.px(12 * s)));
-        summary.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
+        summary.setTextSize(0, Ui.size(11 * s));
         summary.setEllipsize(android.text.TextUtils.TruncateAt.END);
         summary.setMaxWidth(w - 2 * m);
         // a row above the lights and the warnings, so they never run into each other
@@ -213,7 +230,7 @@ final class CarCard extends Cards.Card {
         carName.setText(Car.name(p).toUpperCase(Locale.getDefault()));
         String name = p.welcome().trim();
         welcome.setText(name.toUpperCase(Locale.getDefault()));
-        hello.setVisibility(name.isEmpty() ? GONE : VISIBLE);
+        hello.setVisibility(name.isEmpty() || !roomWelcome ? GONE : VISIBLE);
         boolean arrows = Features.on(p, "arrows") && (p.signal("left") != null || p.signal("right") != null);
         left.setVisibility(arrows ? VISIBLE : GONE);
         right.setVisibility(arrows ? VISIBLE : GONE);

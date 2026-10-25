@@ -163,6 +163,13 @@ public final class Tests {
         eq("apps recent cap", "d,a", AppsActivity.join(AppsActivity.push(r, "d", 2)));
         eq("apps unpin", "a,c", AppsActivity.join(AppsActivity.remove(r, "b")));
         eq("apps split empty", 0, AppsActivity.split("").size());
+        java.util.Map<String, Integer> uses = AppsActivity.counts("maps=9,music=4,radio=4");
+        eq("apps driving: pinned, then most used, then A to Z", "phone,maps,music,radio",
+                AppsActivity.join(AppsActivity.shortList(AppsActivity.split("aa,maps,music,phone,radio"), uses, AppsActivity.split("phone,gone"), 4)));
+        eq("apps driving: short", 2, AppsActivity.shortList(AppsActivity.split("a,b,c"), uses, AppsActivity.split(""), 2).size());
+        eq("box menu while stopped", "[-2, 0, 1, -3, -4]", HomeDialogs.menu(2, false).toString());
+        eq("box menu while moving: no widgets or moving boxes", "[0, 1, -3, -5]", HomeDialogs.menu(2, true).toString());
+        check("text floor is 16", Ui.MIN_TEXT >= 16 && Ui.READ >= 24);
         // status icons
         eq("gps fix", StatusIcons.ON, StatusIcons.gps(3, true));
         eq("gps searching", StatusIcons.SEARCHING, StatusIcons.gps(60, true));
@@ -951,6 +958,14 @@ public final class Tests {
         check("moving: GPS lost in a tunnel stays locked", ChildLock.moving(40, now - 60000, -1, now, now - 60000));
         check("moving: GPS lost long after", !ChildLock.moving(40, now - ChildLock.LOST_MS - 5000, -1, now, now - ChildLock.LOST_MS - 5000));
         check("moving: never seen moving", !ChildLock.moving(0, 0, -1, now, 0));
+        // an hour's drive on GPS fixes alone (nothing asks moving()), then a tunnel with no fixes
+        long seen = 0, start = now - 3_600_000L, last = now - 120_000L;
+        for (long t = start; t <= last; t += 1000) seen = ChildLock.seen(seen, 60, t);
+        eq("moving: fixes keep last seen moving", last, seen);
+        check("moving: tunnel 2 min after the last fix stays locked", ChildLock.moving(60, last, -1, now, seen));
+        check("moving: unlocks once the hold runs out", !ChildLock.moving(60, last, -1, last + ChildLock.LOST_MS + 1000, seen));
+        eq("moving: a stopped reading keeps the last moving time", last, ChildLock.seen(last, 3, now));
+        eq("moving: an older reading never moves it back", last, ChildLock.seen(last, 60, last - 5000));
 
         Voice.Command r = Voice.parse("reply");
         eq("voice: reply", "reply", r == null ? null : r.kind);

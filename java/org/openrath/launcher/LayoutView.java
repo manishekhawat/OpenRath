@@ -128,7 +128,8 @@ final class LayoutView extends View implements Hub.Listener {
             public void onLongPress(MotionEvent e) {
                 Hit h = hit(e);
                 performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
-                if (h == null || !longTap(h.action)) a.openSettings();
+                // off the buttons: Settings, but not while driving (HomeDialogs.settings says so instead)
+                if (h == null || !longTap(h.action)) HomeDialogs.settings(a, -1);
             }
         });
     }

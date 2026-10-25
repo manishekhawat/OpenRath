@@ -486,6 +486,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         if (obd >= 0) kmh = obd;   // the car's own speedometer reading beats GPS
         kmhNow = kmh;
         fixAt = now;
+        ChildLock.reading(kmh, now);   // the locks' "last seen moving", even when nothing asks during the drive
         latNow = l.getLatitude();
         lonNow = l.getLongitude();
         headingNow = l.hasBearing() && kmh > 5 ? l.getBearing() : -1;
