@@ -46,16 +46,41 @@ final class Extras {
         a.dash.postDelayed(saverCheck(a), 20000);
         if (Resume.due(a, a.prefs)) {
             resumeNav(a);
-            // tried after 2 seconds, then every 2 seconds while the music app or radio isn't ready yet
+            final boolean[] done = {false};
+            // a music app that isn't running yet: woken through its library service, played as soon as it answers
+            String pkg = Resume.wakePkg(a.prefs.str("resume", ""));
+            if (pkg != null) {
+                Resume.restoreVolume(a, a.prefs);
+                Resume.wake(a, pkg, new Runnable() {
+                    @Override
+                    public void run() {
+                        if (done[0]) return;
+                        done[0] = true;
+                        MediaCard.owner = "music";
+                        carriedOn(a);
+                    }
+                });
+            }
+            // also tried after 2 seconds, then every 2 seconds while the music app or radio isn't ready
+            // yet: for apps without a library service, FM and OpenRath's own player
             a.dash.postDelayed(new Runnable() {
                 int tries;
 
                 @Override
                 public void run() {
-                    if (!resumeAudio(a, ++tries) && tries < Resume.TRIES) a.dash.postDelayed(this, 2000);
+                    if (done[0]) return;
+                    if (resumeAudio(a, ++tries)) done[0] = true;
+                    else if (tries < Resume.TRIES) a.dash.postDelayed(this, 2000);
                 }
             }, 2000);
         }
+    }
+
+    /** Says that the music carries on. */
+    private static void carriedOn(HomeActivity a) {
+        Toast.makeText(a, Hindi.t("Carrying on where you left off"), Toast.LENGTH_SHORT).show();
+        if (!"text".equals(a.prefs.str("summaryHow", "voice"))) Speak.say(a, "Welcome back. Carrying on where you left off.", false);
+        a.hub.notifyIfChanged(true);
     }
 
     /**
@@ -101,6 +126,7 @@ final class Extras {
             }
             Toast.makeText(a, Hindi.t("Carrying on where you left off"), Toast.LENGTH_SHORT).show();
             if (!"text".equals(a.prefs.str("summaryHow", "voice"))) Speak.say(a, "Welcome back. Carrying on where you left off.", false);
+            Resume.unwake();   // the library link isn't needed any more
         } catch (Throwable e) {
             Diag.note("resume playback", e);
         }
@@ -1458,6 +1484,12 @@ final class Extras {
                 equalizer(a);
             }
         }));
+        r.add(new SettingsView.Row(g, "Balance (left and right)", balanceText(p.num("balance", 0)) + "  ·  " + Hindi.t("OpenRath's own music only"), new Runnable() {
+            @Override
+            public void run() {
+                balance(a);
+            }
+        }));
 
         // ---- Driving
         g = "Driving";
@@ -1731,6 +1763,62 @@ final class Extras {
                 p.put("tickerApps", sb.length() == 0 ? "," : sb.toString());
             }
         }).setNegativeButton(Hindi.t("Cancel"), null).show();
+    }
+
+    private static String balanceText(int b) {
+        return b == 0 ? Hindi.t("Centre") : b < 0 ? Hindi.f("Left %1$s", -b) : Hindi.f("Right %1$s", b);
+    }
+
+    /** Balance for OpenRath's own player: a slider from left to right, saying plainly what it reaches. */
+    private static void balance(final HomeActivity a) {
+        final Prefs p = a.prefs;
+        LinearLayout col = new LinearLayout(a);
+        col.setOrientation(LinearLayout.VERTICAL);
+        col.setPadding(Ui.px(24), Ui.px(10), Ui.px(24), 0);
+        final TextView now = Ui.text(a, 17, 0xFFEEEEEE, "sans-serif-medium", Gravity.CENTER);
+        now.setPadding(0, Ui.px(8), 0, Ui.px(12));
+        now.setText(balanceText(p.num("balance", 0)));
+        col.addView(now);
+        LinearLayout row = new LinearLayout(a);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        TextView l = Ui.text(a, 14, 0xFFBBBBBB, "sans-serif", Gravity.LEFT), rt = Ui.text(a, 14, 0xFFBBBBBB, "sans-serif", Gravity.RIGHT);
+        l.setText(Hindi.t("Left"));
+        rt.setText(Hindi.t("Right"));
+        final SeekBar sb = new SeekBar(a);
+        sb.setMax(2 * Player.BALANCE_MAX);
+        sb.setProgress(Math.max(0, Math.min(2 * Player.BALANCE_MAX, p.num("balance", 0) + Player.BALANCE_MAX)));
+        sb.setMinimumHeight(Ui.px(HomeDock.TARGET));
+        row.addView(l);
+        row.addView(sb, new LinearLayout.LayoutParams(0, Ui.px(HomeDock.TARGET), 1f));
+        row.addView(rt);
+        col.addView(row);
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar s, int v, boolean user) {
+                int b = v - Player.BALANCE_MAX;
+                p.put("balance", String.valueOf(b));
+                now.setText(balanceText(b));
+                Player.balanceChanged();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar s) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar s) {
+            }
+        });
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Balance")).setView(col)
+                .setMessage(Hindi.t(Player.BALANCE_REACH))
+                .setPositiveButton(Hindi.t("Done"), null)
+                .setNeutralButton(Hindi.t("Centre"), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        p.put("balance", "0");
+                        Player.balanceChanged();
+                    }
+                }).show();
     }
 
     private static void equalizer(final HomeActivity a) {

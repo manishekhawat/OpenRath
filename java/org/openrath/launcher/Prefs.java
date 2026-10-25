@@ -50,9 +50,65 @@ final class Prefs {
     static final String[] DOCK_NAMES = {"Navigation", "Music", "Radio", "Bluetooth", "Phone", "All apps"};
 
     private final SharedPreferences p;
+    /** What plays and how loud, kept apart from the settings (see RESUME_KEYS). */
+    private final SharedPreferences r;
+    private static boolean moved;
 
     Prefs(Context c) {
         p = c.getSharedPreferences("home", Context.MODE_PRIVATE);
+        r = c.getSharedPreferences("resume", Context.MODE_PRIVATE);
+        if (!moved) {
+            moved = true;
+            moveResume(p, r);
+        }
+    }
+
+    /**
+     * The values that change on their own as you drive (what was playing, its volume every few
+     * seconds, each source's volume, when the screen slept, when navigation last guided). They live
+     * in their own file, so the settings file, backups and driver profiles hold only settings.
+     */
+    static final String[] RESUME_KEYS = {"resume", "resumeVol", "resumeBoot", "sleptAt", "navAt", "navApp", "volSrc"};
+
+    /** Whether the plain value `key` (as str and put take it) is one of the resume values. Pure, for the tests. */
+    static boolean resumeKey(String key) {
+        if (key.startsWith("vol:")) return true;
+        for (String k : RESUME_KEYS) if (k.equals(key)) return true;
+        return false;
+    }
+
+    /** Which of the settings file's stored keys (with their "x:" in front) belong in the resume file. Pure, for the tests. */
+    static java.util.List<String> resumeKeysIn(java.util.Collection<String> stored) {
+        java.util.List<String> out = new java.util.ArrayList<>();
+        for (String k : stored) if (k.startsWith("x:") && resumeKey(k.substring(2))) out.add(k);
+        return out;
+    }
+
+    /**
+     * Moves resume values found in the settings file to the resume file: once after the update, and
+     * again after an old backup brings some back. A value already in the resume file is newer and kept.
+     */
+    private static void moveResume(SharedPreferences home, SharedPreferences resume) {
+        try {
+            java.util.Map<String, ?> all = home.getAll();
+            java.util.List<String> keys = resumeKeysIn(all.keySet());
+            if (keys.isEmpty()) return;
+            SharedPreferences.Editor to = resume.edit(), from = home.edit();
+            for (String k : keys) {
+                Object v = all.get(k);
+                if (!resume.contains(k) && v != null) to.putString(k, String.valueOf(v));
+                from.remove(k);
+            }
+            to.commit();   // written before the old copies go
+            from.apply();
+        } catch (Throwable e) {
+            Diag.note("move resume values", e);
+        }
+    }
+
+    /** The file a plain value lives in. */
+    private SharedPreferences of(String key) {
+        return resumeKey(key) ? r : p;
     }
 
     String slot(int i) {
@@ -171,11 +227,11 @@ final class Prefs {
 
     // plain values for the newer settings (service reminders, tolls, theme, phone favourites…)
     String str(String key, String def) {
-        return p.getString("x:" + key, def);
+        return of(key).getString("x:" + key, def);
     }
 
     void put(String key, String v) {
-        p.edit().putString("x:" + key, v).apply();
+        of(key).edit().putString("x:" + key, v).apply();
     }
 
     int num(String key, int def) {

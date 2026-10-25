@@ -258,6 +258,16 @@
     <string name="ui_more_background_behind_the_glass" formatted="false">Background behind the glass</string>
     <string name="ui_more_add_your_picture" formatted="false">Add your picture</string>
     <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">Copy a picture (JPG or PNG) to %1$s on the unit, with a USB stick or a file manager. Until then the Aurora background shows.</string>
+    <string name="ui_more_tap_to_open2" formatted="false">Tap to open</string>
+    <string name="ui_more_balance_left_and_right" formatted="false">Balance (left and right)</string>
+    <string name="ui_more_openrath_s_own_music_only" formatted="false">OpenRath\'s own music only</string>
+    <string name="ui_more_centre" formatted="false">Centre</string>
+    <string name="ui_more_left_1_s" formatted="false">Left %1$s</string>
+    <string name="ui_more_right_1_s" formatted="false">Right %1$s</string>
+    <string name="ui_more_balance" formatted="false">Balance</string>
+    <string name="ui_more_only_openrath_s_own_online_radio_and_music_f" formatted="false">Only OpenRath\'s own online radio and music files. Other music apps, FM and the front and rear fader follow the unit\'s own sound settings.</string>
+    <string name="ui_more_files" formatted="false">FILES</string>
+    <string name="ui_more_online" formatted="false">ONLINE</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -515,5 +525,15 @@
         <item>@string/ui_more_background_behind_the_glass</item>
         <item>@string/ui_more_add_your_picture</item>
         <item>@string/ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit</item>
+        <item>@string/ui_more_tap_to_open2</item>
+        <item>@string/ui_more_balance_left_and_right</item>
+        <item>@string/ui_more_openrath_s_own_music_only</item>
+        <item>@string/ui_more_centre</item>
+        <item>@string/ui_more_left_1_s</item>
+        <item>@string/ui_more_right_1_s</item>
+        <item>@string/ui_more_balance</item>
+        <item>@string/ui_more_only_openrath_s_own_online_radio_and_music_f</item>
+        <item>@string/ui_more_files</item>
+        <item>@string/ui_more_online</item>
     </string-array>
 </resources>

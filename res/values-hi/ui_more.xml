@@ -257,4 +257,14 @@
     <string name="ui_more_background_behind_the_glass" formatted="false">शीशे के पीछे का बैकग्राउंड</string>
     <string name="ui_more_add_your_picture" formatted="false">अपनी तस्वीर जोड़ें</string>
     <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">यूनिट पर %1$s में एक तस्वीर (JPG या PNG) कॉपी करें, USB स्टिक या फ़ाइल मैनेजर से। तब तक अरोरा बैकग्राउंड दिखेगा।</string>
+    <string name="ui_more_tap_to_open2" formatted="false">खोलने के लिए टैप करें</string>
+    <string name="ui_more_balance_left_and_right" formatted="false">बैलेंस (बाएँ और दाएँ)</string>
+    <string name="ui_more_openrath_s_own_music_only" formatted="false">सिर्फ़ OpenRath का अपना संगीत</string>
+    <string name="ui_more_centre" formatted="false">बीच में</string>
+    <string name="ui_more_left_1_s" formatted="false">बाएँ %1$s</string>
+    <string name="ui_more_right_1_s" formatted="false">दाएँ %1$s</string>
+    <string name="ui_more_balance" formatted="false">बैलेंस</string>
+    <string name="ui_more_only_openrath_s_own_online_radio_and_music_f" formatted="false">सिर्फ़ OpenRath का अपना ऑनलाइन रेडियो और संगीत फ़ाइलें। दूसरे संगीत ऐप, FM और आगे-पीछे का फ़ेडर यूनिट की अपनी साउंड सेटिंग से चलते हैं।</string>
+    <string name="ui_more_files" formatted="false">फ़ाइलें</string>
+    <string name="ui_more_online" formatted="false">ऑनलाइन</string>
 </resources>
