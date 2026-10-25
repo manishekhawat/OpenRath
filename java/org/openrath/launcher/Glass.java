@@ -51,8 +51,42 @@ final class Glass {
     /** The size the wallpaper is made and blurred at; it is drawn big, smoothed. */
     static final int SMALL_W = 320, SMALL_H = 180;
 
+    /** Glass is the default look; the owner can switch it off in Settings > Look. */
     static boolean wanted(Prefs p) {
-        return "on".equals(p.str("glass", "off"));
+        return !"off".equals(p.str("glass", "on"));
+    }
+
+    /**
+     * A frosted glass card on a canvas, for pictures drawn by hand (the opening animation, the boot
+     * animation): see-through fill, a lighter top, a thin light edge. `a` fades it, 0 to 1.
+     */
+    static void card(Canvas c, RectF r, float radius, float a, boolean dark) {
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        int fill = dark ? NIGHT_FILL : DAY_FILL, top = dark ? NIGHT_TOP : DAY_TOP, edge = dark ? NIGHT_EDGE : DAY_EDGE;
+        p.setShader(new android.graphics.LinearGradient(0, r.top, 0, r.bottom, new int[]{fade(top, a), fade(fill, a)}, null,
+                android.graphics.Shader.TileMode.CLAMP));
+        c.drawRoundRect(r, radius, radius, p);
+        p.setShader(null);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(Math.max(1, radius / 18));
+        p.setColor(fade(edge, a));
+        c.drawRoundRect(r, radius, radius, p);
+    }
+
+    /** A colour with its alpha scaled by `a` (0 to 1). Pure, for the tests. */
+    static int fade(int argb, float a) {
+        int al = Math.round(((argb >>> 24) & 255) * Math.max(0, Math.min(1, a)));
+        return al << 24 | (argb & 0xFFFFFF);
+    }
+
+    /** The blurred wallpaper drawn to fill w x h (cropped to keep its shape), at alpha `a`. */
+    static void backdrop(Canvas c, Bitmap wall, int w, int h, float a) {
+        if (wall == null) return;
+        float sc = Math.max(w / (float) wall.getWidth(), h / (float) wall.getHeight());
+        float bw = wall.getWidth() * sc, bh = wall.getHeight() * sc;
+        Paint p = new Paint(Paint.FILTER_BITMAP_FLAG);
+        p.setAlpha(Math.round(255 * Math.max(0, Math.min(1, a))));
+        c.drawBitmap(wall, null, new RectF((w - bw) / 2, (h - bh) / 2, (w + bw) / 2, (h + bh) / 2), p);
     }
 
     /** The wallpaper chosen: one of WALLS. */

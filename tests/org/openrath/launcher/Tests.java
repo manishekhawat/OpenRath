@@ -1405,6 +1405,8 @@ public final class Tests {
         eq("volume: the radio service's up command", "volumeUp", Volume.command(java.util.Arrays.asList("getVolume()", "setVolumeMute(boolean)", "volumeUp()", "volumeDown()"), true));
         eq("volume: the radio service's down command", "volumeDown", Volume.command(java.util.Arrays.asList("getVolume()", "volumeUp()", "volumeDown()"), false));
         eq("volume: no command, no guess", null, Volume.command(java.util.Arrays.asList("getVolume()", "setVolume(int)"), true));
+        eq("glass: fading halves the alpha", 0x13FFFFFF, Glass.fade(0x26FFFFFF, 0.5f));
+        eq("glass: fully faded is clear", 0x00FFFFFF, Glass.fade(0x26FFFFFF, 0f));
         check("voice: none installed says so", Speak.state(false, false, false).startsWith("No voice engine"));
         check("voice: broken engine says how to fix", Speak.state(true, false, true).contains("doesn't start"));
         check("voice: started, not yet heard", Speak.state(true, true, false).contains("Test the voice"));

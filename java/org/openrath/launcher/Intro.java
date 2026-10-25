@@ -44,6 +44,8 @@ final class Intro extends View {
     private final RectF r = new RectF();
     private long start = -1;
     private boolean done;
+    /** The Glass look's blurred wallpaper, or null. */
+    private android.graphics.Bitmap wall;
 
     private Intro(Context c, long length, boolean still) {
         super(c);
@@ -54,6 +56,13 @@ final class Intro extends View {
             ink.setTypeface(Typeface.createFromAsset(c.getAssets(), "fonts/InterDisplay-Light.otf"));
         } catch (Exception e) {
             Diag.note("intro font", e);
+        }
+        if (Glass.on) {
+            try {
+                wall = Glass.wallpaper(c, new Prefs(c));
+            } catch (Throwable e) {
+                Diag.note("intro glass", e);
+            }
         }
         setContentDescription("OpenRath");
         setElevation(Ui.px(30));   // above the setup screens
@@ -94,12 +103,20 @@ final class Intro extends View {
         }
         float fade = 1 - at(t, 1600, 400);
         int alpha = Math.round(255 * fade);
-        c.drawColor((alpha << 24) | (Ui.BACKGROUND & 0xFFFFFF));
-
         float w = getWidth(), h = getHeight();
         float size = Math.min(w, h) * 0.32f, u = size / 24;
         float cx = w / 2, cy = h / 2 - size * 0.18f;
-        int silver = (alpha << 24) | (Ui.SILVER & 0xFFFFFF);
+        if (Glass.on && wall != null) {
+            // the Glass look: the blurred wallpaper (the dashboard has the same one, so the fade
+            // reveals the boxes on it), and a frosted glass card the wheel and name settle on
+            c.drawColor((alpha << 24) | (Ui.BACKGROUND & 0xFFFFFF));
+            Glass.backdrop(c, wall, (int) w, (int) h, fade);
+            float in = at(t, 0, 600) * fade;
+            float cw = size * 1.9f, top = cy - size * 0.72f, bottom = cy + size * 0.5f + size * 0.62f;
+            r.set(w / 2 - cw / 2, top + (1 - in) * size * 0.1f, w / 2 + cw / 2, bottom + (1 - in) * size * 0.1f);
+            Glass.card(c, r, Glass.RADIUS * Ui.k * 1.6f, in, Glass.night);
+        } else c.drawColor((alpha << 24) | (Ui.BACKGROUND & 0xFFFFFF));
+        int silver = (alpha << 24) | ((Glass.on ? Glass.TEXT : Ui.SILVER) & 0xFFFFFF);
 
         // rolls in from the left a little, turning as it goes
         float roll = still ? 0 : 1 - at(t, 0, 900);
@@ -138,7 +155,7 @@ final class Intro extends View {
         ink.setStyle(Paint.Style.FILL);
         ink.setTextAlign(Paint.Align.CENTER);
         ink.setTextSize(size * 0.3f);
-        ink.setColor((Math.round(alpha * name) << 24) | (Ui.SILVER & 0xFFFFFF));
+        ink.setColor((Math.round(alpha * name) << 24) | ((Glass.on ? Glass.TEXT : Ui.SILVER) & 0xFFFFFF));
         float ty = cy + size * 0.5f + size * 0.38f + (1 - name) * size * 0.08f;
         c.drawText("OpenRath", w / 2, ty, ink);
         float line = at(t, 1000, 500) * size * 0.9f;
