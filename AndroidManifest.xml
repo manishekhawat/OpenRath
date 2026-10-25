@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.openrath.launcher">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="org.openrath.launcher">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
@@ -39,7 +39,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <!-- Android's own screen brightness, day and night, when the owner allows it (Settings > Screen brightness for all apps) -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <!-- granted by the owner in Settings ("Modify system settings"), not a system-only permission -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" tools:ignore="ProtectedPermissions"/>
     <!-- wireless Android Auto: its own Wi-Fi Direct network for the phone -->
     <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation"/>
     <!-- OpenRath's own broadcasts (key actions, trip and player updates) are sent and received with
