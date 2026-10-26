@@ -2,7 +2,7 @@
 
 Newest first.
 
-## Unreleased: From the review
+## 1.44: On the road
 
 - **Phone:** the call screen also opens for calls from the stereo's own Bluetooth phone (FYT, MTC, Topway), and its buttons use the stereo's own answer and hang-up. A new keypad in the phone box dials through the stereo, with big keys; it is blocked while moving.
 - **Bigger while driving:** dashboard text is at least 16 px, and what you read while moving (headings, the song, the next turn, the speed) is 24 px where the box has room. Music, phone and strip buttons are at least 76 px; small boxes drop secondary lines instead.
@@ -16,9 +16,6 @@ Newest first.
 - **Holidays through 2035,** money grouped the way your country writes it, and plain words for the radio control and the OBD adapter.
 - **Simpler start:** a new install starts at Simple, and switched-off features fold under "More features" in each Settings section. Valet mode, the child lock and games for passengers sit together with a line on how each differs. CNG fill-ups join the fuel log. A small mark shows which buttons do more when held, and the tip shows the first time.
 - **Lighter on slow stereos:** boxes are kept across page turns and wake instead of being rebuilt, the LED strip and the picture layouts rest while nothing changes, downloads no longer hold up saving, and a watchdog notes in Diagnostics when the app freezes.
-
-## 1.44: On the road
-
 - **Glass is the default look,** and the opening logo and boot animation follow it: the wheel and name sit on a frosted card over the blurred background. Settings > Look > Themes > Glass look turns it off.
 - **Music and radio, redesigned:** OpenRath's own music and radio screen looks like a full app, with big artwork, a progress bar, a queue and station lists, and its volume buttons now change the stereo's volume.
 - **Android Auto, wired and wireless,** from the dashboard, with a guide for pairing the phone wirelessly.

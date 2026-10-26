@@ -110,5 +110,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$TAG" "openrath-$TAG.apk" "openrath-$TAG-source.zip" SHA256SUMS update.json \
-            --title "OpenRath $VER" --notes-file notes.md --verify-tag
+          F="openrath-$TAG.apk openrath-$TAG-source.zip SHA256SUMS update.json"
+          # a release made by hand on GitHub (which also makes the tag) gets the files and notes added
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" $F --clobber
+            gh release edit "$TAG" --title "OpenRath $VER" --notes-file notes.md
+          else
+            gh release create "$TAG" $F --title "OpenRath $VER" --notes-file notes.md --verify-tag
+          fi

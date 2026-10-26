@@ -26,6 +26,8 @@ The tag must be `v` followed by `VERSION_NAME`, or the job stops. The job then:
 - deletes the key from the build machine,
 - and publishes a GitHub Release with the APK, the source zip and `SHA256SUMS`.
 
+Without git, the tag can also be made on GitHub: Releases > Draft a new release, type the new tag (for example `v1.44`) with main as the target, and publish. The job then adds the signed APK, the files and the CHANGELOG notes to that release.
+
 If something goes wrong, delete the release and the tag on GitHub, fix it, and tag again.
 
 ## Signing offline
