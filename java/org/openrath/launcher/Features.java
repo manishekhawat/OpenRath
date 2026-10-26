@@ -32,7 +32,13 @@ final class Features {
     /** Off whatever the level until the owner turns them on: they need hardware, or change the home screen. */
     private static final java.util.Set<String> ASK_FIRST = new java.util.HashSet<>(java.util.Arrays.asList("cab", "obd", "dashcam", "tpms", "reports", "androidAuto", "androidAutoWireless"));
 
-    private static final String[] SIMPLE_IDS = {"arrows", "navTurns", "parkedSettings", "weather", "news", "ticker", "nightDrive", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "keys", "longKeys", "resume", "offlineMap", "backup", "reports", "musicApp"};
+    /**
+     * The must-haves, and the quiet helpers a driver never has to think about (setup screens, waking from
+     * sleep, the status icons, the smooth speed number): a short set that still feels complete.
+     */
+    private static final String[] SIMPLE_IDS = {"arrows", "road", "weather", "ticker", "intro", "setup", "dockStatus", "appDrawer",
+            "navTurns", "parkedSettings", "smoothSpeed", "speedAlerts", "parking", "reverse", "lightsReminder", "duck", "offlineMap",
+            "callScreen", "musicApp", "radioText", "projection", "keys", "longKeys", "resume", "wake", "backup", "reports"};
     private static final String[] CUSTOM_IDS = {"pages", "widgets", "saver", "perf", "bootArt", "soundProfiles", "speedVolume", "eq", "profiles"};
     private static final String[] DEV_IDS = {"maker", "perf"};
 
@@ -69,9 +75,49 @@ final class Features {
         return ASK_FIRST.contains(f.id) ? now : f.def;
     }
 
-    /** The owner's level; Custom (everything, as before levels) until one is picked. */
+    /**
+     * The owner's level: the one picked, else the one a new install started at (Simple), else Custom
+     * (everything, as before levels) for an install older than levels.
+     */
     static int level(Prefs p) {
-        return levelOf(p.str("level", "custom"));
+        return levelOf(p.str("level", p.str("levelStart", "custom")));
+    }
+
+    /** Saved settings that show the app has been used before, so this isn't a new install. */
+    private static final java.util.Set<String> USED = new java.util.HashSet<>(java.util.Arrays.asList(
+            "fuel", "swapped", "x:level", "x:levelStart", "x:setupDone", "x:setupStep", "x:carSetup", "x:restoreAsked",
+            "x:permsExplained", "x:setupWaits", "x:crashForgiven", "x:hintDay", "x:hintNext", "x:recentRows", "x:valet"));
+
+    /** Whether saved settings with these keys belong to a new install (nothing the owner or the app saved yet). Pure, for the tests. */
+    static boolean fresh(java.util.Collection<String> keys) {
+        for (String k : keys) {
+            if (USED.contains(k) || k.startsWith("x:feat:") || k.startsWith("slot") || k.startsWith("app:")) return false;
+        }
+        return true;
+    }
+
+    /** The switch each feature starts with on a new install: Simple's. Pure, for the tests. */
+    static boolean startsOn(F f, boolean now) {
+        return f.level == DEV ? now : onAt(f, SIMPLE, now);
+    }
+
+    /**
+     * Once, at the first start: a new install starts at Simple (the owner can pick another level in setup
+     * or Settings); an existing one keeps every switch as it is. Called before anything else saves settings.
+     */
+    static void start(Prefs p) {
+        if (levelPicked(p) || !p.str("levelStart", "").isEmpty()) return;
+        if (!fresh(p.all().keySet())) {
+            p.put("levelStart", "custom");
+            return;
+        }
+        for (F f : ALL) if (f.level != DEV) set(p, f.id, startsOn(f, on(p, f.id)));
+        p.put("levelStart", "simple");
+    }
+
+    /** Remember the level in use as picked: "Not now", or skipping setup, keeps the switches as they are. */
+    static void keepLevel(Prefs p) {
+        if (!levelPicked(p)) p.put("level", LEVELS[level(p)]);
     }
 
     static boolean levelPicked(Prefs p) {
@@ -91,9 +137,12 @@ final class Features {
         return !Managed.devBlocked(p) && "on".equals(p.str("devMode", "off"));
     }
 
-    /** Whether Settings shows this feature's switch: those of the owner's level, or every one in developer mode. */
+    /**
+     * Whether Settings shows this feature's switch: every one but the developer switches, which only
+     * developer mode shows. The level decides which are on; Settings folds the ones that are off under More features.
+     */
     static boolean shown(Prefs p, F f) {
-        return dev(p) || inLevel(f, level(p));
+        return dev(p) || f.level != DEV;
     }
 
     static final F[] ALL = {
@@ -165,7 +214,7 @@ final class Features {
             new F("view360", "360 view of your car", "Car", true, "Your car in 3D in its shape, colour and number plate, from any side; opens the stereo's 360 camera app when it has one"),
             new F("cam360Turn", "360 camera on turn signals", "Car", false, "Below 15 km/h the indicator opens the stereo's 360 camera app (needs the indicators set up in Car signals)"),
             new F("care", "Car service", "Car", true, "Oil, tyres, service, insurance and PUC reminders, the nearest workshops, and a call to book"),
-            new F("obd", "OBD-II engine data", "Car", true, "Needs a small plug-in OBD adapter (Bluetooth or Wi-Fi, often sold as ELM327)"),
+            new F("obd", "OBD-II engine data", "Car", true, "Needs a small engine-data plug (Bluetooth or Wi-Fi) in the socket under the steering wheel"),
             new F("faultWords", "Fault codes in plain words", "Car", true, "Each fault code with what it means, what to check and how urgent it is, from a table kept on the unit"),
             new F("askCar", "Ask the car by voice", "Car", true, "\"How's the engine?\", \"how much fuel?\", \"any faults?\" answered from the engine data"),
             new F("ledStrip", "LED light strip", "Car", false, "A Bluetooth ELK-BLEDOM strip takes the theme's colour, dims at night and turns red for a warning"),
@@ -174,9 +223,9 @@ final class Features {
             new F("longKeys", "Hold a steering-wheel button", "Car", true, "Each button can do a second action when held down"),
             new F("wallet", "Car documents wallet", "Car", true, "Photos of the RC, insurance, PUC and licence, shown offline"),
             // family
-            new F("childLock", "Child-lock for apps", "Family", false, "Chosen apps can't be opened while moving"),
+            new F("childLock", "Child-lock for apps", "Family", false, "Only the apps you choose won't open while the car moves; nothing else is limited"),
             new F("profiles", "Driver profiles", "Family", false, "Each driver's own boxes, theme, volume and alerts"),
-            new F("kids", "Trip games for children", "Family", true, "Spot the colour, number plates, and how far to go"),
+            new F("kids", "Games for passengers", "Family", true, "Spot the colour, number plates and how far to go, for children on a trip; nothing is locked"),
             // sound
             new F("wake", "Recover after deep sleep", "Sound", true, "When the stereo wakes from sleep with the ignition, the GPS, music link and map start again"),
             new F("resume", "Resume after switch-on", "Sound", true, "Plays what was on, at the same volume"),
@@ -196,7 +245,7 @@ final class Features {
             new F("cabMeter", "Fare meter", "Cab", true, "Distance, waiting and night charge for the passenger, with a UPI QR to pay"),
             new F("cabApps", "Ride app switch", "Cab", true, "Uber, Ola, Rapido, inDrive and Namma Yatri one tap away"),
             new F("cabPapers", "Permit and badge reminders", "Cab", true, "Permit, fitness, badge, road tax, insurance and PUC, 15 days ahead"),
-            new F("cabCng", "CNG finder and fill log", "Cab", true, "Nearest CNG stations, and km per kg from your fills"),
+            new F("cabCng", "CNG finder and fill log", "Cab", true, "Nearest CNG stations, and km per kg from your CNG fills in the fuel log"),
             new F("cabSpots", "Pickup hotspots", "Cab", true, "Where you got the most rides at this hour"),
             new F("cabTarget", "Daily target and duty hours", "Cab", true, "A target bar, and a break reminder after long duty"),
             new F("cabSos", "One-tap SOS", "Cab", true, "Texts your location to two contacts (or calls, without a SIM)"),

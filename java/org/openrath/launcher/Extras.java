@@ -46,16 +46,41 @@ final class Extras {
         a.dash.postDelayed(saverCheck(a), 20000);
         if (Resume.due(a, a.prefs)) {
             resumeNav(a);
-            // tried after 2 seconds, then every 2 seconds while the music app or radio isn't ready yet
+            final boolean[] done = {false};
+            // a music app that isn't running yet: woken through its library service, played as soon as it answers
+            String pkg = Resume.wakePkg(a.prefs.str("resume", ""));
+            if (pkg != null) {
+                Resume.restoreVolume(a, a.prefs);
+                Resume.wake(a, pkg, new Runnable() {
+                    @Override
+                    public void run() {
+                        if (done[0]) return;
+                        done[0] = true;
+                        MediaCard.owner = "music";
+                        carriedOn(a);
+                    }
+                });
+            }
+            // also tried after 2 seconds, then every 2 seconds while the music app or radio isn't ready
+            // yet: for apps without a library service, FM and OpenRath's own player
             a.dash.postDelayed(new Runnable() {
                 int tries;
 
                 @Override
                 public void run() {
-                    if (!resumeAudio(a, ++tries) && tries < Resume.TRIES) a.dash.postDelayed(this, 2000);
+                    if (done[0]) return;
+                    if (resumeAudio(a, ++tries)) done[0] = true;
+                    else if (tries < Resume.TRIES) a.dash.postDelayed(this, 2000);
                 }
             }, 2000);
         }
+    }
+
+    /** Says that the music carries on. */
+    private static void carriedOn(HomeActivity a) {
+        Toast.makeText(a, Hindi.t("Carrying on where you left off"), Toast.LENGTH_SHORT).show();
+        if (!"text".equals(a.prefs.str("summaryHow", "voice"))) Speak.say(a, "Welcome back. Carrying on where you left off.", false);
+        a.hub.notifyIfChanged(true);
     }
 
     /**
@@ -101,6 +126,7 @@ final class Extras {
             }
             Toast.makeText(a, Hindi.t("Carrying on where you left off"), Toast.LENGTH_SHORT).show();
             if (!"text".equals(a.prefs.str("summaryHow", "voice"))) Speak.say(a, "Welcome back. Carrying on where you left off.", false);
+            Resume.unwake();   // the library link isn't needed any more
         } catch (Throwable e) {
             Diag.note("resume playback", e);
         }
@@ -533,7 +559,7 @@ final class Extras {
         final List<String> devs = Obd.paired();
         if (devs.isEmpty()) {
             new Glass.Builder(a, DIALOG).setTitle(Hindi.t("No paired Bluetooth devices"))
-                    .setMessage(Hindi.t("Plug the OBD adapter (often sold as ELM327) into the socket under the steering wheel, switch the ignition on, "
+                    .setMessage(Hindi.t("Plug the engine-data plug (sold as an OBD-II adapter, ELM327) into the socket under the steering wheel, switch the ignition on, "
                             + "and pair it in the unit's Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here."))
                     .setPositiveButton(Hindi.t("Bluetooth settings"), new DialogInterface.OnClickListener() {
                         @Override
@@ -794,6 +820,12 @@ final class Extras {
                 screenOff(a);
             }
         }));
+        r.add(new SettingsView.Row("Dashboard", "Screen brightness for all apps", a.brightnessState(), new Runnable() {
+            @Override
+            public void run() {
+                a.brightnessSettings();
+            }
+        }));
 
         // ---- Engine and tyres
         String g = "Engine and tyres";
@@ -817,6 +849,18 @@ final class Extras {
                 new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Live engine readings"))
                         .setMessage(now.isEmpty() ? Hindi.f("Not connected to the adapter: %1$s", Hindi.t(Obd.status)) : now)
                         .setPositiveButton(Hindi.t("OK"), null).show();
+            }
+        }));
+        r.add(new SettingsView.Row(g, "Your own engine readings", Obd.mine(p.str("obdMine", "")).length == 0 ? "add more to Live engine readings"
+                : Hindi.f("%1$s added", Obd.mine(p.str("obdMine", "")).length), new Runnable() {
+            @Override
+            public void run() {
+                Obd.chooseMine(a, p, new Runnable() {
+                    @Override
+                    public void run() {
+                        if (a.settingsView != null) a.settingsView.refresh();
+                    }
+                });
             }
         }));
         r.add(new SettingsView.Row(g, "Clear fault codes", "after a repair", new Runnable() {
@@ -977,9 +1021,9 @@ final class Extras {
             }
         }));
 
-        // ---- Kids or valet mode
+        // ---- Valet mode
         g = "Valet";
-        r.add(new SettingsView.Row(g, "Kids or valet mode", Valet.on(p) ? "On: Settings need the PIN" : "Limits volume and speed, locks Settings", new Runnable() {
+        r.add(new SettingsView.Row(g, "Valet mode", Valet.on(p) ? "On: Settings need the PIN" : "When someone else drives: caps the volume and speed, and Settings need your PIN", new Runnable() {
             @Override
             public void run() {
                 Valet.toggle(a, p, new Runnable() {
@@ -1087,6 +1131,21 @@ final class Extras {
                         a.nightDrive(a.hub);
                     }
                 }, 15500);
+            }
+        }));
+
+        // ---- Reversing camera picture, your own route server
+        r.add(new SettingsView.Row("Car signals", "Camera picture in reverse", ReverseView.chosen(p), new Runnable() {
+            @Override
+            public void run() {
+                ReverseView.choose(a);
+            }
+        }));
+        r.add(new SettingsView.Row("Driving", "Your own route server", MapCard.routeBase(p.str("routeServer", "")).isEmpty()
+                ? "the free public ones" : MapCard.routeHost(p.str("routeServer", "")), new Runnable() {
+            @Override
+            public void run() {
+                MapCard.chooseRouteServer(a);
             }
         }));
 
@@ -1365,7 +1424,7 @@ final class Extras {
 
         // ---- Child-lock and driver profiles
         g = "Family";
-        r.add(new SettingsView.Row(g, "Trip games for children", "spot the colour, number plates, how far", new Runnable() {
+        r.add(new SettingsView.Row(g, "Play a game now", "spot the colour, number plates, how far", new Runnable() {
             @Override
             public void run() {
                 if (Features.on(p, "kids")) {
@@ -1458,6 +1517,12 @@ final class Extras {
                 equalizer(a);
             }
         }));
+        r.add(new SettingsView.Row(g, "Balance (left and right)", balanceText(p.num("balance", 0)) + "  ·  " + Hindi.t("OpenRath's own music only"), new Runnable() {
+            @Override
+            public void run() {
+                balance(a);
+            }
+        }));
 
         // ---- Driving
         g = "Driving";
@@ -1515,6 +1580,18 @@ final class Extras {
             @Override
             public void run() {
                 restore(a);
+            }
+        }));
+        r.add(new SettingsView.Row(g, "Move to another stereo", "a QR code when the settings fit one, or share the file", new Runnable() {
+            @Override
+            public void run() {
+                Backup.move(a);
+            }
+        }));
+        r.add(new SettingsView.Row(g, "Read settings from another stereo", "open the file it sent", new Runnable() {
+            @Override
+            public void run() {
+                Backup.pickIn(a);
             }
         }));
         long at = 0;
@@ -1731,6 +1808,62 @@ final class Extras {
                 p.put("tickerApps", sb.length() == 0 ? "," : sb.toString());
             }
         }).setNegativeButton(Hindi.t("Cancel"), null).show();
+    }
+
+    private static String balanceText(int b) {
+        return b == 0 ? Hindi.t("Centre") : b < 0 ? Hindi.f("Left %1$s", -b) : Hindi.f("Right %1$s", b);
+    }
+
+    /** Balance for OpenRath's own player: a slider from left to right, saying plainly what it reaches. */
+    private static void balance(final HomeActivity a) {
+        final Prefs p = a.prefs;
+        LinearLayout col = new LinearLayout(a);
+        col.setOrientation(LinearLayout.VERTICAL);
+        col.setPadding(Ui.px(24), Ui.px(10), Ui.px(24), 0);
+        final TextView now = Ui.text(a, 17, 0xFFEEEEEE, "sans-serif-medium", Gravity.CENTER);
+        now.setPadding(0, Ui.px(8), 0, Ui.px(12));
+        now.setText(balanceText(p.num("balance", 0)));
+        col.addView(now);
+        LinearLayout row = new LinearLayout(a);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        TextView l = Ui.text(a, 14, 0xFFBBBBBB, "sans-serif", Gravity.LEFT), rt = Ui.text(a, 14, 0xFFBBBBBB, "sans-serif", Gravity.RIGHT);
+        l.setText(Hindi.t("Left"));
+        rt.setText(Hindi.t("Right"));
+        final SeekBar sb = new SeekBar(a);
+        sb.setMax(2 * Player.BALANCE_MAX);
+        sb.setProgress(Math.max(0, Math.min(2 * Player.BALANCE_MAX, p.num("balance", 0) + Player.BALANCE_MAX)));
+        sb.setMinimumHeight(Ui.px(HomeDock.TARGET));
+        row.addView(l);
+        row.addView(sb, new LinearLayout.LayoutParams(0, Ui.px(HomeDock.TARGET), 1f));
+        row.addView(rt);
+        col.addView(row);
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar s, int v, boolean user) {
+                int b = v - Player.BALANCE_MAX;
+                p.put("balance", String.valueOf(b));
+                now.setText(balanceText(b));
+                Player.balanceChanged();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar s) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar s) {
+            }
+        });
+        new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Balance")).setView(col)
+                .setMessage(Hindi.t(Player.BALANCE_REACH))
+                .setPositiveButton(Hindi.t("Done"), null)
+                .setNeutralButton(Hindi.t("Centre"), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        p.put("balance", "0");
+                        Player.balanceChanged();
+                    }
+                }).show();
     }
 
     private static void equalizer(final HomeActivity a) {

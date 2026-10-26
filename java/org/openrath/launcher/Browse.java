@@ -44,10 +44,28 @@ final class Browse {
         return out;
     }
 
-    private static ComponentName service(PackageManager pm, String pkg) {
-        for (ResolveInfo r : pm.queryIntentServices(new Intent("android.media.browse.MediaBrowserService").setPackage(pkg), 0))
-            return new ComponentName(r.serviceInfo.packageName, r.serviceInfo.name);
+    /** The app's library service, or null when it has none (also used to wake the app after switch-on, see Resume). */
+    static ComponentName service(PackageManager pm, String pkg) {
+        try {
+            for (ResolveInfo r : pm.queryIntentServices(new Intent("android.media.browse.MediaBrowserService").setPackage(pkg), 0))
+                return new ComponentName(r.serviceInfo.packageName, r.serviceInfo.name);
+        } catch (Exception e) {
+            Diag.note("music app library", e);
+        }
         return null;
+    }
+
+    /**
+     * The music box's source row: the apps with a media session (a music app the box can switch to),
+     * then the sources the boxes already have, as "files", "web" (online radio) and "fm". Pure, for the tests.
+     */
+    static List<String> sources(List<String> sessionPkgs, String own) {
+        List<String> out = new ArrayList<>();
+        for (String p : sessionPkgs) if (p != null && !p.equals(own) && !out.contains(p)) out.add(p);
+        out.add(Player.FILES);
+        out.add(Player.WEB);
+        out.add("fm");
+        return out;
     }
 
     static String label(PackageManager pm, String pkg) {

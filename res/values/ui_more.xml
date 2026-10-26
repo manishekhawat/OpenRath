@@ -178,6 +178,15 @@
     <string name="ui_more_not_tried" formatted="false">not tried</string>
     <string name="ui_more_download_the_english_voice_opens_google_s_vo" formatted="false">Download the English voice (opens Google\'s voice download)</string>
     <string name="ui_more_tap_to_open" formatted="false">Tap to open</string>
+    <string name="ui_more_balance_left_and_right" formatted="false">Balance (left and right)</string>
+    <string name="ui_more_openrath_s_own_music_only" formatted="false">OpenRath\'s own music only</string>
+    <string name="ui_more_centre" formatted="false">Centre</string>
+    <string name="ui_more_left_1_s" formatted="false">Left %1$s</string>
+    <string name="ui_more_right_1_s" formatted="false">Right %1$s</string>
+    <string name="ui_more_balance" formatted="false">Balance</string>
+    <string name="ui_more_only_openrath_s_own_online_radio_and_music_f" formatted="false">Only OpenRath\'s own online radio and music files. Other music apps, FM and the front and rear fader follow the unit\'s own sound settings.</string>
+    <string name="ui_more_files" formatted="false">FILES</string>
+    <string name="ui_more_online" formatted="false">ONLINE</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">Your trips show here after your first drive</string>
     <string name="ui_more_last_drive_1_s" formatted="false">LAST DRIVE, %1$s</string>
     <string name="ui_more_yesterday2" formatted="false">YESTERDAY</string>
@@ -258,6 +267,139 @@
     <string name="ui_more_background_behind_the_glass" formatted="false">Background behind the glass</string>
     <string name="ui_more_add_your_picture" formatted="false">Add your picture</string>
     <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">Copy a picture (JPG or PNG) to %1$s on the unit, with a USB stick or a file manager. Until then the Aurora background shows.</string>
+    <string name="ui_more_keypad" formatted="false">Keypad</string>
+    <string name="ui_more_type_a_number" formatted="false">Type a number</string>
+    <string name="ui_more_allow_phone_calls_then_tap_call_again" formatted="false">Allow phone calls, then tap Call again</string>
+    <string name="ui_more_dialing_a_number_is_blocked_while_the_car_is" formatted="false">Dialing a number is blocked while the car is moving</string>
+    <string name="ui_more_say_call_and_a_name_instead_or_stop_the_car_" formatted="false">Say \"call\" and a name instead, or stop the car to type a number.</string>
+    <string name="ui_more_speak" formatted="false">Speak</string>
+    <string name="ui_more_games_for_passengers" formatted="false">Games for passengers</string>
+    <string name="ui_more_spot_the_colour_number_plates_and_how_far_to" formatted="false">Spot the colour, number plates and how far to go, for children on a trip; nothing is locked</string>
+    <string name="ui_more_only_the_apps_you_choose_won_t_open_while_th" formatted="false">Only the apps you choose won\'t open while the car moves; nothing else is limited</string>
+    <string name="ui_more_nearest_cng_stations_and_km_per_kg_from_your" formatted="false">Nearest CNG stations, and km per kg from your CNG fills in the fuel log</string>
+    <string name="ui_more_valet_and_children" formatted="false">Valet and children</string>
+    <string name="ui_more_valet_mode_app_lock_passenger_games_drivers" formatted="false">Valet mode, app lock, passenger games, drivers</string>
+    <string name="ui_more_valet_mode" formatted="false">Valet mode</string>
+    <string name="ui_more_children_and_drivers" formatted="false">Children and drivers</string>
+    <string name="ui_more_when_someone_else_drives_caps_the_volume_and" formatted="false">When someone else drives: caps the volume and speed, and Settings need your PIN</string>
+    <string name="ui_more_play_a_game_now" formatted="false">Play a game now</string>
+    <string name="ui_more_more_features" formatted="false">More features</string>
+    <string name="ui_more_everything_that_s_off_ready_to_turn_on" formatted="false">Everything that\'s off, ready to turn on</string>
+    <string name="ui_more_1_s_more_feature_you_can_turn_on" formatted="false">%1$s more feature you can turn on</string>
+    <string name="ui_more_1_s_more_features_you_can_turn_on" formatted="false">%1$s more features you can turn on</string>
+    <string name="ui_more_1_s_is_on_its_settings_are_in_2_s" formatted="false">%1$s is on. Its settings are in %2$s</string>
+    <string name="ui_more_this_was_cng_kg" formatted="false">This was CNG (kg)</string>
+    <string name="ui_more_litres_or_kg_for_cng" formatted="false">Litres, or kg for CNG</string>
+    <string name="ui_more_all_fill_ups" formatted="false">All fill-ups</string>
+    <string name="ui_more_your_most_used_apps_search_and_the_full_list" formatted="false">Your most used apps. Search and the full list open when the car is stopped.</string>
+    <string name="ui_more_i_m_a_passenger_widgets_and_moving_boxes" formatted="false">I\'m a passenger: widgets and moving boxes</string>
+    <string name="ui_more_widgets_can_be_chosen_when_the_car_is_stoppe" formatted="false">Widgets can be chosen when the car is stopped</string>
+    <string name="ui_more_needs_a_small_engine_data_plug_bluetooth_or_" formatted="false">Needs a small engine-data plug (Bluetooth or Wi-Fi) in the socket under the steering wheel</string>
+    <string name="ui_more_plug_the_engine_data_plug_sold_as_an_obd_ii_" formatted="false">Plug the engine-data plug (sold as an OBD-II adapter, ELM327) into the socket under the steering wheel, switch the ignition on, and pair it in the unit\'s Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here.</string>
+    <string name="ui_more_this_unit_has_no_direct_radio_control" formatted="false">this unit has no direct radio control</string>
+    <string name="ui_more_screen_brightness_for_all_apps" formatted="false">Screen brightness for all apps</string>
+    <string name="ui_more_off_only_the_dashboard_dims_at_night" formatted="false">off; only the dashboard dims at night</string>
+    <string name="ui_more_waiting_for_your_ok_in_android_the_dashboard" formatted="false">waiting for your OK in Android; the dashboard dims meanwhile</string>
+    <string name="ui_more_day_1_s_night_2_s" formatted="false">day %1$s%%, night %2$s%%</string>
+    <string name="ui_more_openrath_can_set_the_unit_s_own_screen_brigh" formatted="false">OpenRath can set the unit\'s own screen brightness: one level by day and a lower one at night, switched by the headlights (or at sunset, as chosen in Night dimming). Then the night level also holds over the map, music and camera apps, not only on the dashboard.</string>
+    <string name="ui_more_for_this_android_asks_you_once_to_allow_open" formatted="false">For this, Android asks you once to allow OpenRath to change system settings. Without it, only the dashboard dims, as now.</string>
+    <string name="ui_more_turn_on" formatted="false">Turn on</string>
+    <string name="ui_more_turn_off" formatted="false">Turn off</string>
+    <string name="ui_more_day_level_1_s" formatted="false">Day level: %1$s%%</string>
+    <string name="ui_more_night_level_1_s" formatted="false">Night level: %1$s%%</string>
+    <string name="ui_more_allow_it_in_android" formatted="false">Allow it in Android</string>
+    <string name="ui_more_how_bright_by_day" formatted="false">How bright by day</string>
+    <string name="ui_more_how_bright_at_night" formatted="false">How bright at night</string>
+    <string name="ui_more_switch_on_modify_system_settings_for_openrat" formatted="false">Switch on \"Modify system settings\" for OpenRath, then come back.</string>
+    <string name="ui_more_this_unit_has_no_screen_to_allow_that_so_onl" formatted="false">This unit has no screen to allow that, so only the dashboard dims at night.</string>
+    <string name="ui_more_your_own_engine_readings" formatted="false">Your own engine readings</string>
+    <string name="ui_more_add_more_to_live_engine_readings" formatted="false">add more to Live engine readings</string>
+    <string name="ui_more_1_s_added" formatted="false">%1$s added</string>
+    <string name="ui_more_1_s_the_car_doesn_t_give_this" formatted="false">%1$s: the car doesn\'t give this</string>
+    <string name="ui_more_engine_load" formatted="false">Engine load</string>
+    <string name="ui_more_coolant_temperature" formatted="false">Coolant temperature</string>
+    <string name="ui_more_fuel_trim_now_bank_1" formatted="false">Fuel trim now (bank 1)</string>
+    <string name="ui_more_fuel_trim_learnt_bank_1" formatted="false">Fuel trim learnt (bank 1)</string>
+    <string name="ui_more_fuel_trim_now_bank_2" formatted="false">Fuel trim now (bank 2)</string>
+    <string name="ui_more_fuel_trim_learnt_bank_2" formatted="false">Fuel trim learnt (bank 2)</string>
+    <string name="ui_more_fuel_pressure" formatted="false">Fuel pressure</string>
+    <string name="ui_more_manifold_pressure" formatted="false">Manifold pressure</string>
+    <string name="ui_more_engine_speed" formatted="false">Engine speed</string>
+    <string name="ui_more_speed" formatted="false">Speed</string>
+    <string name="ui_more_ignition_timing" formatted="false">Ignition timing</string>
+    <string name="ui_more_intake_air_temperature" formatted="false">Intake air temperature</string>
+    <string name="ui_more_air_flow" formatted="false">Air flow</string>
+    <string name="ui_more_throttle" formatted="false">Throttle</string>
+    <string name="ui_more_oxygen_sensor_1_bank_1" formatted="false">Oxygen sensor 1 (bank 1)</string>
+    <string name="ui_more_oxygen_sensor_2_bank_1" formatted="false">Oxygen sensor 2 (bank 1)</string>
+    <string name="ui_more_time_since_the_engine_started" formatted="false">Time since the engine started</string>
+    <string name="ui_more_distance_driven_with_the_engine_light_on" formatted="false">Distance driven with the engine light on</string>
+    <string name="ui_more_fuel_rail_pressure_to_the_manifold" formatted="false">Fuel rail pressure (to the manifold)</string>
+    <string name="ui_more_fuel_rail_pressure" formatted="false">Fuel rail pressure</string>
+    <string name="ui_more_egr_asked_for" formatted="false">EGR asked for</string>
+    <string name="ui_more_egr_error" formatted="false">EGR error</string>
+    <string name="ui_more_fuel_vapour_purge" formatted="false">Fuel vapour purge</string>
+    <string name="ui_more_fuel_tank_level" formatted="false">Fuel tank level</string>
+    <string name="ui_more_warm_ups_since_the_codes_were_cleared" formatted="false">Warm-ups since the codes were cleared</string>
+    <string name="ui_more_distance_since_the_codes_were_cleared" formatted="false">Distance since the codes were cleared</string>
+    <string name="ui_more_air_pressure_outside" formatted="false">Air pressure outside</string>
+    <string name="ui_more_catalytic_converter_temperature" formatted="false">Catalytic converter temperature</string>
+    <string name="ui_more_engine_computer_voltage" formatted="false">Engine computer voltage</string>
+    <string name="ui_more_absolute_engine_load" formatted="false">Absolute engine load</string>
+    <string name="ui_more_air_fuel_ratio_asked_for_lambda" formatted="false">Air-fuel ratio asked for (lambda)</string>
+    <string name="ui_more_throttle_relative" formatted="false">Throttle (relative)</string>
+    <string name="ui_more_outside_air_temperature" formatted="false">Outside air temperature</string>
+    <string name="ui_more_throttle_sensor_b" formatted="false">Throttle (sensor B)</string>
+    <string name="ui_more_accelerator_pedal_sensor_d" formatted="false">Accelerator pedal (sensor D)</string>
+    <string name="ui_more_accelerator_pedal_sensor_e" formatted="false">Accelerator pedal (sensor E)</string>
+    <string name="ui_more_throttle_motor_asked_for" formatted="false">Throttle motor asked for</string>
+    <string name="ui_more_time_run_with_the_engine_light_on" formatted="false">Time run with the engine light on</string>
+    <string name="ui_more_time_since_the_codes_were_cleared" formatted="false">Time since the codes were cleared</string>
+    <string name="ui_more_ethanol_in_the_fuel" formatted="false">Ethanol in the fuel</string>
+    <string name="ui_more_fuel_rail_pressure_absolute" formatted="false">Fuel rail pressure (absolute)</string>
+    <string name="ui_more_accelerator_pedal_relative" formatted="false">Accelerator pedal (relative)</string>
+    <string name="ui_more_hybrid_battery_life_left" formatted="false">Hybrid battery life left</string>
+    <string name="ui_more_engine_oil_temperature" formatted="false">Engine oil temperature</string>
+    <string name="ui_more_fuel_injection_timing" formatted="false">Fuel injection timing</string>
+    <string name="ui_more_fuel_used" formatted="false">Fuel used</string>
+    <string name="ui_more_engine_torque_asked_for" formatted="false">Engine torque asked for</string>
+    <string name="ui_more_engine_torque" formatted="false">Engine torque</string>
+    <string name="ui_more_engine_torque_at_100" formatted="false">Engine torque at 100%</string>
+    <string name="ui_more_allow_the_camera_then_choose_again" formatted="false">Allow the camera, then choose again.</string>
+    <string name="ui_more_this_unit_gives_android_no_camera_so_the_gui" formatted="false">This unit gives Android no camera, so the guide lines show on a dark screen.</string>
+    <string name="ui_more_find_it_by_itself" formatted="false">Find it by itself</string>
+    <string name="ui_more_no_picture_guide_lines_only" formatted="false">No picture, guide lines only</string>
+    <string name="ui_more_camera_1_s" formatted="false">Camera %1$s</string>
+    <string name="ui_more_faces_back" formatted="false">" (faces back)"</string>
+    <string name="ui_more_camera_picture_in_reverse" formatted="false">Camera picture in reverse</string>
+    <string name="ui_more_guide_lines_only" formatted="false">guide lines only</string>
+    <string name="ui_more_found_by_itself_when_the_unit_has_one" formatted="false">found by itself, when the unit has one</string>
+    <string name="ui_more_your_own_route_server" formatted="false">Your own route server</string>
+    <string name="ui_more_the_free_public_ones" formatted="false">the free public ones</string>
+    <string name="ui_more_routes_come_from_two_free_public_servers_if_" formatted="false">Routes come from two free public servers. If you or your company run your own (OSRM, or one that answers the same way), type its https address here and the map asks it first. Leave it empty for the public ones.</string>
+    <string name="ui_more_that_isn_t_an_https_address_so_the_public_se" formatted="false">That isn\'t an https address, so the public servers stay.</string>
+    <string name="ui_more_move_to_another_stereo" formatted="false">Move to another stereo</string>
+    <string name="ui_more_a_qr_code_when_the_settings_fit_one_or_share" formatted="false">a QR code when the settings fit one, or share the file</string>
+    <string name="ui_more_read_settings_from_another_stereo" formatted="false">Read settings from another stereo</string>
+    <string name="ui_more_open_the_file_it_sent" formatted="false">open the file it sent</string>
+    <string name="ui_more_the_settings_come_to_1_s_characters_a_code_t" formatted="false">The settings come to %1$s characters; a code this screen can show well holds about 1,400.</string>
+    <string name="ui_more_share_the_file_to_take_everything_the_settin" formatted="false">Share the file to take everything: the settings, fuel log, trips and your pictures. Send it by Bluetooth or a messaging app, or copy it with a file manager, then open it on the other stereo with OpenRath.</string>
+    <string name="ui_more_the_qr_code_holds_the_settings_only_this_ste" formatted="false">The QR code holds the settings only. This stereo can\'t read a QR code itself, so scan it with a phone and share the text it shows to the other stereo. PINs and passwords are never included.</string>
+    <string name="ui_more_show_the_qr_code" formatted="false">Show the QR code</string>
+    <string name="ui_more_settings_for_another_stereo" formatted="false">Settings for another stereo</string>
+    <string name="ui_more_scan_with_a_phone_then_share_the_text_to_the" formatted="false">Scan with a phone, then share the text to the other stereo.</string>
+    <string name="ui_more_share_the_file_to_take_everything_the_settin2" formatted="false">Share the file to take everything: the settings, fuel log, trips and your pictures. Send it by Bluetooth or a messaging app, or copy it with a file manager, then open it on the other stereo with OpenRath. PINs and passwords are never included.</string>
+    <string name="ui_more_too_many_settings_for_one_qr_code" formatted="false">Too many settings for one QR code.</string>
+    <string name="ui_more_share_the_file" formatted="false">Share the file</string>
+    <string name="ui_more_no_room_on_the_unit" formatted="false">no room on the unit</string>
+    <string name="ui_more_send_the_settings_with" formatted="false">Send the settings with</string>
+    <string name="ui_more_no_app_on_this_stereo_can_send_files_use_bac" formatted="false">No app on this stereo can send files. Use Back up now and copy the file from OpenRath/backup with a USB stick.</string>
+    <string name="ui_more_settings_can_t_be_changed_in_valet_mode" formatted="false">Settings can\'t be changed in valet mode.</string>
+    <string name="ui_more_no_file_picker_on_this_stereo_copy_the_file_" formatted="false">No file picker on this stereo. Copy the file into its Download folder and use Restore from a backup.</string>
+    <string name="ui_more_the_file_is_too_big_to_be_a_backup" formatted="false">the file is too big to be a backup</string>
+    <string name="ui_more_settings_from_another_stereo" formatted="false">Settings from another stereo</string>
+    <string name="ui_more_replace_every_setting_the_fuel_log_and_trip_" formatted="false">Replace every setting, the fuel log and trip history on this stereo with the ones sent? A copy of what\'s here now is saved first, when storage is allowed. PINs and passwords stay as they are.</string>
+    <string name="ui_more_put_the_dashboard_settings_from_the_other_st" formatted="false">Put the dashboard settings from the other stereo on this one? The fuel log, trips and pictures here stay. PINs and passwords stay as they are.</string>
     <string-array name="ui_more">
         <item>@string/ui_more_next_turn_card_hidden_until_the_next_trip</item>
         <item>@string/ui_more_nothing_playing</item>
@@ -435,6 +577,15 @@
         <item>@string/ui_more_not_tried</item>
         <item>@string/ui_more_download_the_english_voice_opens_google_s_vo</item>
         <item>@string/ui_more_tap_to_open</item>
+        <item>@string/ui_more_balance_left_and_right</item>
+        <item>@string/ui_more_openrath_s_own_music_only</item>
+        <item>@string/ui_more_centre</item>
+        <item>@string/ui_more_left_1_s</item>
+        <item>@string/ui_more_right_1_s</item>
+        <item>@string/ui_more_balance</item>
+        <item>@string/ui_more_only_openrath_s_own_online_radio_and_music_f</item>
+        <item>@string/ui_more_files</item>
+        <item>@string/ui_more_online</item>
         <item>@string/ui_more_your_trips_show_here_after_your_first_drive</item>
         <item>@string/ui_more_last_drive_1_s</item>
         <item>@string/ui_more_yesterday2</item>
@@ -515,5 +666,138 @@
         <item>@string/ui_more_background_behind_the_glass</item>
         <item>@string/ui_more_add_your_picture</item>
         <item>@string/ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit</item>
+        <item>@string/ui_more_keypad</item>
+        <item>@string/ui_more_type_a_number</item>
+        <item>@string/ui_more_allow_phone_calls_then_tap_call_again</item>
+        <item>@string/ui_more_dialing_a_number_is_blocked_while_the_car_is</item>
+        <item>@string/ui_more_say_call_and_a_name_instead_or_stop_the_car_</item>
+        <item>@string/ui_more_speak</item>
+        <item>@string/ui_more_games_for_passengers</item>
+        <item>@string/ui_more_spot_the_colour_number_plates_and_how_far_to</item>
+        <item>@string/ui_more_only_the_apps_you_choose_won_t_open_while_th</item>
+        <item>@string/ui_more_nearest_cng_stations_and_km_per_kg_from_your</item>
+        <item>@string/ui_more_valet_and_children</item>
+        <item>@string/ui_more_valet_mode_app_lock_passenger_games_drivers</item>
+        <item>@string/ui_more_valet_mode</item>
+        <item>@string/ui_more_children_and_drivers</item>
+        <item>@string/ui_more_when_someone_else_drives_caps_the_volume_and</item>
+        <item>@string/ui_more_play_a_game_now</item>
+        <item>@string/ui_more_more_features</item>
+        <item>@string/ui_more_everything_that_s_off_ready_to_turn_on</item>
+        <item>@string/ui_more_1_s_more_feature_you_can_turn_on</item>
+        <item>@string/ui_more_1_s_more_features_you_can_turn_on</item>
+        <item>@string/ui_more_1_s_is_on_its_settings_are_in_2_s</item>
+        <item>@string/ui_more_this_was_cng_kg</item>
+        <item>@string/ui_more_litres_or_kg_for_cng</item>
+        <item>@string/ui_more_all_fill_ups</item>
+        <item>@string/ui_more_your_most_used_apps_search_and_the_full_list</item>
+        <item>@string/ui_more_i_m_a_passenger_widgets_and_moving_boxes</item>
+        <item>@string/ui_more_widgets_can_be_chosen_when_the_car_is_stoppe</item>
+        <item>@string/ui_more_needs_a_small_engine_data_plug_bluetooth_or_</item>
+        <item>@string/ui_more_plug_the_engine_data_plug_sold_as_an_obd_ii_</item>
+        <item>@string/ui_more_this_unit_has_no_direct_radio_control</item>
+        <item>@string/ui_more_screen_brightness_for_all_apps</item>
+        <item>@string/ui_more_off_only_the_dashboard_dims_at_night</item>
+        <item>@string/ui_more_waiting_for_your_ok_in_android_the_dashboard</item>
+        <item>@string/ui_more_day_1_s_night_2_s</item>
+        <item>@string/ui_more_openrath_can_set_the_unit_s_own_screen_brigh</item>
+        <item>@string/ui_more_for_this_android_asks_you_once_to_allow_open</item>
+        <item>@string/ui_more_turn_on</item>
+        <item>@string/ui_more_turn_off</item>
+        <item>@string/ui_more_day_level_1_s</item>
+        <item>@string/ui_more_night_level_1_s</item>
+        <item>@string/ui_more_allow_it_in_android</item>
+        <item>@string/ui_more_how_bright_by_day</item>
+        <item>@string/ui_more_how_bright_at_night</item>
+        <item>@string/ui_more_switch_on_modify_system_settings_for_openrat</item>
+        <item>@string/ui_more_this_unit_has_no_screen_to_allow_that_so_onl</item>
+        <item>@string/ui_more_your_own_engine_readings</item>
+        <item>@string/ui_more_add_more_to_live_engine_readings</item>
+        <item>@string/ui_more_1_s_added</item>
+        <item>@string/ui_more_1_s_the_car_doesn_t_give_this</item>
+        <item>@string/ui_more_engine_load</item>
+        <item>@string/ui_more_coolant_temperature</item>
+        <item>@string/ui_more_fuel_trim_now_bank_1</item>
+        <item>@string/ui_more_fuel_trim_learnt_bank_1</item>
+        <item>@string/ui_more_fuel_trim_now_bank_2</item>
+        <item>@string/ui_more_fuel_trim_learnt_bank_2</item>
+        <item>@string/ui_more_fuel_pressure</item>
+        <item>@string/ui_more_manifold_pressure</item>
+        <item>@string/ui_more_engine_speed</item>
+        <item>@string/ui_more_speed</item>
+        <item>@string/ui_more_ignition_timing</item>
+        <item>@string/ui_more_intake_air_temperature</item>
+        <item>@string/ui_more_air_flow</item>
+        <item>@string/ui_more_throttle</item>
+        <item>@string/ui_more_oxygen_sensor_1_bank_1</item>
+        <item>@string/ui_more_oxygen_sensor_2_bank_1</item>
+        <item>@string/ui_more_time_since_the_engine_started</item>
+        <item>@string/ui_more_distance_driven_with_the_engine_light_on</item>
+        <item>@string/ui_more_fuel_rail_pressure_to_the_manifold</item>
+        <item>@string/ui_more_fuel_rail_pressure</item>
+        <item>@string/ui_more_egr_asked_for</item>
+        <item>@string/ui_more_egr_error</item>
+        <item>@string/ui_more_fuel_vapour_purge</item>
+        <item>@string/ui_more_fuel_tank_level</item>
+        <item>@string/ui_more_warm_ups_since_the_codes_were_cleared</item>
+        <item>@string/ui_more_distance_since_the_codes_were_cleared</item>
+        <item>@string/ui_more_air_pressure_outside</item>
+        <item>@string/ui_more_catalytic_converter_temperature</item>
+        <item>@string/ui_more_engine_computer_voltage</item>
+        <item>@string/ui_more_absolute_engine_load</item>
+        <item>@string/ui_more_air_fuel_ratio_asked_for_lambda</item>
+        <item>@string/ui_more_throttle_relative</item>
+        <item>@string/ui_more_outside_air_temperature</item>
+        <item>@string/ui_more_throttle_sensor_b</item>
+        <item>@string/ui_more_accelerator_pedal_sensor_d</item>
+        <item>@string/ui_more_accelerator_pedal_sensor_e</item>
+        <item>@string/ui_more_throttle_motor_asked_for</item>
+        <item>@string/ui_more_time_run_with_the_engine_light_on</item>
+        <item>@string/ui_more_time_since_the_codes_were_cleared</item>
+        <item>@string/ui_more_ethanol_in_the_fuel</item>
+        <item>@string/ui_more_fuel_rail_pressure_absolute</item>
+        <item>@string/ui_more_accelerator_pedal_relative</item>
+        <item>@string/ui_more_hybrid_battery_life_left</item>
+        <item>@string/ui_more_engine_oil_temperature</item>
+        <item>@string/ui_more_fuel_injection_timing</item>
+        <item>@string/ui_more_fuel_used</item>
+        <item>@string/ui_more_engine_torque_asked_for</item>
+        <item>@string/ui_more_engine_torque</item>
+        <item>@string/ui_more_engine_torque_at_100</item>
+        <item>@string/ui_more_allow_the_camera_then_choose_again</item>
+        <item>@string/ui_more_this_unit_gives_android_no_camera_so_the_gui</item>
+        <item>@string/ui_more_find_it_by_itself</item>
+        <item>@string/ui_more_no_picture_guide_lines_only</item>
+        <item>@string/ui_more_camera_1_s</item>
+        <item>@string/ui_more_faces_back</item>
+        <item>@string/ui_more_camera_picture_in_reverse</item>
+        <item>@string/ui_more_guide_lines_only</item>
+        <item>@string/ui_more_found_by_itself_when_the_unit_has_one</item>
+        <item>@string/ui_more_your_own_route_server</item>
+        <item>@string/ui_more_the_free_public_ones</item>
+        <item>@string/ui_more_routes_come_from_two_free_public_servers_if_</item>
+        <item>@string/ui_more_that_isn_t_an_https_address_so_the_public_se</item>
+        <item>@string/ui_more_move_to_another_stereo</item>
+        <item>@string/ui_more_a_qr_code_when_the_settings_fit_one_or_share</item>
+        <item>@string/ui_more_read_settings_from_another_stereo</item>
+        <item>@string/ui_more_open_the_file_it_sent</item>
+        <item>@string/ui_more_the_settings_come_to_1_s_characters_a_code_t</item>
+        <item>@string/ui_more_share_the_file_to_take_everything_the_settin</item>
+        <item>@string/ui_more_the_qr_code_holds_the_settings_only_this_ste</item>
+        <item>@string/ui_more_show_the_qr_code</item>
+        <item>@string/ui_more_settings_for_another_stereo</item>
+        <item>@string/ui_more_scan_with_a_phone_then_share_the_text_to_the</item>
+        <item>@string/ui_more_share_the_file_to_take_everything_the_settin2</item>
+        <item>@string/ui_more_too_many_settings_for_one_qr_code</item>
+        <item>@string/ui_more_share_the_file</item>
+        <item>@string/ui_more_no_room_on_the_unit</item>
+        <item>@string/ui_more_send_the_settings_with</item>
+        <item>@string/ui_more_no_app_on_this_stereo_can_send_files_use_bac</item>
+        <item>@string/ui_more_settings_can_t_be_changed_in_valet_mode</item>
+        <item>@string/ui_more_no_file_picker_on_this_stereo_copy_the_file_</item>
+        <item>@string/ui_more_the_file_is_too_big_to_be_a_backup</item>
+        <item>@string/ui_more_settings_from_another_stereo</item>
+        <item>@string/ui_more_replace_every_setting_the_fuel_log_and_trip_</item>
+        <item>@string/ui_more_put_the_dashboard_settings_from_the_other_st</item>
     </string-array>
 </resources>

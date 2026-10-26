@@ -145,7 +145,7 @@ final class News {
         tried = now;
         busy = true;
         final String topic = p.str("newsTopic", "top");
-        Bg.run(new Runnable() {
+        Bg.net(new Runnable() {
             @Override
             public void run() {
                 try {

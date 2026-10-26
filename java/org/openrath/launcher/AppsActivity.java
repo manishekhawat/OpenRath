@@ -29,11 +29,15 @@ import java.util.List;
 /**
  * All apps, in a grid on black. With the "appDrawer" feature on: a search box, A to Z or most used
  * first, a row of pinned and recently opened apps, an A–Z column to jump with, and a long press for
- * pin, hide, App info or Uninstall (hidden apps show only when searched for).
+ * pin, hide, App info or Uninstall (hidden apps show only when searched for). While the car moves
+ * (Settings only when stopped) it shows only a short list of the pinned and most used apps, with no
+ * search box, until the car stops or the owner says a passenger is using the screen.
  */
 public class AppsActivity extends Activity {
 
     static final int RECENT = 6;
+    /** How many apps the list shows while driving: the pinned ones, then the most opened. */
+    static final int DRIVING = 8;
 
     private final List<ResolveInfo> all = new ArrayList<>();
     private final List<ResolveInfo> shown = new ArrayList<>();
@@ -43,8 +47,23 @@ public class AppsActivity extends Activity {
     private boolean extras;
     private GridView grid;
     private EditText search;
-    private LinearLayout strip, letters;
+    private LinearLayout strip, letters, top, drivingBar;
+    private HorizontalScrollView hs;
+    private ScrollView ls;
     private BaseAdapter adapter;
+    /** While the car moves (Settings only when stopped): no typing and no full list, only the short list. */
+    private boolean driving;
+    /** The owner said a passenger is using the screen: the full list and search while this list is open. */
+    private boolean passenger;
+    private final android.os.Handler handler = new android.os.Handler();
+    /** Every few seconds: the car started or stopped moving, so the list changes with it. */
+    private final Runnable watch = new Runnable() {
+        @Override
+        public void run() {
+            if (locked() != driving) mode();
+            handler.postDelayed(this, 3000);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle b) {
@@ -61,6 +80,32 @@ public class AppsActivity extends Activity {
         root.setOrientation(LinearLayout.VERTICAL);
         if (Glass.on) root.setBackground(Glass.backdrop());   // the Glass look: the wallpaper, the apps on a glass panel
         else root.setBackgroundColor(0xFF000000);
+
+        // while driving: a line saying why there is no search, and the passenger's way to it
+        drivingBar = new LinearLayout(this);
+        drivingBar.setGravity(Gravity.CENTER_VERTICAL);
+        TextView why = new TextView(this);
+        why.setTextColor(Ui.SILVER_DIM);
+        why.setTextSize(0, Math.max(Ui.MIN_TEXT, 18) * k);
+        why.setText(Hindi.t("Your most used apps. Search and the full list open when the car is stopped."));
+        drivingBar.addView(why, new LinearLayout.LayoutParams(0, -2, 1f));
+        TextView pass = PhoneCard.pill(this, Hindi.t("I'm a passenger"), 0xFF2A2D32);
+        pass.setTextSize(0, Math.max(Ui.MIN_TEXT, 18) * k);
+        pass.setPadding(Math.round(22 * k), 0, Math.round(22 * k), 0);
+        pass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                passenger = true;
+                mode();
+            }
+        });
+        LinearLayout.LayoutParams pp = new LinearLayout.LayoutParams(-2, Math.round(HomeDock.TARGET * k));
+        pp.leftMargin = Math.round(16 * k);
+        drivingBar.addView(pass, pp);
+        drivingBar.setVisibility(View.GONE);
+        LinearLayout.LayoutParams dbp = new LinearLayout.LayoutParams(-1, -2);
+        dbp.setMargins(pad, Math.round(12 * k), pad, 0);
+        root.addView(drivingBar, dbp);
 
         if (extras) {
             search = new EditText(this);
@@ -95,7 +140,7 @@ public class AppsActivity extends Activity {
                 search.setMinHeight(Math.round(56 * k));
                 order.setBackground(Glass.pane(28));
             }
-            LinearLayout top = new LinearLayout(this);
+            top = new LinearLayout(this);
             top.setGravity(Gravity.CENTER_VERTICAL);
             top.addView(search, new LinearLayout.LayoutParams(0, -2, 1f));
             top.addView(order, new LinearLayout.LayoutParams(-2, Math.round(HomeDock.TARGET * k)));
@@ -103,7 +148,7 @@ public class AppsActivity extends Activity {
             sp.setMargins(pad, Math.round(12 * k), pad, 0);
             root.addView(top, sp);
 
-            HorizontalScrollView hs = new HorizontalScrollView(this);
+            hs = new HorizontalScrollView(this);
             strip = new LinearLayout(this);
             strip.setOrientation(LinearLayout.HORIZONTAL);
             strip.setPadding(pad, Math.round(8 * k), pad, 0);
@@ -149,7 +194,7 @@ public class AppsActivity extends Activity {
         });
         body.addView(grid, new LinearLayout.LayoutParams(0, -1, 1));
         if (extras) {
-            ScrollView ls = new ScrollView(this);
+            ls = new ScrollView(this);
             letters = new LinearLayout(this);
             letters.setOrientation(LinearLayout.VERTICAL);
             letters.setPadding(0, pad, Math.round(8 * k), pad);
@@ -173,11 +218,39 @@ public class AppsActivity extends Activity {
         // apps may have been added or removed while we were away
         all.clear();
         all.addAll(AppPicker.apps(this));
-        filter();
         if (extras) {
             fillStrip();
             fillLetters();
         }
+        mode();
+        handler.postDelayed(watch, 3000);
+    }
+
+    @Override
+    protected void onPause() {
+        handler.removeCallbacks(watch);
+        super.onPause();
+    }
+
+    private boolean locked() {
+        return !passenger && ChildLock.parkedOnly(prefs);
+    }
+
+    /** The full list with search, or while driving the short list with no keyboard. */
+    private void mode() {
+        driving = locked();
+        drivingBar.setVisibility(driving ? View.VISIBLE : View.GONE);
+        if (extras) {
+            if (driving && search.hasFocus()) {
+                android.view.inputmethod.InputMethodManager im = (android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (im != null) im.hideSoftInputFromWindow(search.getWindowToken(), 0);
+                search.clearFocus();
+            }
+            top.setVisibility(driving ? View.GONE : View.VISIBLE);
+            ls.setVisibility(driving ? View.GONE : View.VISIBLE);
+            hs.setVisibility(driving || strip.getChildCount() == 0 ? View.GONE : View.VISIBLE);
+        }
+        filter();
     }
 
     private LinearLayout cell(int iconDp) {
@@ -188,8 +261,9 @@ public class AppsActivity extends Activity {
         cell.addView(icon, new LinearLayout.LayoutParams(Math.round(iconDp * k), Math.round(iconDp * k)));
         TextView t = new TextView(this);
         t.setTextColor(Ui.SILVER);
-        t.setTextSize(0, 14 * k);
+        t.setTextSize(0, Math.max(Ui.MIN_TEXT, 14) * k);
         t.setSingleLine(true);
+        t.setEllipsize(android.text.TextUtils.TruncateAt.END);
         if (Glass.on) t.setShadowLayer(2 * k, 0, k, 0x59000000);
         t.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(-1, -2);
@@ -207,9 +281,19 @@ public class AppsActivity extends Activity {
      * found and shown again); the most opened first when that order is chosen.
      */
     private void filter() {
-        String q = search == null ? "" : search.getText().toString();
         List<String> hidden = split(prefs.str("hiddenApps", ""));
         shown.clear();
+        if (driving) {
+            List<String> pkgs = new ArrayList<>();
+            for (ResolveInfo r : all) if (!hidden.contains(r.activityInfo.packageName)) pkgs.add(r.activityInfo.packageName);
+            for (String pkg : shortList(pkgs, counts(prefs.str("appUses", "")), split(prefs.str("pinnedApps", "")), DRIVING)) {
+                ResolveInfo r = find(pkg);
+                if (r != null) shown.add(r);
+            }
+            adapter.notifyDataSetChanged();
+            return;
+        }
+        String q = search == null ? "" : search.getText().toString();
         for (ResolveInfo r : all) {
             String pkg = r.activityInfo.packageName;
             if (hidden.contains(pkg) && q.trim().isEmpty()) continue;
@@ -226,6 +310,26 @@ public class AppsActivity extends Activity {
             });
         }
         adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * The short list while driving: the pinned apps first, then the most opened, then A to Z (the
+     * order pkgs come in), at most max. Pure, for the tests.
+     */
+    static List<String> shortList(List<String> pkgs, final java.util.Map<String, Integer> uses, List<String> pinned, int max) {
+        List<String> out = new ArrayList<>();
+        for (String p : pinned) if (pkgs.contains(p) && !out.contains(p) && out.size() < max) out.add(p);
+        List<String> rest = new ArrayList<>();
+        for (String p : pkgs) if (!out.contains(p)) rest.add(p);
+        java.util.Collections.sort(rest, new java.util.Comparator<String>() {
+            @Override
+            public int compare(String a, String b) {
+                Integer x = uses.get(a), y = uses.get(b);
+                return Integer.compare(y == null ? 0 : y, x == null ? 0 : x);   // stable: A to Z among equals
+            }
+        });
+        for (String p : rest) if (out.size() < max) out.add(p);
+        return out;
     }
 
     /** "pkg=n,pkg=n" to a map. */
@@ -323,10 +427,8 @@ public class AppsActivity extends Activity {
             Toast.makeText(this, Hindi.t(ChildLock.SORRY), Toast.LENGTH_SHORT).show();
             return;
         }
-        if (extras) {
-            prefs.put("recentApps", join(push(split(prefs.str("recentApps", "")), pkg, RECENT)));
-            prefs.put("appUses", bump(prefs.str("appUses", ""), pkg));
-        }
+        if (extras) prefs.put("recentApps", join(push(split(prefs.str("recentApps", "")), pkg, RECENT)));
+        prefs.put("appUses", bump(prefs.str("appUses", ""), pkg));   // also for the short list while driving
         Intent in = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
                 .setClassName(pkg, r.activityInfo.name)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -335,6 +437,7 @@ public class AppsActivity extends Activity {
     }
 
     private void menu(ResolveInfo r) {
+        if (driving) return;   // pin, hide and uninstall wait for the car to stop
         final String pkg = r.activityInfo.packageName;
         final List<String> pinned = split(prefs.str("pinnedApps", ""));
         final boolean isPinned = pinned.contains(pkg);

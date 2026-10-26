@@ -12,7 +12,8 @@ import android.widget.TextView;
  * The music and radio boxes: what is playing, with previous, play / pause and next buttons and
  * the source switch in the header. The radio box drives FM through the stereo's own services
  * when it can (with a station scan), else the radio app; for app players the launcher can't
- * see, the buttons send media keys.
+ * see, the buttons send media keys. A tall music box also shows a row of sources along the
+ * bottom (the music apps with a player, music files, online radio, FM): one tap switches.
  */
 final class MediaCard extends Cards.Card {
     final boolean radio;
@@ -46,6 +47,14 @@ final class MediaCard extends Cards.Card {
     /** Drag to seek, for music apps that report where the track is. */
     final Progress progress = new Progress(getContext());
     android.graphics.Bitmap tintedFor;
+    /** The music box's source row: a chip for each music app with a player, music files, online radio and FM. */
+    final LinearLayout chips = new LinearLayout(getContext());
+    /** What the chips stand for (see Browse.sources), and which one each chip is. */
+    java.util.List<String> chipItems = new java.util.ArrayList<>();
+    final java.util.List<View> chipViews = new java.util.ArrayList<>();
+    private int boxW, boxH;
+    /** The sources that aren't music apps, at the end of the row: kept when the row has no room for every app. */
+    static final int FIXED_CHIPS = 3;
 
     MediaCard(Context c, boolean isRadio) {
         super(c);
@@ -90,6 +99,10 @@ final class MediaCard extends Cards.Card {
             });
         }
         if (!radio) {
+            chips.setOrientation(LinearLayout.HORIZONTAL);
+            chips.setGravity(Gravity.CENTER_VERTICAL);
+            chips.setVisibility(GONE);
+            addView(chips);
             android.graphics.drawable.GradientDrawable pill = new android.graphics.drawable.GradientDrawable();
             pill.setCornerRadius(999);
             pill.setStroke(Math.max(1, Ui.px(1.5f)), Ui.EDGE);
@@ -291,32 +304,187 @@ final class MediaCard extends Cards.Card {
         title.setTextSize(0, (radio ? 30 : 24) * Ui.k * s);
         sub.setTextSize(0, Math.max(Ui.MIN_TEXT, 15 * s) * Ui.k);
         // each button takes touches across at least 76 (Android's size for use while driving), however
-        // small the box; the picture keeps its size and the rest is padding, eating into the gap first
-        int touch = Math.max(bs, Math.min(Ui.px(HomeDock.TARGET), Math.round(w * 0.55f / 3)));
+        // small the box; the picture keeps its size and the rest is padding, eating into the gap first.
+        // A box too narrow for that drops the words first, then previous and next (play stays).
+        int touch = Math.max(bs, Ui.px(HomeDock.TARGET));
         int pad = (touch - bs) / 2, between = Math.max(0, Ui.px(14 * s) - (touch - bs));
-        int bw = 3 * touch + 2 * between;
-        text.setLayoutParams(at(Math.max(w - 3 * m - bw, Ui.px(60)), -2, Gravity.CENTER_VERTICAL | Gravity.LEFT, m, Ui.px(14 * s), 0, 0));
+        int count = buttonCount(w - 2 * m, touch);
+        if (count == 3) between = Math.min(between, (w - 2 * m - 3 * touch) / 2);
+        else between = 0;
+        int bw = count * touch + (count - 1) * between;
+        int textW = w - 3 * m - bw;
+        text.setVisibility(textW >= Ui.px(60) ? VISIBLE : GONE);
+        // the source row along the bottom, when the box is tall enough for it under the buttons
+        int gap = Ui.px(8 * s), headH = Ui.px(10 * s) + Math.round(Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k * 1.3f) + Ui.px(12 * s);
+        int bar = Ui.px(30 * s), rowN = radio ? 0 : chipCount(w - 2 * m, touch, gap);
+        boolean row = !radio && chipRoom(h, headH, touch, bar, gap) && rowN >= 2 && chipItems.size() >= 2;
+        int shift = row ? (headH - touch - 2 * gap) / 2 : 0;   // the words and buttons centre in the room above the row
+        text.setLayoutParams(at(Math.max(textW, Ui.px(60)), -2, Gravity.CENTER_VERTICAL | Gravity.LEFT, m,
+                Math.max(0, Ui.px(14 * s) + shift), 0, Math.max(0, -Ui.px(14 * s) - shift)));
         for (ImageView b : new ImageView[]{prev, play, next}) {
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(touch, touch);
-            p.leftMargin = b == prev ? 0 : between;
+            p.leftMargin = b == prev || b == play && count == 1 ? 0 : between;
             b.setPadding(pad, pad, pad, pad);
             b.setLayoutParams(p);
+            if (b != play) b.setVisibility(count == 3 ? VISIBLE : GONE);
         }
-        buttons.setLayoutParams(at(-2, -2, Gravity.CENTER_VERTICAL | Gravity.RIGHT, 0, Ui.px(8 * s), m, 0));
+        buttons.setLayoutParams(at(-2, -2, Gravity.CENTER_VERTICAL | Gravity.RIGHT, 0,
+                Math.max(0, Ui.px(8 * s) + shift), m, Math.max(0, -Ui.px(8 * s) - shift)));
+        boxW = w;
+        boxH = h;
+        if (!radio) {
+            chips.setVisibility(row ? VISIBLE : GONE);
+            java.util.List<String> shown = shown(chipItems, row ? rowN : 0, FIXED_CHIPS);
+            for (int i = 0; i < chipViews.size(); i++) {
+                View c = chipViews.get(i);
+                c.setVisibility(shown.contains(chipItems.get(i)) ? VISIBLE : GONE);
+                LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(touch, touch);
+                cp.rightMargin = gap;
+                c.setLayoutParams(cp);
+                int ip = Math.round(touch * 0.2f);
+                if (c instanceof ImageView) c.setPadding(ip, ip, ip, ip);
+                else ((TextView) c).setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
+            }
+            chips.setLayoutParams(at(-2, touch, Gravity.BOTTOM | Gravity.LEFT, m, 0, 0, gap));
+        }
         scan.setTextSize(0, 17 * Ui.k * s);
         scan.setPadding(Ui.px(26 * s), Ui.px(9 * s), Ui.px(26 * s), Ui.px(9 * s));
         scan.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(8 * s), m, 0));
         phone.setTextSize(0, Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k);
         phone.setPadding(Ui.px(10 * s), Ui.px(4 * s), Ui.px(10 * s), Ui.px(4 * s));
         phone.setLayoutParams(at(-2, -2, Gravity.TOP | Gravity.RIGHT, 0, Ui.px(8 * s), m, 0));
-        progress.setLayoutParams(at(-1, Ui.px(30 * s), Gravity.BOTTOM, m, 0, m, Ui.px(4 * s)));
+        progress.setLayoutParams(at(-1, bar, Gravity.BOTTOM, m, 0, m, row ? touch + 2 * gap : Ui.px(4 * s)));
         progress.text = Math.max(Ui.MIN_TEXT, 11 * s) * Ui.k;
+    }
+
+    /** Buttons that fit across `room` with each at least `touch` wide: all three, else play alone. Pure, for the tests. */
+    static int buttonCount(int room, int touch) {
+        return room >= 3 * touch ? 3 : 1;
+    }
+
+    /** Whether a box `h` tall has room for the heading, the buttons, the seek bar and the source row. Pure, for the tests. */
+    static boolean chipRoom(int h, int head, int touch, int bar, int gap) {
+        return h >= head + touch + bar + touch + 3 * gap;
+    }
+
+    /** How many chips `touch` wide, `gap` apart, fit across `room`. Pure, for the tests. */
+    static int chipCount(int room, int touch, int gap) {
+        return room < touch ? 0 : (room + gap) / (touch + gap);
+    }
+
+    /**
+     * The chips that fit when only `n` do: the music apps first, as many as there's room for, then
+     * the last `fixed` items (files, online radio, FM), which always stay. Pure, for the tests.
+     */
+    static java.util.List<String> shown(java.util.List<String> all, int n, int fixed) {
+        if (n <= 0) return new java.util.ArrayList<>();
+        if (all.size() <= n) return all;
+        int f = Math.min(fixed, all.size()), apps = Math.max(0, n - f);
+        java.util.List<String> out = new java.util.ArrayList<>(all.subList(0, Math.min(apps, all.size() - f)));
+        java.util.List<String> tail = all.subList(all.size() - f, all.size());
+        out.addAll(tail.subList(Math.max(0, tail.size() - (n - out.size())), tail.size()));
+        return out;
+    }
+
+    /** The source row's chips again, when the music apps with a player change. */
+    private void chipsFor(java.util.List<String> items) {
+        if (items.equals(chipItems)) return;
+        chipItems = items;
+        chips.removeAllViews();
+        chipViews.clear();
+        android.content.pm.PackageManager pm = getContext().getPackageManager();
+        for (final String it : items) {
+            View c;
+            boolean app = !Player.FILES.equals(it) && !Player.WEB.equals(it) && !"fm".equals(it);
+            if (app) {
+                ImageView iv = new ImageView(getContext());
+                try {
+                    iv.setImageDrawable(pm.getApplicationIcon(it));
+                } catch (Exception e) {
+                    iv.setImageBitmap(Ui.img(getContext(), "btn_play"));
+                }
+                iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                iv.setContentDescription(Browse.label(pm, it));
+                c = iv;
+            } else {
+                TextView t = Ui.text(getContext(), 11, Ui.SILVER, "sans-serif-medium", Gravity.CENTER);
+                t.setSingleLine(true);
+                t.setText(Player.FILES.equals(it) ? Hindi.t("FILES") : Player.WEB.equals(it) ? Hindi.t("ONLINE") : "FM");
+                c = t;
+            }
+            clickable(c, new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    switchTo(it);
+                }
+            });
+            chipViews.add(c);
+            chips.addView(c);
+        }
+        if (boxW > 0) fit(boxW, boxH);
+    }
+
+    /** Marks the chip of what plays now (as Resume remembers it). */
+    private void chipsNow(String playing) {
+        for (int i = 0; i < chipViews.size(); i++) {
+            String it = chipItems.get(i);
+            boolean on = it.equals(playing) || ("app:" + it).equals(playing);
+            android.graphics.drawable.GradientDrawable pill = new android.graphics.drawable.GradientDrawable();
+            pill.setCornerRadius(999);
+            pill.setStroke(Math.max(1, Ui.px(on ? 2.5f : 1.5f)), on ? Ui.SILVER : Ui.EDGE);
+            if (Glass.on || on) pill.setColor(Ui.PANEL_TOP);
+            chipViews.get(i).setBackground(pill);
+            chipViews.get(i).setAlpha(on ? 1f : 0.75f);
+        }
+    }
+
+    /** One tap on a chip: that source plays now, and the boxes follow it. */
+    void switchTo(String it) {
+        Prefs p = host.prefs();
+        Context c = getContext();
+        try {
+            if ("fm".equals(it)) {
+                if (Player.playing) Player.send(c, Player.STOP, null);
+                p.setSource("radio", "app");
+                owner = "radio";
+                Resume.remember(p, "fm");
+                if (unit != null && unit.fm(p)) {
+                    unit.fmPlay(c, p, true);
+                    if (!unit.fmFirst(p)) host.startRadioService();
+                } else {
+                    host.openApp("media:radio", "Radio");
+                }
+            } else if (Player.WEB.equals(it) || Player.FILES.equals(it)) {
+                boolean web = Player.WEB.equals(it);
+                if (unit != null) unit.fmQuiet();
+                owner = web ? "radio" : "music";
+                p.setSource(web ? "radio" : "music", it);
+                Resume.remember(p, it);
+                Player.send(c, Player.PLAY, it);
+            } else {
+                boolean r = Hub.looksLikeRadio(it);
+                p.setApp(r ? "media:radio" : "media:music", it);   // the box follows this app now
+                p.setSource(r ? "radio" : "music", "app");
+                if (Player.playing) Player.send(c, Player.STOP, null);
+                if (unit != null) unit.fmQuiet();
+                owner = r ? "radio" : "music";
+                Resume.remember(p, "app:" + it);
+                Resume.playApp(c, it, true);
+            }
+        } catch (Throwable e) {
+            Diag.note("switch music source", e);
+        }
+        host.refresh();
     }
 
     @Override
     public void changed(Hub h) {
         unit = h.unit;
         Prefs p = host.prefs();
+        if (!radio) {
+            chipsFor(Browse.sources(h.sessionPkgs, getContext().getPackageName()));
+            chipsNow(p.str("resume", ""));
+        }
         String pref = p.source(radio ? "radio" : "music");
         boolean auto = "auto".equals(pref);
         if (radio) source = auto ? (h.online ? Player.WEB : "app") : pref;

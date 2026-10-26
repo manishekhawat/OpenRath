@@ -36,7 +36,8 @@ final class OverStrip {
         if (shown != null || !wanted(p) || !OverMic.allowed(app)) return;
         final WindowManager wm = (WindowManager) app.getSystemService(Context.WINDOW_SERVICE);
         final int sw = app.getResources().getDisplayMetrics().widthPixels, sh = app.getResources().getDisplayMetrics().heightPixels;
-        final int w = Math.min(sw - Ui.px(40), Ui.px(620)), h = Ui.px(58);
+        // tall enough for the buttons to be full touch targets (HomeDock.TARGET) and the words to read at a glance
+        final int w = Math.min(sw - Ui.px(40), Ui.px(680)), h = Ui.px(HomeDock.TARGET + 6);
         final WindowManager.LayoutParams lp = new WindowManager.LayoutParams(w, h, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, PixelFormat.TRANSLUCENT);
         lp.gravity = Gravity.TOP | Gravity.LEFT;
@@ -76,14 +77,15 @@ final class OverStrip {
             }
         };
         s.setGravity(Gravity.CENTER_VERTICAL);
-        s.setPadding(Ui.px(16), Ui.px(2), Ui.px(8), Ui.px(2));
+        s.setPadding(Ui.px(16), Ui.px(3), Ui.px(8), Ui.px(3));
         GradientDrawable g = new GradientDrawable();
         g.setCornerRadius(Ui.RADIUS * Ui.k);
         g.setColor(0xF0000000 | (Ui.solidPanel() & 0xFFFFFF));
         g.setStroke(Math.max(1, Ui.px(1.5f)), Ui.ACCENT);
         s.setBackground(g);
-        final TextView line1 = Ui.text(app, 16, Ui.SILVER, "sans-serif", Gravity.LEFT);
-        final TextView line2 = Ui.text(app, 13, Ui.SILVER_DIM, "sans-serif", Gravity.LEFT);
+        // the next turn or the song, read while moving; under it the rest, at the smallest size
+        final TextView line1 = Ui.text(app, Ui.READ, Ui.SILVER, "sans-serif", Gravity.LEFT);
+        final TextView line2 = Ui.text(app, Ui.MIN_TEXT, Ui.SILVER_DIM, "sans-serif", Gravity.LEFT);
         line1.setSingleLine(true);
         line2.setSingleLine(true);
         line1.setEllipsize(android.text.TextUtils.TruncateAt.END);
@@ -128,7 +130,7 @@ final class OverStrip {
                 }
             });
             keys[i] = b;
-            s.addView(b, new LinearLayout.LayoutParams(Ui.px(76), -1));
+            s.addView(b, new LinearLayout.LayoutParams(Ui.px(HomeDock.TARGET), -1));
         }
         try {
             wm.addView(s, lp);
@@ -174,7 +176,7 @@ final class OverStrip {
     private static ImageView button(Context c, String pic) {
         ImageView b = new ImageView(c);
         b.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        b.setPadding(Ui.px(20), Ui.px(12), Ui.px(20), Ui.px(12));
+        b.setPadding(Ui.px(22), Ui.px(20), Ui.px(22), Ui.px(20));
         b.setImageBitmap(Ui.img(c, pic));
         return b;
     }

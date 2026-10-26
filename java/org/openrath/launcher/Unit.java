@@ -99,12 +99,32 @@ class Unit {
         }
     }
 
+    /**
+     * True when call() rings the number itself; false when it can only open Android's dialer with
+     * the number in it (plain Android without the phone permission).
+     */
+    boolean dialsItself(Context c) {
+        return c.checkCallingOrSelfPermission(android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED;
+    }
+
     void answer(Context c) {
         telecom(c, "acceptRingingCall");
     }
 
     void hangUp(Context c) {
         telecom(c, "endCall");
+    }
+
+    /** The call as the stereo's own phone service reports it (see callState). */
+    static final int CALL_UNKNOWN = -1, CALL_NONE = 0, CALL_RINGING = 1, CALL_ON = 2;
+
+    /**
+     * CALL_RINGING, CALL_ON (dialling or talking) or CALL_NONE, from the maker's phone service;
+     * CALL_UNKNOWN when this unit has none (or it isn't connected), and Android's phone state is
+     * all there is. Cheap enough to ask a few times a second.
+     */
+    int callState() {
+        return CALL_UNKNOWN;
     }
 
     /** Who is on the line, as the unit says it (beyond the call log); "" when unknown. */

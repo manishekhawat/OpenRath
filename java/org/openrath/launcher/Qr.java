@@ -32,6 +32,19 @@ final class Qr {
         return m;
     }
 
+    /**
+     * Whether the text fits a code no bigger than `maxVersion` (version 1 is 21 modules a side, each
+     * version 4 more). A big code on a car screen gets modules too small for a phone to read. Pure.
+     */
+    static boolean fits(String text, int maxVersion) {
+        try {
+            QrCode.encodeSegments(org.openrath.qr.QrSegment.makeSegments(text), QrCode.Ecc.LOW, QrCode.MIN_VERSION, maxVersion, -1, true);
+            return true;
+        } catch (org.openrath.qr.DataTooLongException e) {
+            return false;
+        }
+    }
+
     /** The code as a black-on-white bitmap at most `px` wide, every module a whole number of pixels. */
     static Bitmap bitmap(String text, int px) {
         boolean[][] m = modules(text);

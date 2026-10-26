@@ -88,7 +88,7 @@ final class Tiles {
                     FileOutputStream w = new FileOutputStream(f);
                     w.write(data);
                     w.close();
-                    if (++written % 300 == 0) Bg.run(new Runnable() {
+                    if (++written % 300 == 0) Bg.save(new Runnable() {
                         @Override
                         public void run() {
                             prune(c);

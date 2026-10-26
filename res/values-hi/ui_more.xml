@@ -177,6 +177,15 @@
     <string name="ui_more_not_tried" formatted="false">आज़माया नहीं गया</string>
     <string name="ui_more_download_the_english_voice_opens_google_s_vo" formatted="false">अंग्रेज़ी आवाज़ डाउनलोड करें (Google का आवाज़ डाउनलोड खुलेगा)</string>
     <string name="ui_more_tap_to_open" formatted="false">खोलने के लिए टैप करें</string>
+    <string name="ui_more_balance_left_and_right" formatted="false">बैलेंस (बाएँ और दाएँ)</string>
+    <string name="ui_more_openrath_s_own_music_only" formatted="false">सिर्फ़ OpenRath का अपना संगीत</string>
+    <string name="ui_more_centre" formatted="false">बीच में</string>
+    <string name="ui_more_left_1_s" formatted="false">बाएँ %1$s</string>
+    <string name="ui_more_right_1_s" formatted="false">दाएँ %1$s</string>
+    <string name="ui_more_balance" formatted="false">बैलेंस</string>
+    <string name="ui_more_only_openrath_s_own_online_radio_and_music_f" formatted="false">सिर्फ़ OpenRath का अपना ऑनलाइन रेडियो और संगीत फ़ाइलें। दूसरे संगीत ऐप, FM और आगे-पीछे का फ़ेडर यूनिट की अपनी साउंड सेटिंग से चलते हैं।</string>
+    <string name="ui_more_files" formatted="false">फ़ाइलें</string>
+    <string name="ui_more_online" formatted="false">ऑनलाइन</string>
     <string name="ui_more_your_trips_show_here_after_your_first_drive" formatted="false">आपकी पहली ड्राइव के बाद यहाँ यात्राएँ दिखेंगी</string>
     <string name="ui_more_last_drive_1_s" formatted="false">पिछली ड्राइव, %1$s</string>
     <string name="ui_more_yesterday2" formatted="false">कल</string>
@@ -257,4 +266,137 @@
     <string name="ui_more_background_behind_the_glass" formatted="false">शीशे के पीछे का बैकग्राउंड</string>
     <string name="ui_more_add_your_picture" formatted="false">अपनी तस्वीर जोड़ें</string>
     <string name="ui_more_copy_a_picture_jpg_or_png_to_1_s_on_the_unit" formatted="false">यूनिट पर %1$s में एक तस्वीर (JPG या PNG) कॉपी करें, USB स्टिक या फ़ाइल मैनेजर से। तब तक अरोरा बैकग्राउंड दिखेगा।</string>
+    <string name="ui_more_keypad" formatted="false">कीपैड</string>
+    <string name="ui_more_type_a_number" formatted="false">नंबर लिखें</string>
+    <string name="ui_more_allow_phone_calls_then_tap_call_again" formatted="false">फ़ोन कॉल की अनुमति दें, फिर कॉल दोबारा दबाएँ</string>
+    <string name="ui_more_dialing_a_number_is_blocked_while_the_car_is" formatted="false">गाड़ी चलते समय नंबर डायल करना बंद है</string>
+    <string name="ui_more_say_call_and_a_name_instead_or_stop_the_car_" formatted="false">इसकी जगह \"कॉल\" और नाम बोलें, या नंबर लिखने के लिए गाड़ी रोकें।</string>
+    <string name="ui_more_speak" formatted="false">बोलें</string>
+    <string name="ui_more_games_for_passengers" formatted="false">यात्रियों के लिए खेल</string>
+    <string name="ui_more_spot_the_colour_number_plates_and_how_far_to" formatted="false">रंग पहचानो, नंबर प्लेट, और कितना दूर जाना है, सफ़र में बच्चों के लिए; कुछ भी लॉक नहीं होता</string>
+    <string name="ui_more_only_the_apps_you_choose_won_t_open_while_th" formatted="false">गाड़ी चलते समय सिर्फ़ आपके चुने ऐप्स नहीं खुलेंगे; बाकी कुछ सीमित नहीं होता</string>
+    <string name="ui_more_nearest_cng_stations_and_km_per_kg_from_your" formatted="false">पास के CNG स्टेशन, और फ़्यूल लॉग में CNG भराई से किमी प्रति किलो</string>
+    <string name="ui_more_valet_and_children" formatted="false">वैले और बच्चे</string>
+    <string name="ui_more_valet_mode_app_lock_passenger_games_drivers" formatted="false">वैले मोड, ऐप लॉक, यात्रियों के खेल, ड्राइवर</string>
+    <string name="ui_more_valet_mode" formatted="false">वैले मोड</string>
+    <string name="ui_more_children_and_drivers" formatted="false">बच्चे और ड्राइवर</string>
+    <string name="ui_more_when_someone_else_drives_caps_the_volume_and" formatted="false">जब कोई और चलाए: आवाज़ और रफ़्तार की सीमा, और सेटिंग्स के लिए आपका PIN</string>
+    <string name="ui_more_play_a_game_now" formatted="false">अभी एक खेल खेलें</string>
+    <string name="ui_more_more_features" formatted="false">और फ़ीचर</string>
+    <string name="ui_more_everything_that_s_off_ready_to_turn_on" formatted="false">जो कुछ बंद है, चालू करने के लिए तैयार</string>
+    <string name="ui_more_1_s_more_feature_you_can_turn_on" formatted="false">%1$s और फ़ीचर जिसे आप चालू कर सकते हैं</string>
+    <string name="ui_more_1_s_more_features_you_can_turn_on" formatted="false">%1$s और फ़ीचर जिन्हें आप चालू कर सकते हैं</string>
+    <string name="ui_more_1_s_is_on_its_settings_are_in_2_s" formatted="false">%1$s चालू है। इसकी सेटिंग्स %2$s में हैं</string>
+    <string name="ui_more_this_was_cng_kg" formatted="false">यह CNG था (किलो)</string>
+    <string name="ui_more_litres_or_kg_for_cng" formatted="false">लीटर, या CNG के लिए किलो</string>
+    <string name="ui_more_all_fill_ups" formatted="false">सभी भराई</string>
+    <string name="ui_more_your_most_used_apps_search_and_the_full_list" formatted="false">आपके सबसे ज़्यादा चलाए ऐप। खोज और पूरी सूची कार रुकने पर खुलती है।</string>
+    <string name="ui_more_i_m_a_passenger_widgets_and_moving_boxes" formatted="false">मैं सवारी हूँ: विजेट और बॉक्स हटाना</string>
+    <string name="ui_more_widgets_can_be_chosen_when_the_car_is_stoppe" formatted="false">विजेट कार रुकने पर चुने जा सकते हैं</string>
+    <string name="ui_more_needs_a_small_engine_data_plug_bluetooth_or_" formatted="false">स्टीयरिंग के नीचे वाले सॉकेट में एक छोटा इंजन-डेटा प्लग चाहिए (Bluetooth या Wi-Fi)</string>
+    <string name="ui_more_plug_the_engine_data_plug_sold_as_an_obd_ii_" formatted="false">इंजन-डेटा प्लग (OBD-II अडैप्टर, ELM327 नाम से बिकता है) को स्टीयरिंग के नीचे वाले सॉकेट में लगाएँ, इग्निशन चालू करें, और यूनिट की Bluetooth सेटिंग्स में पेयर करें (PIN अक्सर 1234 या 0000 होता है)। फिर यहाँ लौटें।</string>
+    <string name="ui_more_this_unit_has_no_direct_radio_control" formatted="false">इस यूनिट में रेडियो का सीधा कंट्रोल नहीं है</string>
+    <string name="ui_more_screen_brightness_for_all_apps" formatted="false">सभी ऐप्स के लिए स्क्रीन की चमक</string>
+    <string name="ui_more_off_only_the_dashboard_dims_at_night" formatted="false">बंद; रात में सिर्फ़ डैशबोर्ड धीमा होता है</string>
+    <string name="ui_more_waiting_for_your_ok_in_android_the_dashboard" formatted="false">Android में आपकी मंज़ूरी का इंतज़ार; तब तक डैशबोर्ड धीमा होता है</string>
+    <string name="ui_more_day_1_s_night_2_s" formatted="false">दिन %1$s%%, रात %2$s%%</string>
+    <string name="ui_more_openrath_can_set_the_unit_s_own_screen_brigh" formatted="false">OpenRath यूनिट की अपनी स्क्रीन की चमक सेट कर सकता है: दिन में एक लेवल और रात में उससे कम, हेडलाइट से बदलता है (या सूरज ढलने पर, जैसा रात में धीमा करना में चुना है)। तब रात वाला लेवल मैप, म्यूज़िक और कैमरा ऐप्स पर भी रहता है, सिर्फ़ डैशबोर्ड पर नहीं।</string>
+    <string name="ui_more_for_this_android_asks_you_once_to_allow_open" formatted="false">इसके लिए Android एक बार पूछता है कि OpenRath सिस्टम सेटिंग्स बदल सके। इसके बिना, अभी की तरह सिर्फ़ डैशबोर्ड धीमा होता है।</string>
+    <string name="ui_more_turn_on" formatted="false">चालू करें</string>
+    <string name="ui_more_turn_off" formatted="false">बंद करें</string>
+    <string name="ui_more_day_level_1_s" formatted="false">दिन का लेवल: %1$s%%</string>
+    <string name="ui_more_night_level_1_s" formatted="false">रात का लेवल: %1$s%%</string>
+    <string name="ui_more_allow_it_in_android" formatted="false">Android में अनुमति दें</string>
+    <string name="ui_more_how_bright_by_day" formatted="false">दिन में कितनी चमक</string>
+    <string name="ui_more_how_bright_at_night" formatted="false">रात में कितनी चमक</string>
+    <string name="ui_more_switch_on_modify_system_settings_for_openrat" formatted="false">OpenRath के लिए \"सिस्टम सेटिंग्स बदलें\" चालू करें, फिर यहाँ लौटें।</string>
+    <string name="ui_more_this_unit_has_no_screen_to_allow_that_so_onl" formatted="false">इस यूनिट में इसकी अनुमति देने की स्क्रीन नहीं है, इसलिए रात में सिर्फ़ डैशबोर्ड धीमा होगा।</string>
+    <string name="ui_more_your_own_engine_readings" formatted="false">इंजन की आपकी अपनी रीडिंग</string>
+    <string name="ui_more_add_more_to_live_engine_readings" formatted="false">इंजन की लाइव रीडिंग में और जोड़ें</string>
+    <string name="ui_more_1_s_added" formatted="false">%1$s जोड़ी गईं</string>
+    <string name="ui_more_1_s_the_car_doesn_t_give_this" formatted="false">%1$s: कार यह नहीं बताती</string>
+    <string name="ui_more_engine_load" formatted="false">इंजन पर लोड</string>
+    <string name="ui_more_coolant_temperature" formatted="false">कूलेंट का तापमान</string>
+    <string name="ui_more_fuel_trim_now_bank_1" formatted="false">अभी का फ़्यूल ट्रिम (बैंक 1)</string>
+    <string name="ui_more_fuel_trim_learnt_bank_1" formatted="false">सीखा हुआ फ़्यूल ट्रिम (बैंक 1)</string>
+    <string name="ui_more_fuel_trim_now_bank_2" formatted="false">अभी का फ़्यूल ट्रिम (बैंक 2)</string>
+    <string name="ui_more_fuel_trim_learnt_bank_2" formatted="false">सीखा हुआ फ़्यूल ट्रिम (बैंक 2)</string>
+    <string name="ui_more_fuel_pressure" formatted="false">फ़्यूल का दबाव</string>
+    <string name="ui_more_manifold_pressure" formatted="false">मैनिफ़ोल्ड का दबाव</string>
+    <string name="ui_more_engine_speed" formatted="false">इंजन की रफ़्तार</string>
+    <string name="ui_more_speed" formatted="false">रफ़्तार</string>
+    <string name="ui_more_ignition_timing" formatted="false">इग्निशन टाइमिंग</string>
+    <string name="ui_more_intake_air_temperature" formatted="false">अंदर आती हवा का तापमान</string>
+    <string name="ui_more_air_flow" formatted="false">हवा का बहाव</string>
+    <string name="ui_more_throttle" formatted="false">थ्रॉटल</string>
+    <string name="ui_more_oxygen_sensor_1_bank_1" formatted="false">ऑक्सीजन सेंसर 1 (बैंक 1)</string>
+    <string name="ui_more_oxygen_sensor_2_bank_1" formatted="false">ऑक्सीजन सेंसर 2 (बैंक 1)</string>
+    <string name="ui_more_time_since_the_engine_started" formatted="false">इंजन चालू होने के बाद का समय</string>
+    <string name="ui_more_distance_driven_with_the_engine_light_on" formatted="false">इंजन लाइट जलते हुए चली दूरी</string>
+    <string name="ui_more_fuel_rail_pressure_to_the_manifold" formatted="false">फ़्यूल रेल का दबाव (मैनिफ़ोल्ड के मुकाबले)</string>
+    <string name="ui_more_fuel_rail_pressure" formatted="false">फ़्यूल रेल का दबाव</string>
+    <string name="ui_more_egr_asked_for" formatted="false">माँगा गया EGR</string>
+    <string name="ui_more_egr_error" formatted="false">EGR की गड़बड़ी</string>
+    <string name="ui_more_fuel_vapour_purge" formatted="false">फ़्यूल भाप की सफ़ाई</string>
+    <string name="ui_more_fuel_tank_level" formatted="false">टंकी में फ़्यूल</string>
+    <string name="ui_more_warm_ups_since_the_codes_were_cleared" formatted="false">कोड मिटाने के बाद इंजन कितनी बार गर्म हुआ</string>
+    <string name="ui_more_distance_since_the_codes_were_cleared" formatted="false">कोड मिटाने के बाद की दूरी</string>
+    <string name="ui_more_air_pressure_outside" formatted="false">बाहर हवा का दबाव</string>
+    <string name="ui_more_catalytic_converter_temperature" formatted="false">कैटेलिटिक कन्वर्टर का तापमान</string>
+    <string name="ui_more_engine_computer_voltage" formatted="false">इंजन कंप्यूटर का वोल्टेज</string>
+    <string name="ui_more_absolute_engine_load" formatted="false">इंजन पर कुल लोड</string>
+    <string name="ui_more_air_fuel_ratio_asked_for_lambda" formatted="false">माँगा गया हवा-फ़्यूल अनुपात (लैम्डा)</string>
+    <string name="ui_more_throttle_relative" formatted="false">थ्रॉटल (सापेक्ष)</string>
+    <string name="ui_more_outside_air_temperature" formatted="false">बाहर का तापमान</string>
+    <string name="ui_more_throttle_sensor_b" formatted="false">थ्रॉटल (सेंसर B)</string>
+    <string name="ui_more_accelerator_pedal_sensor_d" formatted="false">एक्सीलरेटर पेडल (सेंसर D)</string>
+    <string name="ui_more_accelerator_pedal_sensor_e" formatted="false">एक्सीलरेटर पेडल (सेंसर E)</string>
+    <string name="ui_more_throttle_motor_asked_for" formatted="false">माँगी गई थ्रॉटल मोटर</string>
+    <string name="ui_more_time_run_with_the_engine_light_on" formatted="false">इंजन लाइट जलते हुए चलने का समय</string>
+    <string name="ui_more_time_since_the_codes_were_cleared" formatted="false">कोड मिटाने के बाद का समय</string>
+    <string name="ui_more_ethanol_in_the_fuel" formatted="false">फ़्यूल में एथेनॉल</string>
+    <string name="ui_more_fuel_rail_pressure_absolute" formatted="false">फ़्यूल रेल का दबाव (कुल)</string>
+    <string name="ui_more_accelerator_pedal_relative" formatted="false">एक्सीलरेटर पेडल (सापेक्ष)</string>
+    <string name="ui_more_hybrid_battery_life_left" formatted="false">हाइब्रिड बैटरी की बची उम्र</string>
+    <string name="ui_more_engine_oil_temperature" formatted="false">इंजन ऑयल का तापमान</string>
+    <string name="ui_more_fuel_injection_timing" formatted="false">फ़्यूल इंजेक्शन टाइमिंग</string>
+    <string name="ui_more_fuel_used" formatted="false">फ़्यूल की खपत</string>
+    <string name="ui_more_engine_torque_asked_for" formatted="false">माँगा गया इंजन टॉर्क</string>
+    <string name="ui_more_engine_torque" formatted="false">इंजन टॉर्क</string>
+    <string name="ui_more_engine_torque_at_100" formatted="false">100% पर इंजन टॉर्क</string>
+    <string name="ui_more_allow_the_camera_then_choose_again" formatted="false">कैमरा की अनुमति दें, फिर दोबारा चुनें।</string>
+    <string name="ui_more_this_unit_gives_android_no_camera_so_the_gui" formatted="false">यह यूनिट Android को कोई कैमरा नहीं देती, इसलिए गाइड लाइनें काली स्क्रीन पर दिखती हैं।</string>
+    <string name="ui_more_find_it_by_itself" formatted="false">अपने आप ढूँढे</string>
+    <string name="ui_more_no_picture_guide_lines_only" formatted="false">तस्वीर नहीं, सिर्फ़ गाइड लाइनें</string>
+    <string name="ui_more_camera_1_s" formatted="false">कैमरा %1$s</string>
+    <string name="ui_more_faces_back" formatted="false">" (पीछे की ओर)"</string>
+    <string name="ui_more_camera_picture_in_reverse" formatted="false">रिवर्स में कैमरे की तस्वीर</string>
+    <string name="ui_more_guide_lines_only" formatted="false">सिर्फ़ गाइड लाइनें</string>
+    <string name="ui_more_found_by_itself_when_the_unit_has_one" formatted="false">अपने आप, अगर यूनिट में कैमरा है</string>
+    <string name="ui_more_your_own_route_server" formatted="false">आपका अपना रूट सर्वर</string>
+    <string name="ui_more_the_free_public_ones" formatted="false">मुफ़्त सार्वजनिक सर्वर</string>
+    <string name="ui_more_routes_come_from_two_free_public_servers_if_" formatted="false">रास्ते दो मुफ़्त सार्वजनिक सर्वर से आते हैं। अगर आप या आपकी कंपनी अपना सर्वर चलाते हैं (OSRM, या वैसा ही जवाब देने वाला), तो उसका https पता यहाँ लिखें, मैप पहले उसी से पूछेगा। सार्वजनिक सर्वर के लिए खाली छोड़ें।</string>
+    <string name="ui_more_that_isn_t_an_https_address_so_the_public_se" formatted="false">यह https पता नहीं है, इसलिए सार्वजनिक सर्वर ही रहेंगे।</string>
+    <string name="ui_more_move_to_another_stereo" formatted="false">दूसरे स्टीरियो में ले जाएँ</string>
+    <string name="ui_more_a_qr_code_when_the_settings_fit_one_or_share" formatted="false">सेटिंग्स समाएँ तो QR कोड, नहीं तो फ़ाइल भेजें</string>
+    <string name="ui_more_read_settings_from_another_stereo" formatted="false">दूसरे स्टीरियो की सेटिंग्स लें</string>
+    <string name="ui_more_open_the_file_it_sent" formatted="false">उसकी भेजी फ़ाइल खोलें</string>
+    <string name="ui_more_the_settings_come_to_1_s_characters_a_code_t" formatted="false">सेटिंग्स %1$s अक्षर की हैं; यह स्क्रीन जो कोड ठीक से दिखा सकती है उसमें करीब 1,400 आते हैं।</string>
+    <string name="ui_more_share_the_file_to_take_everything_the_settin" formatted="false">सब कुछ ले जाने के लिए फ़ाइल भेजें: सेटिंग्स, फ़्यूल लॉग, सफ़र और आपकी तस्वीरें। इसे Bluetooth या मैसेजिंग ऐप से भेजें, या फ़ाइल मैनेजर से कॉपी करें, फिर दूसरे स्टीरियो पर OpenRath से खोलें।</string>
+    <string name="ui_more_the_qr_code_holds_the_settings_only_this_ste" formatted="false">QR कोड में सिर्फ़ सेटिंग्स हैं। यह स्टीरियो खुद QR कोड नहीं पढ़ सकता, इसलिए फ़ोन से स्कैन करें और जो टेक्स्ट दिखे उसे दूसरे स्टीरियो पर भेजें। PIN और पासवर्ड कभी शामिल नहीं होते।</string>
+    <string name="ui_more_show_the_qr_code" formatted="false">QR कोड दिखाएँ</string>
+    <string name="ui_more_settings_for_another_stereo" formatted="false">दूसरे स्टीरियो के लिए सेटिंग्स</string>
+    <string name="ui_more_scan_with_a_phone_then_share_the_text_to_the" formatted="false">फ़ोन से स्कैन करें, फिर टेक्स्ट दूसरे स्टीरियो पर भेजें।</string>
+    <string name="ui_more_share_the_file_to_take_everything_the_settin2" formatted="false">सब कुछ ले जाने के लिए फ़ाइल भेजें: सेटिंग्स, फ़्यूल लॉग, सफ़र और आपकी तस्वीरें। इसे Bluetooth या मैसेजिंग ऐप से भेजें, या फ़ाइल मैनेजर से कॉपी करें, फिर दूसरे स्टीरियो पर OpenRath से खोलें। PIN और पासवर्ड कभी शामिल नहीं होते।</string>
+    <string name="ui_more_too_many_settings_for_one_qr_code" formatted="false">एक QR कोड के लिए सेटिंग्स बहुत ज़्यादा हैं।</string>
+    <string name="ui_more_share_the_file" formatted="false">फ़ाइल भेजें</string>
+    <string name="ui_more_no_room_on_the_unit" formatted="false">यूनिट में जगह नहीं है</string>
+    <string name="ui_more_send_the_settings_with" formatted="false">सेटिंग्स इससे भेजें</string>
+    <string name="ui_more_no_app_on_this_stereo_can_send_files_use_bac" formatted="false">इस स्टीरियो पर कोई ऐप फ़ाइल नहीं भेज सकता। अभी बैकअप लें और फ़ाइल OpenRath/backup से USB स्टिक में कॉपी करें।</string>
+    <string name="ui_more_settings_can_t_be_changed_in_valet_mode" formatted="false">वैले मोड में सेटिंग्स नहीं बदल सकतीं।</string>
+    <string name="ui_more_no_file_picker_on_this_stereo_copy_the_file_" formatted="false">इस स्टीरियो में फ़ाइल चुनने का ऐप नहीं है। फ़ाइल को इसके Download फ़ोल्डर में कॉपी करें और बैकअप से वापस लाएँ इस्तेमाल करें।</string>
+    <string name="ui_more_the_file_is_too_big_to_be_a_backup" formatted="false">यह फ़ाइल बैकअप होने के लिए बहुत बड़ी है</string>
+    <string name="ui_more_settings_from_another_stereo" formatted="false">दूसरे स्टीरियो से सेटिंग्स</string>
+    <string name="ui_more_replace_every_setting_the_fuel_log_and_trip_" formatted="false">इस स्टीरियो की हर सेटिंग, फ़्यूल लॉग और सफ़र का इतिहास भेजी गई फ़ाइल से बदलें? स्टोरेज की अनुमति हो तो अभी वाले की कॉपी पहले सहेजी जाती है। PIN और पासवर्ड जैसे हैं वैसे रहते हैं।</string>
+    <string name="ui_more_put_the_dashboard_settings_from_the_other_st" formatted="false">दूसरे स्टीरियो की डैशबोर्ड सेटिंग्स इस पर लगाएँ? यहाँ का फ़्यूल लॉग, सफ़र और तस्वीरें बनी रहती हैं। PIN और पासवर्ड जैसे हैं वैसे रहते हैं।</string>
 </resources>

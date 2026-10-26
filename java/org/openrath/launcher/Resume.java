@@ -57,6 +57,76 @@ final class Resume {
         return pkg != null && !pkg.isEmpty() && guidedAt > 0 && now - guidedAt >= 0 && now - guidedAt < NAV_MS;
     }
 
+    /** How long the link to a music app's library stays open after carrying on, so the app can get going. */
+    static final long WAKE_MS = 30000;
+
+    private static android.media.browse.MediaBrowser waking;
+
+    /**
+     * The package to wake through its library service, from what was playing ("app:<package>"), or
+     * null for FM, OpenRath's own player and nothing. Pure, for the tests.
+     */
+    static String wakePkg(String what) {
+        if (what == null || !what.startsWith("app:") || what.length() <= 4) return null;
+        return what.substring(4);
+    }
+
+    /**
+     * Wake a music app that isn't running yet: connect to its library service (the way Android Auto
+     * starts it) and press play on its player as soon as it answers. `played` runs once it did. False
+     * when the app has no library service; then the tries with its media session and a play button
+     * press carry on alone.
+     */
+    static boolean wake(Context c, String pkg, final Runnable played) {
+        final Context app = c.getApplicationContext();
+        android.content.ComponentName svc = Browse.service(app.getPackageManager(), pkg);
+        if (svc == null) return false;
+        unwake();
+        final android.media.browse.MediaBrowser[] b = new android.media.browse.MediaBrowser[1];
+        try {
+            b[0] = new android.media.browse.MediaBrowser(app, svc, new android.media.browse.MediaBrowser.ConnectionCallback() {
+                @Override
+                public void onConnected() {
+                    try {
+                        AudioManager am = (AudioManager) app.getSystemService(Context.AUDIO_SERVICE);
+                        if (!am.isMusicActive()) new android.media.session.MediaController(app, b[0].getSessionToken()).getTransportControls().play();
+                        played.run();
+                    } catch (Throwable e) {
+                        Diag.note("resume music app", e);
+                    }
+                }
+
+                @Override
+                public void onConnectionFailed() {
+                    // the app keeps its library to itself: the session tries and the button press
+                }
+            }, null);
+            waking = b[0];
+            b[0].connect();
+        } catch (Throwable e) {
+            Diag.note("resume music app library", e);
+            return false;
+        }
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (waking == b[0]) unwake();
+            }
+        }, WAKE_MS);
+        return true;
+    }
+
+    /** Let go of the music app's library service (it keeps playing on its own). */
+    static void unwake() {
+        if (waking == null) return;
+        try {
+            waking.disconnect();
+        } catch (Throwable ignored) {
+            // already gone
+        }
+        waking = null;
+    }
+
     /**
      * Play the music app that was playing: through its media session when it has one up, else with
      * a play button press sent to that app alone. False while it has no session yet (try again),

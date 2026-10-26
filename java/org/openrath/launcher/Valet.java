@@ -10,9 +10,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 /**
- * Kids or valet mode: while someone else drives (or the children are in charge of the music), the
+ * Valet mode: while someone else drives (or the children are in charge of the music), the
  * volume can't go above a set level, there's a voice warning above a set speed, and Settings and
- * the box menus need the owner's PIN.
+ * the box menus need the owner's PIN. It limits the whole unit; the child-lock (ChildLock) only
+ * stops chosen apps while moving, and the passenger games (Kids) limit nothing. Settings shows the
+ * three side by side under Valet and children.
  */
 final class Valet {
 

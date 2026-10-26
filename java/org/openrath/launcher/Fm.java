@@ -18,7 +18,7 @@ import java.util.Locale;
  * Starting and stopping FM from the radio box on Topway units. The unit's radio service
  * (com.tw.service.xt) has no plain "play radio" command, only things like radioOpenChannel,
  * radioSetChannel and OpenProject, so which one switches the sound to FM is found once with the
- * FM radio test in Settings and remembered. "mcu" means Topway's MCU link instead.
+ * FM radio test in Settings and remembered. "mcu" means talking to Topway's radio chip directly instead.
  */
 final class Fm {
 
@@ -123,7 +123,7 @@ final class Fm {
     /** Run one command; null when it ran. */
     static String run(String cmd, Xt xt, Tw.Radio fm, boolean on) {
         if ("mcu".equals(cmd)) {
-            if (fm == null) return "no MCU link on this unit";
+            if (fm == null) return "this unit has no direct radio control";
             fm.play(on);
             return null;
         }

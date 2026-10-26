@@ -112,7 +112,7 @@ final class Cab {
     }
 
     static String rs(double v) {
-        return Money.shown("₹") + java.text.NumberFormat.getIntegerInstance(new Locale("en", "IN")).format(Math.round(v));
+        return Money.shown("₹") + Money.group(Math.round(v));
     }
 
     static String hm(long ms) {
@@ -832,12 +832,9 @@ final class Cab {
         }
     }
 
+    /** The CNG fills: kept in the fuel log as fills of type CNG, so there is one fuel history. */
     static JSONArray cng(Prefs p) {
-        try {
-            return new JSONArray(p.str("cabCng", "[]"));
-        } catch (Exception e) {
-            return new JSONArray();
-        }
+        return Fuel.cng(p);
     }
 
     /** Km per kg between fills (each fill tops the cylinder up): {last, average, ₹ a km}. */
@@ -879,6 +876,18 @@ final class Cab {
                     public void onClick(DialogInterface d, int w) {
                         addCng(a);
                     }
+                })
+                // the same fills, with the petrol ones, in the fuel log (where one can be deleted)
+                .setNeutralButton(Hindi.t("All fill-ups"), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        Fuel.history(a, p, new Runnable() {
+                            @Override
+                            public void run() {
+                                a.hub.notifyIfChanged(true);
+                            }
+                        });
+                    }
                 }).setNegativeButton(Hindi.t("Close"), null).show();
     }
 
@@ -901,12 +910,12 @@ final class Cab {
                         try {
                             JSONObject e = new JSONObject();
                             e.put("t", System.currentTimeMillis());
+                            e.put("type", Fuel.CNG);
                             e.put("kg", k);
                             e.put("rs", Math.max(0, r));
                             e.put("odo", o);
-                            JSONArray l = cng(p);
-                            l.put(e);
-                            p.put("cabCng", l.toString());
+                            e.put("gps", Drive.odoKm);
+                            Fuel.put(p, e);
                         } catch (Exception e) {
                             Diag.note("CNG fill save", e);
                         }

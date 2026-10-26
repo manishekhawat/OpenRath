@@ -116,6 +116,42 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
         }
     }
 
+    /** Balance steps each way: -10 is all left, 10 all right, 0 the middle. Kept as the plain value "balance". */
+    static final int BALANCE_MAX = 10;
+
+    /**
+     * Left and right volume for a balance and an overall level (1 = full, less while a navigation
+     * prompt speaks): the far side fades out, the near side stays. Pure, for the tests.
+     */
+    static float[] sides(int balance, float level) {
+        int b = Math.max(-BALANCE_MAX, Math.min(BALANCE_MAX, balance));
+        float l = b > 0 ? 1f - b / (float) BALANCE_MAX : 1f, r = b < 0 ? 1f + b / (float) BALANCE_MAX : 1f;
+        return new float[]{l * level, r * level};
+    }
+
+    /** What the balance reaches, said in its row and when it opens. No stereo service OpenRath talks to has a balance or fader command. */
+    static final String BALANCE_REACH = "Only OpenRath's own online radio and music files. Other music apps, FM and the front and rear "
+            + "fader follow the unit's own sound settings.";
+
+    /** The balance changed in Settings: the player follows it now. */
+    static void balanceChanged() {
+        if (self != null) self.volume(self.level);
+    }
+
+    private float level = 1f;
+
+    /** The player's volume at `lv`, with the balance. */
+    private void volume(float lv) {
+        level = lv;
+        if (mp == null) return;
+        try {
+            float[] v = sides(new Prefs(this).num("balance", 0), lv);
+            mp.setVolume(v[0], v[1]);
+        } catch (Exception e) {
+            Diag.note("music balance", e);
+        }
+    }
+
     private final Handler handler = new Handler();
     private MediaPlayer mp;
     private MediaSession session;
@@ -218,6 +254,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
         mp.setOnPreparedListener(this);
         mp.setOnCompletionListener(this);
         mp.setOnErrorListener(this);
+        volume(1f);   // with the balance
         Eq.apply(this, new Prefs(this), mp.getAudioSessionId());
         try {
             if (WEB.equals(mode) && !streamable(t.src)) throw new java.io.IOException("not a web stream");
@@ -316,10 +353,10 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
             playing = false;
             changed();
         } else if (f == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || f == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-            if (mp != null && playing) mp.setVolume(0.2f, 0.2f);   // a navigation prompt: duck
+            if (mp != null && playing) volume(0.2f);   // a navigation prompt: duck
         } else if (f == AudioManager.AUDIOFOCUS_GAIN) {
             focus = true;
-            if (mp != null) mp.setVolume(1f, 1f);
+            volume(1f);
         }
     }
 
@@ -334,7 +371,7 @@ public class Player extends Service implements MediaPlayer.OnPreparedListener, M
         changed();
         final String m = mode;
         final Context c = getApplicationContext();
-        Bg.run(new Runnable() {
+        Bg.run(WEB.equals(m), new Runnable() {
             @Override
             public void run() {
                 final List<Track> l = WEB.equals(m) ? fetchStations(c) : scanSongs(c);

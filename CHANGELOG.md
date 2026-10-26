@@ -2,6 +2,21 @@
 
 Newest first.
 
+## Unreleased: From the review
+
+- **Phone:** the call screen also opens for calls from the stereo's own Bluetooth phone (FYT, MTC, Topway), and its buttons use the stereo's own answer and hang-up. A new keypad in the phone box dials through the stereo, with big keys; it is blocked while moving.
+- **Bigger while driving:** dashboard text is at least 16 px, and what you read while moving (headings, the song, the next turn, the speed) is 24 px where the box has room. Music, phone and strip buttons are at least 76 px; small boxes drop secondary lines instead.
+- **Locked while moving:** the app list's search and full grid, the widget picker, Move boxes and the long press to Settings. The app lock now stays on through a tunnel after a long drive.
+- **Music:** a row of music apps, files, online radio and FM on tall music boxes, one tap to switch. Music apps resume straight after the ignition. Balance for OpenRath's own music.
+- **Screen brightness for all apps,** day and night, once allowed.
+- **Routes:** your own route server can be set, and when no server answers, Go opens your navigation app.
+- **Camera picture in reverse,** with the guide lines over it, where the stereo has a camera.
+- **Your own engine readings:** pick from about 50 standard readings.
+- **Move to another stereo** with a QR code or by sharing the backup.
+- **Holidays through 2035,** money grouped the way your country writes it, and plain words for the radio control and the OBD adapter.
+- **Simpler start:** a new install starts at Simple, and switched-off features fold under "More features" in each Settings section. Valet mode, the child lock and games for passengers sit together with a line on how each differs. CNG fill-ups join the fuel log. A small mark shows which buttons do more when held, and the tip shows the first time.
+- **Lighter on slow stereos:** boxes are kept across page turns and wake instead of being rebuilt, the LED strip and the picture layouts rest while nothing changes, downloads no longer hold up saving, and a watchdog notes in Diagnostics when the app freezes.
+
 ## 1.44: On the road
 
 - **Glass is the default look,** and the opening logo and boot animation follow it: the wheel and name sit on a frosted card over the blurred background. Settings > Look > Themes > Glass look turns it off.

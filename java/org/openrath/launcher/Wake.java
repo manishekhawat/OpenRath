@@ -35,6 +35,7 @@ final class Wake {
                 sleptNow(a);
                 ThemeAuto.check(a);
                 LedStrip.check(a);
+                Watchdog.start();   // nothing when it is already watching
                 Achievements.check(a);
                 a.dash.postDelayed(this, CHECK_MS);
             }
@@ -65,14 +66,21 @@ final class Wake {
 
     private static java.lang.ref.WeakReference<HomeActivity> watching;
 
-    /** Everything that goes stale in deep sleep, started again. */
+    /**
+     * Everything that goes stale in deep sleep, started again. The boxes stay and show fresh figures;
+     * the map is kept too, and only made again when its page died while the unit slept.
+     */
     static void woke(HomeActivity a) {
         a.prefs.put("sleptAt", String.valueOf(System.currentTimeMillis() - 2 * SLEPT_MS));   // so Resume carries on the music
         Drive.start(a);
         a.hub.stop();
         a.hub.start();
-        a.freshMap();
-        a.build();   // the map's page is made again with the boxes
+        LedStrip.check(a);
+        MapCard m = a.keptMap;
+        if (m != null && !m.alive()) {
+            a.freshMap();
+            a.build();   // the map's page is made again with the boxes
+        } else a.hub.notifyIfChanged(true);
         Extras.resumed(a);
     }
 

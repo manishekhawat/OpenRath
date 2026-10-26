@@ -25,6 +25,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         super.onCreate(b);
         Fm.app = getApplicationContext();
         prefs = new Prefs(this);
+        Features.start(prefs);   // a new install starts at Simple; before anything else is saved
         Managed.apply(this, prefs);   // a fleet's managed settings, if the unit has any
         Reports.install(this, prefs);
         Hindi.load(this, prefs);   // before the dashboard is built, so it starts in the owner's language
@@ -81,6 +82,8 @@ public class HomeActivity extends Activity implements Cards.Host {
         // managed settings changed: sent by the system, which needs no permission of OpenRath's
         android.content.IntentFilter sys = new android.content.IntentFilter(Intent.ACTION_APPLICATION_RESTRICTIONS_CHANGED);
         sys.addAction(Intent.ACTION_SCREEN_ON);   // back from the stereo's sleep: check at once (Wake)
+        sys.addAction(Intent.ACTION_SCREEN_OFF);   // the light strip and the freeze watch rest meanwhile
+        Watchdog.start();
         Compat.fromSystem(this, events, sys);
         PhoneLink.listen(this);
         AaUsb.listen(this);   // a phone plugged in starts Android Auto (when switched on)
@@ -108,7 +111,12 @@ public class HomeActivity extends Activity implements Cards.Host {
             } else if (Ticker.CHANGED.equals(i.getAction())) Extras.ticker(HomeActivity.this);
             else if (NavTurn.CHANGED.equals(i.getAction())) NavCard.update(HomeActivity.this);
             else if (Intent.ACTION_SCREEN_ON.equals(i.getAction())) {
+                Watchdog.start();
+                LedStrip.check(HomeActivity.this);
                 if (visible) Wake.sleptNow(HomeActivity.this);
+            } else if (Intent.ACTION_SCREEN_OFF.equals(i.getAction())) {
+                Watchdog.stop();
+                LedStrip.sleep();
             }
             else if (Drive.REST.equals(i.getAction())) restStop();
             else if (Drive.HIGHWAY.equals(i.getAction())) highwayStrip();
@@ -295,8 +303,82 @@ public class HomeActivity extends Activity implements Cards.Host {
     void turnPage(int dir) {
         int n = prefs.pages();
         if (n < 2) return;
+        int from = Prefs.page;
         Prefs.page = (Prefs.page + dir + n) % n;
-        build();
+        if (!showPage(from)) build();
+    }
+
+    /** Boxes of the pages turned away from, by page, shown again on the way back; emptied by build(). */
+    private final Cards.Card[][] keptPages = new Cards.Card[Prefs.MAX_PAGES][];
+    /** What each box of a kept page shows, and what each box on screen shows, as they were made. */
+    private final String[][] keptWhat = new String[Prefs.MAX_PAGES][];
+    private final String[] shownWhat = new String[Prefs.SLOTS];
+    /** Where the status icons were when the dock was made (see statusPlace). */
+    private String dockPlace;
+
+    /**
+     * A box that can be kept off screen and shown again as it is. Not the map (one kept map serves
+     * every page, see Cards.map) and not a video, whose picture is gone once it leaves the screen.
+     */
+    static boolean keepable(String content) {
+        return content != null && !Prefs.MAP.equals(content) && !Prefs.VIDEO.equals(content);
+    }
+
+    /** Whether a kept page's boxes still show what the settings now say for that page. Pure, for the tests. */
+    static boolean samePage(String[] kept, String[] now) {
+        return kept != null && java.util.Arrays.equals(kept, now);
+    }
+
+    /**
+     * Swap the boxes on screen for those of the page now chosen, without building the whole
+     * dashboard: the boxes turned away from are kept, and a kept page whose boxes still show the same
+     * comes back as it was (with its timers, which stop while a box is off screen). False when the
+     * dashboard must be built instead: a picture layout, or the box mover open.
+     */
+    private boolean showPage(int from) {
+        int to = Prefs.page;
+        if (layoutView != null || dash.dock == null || dash.editing() || from != dash.page
+                || from < 0 || from >= keptPages.length || to >= keptPages.length) return false;
+        Cards.Card[] had = new Cards.Card[Prefs.SLOTS];
+        for (int i = 0; i < Prefs.SLOTS; i++) {
+            if (!(dash.slots[i] instanceof Cards.Card) || shownWhat[i] == null) return false;
+            had[i] = (Cards.Card) dash.slots[i];
+        }
+        String[] want = new String[Prefs.SLOTS];
+        for (int i = 0; i < Prefs.SLOTS; i++) want[i] = prefs.slot(i);
+        Cards.Card[] back = samePage(keptWhat[to], want) ? keptPages[to] : null;
+        keptPages[to] = null;
+        keptWhat[to] = null;
+        hub.clearListeners();
+        for (int i = 0; i < Prefs.SLOTS; i++) {
+            dash.removeView(had[i]);
+            if (!keepable(shownWhat[i])) had[i] = null;   // made again when this page comes back
+        }
+        keptPages[from] = had;
+        keptWhat[from] = shownWhat.clone();
+        for (int i = 0; i < Prefs.SLOTS; i++) {
+            Cards.Card c = back != null && keepable(want[i]) ? back[i] : null;
+            if (c == null) c = Prefs.MAP.equals(want[i]) && !firstFrame && keptMap == null ? mapLater(i) : Cards.make(want[i], this, this, i);
+            dash.slots[i] = c;
+            dash.addView(c);
+            hub.add(c);
+            shownWhat[i] = want[i];
+        }
+        dash.page = to;
+        String place = statusPlace();
+        if (!place.equals(dockPlace)) {   // the status icons move between the dock and this page's clock
+            dash.removeView(dash.dock);
+            dash.dock = dash.wide ? HomeDock.wideBar(this) : HomeDock.dock(this);
+            dash.addView(dash.dock, 0);
+            dockPlace = place;
+        }
+        keepMap(true);
+        hub.add(overlays);
+        dash.requestLayout();
+        dash.invalidate();   // the page dots
+        micShown();
+        hub.notifyIfChanged(true);   // boxes coming back show the figures of now
+        return true;
     }
 
     @Override
@@ -339,11 +421,22 @@ public class HomeActivity extends Activity implements Cards.Host {
         dash.removeCallbacks(chores);
         dash.removeCallbacks(questions);
         Wake.stop(this);
+        Watchdog.stop();   // a new dashboard starts it again
         Extras.closed(this);
         LedStrip.closed(this);
         if (keptMap != null) keptMap.destroy();
         keptMap = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        // memory is short: let go of the other pages' boxes (made again when turned to)
+        if (level >= TRIM_MEMORY_RUNNING_LOW && level != TRIM_MEMORY_UI_HIDDEN) {
+            java.util.Arrays.fill(keptPages, null);
+            java.util.Arrays.fill(keptWhat, null);
+        }
     }
 
     @Override
@@ -353,6 +446,11 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     @Override
     public void pickWidget(String content) {
+        // a widget box's tap: the list of widgets waits for the car to stop (a passenger has the box menu)
+        if (ChildLock.parkedOnly(prefs)) {
+            android.widget.Toast.makeText(this, Hindi.t("Widgets can be chosen when the car is stopped"), android.widget.Toast.LENGTH_SHORT).show();
+            return;
+        }
         Extras.pickWidget(this, content);
     }
 
@@ -373,6 +471,10 @@ public class HomeActivity extends Activity implements Cards.Host {
     void build() {
         hub.clearListeners();
         dash.removeAllViews();
+        // a setting, the theme or the screen changed: the boxes kept for other pages are made again too
+        java.util.Arrays.fill(keptPages, null);
+        java.util.Arrays.fill(keptWhat, null);
+        java.util.Arrays.fill(shownWhat, null);
         Motion.load(prefs);
         Units.load(prefs);
         Fixes.stillKmh = prefs.num("speedFilter", 2);
@@ -435,6 +537,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         dash.setWillNotDraw(false);
         dash.dock = dash.wide ? HomeDock.wideBar(this) : HomeDock.dock(this);
         dash.addView(dash.dock);
+        dockPlace = statusPlace();
         for (int i = 0; i < Prefs.SLOTS; i++) {
             String content = prefs.slot(i);
             // a new map page waits until the dashboard has been drawn once, so the first screen comes up sooner
@@ -442,6 +545,7 @@ public class HomeActivity extends Activity implements Cards.Host {
             dash.slots[i] = c;
             dash.addView(c);
             hub.add(c);
+            shownWhat[i] = content;
         }
         keepMap(true);
         dash.requestLayout();
@@ -625,7 +729,11 @@ public class HomeActivity extends Activity implements Cards.Host {
                 root.addView(dimmer, root.indexOfChild(layoutView != null ? layoutView : dash) + 1,
                         new android.widget.FrameLayout.LayoutParams(-1, -1));
             }
-            // the backlight itself goes down where Android lets an app set it; else a dark layer on top
+            // Android's own brightness when the owner allowed it (holds over other apps too), switched by
+            // the night dimming choice or, with that off, the headlights; else this window's backlight
+            // where Android lets an app set it; else a dark layer on top
+            boolean system = systemBrightness("off".equals(mode) ? h.lightsOn() : night);
+            if (system) night = false;
             boolean backlit = backlight(night ? prefs.num("dimLevel", 40) : 0);
             dimmer.setAlpha(night && !backlit ? prefs.num("dimLevel", 40) / 100f : 0f);
             dimmer.setVisibility(night && !backlit ? View.VISIBLE : View.GONE);
@@ -660,6 +768,151 @@ public class HomeActivity extends Activity implements Cards.Host {
         getWindow().setAttributes(lp);
         backlitBy = Math.max(0, percent);
         return true;
+    }
+
+    // ------------------------------------------------------------------ brightness for all apps
+
+    /** Android's brightness (1 to 255) for a level in percent. Pure, for the tests. */
+    static int systemLevel(int percent) {
+        return Math.max(1, Math.min(255, Math.round(percent * 255 / 100f)));
+    }
+
+    /** Whether Android lets OpenRath change its own settings (the owner allows it once). */
+    static boolean canWriteSettings(android.content.Context c) {
+        return android.os.Build.VERSION.SDK_INT < 23 || android.provider.Settings.System.canWrite(c);
+    }
+
+    /** The level last written to Android's settings; -1 = none yet. */
+    private int systemSet = -1;
+
+    /**
+     * Set Android's own screen brightness to the owner's day or night level, so it holds over the
+     * other apps too. Written only when it changes, so the owner can still move it by hand in
+     * between. False when it is off or not allowed: then the dashboard dims only itself, as before.
+     */
+    private boolean systemBrightness(boolean night) {
+        if (!"on".equals(prefs.str("sysBright", "off")) || !canWriteSettings(this)) {
+            systemSet = -1;
+            return false;
+        }
+        int want = systemLevel(night ? prefs.num("brightNight", 25) : prefs.num("brightDay", 80));
+        if (want == systemSet) return true;
+        try {
+            android.content.ContentResolver cr = getContentResolver();
+            android.provider.Settings.System.putInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE,
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+            android.provider.Settings.System.putInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS, want);
+            systemSet = want;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /** "day 80%, night 25%", "off", or that Android's permission is still missing; for Settings. */
+    String brightnessState() {
+        if (!"on".equals(prefs.str("sysBright", "off"))) return Hindi.t("off; only the dashboard dims at night");
+        if (!canWriteSettings(this)) return Hindi.t("waiting for your OK in Android; the dashboard dims meanwhile");
+        return Hindi.f("day %1$s%%, night %2$s%%", prefs.num("brightDay", 80), prefs.num("brightNight", 25));
+    }
+
+    /** Settings > Screen brightness for all apps: explain and ask once, then the day and night levels. */
+    void brightnessSettings() {
+        if (!"on".equals(prefs.str("sysBright", "off"))) {
+            new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Screen brightness for all apps"))
+                    .setMessage(Hindi.t("OpenRath can set the unit's own screen brightness: one level by day and a lower one at night, "
+                            + "switched by the headlights (or at sunset, as chosen in Night dimming). Then the night level also holds "
+                            + "over the map, music and camera apps, not only on the dashboard.") + "\n\n" + Hindi.t("For this, Android asks you once to "
+                            + "allow OpenRath to change system settings. Without it, only the dashboard dims, as now."))
+                    .setPositiveButton(Hindi.t("Turn on"), new android.content.DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(android.content.DialogInterface d, int w) {
+                            rememberOwnBrightness();
+                            prefs.put("sysBright", "on");
+                            if (!canWriteSettings(HomeActivity.this)) askWriteSettings();
+                            else brightnessLevels();
+                            hub.notifyIfChanged(true);
+                            if (settingsView != null) settingsView.refresh();
+                        }
+                    }).setNegativeButton(Hindi.t("Cancel"), null).show();
+            return;
+        }
+        brightnessLevels();
+    }
+
+    private void brightnessLevels() {
+        final boolean allowed = canWriteSettings(this);
+        final String[] items = {Hindi.f("Day level: %1$s%%", prefs.num("brightDay", 80)), Hindi.f("Night level: %1$s%%", prefs.num("brightNight", 25)),
+                allowed ? Hindi.t("Turn off") : Hindi.t("Allow it in Android"), Hindi.t("Turn off")};
+        new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t("Screen brightness for all apps"))
+                .setItems(allowed ? java.util.Arrays.copyOf(items, 3) : items, new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface d, int w) {
+                        if (w == 0) brightnessStep("brightDay", 80, new int[]{40, 50, 60, 70, 80, 90, 100}, "How bright by day");
+                        else if (w == 1) brightnessStep("brightNight", 25, new int[]{5, 10, 15, 20, 25, 30, 40, 50}, "How bright at night");
+                        else if (w == 2 && !allowed) askWriteSettings();
+                        else {
+                            prefs.put("sysBright", "off");
+                            giveBackOwnBrightness();
+                            hub.notifyIfChanged(true);
+                            if (settingsView != null) settingsView.refresh();
+                        }
+                    }
+                }).setNegativeButton(Hindi.t("Close"), null).show();
+    }
+
+    private void brightnessStep(final String key, int def, final int[] steps, String title) {
+        String[] names = new String[steps.length];
+        int at = -1;
+        for (int i = 0; i < steps.length; i++) {
+            names[i] = steps[i] + "%";
+            if (steps[i] == prefs.num(key, def)) at = i;
+        }
+        new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert).setTitle(Hindi.t(title))
+                .setSingleChoiceItems(names, at, new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface d, int w) {
+                        prefs.put(key, String.valueOf(steps[w]));
+                        d.dismiss();
+                        systemSet = -1;   // write the new level now
+                        hub.notifyIfChanged(true);
+                        if (settingsView != null) settingsView.refresh();
+                    }
+                }).show();
+    }
+
+    /** Android's own screen for "Modify system settings", on OpenRath's page. */
+    private void askWriteSettings() {
+        try {
+            startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                    android.net.Uri.parse("package:" + getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            Toast.makeText(this, Hindi.t("Switch on \"Modify system settings\" for OpenRath, then come back."), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(this, Hindi.t("This unit has no screen to allow that, so only the dashboard dims at night."), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /** The brightness the owner had before OpenRath took it over, to give back when it is turned off. */
+    private void rememberOwnBrightness() {
+        try {
+            android.content.ContentResolver cr = getContentResolver();
+            prefs.put("brightWas", String.valueOf(android.provider.Settings.System.getInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS)));
+            prefs.put("brightWasMode", String.valueOf(android.provider.Settings.System.getInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE, 0)));
+        } catch (Exception ignored) {
+            // unreadable: nothing to give back later
+        }
+    }
+
+    private void giveBackOwnBrightness() {
+        systemSet = -1;
+        if (!canWriteSettings(this) || prefs.str("brightWas", "").isEmpty()) return;
+        try {
+            android.content.ContentResolver cr = getContentResolver();
+            android.provider.Settings.System.putInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS, prefs.num("brightWas", 200));
+            android.provider.Settings.System.putInt(cr, android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE, prefs.num("brightWasMode", 0));
+        } catch (Exception ignored) {
+            // left as it is
+        }
     }
 
     // ------------------------------------------------------------------ night-drive mode and valet badge
@@ -816,7 +1069,10 @@ public class HomeActivity extends Activity implements Cards.Host {
             return;
         }
         Intent i = pkg == null ? null : Compat.launch(getPackageManager(), pkg);
-        if (i == null && "dock:phone".equals(key)) i = new Intent(Intent.ACTION_DIAL);
+        if (i == null && "dock:phone".equals(key)) {
+            Keypad.show(this, hub.unit);   // no phone app chosen: OpenRath's own keypad, through the stereo's phone
+            return;
+        }
         if (i != null) {
             try {
                 startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -1107,7 +1363,7 @@ public class HomeActivity extends Activity implements Cards.Host {
 
     void openSettings() {
         if (settingsView != null) return;
-        if (Features.on(prefs, "parkedSettings") && !passenger && ChildLock.moving()) {
+        if (!passenger && ChildLock.parkedOnly(prefs)) {
             new Glass.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
                     .setTitle(Hindi.t("Settings open when the car is stopped"))
                     .setMessage(Hindi.t("Changing settings while driving takes your eyes off the road."))
@@ -1212,7 +1468,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         TextView done = PhoneCard.pill(this, Hindi.t("Done"), 0xFF2A2D32);
         done.setTextSize(0, 16 * Ui.k);
         done.setPadding(Ui.px(20), 0, Ui.px(20), 0);
-        LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(-2, Ui.px(44));
+        LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(-2, Ui.px(HomeDock.TARGET));
         dp.leftMargin = Ui.px(18);
         bar.addView(done, dp);
         done.setOnClickListener(new View.OnClickListener() {
@@ -1224,7 +1480,7 @@ public class HomeActivity extends Activity implements Cards.Host {
         TextView reset = PhoneCard.pill(this, Hindi.t("Usual sizes"), 0xFF2A2D32);
         reset.setTextSize(0, 16 * Ui.k);
         reset.setPadding(Ui.px(20), 0, Ui.px(20), 0);
-        LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(-2, Ui.px(44));
+        LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(-2, Ui.px(HomeDock.TARGET));
         rp.leftMargin = Ui.px(10);
         bar.addView(reset, rp);
         reset.setOnClickListener(new View.OnClickListener() {

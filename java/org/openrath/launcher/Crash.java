@@ -26,7 +26,7 @@ final class Crash {
         if (sp != null) return;
         sp = c.getApplicationContext().getSharedPreferences("crash", Context.MODE_PRIVATE);
         logs = new File(c.getApplicationContext().getFilesDir(), "logs");
-        Bg.run(new Runnable() {   // shared storage is slow on these units: off the start-up path
+        Bg.save(new Runnable() {   // shared storage is slow on these units: off the start-up path
             @Override
             public void run() {
                 moveOld();
@@ -113,6 +113,19 @@ final class Crash {
         }
     }
 
+    /**
+     * The screen's thread stopped answering for a while (see Watchdog): kept like a crash, with what
+     * that thread was doing, for Help > Crash reports and Diagnostics. The app carries on.
+     */
+    static void froze(long ms, StackTraceElement[] where) {
+        StringBuilder b = new StringBuilder("The screen stopped responding for " + ms / 1000 + " seconds (the app kept running)\n");
+        if (where != null) for (StackTraceElement e : where) b.append("\tat ").append(e).append('\n');
+        String s = scrub(b.toString());
+        Diag.note("the screen froze for " + ms / 1000 + " s", null);
+        if (sp != null) sp.edit().putString("last", s.length() > 700 ? s.substring(0, 700) : s).apply();
+        save(s, "main (not responding)");
+    }
+
     /** Saved crash reports, newest first. */
     static List<File> files() {
         List<File> out = new ArrayList<>();
@@ -156,6 +169,8 @@ final class Crash {
             if (passed.contains(step) && written == null) return true;
             written = step;
         }
+        // commit, not apply: the step may bring the app down in native code a moment later, before an
+        // apply() reached the disk, and then the next start wouldn't know which step to skip
         sp.edit().putString("running", step).commit();
         return true;
     }
@@ -168,7 +183,8 @@ final class Crash {
             wasWritten = written != null;
             written = null;
         }
-        if (sp != null && wasWritten) sp.edit().remove("running").commit();
+        // apply is enough here: the step got through, so nothing is lost if the app ends before the write
+        if (sp != null && wasWritten) sp.edit().remove("running").apply();
     }
 
     static String last() {

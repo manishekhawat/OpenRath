@@ -54,6 +54,9 @@ final class SettingsView extends FrameLayout {
         }
     }
 
+    /** Valet mode, the child-lock, passenger games and driver profiles: related jobs, side by side, each saying how it differs. */
+    static final String FAMILY = "Valet and children";
+
     static final Section[] SECTIONS = {
             new Section("General", "Level, language, units, country", new String[]{"Level", "General"},
                     new String[]{"How much OpenRath shows", "General"}),
@@ -69,8 +72,8 @@ final class SettingsView extends FrameLayout {
             new Section("Fuel and parking", "Petrol, tolls, parking, sharing costs", new String[0], new String[0]),
             new Section("Dashcam", "Recording with a USB camera", new String[]{"Dashcam"}, new String[]{"Dashcam"}),
             new Section("Your driving", "Trips, badges, routes, learnt roads", new String[]{"Your driving"}, new String[]{"Records"}),
-            new Section("Family", "Valet, child-lock, drivers", new String[]{"Valet", "Family"},
-                    new String[]{"Kids or valet mode", "Child-lock and drivers"}),
+            new Section(FAMILY, "Valet mode, app lock, passenger games, drivers", new String[]{"Valet", "Family"},
+                    new String[]{"Valet mode", "Children and drivers"}),
             new Section("Car", "Service, engine, lights, buttons", new String[]{"Car care", "Engine and tyres", "Car signals", "Steering-wheel buttons"},
                     new String[]{"Service reminders", "Engine and tyres", "Lights, indicators and reverse", "Steering-wheel buttons"}),
             new Section("Cab driver", "Earnings, fare meter, SOS, papers", new String[]{"Cab"}, new String[]{"Cab driver"}),
@@ -121,10 +124,10 @@ final class SettingsView extends FrameLayout {
             {"Share the trip", "tripShare"}, {"Split the cost", "split"}, {"Your UPI id", "split"},
             {"Pause parked music after", "parkedMusic"},
             {"Camera", "dashcam"}, {"Space for recordings", "dashcam"}, {"Save the clip now", "dashcam"},
-            {"Trip games for children", "kids"}, {"Apps locked while moving", "childLock"}, {"Who's driving", "profiles"},
+            {"Play a game now", "kids"}, {"Apps locked while moving", "childLock"}, {"Who's driving", "profiles"},
             {"Volume limit", "valet"}, {"Speed limit in valet mode", "valet"}, {"Change the PIN", "valet"}, {"Choose the PIN", "valet"},
             {"Car documents", "wallet"}, {"Service reminders", "care"}, {"Your service centre", "care"},
-            {"OBD-II adapter", "obd"}, {"Read fault codes", "obdReady"}, {"Live engine readings", "obdReady"},
+            {"Camera picture in reverse", "reverse"}, {"OBD-II adapter", "obd"}, {"Read fault codes", "obdReady"}, {"Live engine readings", "obdReady"}, {"Your own engine readings", "obd"},
             {"Clear fault codes", "obdReady"}, {"Warn when the coolant is above", "obdReady"},
             {"Tyre sensors", "tpms"}, {"Tyre pressure units", "tpms"}, {"Warn when a tyre is below", "tpms"},
             {"LED light strip", "ledStrip"}, {"Learn a button", "keys"}, {"Buttons work in other apps too", "keys"},
@@ -171,7 +174,7 @@ final class SettingsView extends FrameLayout {
         if ("Dashboard".equals(f.group)) return "Home screen";
         if ("Sound".equals(f.group)) return "Radio and music";
         if ("Data".equals(f.group)) return "Backup and about";
-        if ("Family".equals(f.group)) return "Family";
+        if ("Family".equals(f.group)) return FAMILY;
         if ("Cab".equals(f.group)) return "Cab driver";
         if ("Phone".equals(f.group)) return "Phone and messages";
         if ("Driving".equals(f.group)) return "Driving alerts";
@@ -204,6 +207,7 @@ final class SettingsView extends FrameLayout {
     SettingsView(Context c, Source s) {
         super(c);
         source = s;
+        opened.clear();   // switches that are off start folded away each time
         Glass.screen(this);
         setClickable(true);   // nothing reaches the dashboard underneath
 
@@ -307,32 +311,70 @@ final class SettingsView extends FrameLayout {
      */
     static java.util.Map<String, List<Object>> arrange(List<Row> rows, Prefs p) {
         List<Row> live = new ArrayList<>();
+        for (Row r : rows) if (depOn(p, dependsOn(r))) live.add(r);
+        return place(live, opened);
+    }
+
+    /** The left-hand entry, and the row in each section, that gather the switches of features that are off. */
+    static final String MORE = "More features";
+    private static final Section MORE_SECTION = new Section(MORE, "Everything that's off, ready to turn on", new String[0], new String[0]);
+    /**
+     * Sections whose "More features" row was tapped, so their switched-off features show in place, and "#" and the id
+     * of each switch used in its own section, which stays where it is when turned off.
+     */
+    static final java.util.Set<String> opened = new java.util.HashSet<>();
+
+    private static boolean isOff(Row r) {
+        return r.feature != null && Boolean.FALSE.equals(r.on);
+    }
+
+    /** A section's "More features" row: one line instead of every switch that's off; a tap opens them out. */
+    private static Row moreRow(final String section, int n) {
+        return new Row(section, MORE, Hindi.f(n == 1 ? "%1$s more feature you can turn on" : "%1$s more features you can turn on", n), new Runnable() {
+            @Override
+            public void run() {
+                opened.add(section);
+            }
+        });
+    }
+
+    /**
+     * The sections from the rows to show (live): in each, the switches of features that are on, each with the rows
+     * that set it up, then one "More features" row for those that are off (all of them once `open` names the
+     * section), then each old group under its heading. Last, More features gathers every switch that's off.
+     * Pure apart from the translated words, for the tests.
+     */
+    static java.util.Map<String, List<Object>> place(List<Row> live, java.util.Set<String> open) {
         java.util.Set<String> switchIds = new java.util.HashSet<>();
-        for (Row r : rows) {
-            if (!depOn(p, dependsOn(r))) continue;
-            live.add(r);
-            if (r.feature != null) switchIds.add(r.feature);
-        }
+        for (Row r : live) if (r.feature != null) switchIds.add(r.feature);
         java.util.Map<String, List<Object>> out = new java.util.LinkedHashMap<>();
+        List<Object> more = new ArrayList<>();
         for (Section sec : SECTIONS) {
             List<Object> items = new ArrayList<>();
-            List<Row> switches = new ArrayList<>();
+            List<Row> switches = new ArrayList<>(), off = new ArrayList<>();
             java.util.Set<String> switchNames = new java.util.HashSet<>();
             for (Row r : live) {
                 if (r.feature == null) continue;
                 Features.F f = Features.get(r.feature);
                 if (f != null && sectionOf(f).equals(sec.name)) {
-                    switches.add(r);
+                    (isOff(r) && !open.contains("#" + r.feature) ? off : switches).add(r);
                     switchNames.add(r.title.toLowerCase(java.util.Locale.US));
                 }
             }
-            if (!switches.isEmpty()) {
+            if (!switches.isEmpty() || !off.isEmpty()) {
                 items.add("Turn on or off");
                 for (Row s : switches) {
                     items.add(s);
                     for (Row r : live) {
                         if (r.feature == null && r.action != null && s.feature.equals(lookup(UNDER, r.title))) items.add(new Child(r));
                     }
+                }
+                // Valet and children keeps its three side by side, so their one-line differences can be compared
+                if (open.contains(sec.name) || FAMILY.equals(sec.name)) items.addAll(off);
+                else if (!off.isEmpty()) items.add(moreRow(sec.name, off.size()));
+                if (!off.isEmpty()) {
+                    more.add(sec.name);
+                    more.addAll(off);
                 }
             }
             for (int i = 0; i < sec.groups.length; i++) {
@@ -351,6 +393,7 @@ final class SettingsView extends FrameLayout {
             }
             if (!items.isEmpty()) out.put(sec.name, items);
         }
+        if (!more.isEmpty()) out.put(MORE, more);
         return out;
     }
 
@@ -414,6 +457,7 @@ final class SettingsView extends FrameLayout {
 
     private static Section section(String name) {
         if (RECENT.equals(name)) return RECENT_SECTION;
+        if (MORE.equals(name)) return MORE_SECTION;
         for (Section s : SECTIONS) if (s.name.equals(name)) return s;
         return SECTIONS[0];
     }
@@ -468,12 +512,13 @@ final class SettingsView extends FrameLayout {
         if (!q.isEmpty()) {
             heading.setText(Hindi.t("Search"));
             int found = 0;
+            java.util.Set<Row> listed = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<Row, Boolean>());
             for (java.util.Map.Entry<String, List<Object>> e : all.entrySet()) {
                 if (RECENT.equals(e.getKey())) continue;
                 boolean head = false;
                 for (Object o : e.getValue()) {
                     Row r = rowOf(o);
-                    if (r == null) continue;
+                    if (r == null || (r.feature == null && MORE.equals(r.title)) || !listed.add(r)) continue;   // each once
                     String hay = (r.title + " " + (r.value == null ? "" : r.value) + " " + e.getKey() + " " + Hindi.t(r.title) + " "
                             + Hindi.t(r.value) + " " + Hindi.t(e.getKey())).toLowerCase(java.util.Locale.US);
                     if (!hay.contains(q)) continue;
@@ -573,8 +618,15 @@ final class SettingsView extends FrameLayout {
             public void onClick(View v) {
                 Reports.count(r.title);
                 Prefs p = new Prefs(getContext());
-                p.put("recentRows", remember(p.str("recentRows", ""), r.title));
+                boolean link = r.feature == null && MORE.equals(r.title);   // opens out the switches that are off
+                if (!link) p.put("recentRows", remember(p.str("recentRows", ""), r.title));
                 r.action.run();
+                if (MORE.equals(group) && r.feature != null && Features.on(p, r.feature)) {
+                    // it leaves this list: say where it went
+                    Features.F f = Features.get(r.feature);
+                    if (f != null) android.widget.Toast.makeText(getContext(), Hindi.f("%1$s is on. Its settings are in %2$s", Hindi.t(f.name),
+                            Hindi.t(sectionOf(f))), android.widget.Toast.LENGTH_SHORT).show();
+                } else if (r.feature != null) opened.add("#" + r.feature);   // turned off here: it stays here until Settings closes
                 refresh();
             }
         });

@@ -205,6 +205,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         android.content.IntentFilter sf = new android.content.IntentFilter(Intent.ACTION_SCREEN_OFF);
         Compat.fromSystem(this, screen, sf);
         Compat.fromSystem(this, ringing, new android.content.IntentFilter(android.telephony.TelephonyManager.ACTION_PHONE_STATE_CHANGED));
+        makerCalls = new CallScreen.Units(this);
+        makerCalls.start();
         handler.postDelayed(volumes, VOLUMES_MS);
     }
 
@@ -230,6 +232,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
 
     /** Calls ringing and ending, for the call screen over other apps. */
     private final CallScreen.Watch ringing = new CallScreen.Watch();
+    /** The same from the stereo maker's own phone service, on units that have one. */
+    private CallScreen.Units makerCalls;
 
     private Resume.Screen screen;
     private boolean hotWarned;
@@ -245,7 +249,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         if (Features.on(prefs, "tpms")) Tpms.start(this, prefs);
         else Tpms.stop();
         if (Features.on(prefs, "backup")) {
-            Bg.run(new Runnable() {
+            Bg.save(new Runnable() {
                 @Override
                 public void run() {
                     Backup.daily(Drive.this, prefs);
@@ -398,8 +402,8 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         }
     }
 
-    /** Writes to the "drive" settings, one after another off the main thread. */
-    private final Bg.Serial writer = Bg.serial();
+    /** Writes to the "drive" settings, one after another on the saving thread (Bg.saves). */
+    private final Bg.Serial writer = new Bg.Serial(Bg.saves());
     /** The day-by-day history, kept read in memory (only the writer touches it). */
     private JSONObject hist;
     private String savedTrip = "";
@@ -482,6 +486,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         if (obd >= 0) kmh = obd;   // the car's own speedometer reading beats GPS
         kmhNow = kmh;
         fixAt = now;
+        ChildLock.reading(kmh, now);   // the locks' "last seen moving", even when nothing asks during the drive
         latNow = l.getLatitude();
         lonNow = l.getLongitude();
         headingNow = l.hasBearing() && kmh > 5 ? l.getBearing() : -1;
@@ -772,7 +777,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
         if (wantLimit) queriedAt = l;
         final double lat = l.getLatitude(), lon = l.getLongitude();
         final java.io.File dir = new java.io.File(getCacheDir(), "overpass");
-        Bg.run(new Runnable() {
+        Bg.net(new Runnable() {
             @Override
             public void run() {
                 long now = System.currentTimeMillis();
@@ -1086,6 +1091,7 @@ public class Drive extends Service implements LocationListener, TextToSpeech.OnI
     @Override
     public void onDestroy() {
         handler.removeCallbacks(volumes);
+        if (makerCalls != null) makerCalls.stop();
         save(true);
         if (Features.on(prefs, "coach")) Coach.save(prefs, drives.close(System.currentTimeMillis()));
         Dashcam.stop();

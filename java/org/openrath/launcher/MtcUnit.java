@@ -38,7 +38,7 @@ final class MtcUnit extends Unit {
     private IBinder bt;
     private boolean btBound, receiving;
     private volatile String freq = "", ps = "", devName = "", callNum = "";
-    private volatile long callAt;
+    private volatile long callAt, answeredAt, numFor;
     private String callDir = "";
     private Boolean fmOn;
 
@@ -246,20 +246,54 @@ final class MtcUnit extends Unit {
     }
 
     @Override
+    boolean dialsItself(Context c) {
+        return bt != null || super.dialsItself(c);
+    }
+
+    @Override
     void answer(Context c) {
         if (transact(T_ANSWER, null, false) == null) super.answer(c);
+        answeredAt = System.currentTimeMillis();
     }
 
     @Override
     void hangUp(Context c) {
-        boolean ringing = "in".equals(callDir) && System.currentTimeMillis() - callAt < 30000;
+        boolean ringing = callState(true, callAt, callDir, answeredAt, false, System.currentTimeMillis()) == CALL_RINGING;
         if (transact(ringing ? T_REJECT : T_HANGUP, null, false) == null) super.hangUp(c);
         callAt = 0;
     }
 
     @Override
+    int callState() {
+        long now = System.currentTimeMillis();
+        boolean recent = now - callAt < CALL_MS;
+        if (bt != null && recent && numFor != callAt) {
+            // the number for the call screen, once per call (the hub's tick reads it again for the call log)
+            numFor = callAt;
+            String n = transact("in".equals(callDir) ? T_CALL_IN_NUM : T_DIAL_OUT_NUM, null, true);
+            if (n != null && !n.trim().isEmpty()) callNum = n.trim();
+        }
+        return callState(bt != null, callAt, callDir, answeredAt, !recent && inCall(), now);
+    }
+
+    /** How long after the stock app announces a call it counts as on, without a hang-up seen. */
+    static final long CALL_MS = 30000;
+
+    /**
+     * The call screen's state from the stock apps' announcement: ringing from a "call in" until it is
+     * answered (or CALL_MS passes), on during an outgoing call or an answered one; `telecom` is
+     * Android's own in-call flag.
+     */
+    static int callState(boolean linked, long callAt, String dir, long answeredAt, boolean telecom, long now) {
+        if (!linked) return CALL_UNKNOWN;
+        boolean recent = callAt > 0 && now - callAt < CALL_MS;
+        if (recent && "in".equals(dir) && answeredAt < callAt) return CALL_RINGING;
+        return recent || telecom ? CALL_ON : CALL_NONE;
+    }
+
+    @Override
     String caller() {
-        return System.currentTimeMillis() - callAt < 30000 ? callNum : "";
+        return System.currentTimeMillis() - callAt < CALL_MS ? callNum : "";
     }
 
     // ------------------------------------------------------------------ FM

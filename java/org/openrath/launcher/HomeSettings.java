@@ -135,7 +135,7 @@ final class HomeSettings {
         b.append("Last call: ").append(a.hub.lastCall == null ? "none seen yet" : a.hub.lastCall[1] + " " + a.hub.lastCall[0] + " " + a.hub.lastCall[2])
                 .append(a.hub.xt == null ? "" : ", last Bluetooth text \"" + a.hub.xt.btText + "\"")
                 .append(a.checkSelfPermission(Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED ? "" : ", call log not allowed").append("\n");
-        b.append("Topway MCU link: ").append(!Tw.available() ? "not on this unit"
+        b.append("Topway radio control: ").append(!Tw.available() ? "not on this unit"
                 : a.hub.fm == null ? "present" : a.hub.fm.seen ? "FM " + a.hub.fm.frequency() + (a.hub.fm.on ? " (playing)" : "")
                 + (a.hub.fm.name.isEmpty() ? "" : " " + a.hub.fm.name) : "present, no answer from the tuner yet").append("\n");
         b.append("Trip: today ").append(String.format(java.util.Locale.US, "%.1f km, %d min", Drive.todayKm, Drive.todaySec / 60))
@@ -212,7 +212,7 @@ final class HomeSettings {
                 .setNegativeButton(first ? Hindi.t("Not now") : Hindi.t("Cancel"), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface d, int w) {
-                        if (first) a.prefs.put("level", "custom");   // asked once; everything stays as it was
+                        if (first) Features.keepLevel(a.prefs);   // asked once; everything stays as it was
                     }
                 }).show();
     }
@@ -307,7 +307,7 @@ final class HomeSettings {
         if (list.isEmpty()) {
             final android.app.ProgressDialog wait = android.app.ProgressDialog.show(a, null,
                     web ? Hindi.t("Finding stations…") : Hindi.t("Looking for music…"), true);
-            Bg.run(new Runnable() {
+            Bg.run(web, new Runnable() {
                 @Override
                 public void run() {
                     final java.util.List<Player.Track> l = web ? Player.fetchStations(a)

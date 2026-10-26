@@ -163,6 +163,13 @@ public final class Tests {
         eq("apps recent cap", "d,a", AppsActivity.join(AppsActivity.push(r, "d", 2)));
         eq("apps unpin", "a,c", AppsActivity.join(AppsActivity.remove(r, "b")));
         eq("apps split empty", 0, AppsActivity.split("").size());
+        java.util.Map<String, Integer> uses = AppsActivity.counts("maps=9,music=4,radio=4");
+        eq("apps driving: pinned, then most used, then A to Z", "phone,maps,music,radio",
+                AppsActivity.join(AppsActivity.shortList(AppsActivity.split("aa,maps,music,phone,radio"), uses, AppsActivity.split("phone,gone"), 4)));
+        eq("apps driving: short", 2, AppsActivity.shortList(AppsActivity.split("a,b,c"), uses, AppsActivity.split(""), 2).size());
+        eq("box menu while stopped", "[-2, 0, 1, -3, -4]", HomeDialogs.menu(2, false).toString());
+        eq("box menu while moving: no widgets or moving boxes", "[0, 1, -3, -5]", HomeDialogs.menu(2, true).toString());
+        check("text floor is 16", Ui.MIN_TEXT >= 16 && Ui.READ >= 24);
         // status icons
         eq("gps fix", StatusIcons.ON, StatusIcons.gps(3, true));
         eq("gps searching", StatusIcons.SEARCHING, StatusIcons.gps(60, true));
@@ -334,6 +341,35 @@ public final class Tests {
         for (String id : new String[]{"faultWords", "askCar", "autoTheme", "ledStrip", "achievements"}) check("feature " + id, Features.get(id) != null);
     }
 
+    private static void speedIdeas() {
+        // the freeze watch: told once per freeze, quiet while answers come
+        Watchdog.Beat b = new Watchdog.Beat();
+        check("first ping", b.ask(1000));
+        eq("answered quickly", 0L, b.frozen(1100, 10000));
+        b.answer(1050);
+        check("next ping", b.ask(6000));
+        check("no second ping while waiting", !b.ask(11000));
+        eq("not yet frozen", 0L, b.frozen(15000, 10000));
+        eq("frozen", 10000L, b.frozen(16000, 10000));
+        eq("told once", 0L, b.frozen(21000, 10000));
+        b.answer(22000);
+        check("ping again after the answer", b.ask(23000));
+        eq("a new freeze is told again", 11000L, b.frozen(34000, 10000));
+        // the picture layouts' clocks
+        check("analog has a second hand", LayoutView.secondHand("analog-big") && LayoutView.secondHand("digital-analog") && LayoutView.secondHand("wall"));
+        check("digital has none", !LayoutView.secondHand("") && !LayoutView.secondHand("digital") && !LayoutView.secondHand("digital-line"));
+        eq("next second", 510L, LayoutView.nextTick(60500, true));
+        eq("next minute", 30010L, LayoutView.nextTick(90000, false));
+        check("into a new minute", LayoutView.newMinute(119500, LayoutView.nextTick(119500, true)));
+        check("same minute", !LayoutView.newMinute(100500, LayoutView.nextTick(100500, true)));
+        // kept dashboard pages
+        String[] page = {"car", "clock", "weather", "map", "music"};
+        check("same boxes come back", HomeActivity.samePage(page.clone(), page));
+        check("changed boxes are made again", !HomeActivity.samePage(new String[]{"car", "clock", "trip", "map", "music"}, page));
+        check("nothing kept", !HomeActivity.samePage(null, page));
+        check("the map isn't kept with a page", !HomeActivity.keepable(Prefs.MAP) && !HomeActivity.keepable(Prefs.VIDEO) && HomeActivity.keepable(Prefs.CLOCK));
+    }
+
     private static void miniAaIdeas() {
         // deep sleep: the boot clock moves on, the awake clock doesn't
         eq("slept", 300000L, Wake.slept(1000, 1000, 1000 + 315000, 1000 + 15000));
@@ -383,6 +419,7 @@ public final class Tests {
 
     public static void main(String[] args) {
         levels();
+        fuelTypes();
         hindi();
         fleets();
         obd();
@@ -416,6 +453,7 @@ public final class Tests {
         settingsLook();
         femtoIdeas();
         miniAaIdeas();
+        speedIdeas();
         nebulaIdeas();
         intro();
         setupScreens();
@@ -428,8 +466,189 @@ public final class Tests {
         musicScreen();
         androidAuto();
         glassLook();
+        phoneKeypad();
+        reviewMisc();
         System.out.println(run + " checks, " + failed + " failed");
         if (failed > 0) System.exit(1);
+    }
+
+    /** The phone's own keypad (what it takes and how it shows the number) and the maker services' call states. */
+    private static void phoneKeypad() {
+        eq("keypad: digit", "98", Keypad.press("9", '8'));
+        eq("keypad: plus first", "+", Keypad.press("", '+'));
+        eq("keypad: no plus inside", "98", Keypad.press("98", '+'));
+        eq("keypad: star and hash", "*1#", Keypad.press(Keypad.press("*", '1'), '#'));
+        eq("keypad: not a key", "9", Keypad.press("9", 'a'));
+        String full = "123456789012345678";
+        eq("keypad: at most MAX", full, Keypad.press(full, '9'));
+        eq("keypad: back", "9", Keypad.back("98"));
+        eq("keypad: back on empty", "", Keypad.back(""));
+        eq("keypad: mobile", "98765 43210", Keypad.show("9876543210"));
+        eq("keypad: while typing", "98765 4", Keypad.show("987654"));
+        eq("keypad: short", "100", Keypad.show("100"));
+        eq("keypad: +91", "+91 98765 43210", Keypad.show("+919876543210"));
+        eq("keypad: +91 alone", "+91", Keypad.show("+91"));
+        eq("keypad: leading 0", "0 98765 43210", Keypad.show("09876543210"));
+        eq("keypad: other country", "+447 911 123 456", Keypad.show("+447911123456"));
+        eq("keypad: codes as typed", "*123#", Keypad.show("*123#"));
+        eq("keypad: empty", "", Keypad.show(""));
+        eq("fyt: not linked", Unit.CALL_UNKNOWN, FytUnit.callState(false, FytUnit.PH_RINGING));
+        eq("fyt: not said yet", Unit.CALL_UNKNOWN, FytUnit.callState(true, -1));
+        eq("fyt: ringing", Unit.CALL_RINGING, FytUnit.callState(true, FytUnit.PH_RINGING));
+        eq("fyt: talking", Unit.CALL_ON, FytUnit.callState(true, FytUnit.PH_TALKING));
+        eq("fyt: dialling", Unit.CALL_ON, FytUnit.callState(true, FytUnit.PH_DIALING));
+        eq("fyt: connected, no call", Unit.CALL_NONE, FytUnit.callState(true, FytUnit.PH_CONNECTED));
+        long now = 1000000;
+        eq("mtc: not linked", Unit.CALL_UNKNOWN, MtcUnit.callState(false, now, "in", 0, false, now));
+        eq("mtc: ringing", Unit.CALL_RINGING, MtcUnit.callState(true, now - 2000, "in", 0, false, now));
+        eq("mtc: answered", Unit.CALL_ON, MtcUnit.callState(true, now - 2000, "in", now - 1000, false, now));
+        eq("mtc: calling out", Unit.CALL_ON, MtcUnit.callState(true, now - 2000, "out", 0, false, now));
+        eq("mtc: long over", Unit.CALL_NONE, MtcUnit.callState(true, now - MtcUnit.CALL_MS - 1, "in", 0, false, now));
+        eq("mtc: on by Android", Unit.CALL_ON, MtcUnit.callState(true, 0, "", 0, true, now));
+    }
+
+    /** Brightness, routing, the reversing camera, engine readings, moving to another stereo, holidays and money. */
+    private static void reviewMisc() {
+        // brightness for all apps
+        eq("brightness: full", 255, HomeActivity.systemLevel(100));
+        eq("brightness: night quarter", 64, HomeActivity.systemLevel(25));
+        eq("brightness: never black", 1, HomeActivity.systemLevel(0));
+        eq("brightness: capped", 255, HomeActivity.systemLevel(140));
+
+        // the owner's route server
+        eq("route server: host only", "https://osrm.example.in/route/v1/driving/", MapCard.routeBase("https://osrm.example.in"));
+        eq("route server: trailing slash", "https://osrm.example.in/route/v1/driving/", MapCard.routeBase(" https://osrm.example.in/ "));
+        eq("route server: its own profile", "https://r.example.in:8443/route/v1/car/", MapCard.routeBase("https://r.example.in:8443/route/v1/car"));
+        eq("route server: a path before", "https://example.in/osrm/route/v1/driving/", MapCard.routeBase("https://example.in/osrm"));
+        eq("route server: empty is the public ones", "", MapCard.routeBase(""));
+        eq("route server: http refused", "", MapCard.routeBase("http://192.168.1.5:5000"));
+        eq("route server: no tricks in the rules", "", MapCard.routeBase("https://a.in; script-src *"));
+        eq("route server: no query", "", MapCard.routeBase("https://a.in/x?y=1"));
+        eq("route server: host shown", "r.example.in:8443", MapCard.routeHost("https://r.example.in:8443/route/v1/car"));
+        String csp = "<meta content=\"default-src 'self'; connect-src 'self' https://router.project-osrm.org; object-src 'none'\">";
+        check("route server: let through the page's rules", MapCard.withRouteServer(csp, "https://osrm.example.in").contains("connect-src 'self' https://osrm.example.in https://router.project-osrm.org;"));
+        eq("route server: none leaves the page", csp, MapCard.withRouteServer(csp, "nonsense"));
+        try {
+            String page = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get("assets/map/map.html")), "UTF-8");
+            check("route server: the map page has the rule to widen", page.contains("connect-src 'self' "));
+            check("route server: the map page asks it", page.contains("app.routeServer"));
+            check("route service down: hands over to the navigation app", page.contains("routeFailed") && page.contains("app.navAppName"));
+        } catch (Exception e) {
+            check("map page readable " + e, false);
+        }
+
+        // the reversing camera
+        eq("reverse camera: none on the unit", -1, ReverseView.pick("auto", new boolean[0]));
+        eq("reverse camera: the one facing back", 1, ReverseView.pick("auto", new boolean[]{false, true}));
+        eq("reverse camera: the only one", 0, ReverseView.pick("auto", new boolean[]{false}));
+        eq("reverse camera: two, neither back", -1, ReverseView.pick("auto", new boolean[]{false, false}));
+        eq("reverse camera: owner's choice", 0, ReverseView.pick("0", new boolean[]{false, true}));
+        eq("reverse camera: chosen one gone", -1, ReverseView.pick("3", new boolean[]{true}));
+        eq("reverse camera: lines only", -1, ReverseView.pick("none", new boolean[]{true}));
+
+        // the owner's own engine readings: the SAE J1979 formulas
+        near("pid: outside air", 31, Obd.custom("0146", "41 46 47"), 0.01);
+        near("pid: oil temperature", 95, Obd.custom("015C", "41 5C 87"), 0.01);
+        near("pid: computer volts", 14.2, Obd.custom("0142", "41 42 37 78"), 0.001);
+        near("pid: rpm", 1726, Obd.custom("010C", "41 0C 1A F8"), 0.01);
+        near("pid: timing advance", 9.5, Obd.custom("010E", "41 0E 93"), 0.01);
+        near("pid: catalyst", 463.6, Obd.custom("013C", "41 3C 13 AC"), 0.01);
+        near("pid: lambda", 1.0, Obd.custom("0144", "41 44 80 00"), 0.0001);
+        near("pid: oxygen sensor", 0.45, Obd.custom("0114", "41 14 5A FF"), 0.001);
+        near("pid: fuel rate", 3.2, Obd.custom("015E", "41 5E 00 40"), 0.001);
+        near("pid: rail pressure", 5050, Obd.custom("0123", "41 23 01 F9"), 0.01);
+        near("pid: relative rail pressure", 25.28, Obd.custom("0122", "41 22 01 40"), 0.01);
+        near("pid: injection timing", -10, Obd.custom("015D", "41 5D 64 00"), 0.01);
+        near("pid: torque", 25, Obd.custom("0162", "41 62 96"), 0.01);
+        near("pid: absolute load", 100, Obd.custom("0143", "41 43 00 FF"), 0.01);
+        near("pid: fuel pressure", 300, Obd.custom("010A", "41 0A 64"), 0.01);
+        near("pid: trim", -25, Obd.custom("0108", "41 08 60"), 0.01);
+        near("pid: barometer", 101, Obd.custom("0133", "41 33 65"), 0.01);
+        near("pid: distance since cleared", 1000, Obd.custom("0131", "41 31 03 E8"), 0.01);
+        check("pid: two bytes wanted", Obd.custom("0142", "41 42 37") == Obd.NONE);
+        check("pid: no answer", Obd.custom("0146", "NO DATA") == Obd.NONE);
+        check("pid: unknown", Obd.custom("01FF", "41 FF 00") == Obd.NONE);
+        for (String[] row : Obd.PIDS) {
+            check("pid: known formula " + row[0], Obd.formula(row[3], new int[]{100, 100}) != Obd.NONE);
+            check("pid: mode 01 " + row[0], row[0].length() == 4 && row[0].startsWith("01"));
+        }
+        eq("pid: line", "Outside air temperature: 31°C", Obd.customLine(Obd.pid("0146"), 31));
+        eq("pid: line with decimals", "Engine computer voltage: 14.20 V", Obd.customLine(Obd.pid("0142"), 14.2f));
+        eq("pid: setting read back", "0146,015C", String.join(",", Obd.mine("0146, 015c,zz,0146")));
+        check("pid: built-in ones not offered again", Obd.offered().size() < Obd.PIDS.length && Obd.pid("010C") != null);
+        for (String[] row : Obd.offered()) check("pid: not offered twice " + row[0], !"010C".equals(row[0]) && !"0105".equals(row[0]));
+
+        // moving to another stereo
+        try {
+            String json = "{\"app\":\"OpenRath\",\"format\":1,\"prefs\":{\"home\":{\"carModel\":[\"s\",\"Dzire\"],\"saverMin\":[\"s\",\"5\"]}}}";
+            String code = Backup.pack(json);
+            check("move: code starts with its mark", code.startsWith(Backup.CODE));
+            eq("move: code read back", json, Backup.unpack(code));
+            eq("move: code inside other text", json, Backup.unpack("Scanned text: " + code + " (end)"));
+            check("move: code cut short", Backup.unpack(code.substring(0, code.length() - 6)) == null);
+            check("move: not ours", Backup.unpack("hello") == null && Backup.unpack(null) == null);
+            check("move: not settings", Backup.unpack(Backup.pack("{\"x\":1}")) == null);
+            check("move: small settings fit a QR code", Qr.fits(code, Backup.QR_VERSION));
+            StringBuilder big = new StringBuilder();
+            java.util.Random rnd = new java.util.Random(7);
+            for (int i = 0; i < 3000; i++) big.append((char) ('a' + rnd.nextInt(26)));
+            check("move: big settings don't", !Qr.fits(Backup.pack("{\"prefs\":{\"x\":\"" + big + "\"}}"), Backup.QR_VERSION));
+            check("move: PINs never in a backup", !Backup.backedUp("x:valetPin") && !Backup.backedUp("x:apPass"));
+        } catch (Exception e) {
+            check("move: " + e, false);
+        }
+
+        // holidays: any year for the fixed ones and Good Friday, the moon's ones to 2035
+        eq("easter 2026", "2026-04-05", ymd(Holidays.easter(2026)));
+        eq("easter 2027", "2027-03-28", ymd(Holidays.easter(2027)));
+        eq("easter 2035", "2035-03-25", ymd(Holidays.easter(2035)));
+        eq("easter 2038", "2038-04-25", ymd(Holidays.easter(2038)));
+        check("good friday 2026 kept", names(2026).contains("Good Friday 2026-04-03"));
+        check("good friday 2040", names(2040).contains("Good Friday 2040-03-30"));
+        check("republic day 2040", names(2040).contains("Republic Day 2040-01-26"));
+        check("diwali 2031", names(2031).contains("Diwali 2031-11-14"));
+        check("diwali 2035", names(2035).contains("Diwali 2035-10-30"));
+        String last = "";
+        for (String[] m : Holidays.MOVING) {
+            check("holiday years in order " + m[0], m[0].substring(0, 4).compareTo(last) >= 0);
+            check("holiday date valid " + m[0], m[0].matches("20(2[6-9]|3[0-5])-[01][0-9]-[0-3][0-9]"));
+            last = m[0].substring(0, 4);
+        }
+        String was = Money.country;
+        Money.country = "IN";
+        check("upcoming in 2034 still finds holidays", Holidays.upcoming(day(2034, 1, 2, 9, 0), 3).size() == 3);
+        Money.country = was;
+
+        // money: digit grouping by country, and the country when the unit's language has none
+        eq("group: lakh", "1,00,000", Money.group(100000, "IN"));
+        eq("group: crore", "1,23,45,678", Money.group(12345678, "IN"));
+        eq("group: thousand", "1,000", Money.group(1000, "IN"));
+        eq("group: small", "999", Money.group(999, "IN"));
+        eq("group: uk", "100,000", Money.group(100000, "GB"));
+        eq("group: us million", "1,234,567", Money.group(1234567, "US"));
+        eq("group: germany", "1.234.567", Money.group(1234567, "DE"));
+        eq("group: pakistan", "12,34,567", Money.group(1234567, "PK"));
+        eq("group: negative", "-12,500", Money.group(-12500, "IN"));
+        Money.country = "GB";
+        eq("cab amount abroad", "£150,000", Cab.rs(150000));
+        Money.country = "IN";
+        eq("cab amount in India", "₹1,50,000", Cab.rs(150000));
+        Money.country = was;
+        eq("country: chosen", "GB", Money.pick("gb", "IN", "in"));
+        eq("country: unit's language", "AE", Money.pick("", "AE", "in"));
+        eq("country: SIM when the language has none", "NP", Money.pick("", "", "np"));
+        eq("country: nothing known", "IN", Money.pick("", "", ""));
+        eq("country: junk", "IN", Money.pick("1", null, "419"));
+    }
+
+    private static String ymd(java.util.Calendar c) {
+        return String.format(java.util.Locale.US, "%04d-%02d-%02d", c.get(java.util.Calendar.YEAR), c.get(java.util.Calendar.MONTH) + 1, c.get(java.util.Calendar.DAY_OF_MONTH));
+    }
+
+    private static List<String> names(int year) {
+        List<String> out = new java.util.ArrayList<>();
+        for (Holidays.Day d : Holidays.of(year)) out.add(d.name + " " + ymd(d.date));
+        return out;
     }
 
     /** The Glass look: the wallpaper's blur, its colours and the see-through mixing of glass panels. */
@@ -884,6 +1103,14 @@ public final class Tests {
         check("moving: GPS lost in a tunnel stays locked", ChildLock.moving(40, now - 60000, -1, now, now - 60000));
         check("moving: GPS lost long after", !ChildLock.moving(40, now - ChildLock.LOST_MS - 5000, -1, now, now - ChildLock.LOST_MS - 5000));
         check("moving: never seen moving", !ChildLock.moving(0, 0, -1, now, 0));
+        // an hour's drive on GPS fixes alone (nothing asks moving()), then a tunnel with no fixes
+        long seen = 0, start = now - 3_600_000L, last = now - 120_000L;
+        for (long t = start; t <= last; t += 1000) seen = ChildLock.seen(seen, 60, t);
+        eq("moving: fixes keep last seen moving", last, seen);
+        check("moving: tunnel 2 min after the last fix stays locked", ChildLock.moving(60, last, -1, now, seen));
+        check("moving: unlocks once the hold runs out", !ChildLock.moving(60, last, -1, last + ChildLock.LOST_MS + 1000, seen));
+        eq("moving: a stopped reading keeps the last moving time", last, ChildLock.seen(last, 3, now));
+        eq("moving: an older reading never moves it back", last, ChildLock.seen(last, 60, last - 5000));
 
         Voice.Command r = Voice.parse("reply");
         eq("voice: reply", "reply", r == null ? null : r.kind);
@@ -909,6 +1136,37 @@ public final class Tests {
         eq("volume: new source gets its own", 12, Resume.volumeFor("com.spotify.music", "web", 8, 12));
         eq("volume: never played before", -1, Resume.volumeFor("com.spotify.music", "web", 8, -1));
         eq("volume: already right", -1, Resume.volumeFor("files", "web", 8, 8));
+        eq("resume wake: music app", "com.spotify.music", Resume.wakePkg("app:com.spotify.music"));
+        eq("resume wake: fm", null, Resume.wakePkg("fm"));
+        eq("resume wake: empty app", null, Resume.wakePkg("app:"));
+        eq("resume wake: nothing", null, Resume.wakePkg(null));
+
+        float[] mid = Player.sides(0, 1f), right = Player.sides(5, 1f), left = Player.sides(-10, 1f), duck = Player.sides(5, 0.2f);
+        check("balance: centre is full both sides", mid[0] == 1f && mid[1] == 1f);
+        near("balance: right fades the left", 0.5, right[0], 1e-6);
+        near("balance: right keeps the right", 1.0, right[1], 1e-6);
+        check("balance: all left", left[0] == 1f && left[1] == 0f);
+        near("balance: ducked too", 0.1, duck[0], 1e-6);
+        check("balance: past the end is the end", Player.sides(99, 1f)[0] == 0f);
+
+        check("resume key: what played", Prefs.resumeKey("resume") && Prefs.resumeKey("resumeVol") && Prefs.resumeKey("sleptAt"));
+        check("resume key: navigation and source volume", Prefs.resumeKey("navAt") && Prefs.resumeKey("vol:com.spotify.music"));
+        check("resume key: a setting stays", !Prefs.resumeKey("volume") && !Prefs.resumeKey("balance") && !Prefs.resumeKey("eqPreset"));
+        eq("resume keys moved", Arrays.asList("x:resume", "x:vol:web", "x:sleptAt"),
+                Prefs.resumeKeysIn(Arrays.asList("slot0", "x:resume", "x:eqPreset", "x:vol:web", "resume", "x:sleptAt", "x:balance")));
+
+        java.util.List<String> src = Browse.sources(Arrays.asList("com.spotify.music", "org.openrath.launcher", "com.spotify.music", "com.gaana"), "org.openrath.launcher");
+        eq("music chips", Arrays.asList("com.spotify.music", "com.gaana", Player.FILES, Player.WEB, "fm"), src);
+        eq("music chips: all fit", src, MediaCard.shown(src, 6, MediaCard.FIXED_CHIPS));
+        eq("music chips: radio kept", Arrays.asList("com.spotify.music", Player.FILES, Player.WEB, "fm"), MediaCard.shown(src, 4, MediaCard.FIXED_CHIPS));
+        eq("music chips: very narrow", Arrays.asList(Player.WEB, "fm"), MediaCard.shown(src, 2, MediaCard.FIXED_CHIPS));
+        eq("music chips: no room", 0, MediaCard.shown(src, 0, MediaCard.FIXED_CHIPS).size());
+        eq("music chips across", 4, MediaCard.chipCount(76 * 4 + 8 * 3, 76, 8));
+        eq("music chips: narrower than one", 0, MediaCard.chipCount(60, 76, 8));
+        check("music chips: tall box has room", MediaCard.chipRoom(260, 40, 76, 30, 8));
+        check("music chips: short box hasn't", !MediaCard.chipRoom(180, 40, 76, 30, 8));
+        eq("music buttons: three fit", 3, MediaCard.buttonCount(228, 76));
+        eq("music buttons: play alone when narrow", 1, MediaCard.buttonCount(200, 76));
         java.util.List<String> drivers = Arrays.asList("Asha", "Ravi");
         check("phone: switch to the phone's driver", PhoneLink.switchDriver("Ravi", "Asha", drivers));
         check("phone: already driving", !PhoneLink.switchDriver("Asha", "Asha", drivers));
@@ -960,7 +1218,7 @@ public final class Tests {
             else if (x.level == Features.CUSTOM) c++;
             else d++;
         }
-        eq("levels: simple count", 19, s);   // "longKeys" registered beside "keys"; "navTurns" and "parkedSettings" from the launcher review; "musicApp"
+        eq("levels: simple count", 27, s);   // the must-haves, plus the quiet helpers (setup, wake, smooth speed, status icons, call screen)
         eq("levels: custom count", 8, c);
         eq("levels: dev count", 2, d);
         check("levels: full has the most", f > s && f > c);
@@ -986,6 +1244,103 @@ public final class Tests {
         check("levels: cab stays as the owner set it", Features.onAt(cab, Features.FULL, true) && !Features.onAt(cab, Features.FULL, false));
         check("levels: obd off in simple", !Features.onAt(obd, Features.SIMPLE, true));
         check("levels: obd not forced on", !Features.onAt(obd, Features.CUSTOM, false));
+
+        // a new install starts at Simple; one with anything saved keeps what it has
+        check("start: nothing saved is new", Features.fresh(java.util.Collections.<String>emptyList()));
+        check("start: managed and language keys are still new", Features.fresh(java.util.Arrays.asList("x:m:lockLevel", "x:m:levelApplied", "x:lang")));
+        check("start: a feature switch means an old install", !Features.fresh(java.util.Arrays.asList("x:lang", "x:feat:weather")));
+        check("start: finished setup means an old install", !Features.fresh(java.util.Arrays.asList("x:setupDone")));
+        check("start: chosen boxes mean an old install", !Features.fresh(java.util.Arrays.asList("slot2")));
+        check("start: chosen apps mean an old install", !Features.fresh(java.util.Arrays.asList("app:dock:navi")));
+        check("start: an earlier version means an old install", !Features.fresh(java.util.Arrays.asList("x:crashForgiven")));
+        check("start: a fill-up means an old install", !Features.fresh(java.util.Arrays.asList("fuel")));
+        int startOn = 0;
+        for (Features.F x : Features.ALL) if (x.level != Features.DEV && Features.startsOn(x, x.def)) startOn++;
+        check("start: simple is a short set (" + startOn + ")", startOn >= 15 && startOn <= 30 && startOn < Features.ALL.length / 3);
+        for (String id : new String[]{"setup", "wake", "speedAlerts", "reverse", "musicApp", "callScreen", "backup", "dockStatus"})
+            check("start: " + id + " on in simple", Features.startsOn(Features.get(id), false));
+        for (String id : new String[]{"score", "cab", "obd", "dashcam", "eq", "widgets", "reports", "news"})
+            check("start: " + id + " off in simple", !Features.startsOn(Features.get(id), Features.get(id).def));
+        check("start: developer switch untouched", Features.startsOn(maker, true) && !Features.startsOn(maker, false));
+
+        // Settings: switches of features that are off fold under More features, and stay reachable
+        java.util.List<SettingsView.Row> rows = new java.util.ArrayList<>();
+        SettingsView.Row onRow = new SettingsView.Row("Features", "Driving score", "", null).toggle(true, "score");
+        SettingsView.Row offRow = new SettingsView.Row("Features", "Badges for good driving", "", null).toggle(false, "achievements");
+        SettingsView.Row offRow2 = new SettingsView.Row("Features", "0–100 km/h timer", "", null).toggle(false, "accel");
+        SettingsView.Row lock = new SettingsView.Row("Features", "Child-lock for apps", "", null).toggle(false, "childLock");
+        rows.add(onRow);
+        rows.add(offRow);
+        rows.add(offRow2);
+        rows.add(lock);
+        java.util.Map<String, java.util.List<Object>> placed = SettingsView.place(rows, new java.util.HashSet<String>());
+        java.util.List<Object> driving = placed.get("Your driving");
+        check("more: switch that's on stays", driving != null && driving.contains(onRow));
+        check("more: switches that are off fold away", driving != null && !driving.contains(offRow) && !driving.contains(offRow2));
+        SettingsView.Row link = null;
+        if (driving != null) for (Object o : driving) if (o instanceof SettingsView.Row && SettingsView.MORE.equals(((SettingsView.Row) o).title)) link = (SettingsView.Row) o;
+        check("more: one row for them", link != null && link.value.startsWith("2 "));
+        java.util.List<Object> more = placed.get(SettingsView.MORE);
+        check("more: every switch that's off is listed", more != null && more.contains(offRow) && more.contains(offRow2) && more.contains(lock));
+        check("more: under its section's name", more != null && more.indexOf("Your driving") >= 0 && more.indexOf("Your driving") < more.indexOf(offRow));
+        check("more: valet and children keeps its switches", placed.get(SettingsView.FAMILY) != null && placed.get(SettingsView.FAMILY).contains(lock));
+        if (link != null) link.action.run();
+        check("more: a tap opens them out", SettingsView.opened.contains("Your driving"));
+        java.util.Map<String, java.util.List<Object>> open = SettingsView.place(rows, SettingsView.opened);
+        check("more: opened out in place", open.get("Your driving").contains(offRow) && open.get("Your driving").contains(offRow2));
+        SettingsView.opened.clear();
+        check("more: nothing off, no entry", !SettingsView.place(java.util.Collections.singletonList(onRow), new java.util.HashSet<String>()).containsKey(SettingsView.MORE));
+        check("more: a switch turned off where it is stays there",
+                SettingsView.place(rows, new java.util.HashSet<String>(java.util.Arrays.asList("#accel"))).get("Your driving").contains(offRow2));
+        check("family: section named", "Valet and children".equals(SettingsView.sectionOf(Features.get("kids"))));
+        check("family: games say they're for passengers", Features.get("kids").name.toLowerCase(java.util.Locale.US).contains("passengers"));
+    }
+
+    private static void fuelTypes() {
+        try {
+            fuelTypesIn();
+        } catch (Exception e) {
+            check("cng merge: runs " + e, false);
+        }
+    }
+
+    private static void fuelTypesIn() throws Exception {
+        org.json.JSONArray fuel = new org.json.JSONArray("[{\"t\":100,\"l\":30,\"rs\":3000,\"odo\":1000,\"full\":true},"
+                + "{\"t\":300,\"l\":25,\"rs\":2500,\"odo\":1400,\"full\":true}]");
+        org.json.JSONArray cng = new org.json.JSONArray("[{\"t\":200,\"kg\":8,\"rs\":600,\"odo\":1200},{\"t\":400,\"kg\":7,\"rs\":520,\"odo\":1450}]");
+        org.json.JSONArray m = Fuel.merged(fuel, cng);
+        eq("cng merge: one history", 4, m.length());
+        eq("cng merge: in time order", "100,200,300,400", m.optJSONObject(0).optLong("t") + "," + m.optJSONObject(1).optLong("t") + ","
+                + m.optJSONObject(2).optLong("t") + "," + m.optJSONObject(3).optLong("t"));
+        check("cng merge: marked CNG", Fuel.isCng(m.optJSONObject(1)) && Fuel.isCng(m.optJSONObject(3)));
+        check("cng merge: petrol stays petrol", !Fuel.isCng(m.optJSONObject(0)) && !Fuel.isCng(m.optJSONObject(2)));
+        near("cng merge: kg kept", 8, m.optJSONObject(1).optDouble("kg"), 0.001);
+        eq("cng merge: twice adds nothing", 4, Fuel.merged(m, cng).length());
+        eq("cng merge: petrol fills", 2, Fuel.of(m, false).length());
+        eq("cng merge: cng fills", 2, Fuel.of(m, true).length());
+        double[] st = Cab.cngStats(Fuel.of(m, true));
+        near("cng merge: km per kg from the merged log", 250 / 7.0, st[0], 0.01);
+        eq("cng merge: petrol mileage unchanged", 1, Fuel.fullTankKmpl(Fuel.of(m, false)).size());
+        near("cng merge: petrol km per litre", 16, Fuel.fullTankKmpl(Fuel.of(m, false)).get(0), 0.01);
+        eq("cng merge: empty old log", 2, Fuel.merged(fuel, new org.json.JSONArray()).length());
+        eq("cng merge: into an empty log", 2, Fuel.of(Fuel.merged(new org.json.JSONArray(), cng), true).length());
+
+        // long-press tips: once each, remembered
+        String seen = Hints.markSeen("", "bar");
+        check("hints: seen", Hints.seen(seen, "bar"));
+        check("hints: others not seen", !Hints.seen(seen, "navi") && !Hints.seen("", "bar"));
+        seen = Hints.markSeen(seen, "navi");
+        check("hints: two seen", Hints.seen(seen, "bar") && Hints.seen(seen, "navi"));
+        eq("hints: marking again changes nothing", seen, Hints.markSeen(seen, "bar"));
+        check("hints: one id isn't part of another", !Hints.seen(",navigation,", "navi"));
+        eq("hints: apps button", "apps", Hints.dockTip("apps", true));
+        eq("hints: navigation with places", "navi", Hints.dockTip("navi", true));
+        eq("hints: navigation without places", "bar", Hints.dockTip("navi", false));
+        eq("hints: music button", "bar", Hints.dockTip("music", true));
+        java.util.Set<String> ids = new java.util.HashSet<>();
+        for (String[] tip : Hints.ALL) check("hints: id once " + tip[2], ids.add(tip[2]));
+        float[] at = Hints.spot(76, 200, 7, 3);
+        check("hints: mark top-right of the picture", at[0] > 38 && at[0] <= 73 && at[1] < 100 && at[1] > 60);
     }
 
     static void obd() {
@@ -1987,8 +2342,8 @@ public final class Tests {
                 }
             }
             check("finish: caught errors noted for Diagnostics", notes > 70);
-            // Bg's pool, the boot logo, OBD-II, Android Auto's reader and wireless Android Auto
-            check("finish: few threads of their own", threads <= 5);
+            // Bg's pools, the boot logo, OBD-II, Android Auto's reader, wireless Android Auto and the freeze watch
+            check("finish: few threads of their own", threads <= 6);
         } catch (Exception x) {
             check("finish fixes: " + x, false);
         }
