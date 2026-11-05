@@ -1012,7 +1012,7 @@ public final class Tests {
             }
             String rel = read(".github/workflows/release.yml");
             check("release: signs in the protected environment", rel.contains("environment: release"));
-            check("release: published certificate", read("RELEASING.md").contains("88:E2:18:0C:76:5C:A0:77"));
+            check("release: published certificate", read("RELEASING.md").contains("4C:D1:EA:96:0D:33:DC:11"));
         } catch (Exception x) {
             check("build fixes: " + x, false);
         }

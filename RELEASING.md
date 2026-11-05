@@ -100,13 +100,13 @@ It should say `OK` for the APK. Then check who signed it, with `apksigner` from 
 apksigner verify --print-certs openrath-v1.33.apk
 ```
 
-The line `Signer #1 certificate SHA-256 digest` must match OpenRath's release certificate:
+The line `Signer #1 certificate SHA-256 digest` must match OpenRath's release certificate (the key made for 1.44; 1.42 and older were signed with an earlier key, so 1.44 can't install over them):
 
 ```
-88:E2:18:0C:76:5C:A0:77:E6:6B:15:DE:ED:BB:8C:9E:C1:6D:17:B9:A6:26:D4:29:32:09:99:48:FA:BB:C2:D5
+4C:D1:EA:96:0D:33:DC:11:5E:A9:19:8D:9C:21:08:5F:18:0F:41:BF:5A:07:22:1A:DB:65:B5:CB:85:14:C9:1B
 ```
 
-(`apksigner` prints it without colons, in lower case: `88e2180c765ca077e66b15deedbb8c9ec16d17b9a626d42932099948fabbc2d5`.) `keytool -printcert -jarfile openrath-vX.Y.apk` shows the same digest, with colons.
+(`apksigner` prints it without colons, in lower case: `4cd1ea960d33dc115ea9198d9c21085f180f41bf5a07221adb65b5cb8514c91b`.) `keytool -printcert -jarfile openrath-vX.Y.apk` shows the same digest, with colons.
 
 Each release's notes also show the certificate it was signed with. If the two don't match, don't install the APK, and report it as described in `SECURITY.md`.
 
