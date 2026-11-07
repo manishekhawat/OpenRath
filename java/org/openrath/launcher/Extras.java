@@ -557,11 +557,23 @@ final class Extras {
 
     static void chooseBluetooth(final HomeActivity a) {
         final List<String> devs = Obd.paired();
-        if (devs.isEmpty()) {
-            new Glass.Builder(a, DIALOG).setTitle(Hindi.t("No paired Bluetooth devices"))
-                    .setMessage(Hindi.t("Plug the engine-data plug (sold as an OBD-II adapter, ELM327) into the socket under the steering wheel, switch the ignition on, "
-                            + "and pair it in the unit's Bluetooth settings (the PIN is usually 1234 or 0000). Then come back here."))
-                    .setPositiveButton(Hindi.t("Bluetooth settings"), new DialogInterface.OnClickListener() {
+        if (!Obd.anyAdapter(devs)) {
+            // Nothing paired here could be the adapter: often it was paired with the phone instead,
+            // which the unit can't use. Offer to find and pair it from here.
+            String msg = Hindi.t("The OBD-II adapter has to be paired with this unit, not with your phone. Plug it into the socket "
+                    + "under the steering wheel and switch the ignition on. If your phone is connected to the adapter, turn the phone's "
+                    + "Bluetooth off for a minute: these adapters take only one connection at a time. Then find it from here "
+                    + "(the PIN is usually 1234 or 0000).");
+            Glass.Builder g = new Glass.Builder(a, DIALOG);
+            g.setTitle(Hindi.t(devs.isEmpty() ? "No paired Bluetooth devices" : "No OBD-II adapter is paired with this unit"))
+                    .setMessage(msg)
+                    .setPositiveButton(Hindi.t("Find the adapter"), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface d, int w) {
+                            scanBluetooth(a);
+                        }
+                    })
+                    .setNeutralButton(Hindi.t("Bluetooth settings"), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface d, int w) {
                             try {
@@ -570,23 +582,185 @@ final class Extras {
                                 Diag.note("Bluetooth settings", e);
                             }
                         }
-                    }).setNegativeButton(Hindi.t("Close"), null).show();
+                    });
+            if (devs.isEmpty()) g.setNegativeButton(Hindi.t("Close"), null);
+            else g.setNegativeButton(Hindi.t("Show paired"), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface d, int w) {
+                    pickPaired(a, devs);
+                }
+            });
+            g.show();
             return;
         }
-        String[] names = new String[devs.size()];
-        for (int i = 0; i < names.length; i++) names[i] = devs.get(i).replace("|", "   ");
+        pickPaired(a, devs);
+    }
+
+    private static void pickPaired(final HomeActivity a, final List<String> devs) {
+        String[] names = new String[devs.size() + 1];
+        for (int i = 0; i < devs.size(); i++) {
+            String[] f = devs.get(i).split("\\|", -1);
+            String k = f.length > 2 ? f[2] : "";
+            names[i] = f[0] + "   " + f[1] + ("phone".equals(k) ? "   (" + Hindi.t("phone") + ")" : "audio".equals(k) ? "   (" + Hindi.t("audio") + ")" : "");
+        }
+        names[devs.size()] = Hindi.t("Not listed? Find and pair a new adapter");
         new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Which one is the OBD-II adapter?")).setItems(names, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface d, int w) {
-                String[] f = devs.get(w).split("\\|");
-                a.prefs.put("obdName", f[0]);
-                a.prefs.put("obdMac", f[1]);
-                Obd.stop();
-                Features.set(a.prefs, "obd", true);
-                Drive.start(a);
-                Toast.makeText(a, Hindi.f("Connecting to %1$s; keep the ignition on", f[0]), Toast.LENGTH_LONG).show();
+                if (w == devs.size()) {
+                    scanBluetooth(a);
+                    return;
+                }
+                String[] f = devs.get(w).split("\\|", -1);
+                useBluetooth(a, f[0], f[1]);
             }
         }).setNegativeButton(Hindi.t("Cancel"), null).show();
+    }
+
+    private static void useBluetooth(HomeActivity a, String name, String mac) {
+        a.prefs.put("obdName", name);
+        a.prefs.put("obdMac", mac);
+        Obd.stop();
+        Features.set(a.prefs, "obd", true);
+        Drive.start(a);
+        Toast.makeText(a, Hindi.f("Connecting to %1$s; keep the ignition on", name), Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Look for Bluetooth devices nearby and pair the one picked, so the adapter can be paired from
+     * OpenRath on units whose own Bluetooth screen only lists phones.
+     */
+    static void scanBluetooth(final HomeActivity a) {
+        final android.bluetooth.BluetoothAdapter bt;
+        try {
+            bt = android.bluetooth.BluetoothAdapter.getDefaultAdapter();
+        } catch (Throwable e) {
+            Diag.note("OBD scan", e);
+            return;
+        }
+        if (bt == null) {
+            Toast.makeText(a, Hindi.t("This unit has no Bluetooth that apps can use"), Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (!bt.isEnabled()) {
+            Toast.makeText(a, Hindi.t("Bluetooth is off"), Toast.LENGTH_LONG).show();
+            try {
+                a.startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+            } catch (Throwable e) {
+                Diag.note("Bluetooth settings", e);
+            }
+            return;
+        }
+        List<String> need = new ArrayList<>();
+        if (android.os.Build.VERSION.SDK_INT >= 31) {
+            need.add("android.permission.BLUETOOTH_SCAN");
+            need.add("android.permission.BLUETOOTH_CONNECT");
+        } else {
+            need.add(android.Manifest.permission.ACCESS_FINE_LOCATION);   // Android 11 and older only scan with location
+        }
+        List<String> missing = new ArrayList<>();
+        for (String p : need) if (a.checkSelfPermission(p) != PackageManager.PERMISSION_GRANTED) missing.add(p);
+        if (!missing.isEmpty()) {
+            a.requestPermissions(missing.toArray(new String[0]), 1);
+            Toast.makeText(a, Hindi.t("Allow Bluetooth access, then tap Find the adapter again"), Toast.LENGTH_LONG).show();
+            return;
+        }
+        final List<android.bluetooth.BluetoothDevice> found = new ArrayList<>();
+        final android.widget.ArrayAdapter<String> list = new android.widget.ArrayAdapter<>(a, android.R.layout.simple_list_item_1);
+        final AlertDialog[] dlg = new AlertDialog[1];
+        final android.bluetooth.BluetoothDevice[] pairing = new android.bluetooth.BluetoothDevice[1];
+        final android.content.BroadcastReceiver r = new android.content.BroadcastReceiver() {
+            @Override
+            public void onReceive(android.content.Context c, Intent i) {
+                String act = i.getAction();
+                android.bluetooth.BluetoothDevice d = i.getParcelableExtra(android.bluetooth.BluetoothDevice.EXTRA_DEVICE);
+                if (android.bluetooth.BluetoothDevice.ACTION_FOUND.equals(act) && d != null) {
+                    for (android.bluetooth.BluetoothDevice o : found) if (o.getAddress().equals(d.getAddress())) return;
+                    String n = d.getName() == null ? d.getAddress() : d.getName();
+                    int major = -1;
+                    android.bluetooth.BluetoothClass k = d.getBluetoothClass();
+                    if (k != null) major = k.getMajorDeviceClass();
+                    String kind = Obd.kind(n, major);
+                    if ("phone".equals(kind) || "audio".equals(kind)) return;   // never the adapter
+                    String label = n + "   " + d.getAddress();
+                    if ("obd".equals(kind)) {
+                        found.add(0, d);
+                        list.insert(label, 0);
+                    } else {
+                        found.add(d);
+                        list.add(label);
+                    }
+                } else if (android.bluetooth.BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(act)) {
+                    if (dlg[0] != null && pairing[0] == null)
+                        dlg[0].setTitle(Hindi.t(found.isEmpty() ? "Nothing found. Ignition on? Phone's Bluetooth off?" : "Tap the OBD-II adapter"));
+                } else if (android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(act) && d != null
+                        && pairing[0] != null && d.getAddress().equals(pairing[0].getAddress())) {
+                    int st = i.getIntExtra(android.bluetooth.BluetoothDevice.EXTRA_BOND_STATE, -1);
+                    if (st == android.bluetooth.BluetoothDevice.BOND_BONDED) {
+                        if (dlg[0] != null) dlg[0].dismiss();
+                        useBluetooth(a, d.getName() == null ? d.getAddress() : d.getName(), d.getAddress());
+                    } else if (st == android.bluetooth.BluetoothDevice.BOND_NONE) {
+                        pairing[0] = null;
+                        Toast.makeText(a, Hindi.t("Pairing failed. Try again; the PIN is usually 1234 or 0000."), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        };
+        android.content.IntentFilter f = new android.content.IntentFilter(android.bluetooth.BluetoothDevice.ACTION_FOUND);
+        f.addAction(android.bluetooth.BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        f.addAction(android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+        try {
+            Compat.fromSystem(a, r, f);
+            bt.cancelDiscovery();
+            if (!bt.startDiscovery()) throw new IllegalStateException("startDiscovery refused");
+        } catch (Throwable e) {
+            Diag.note("OBD scan", e);
+            try {
+                a.unregisterReceiver(r);
+            } catch (Throwable ignored) {
+                // not registered
+            }
+            Toast.makeText(a, Hindi.t("Couldn't search for Bluetooth devices; pair the adapter in Bluetooth settings"), Toast.LENGTH_LONG).show();
+            return;
+        }
+        dlg[0] = new Glass.Builder(a, DIALOG).setTitle(Hindi.t("Looking for the adapter…"))
+                .setAdapter(list, null)
+                .setNegativeButton(Hindi.t("Cancel"), null).create();
+        dlg[0].setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface d) {
+                try {
+                    bt.cancelDiscovery();
+                    a.unregisterReceiver(r);
+                } catch (Throwable ignored) {
+                    // already gone
+                }
+            }
+        });
+        dlg[0].show();
+        // set after show(): a click must not close the dialog, which still waits for the pairing to finish
+        dlg[0].getListView().setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(android.widget.AdapterView<?> p, View v, int w, long id) {
+                if (w >= found.size()) return;
+                android.bluetooth.BluetoothDevice d = found.get(w);
+                try {
+                    bt.cancelDiscovery();
+                    if (d.getBondState() == android.bluetooth.BluetoothDevice.BOND_BONDED) {
+                        dlg[0].dismiss();
+                        useBluetooth(a, d.getName() == null ? d.getAddress() : d.getName(), d.getAddress());
+                        return;
+                    }
+                    pairing[0] = d;
+                    dlg[0].setTitle(Hindi.t("Pairing… enter 1234 (or 0000) if asked"));
+                    if (!d.createBond()) throw new IllegalStateException("createBond refused");
+                } catch (Throwable e) {
+                    pairing[0] = null;
+                    Diag.note("OBD pair", e);
+                    Toast.makeText(a, Hindi.t("Pairing failed. Try again; the PIN is usually 1234 or 0000."), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     static void readCodes(final HomeActivity a) {
