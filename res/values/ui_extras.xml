@@ -286,13 +286,14 @@
     <string name="ui_extras_not_listed_find_adapter" formatted="false">Not listed? Find and pair a new adapter</string>
     <string name="ui_extras_no_bluetooth_for_apps" formatted="false">This unit has no Bluetooth that apps can use</string>
     <string name="ui_extras_allow_bluetooth_find_again" formatted="false">Allow Bluetooth access, then tap Find the adapter again</string>
-    <string name="ui_extras_pairing_failed_pin" formatted="false">Pairing failed. Try again; the PIN is usually 1234 or 0000.</string>
     <string name="ui_extras_couldnt_search_bluetooth" formatted="false">Couldn\'t search for Bluetooth devices; pair the adapter in Bluetooth settings</string>
     <string name="ui_extras_looking_for_adapter" formatted="false">Looking for the adapter…</string>
-    <string name="ui_extras_pairing_enter_pin" formatted="false">Pairing… enter 1234 (or 0000) if asked</string>
     <string name="ui_extras_nothing_found_ignition" formatted="false">Nothing found. Ignition on? Phone\'s Bluetooth off?</string>
     <string name="ui_extras_tap_the_obd_adapter" formatted="false">Tap the OBD-II adapter</string>
     <string name="ui_extras_not_connected_phone" formatted="false">Not connected: that is a phone, not the OBD-II adapter. Pair the adapter with this unit and pick it.</string>
+    <string name="ui_extras_pairing_with_pin_n" formatted="false">Pairing with PIN %1$s…</string>
+    <string name="ui_extras_trying_pin_n" formatted="false">Trying PIN %1$s…</string>
+    <string name="ui_extras_pairing_failed_all_pins" formatted="false">Pairing failed with PINs 1234, 0000, 6789 and 1111. Unplug the adapter for ten seconds and try again.</string>
     <string-array name="ui_extras">
         <item>@string/ui_extras_carrying_on_where_you_left_off</item>
         <item>@string/ui_extras_switch_on_widgets_from_other_apps</item>
@@ -578,12 +579,13 @@
         <item>@string/ui_extras_not_listed_find_adapter</item>
         <item>@string/ui_extras_no_bluetooth_for_apps</item>
         <item>@string/ui_extras_allow_bluetooth_find_again</item>
-        <item>@string/ui_extras_pairing_failed_pin</item>
         <item>@string/ui_extras_couldnt_search_bluetooth</item>
         <item>@string/ui_extras_looking_for_adapter</item>
-        <item>@string/ui_extras_pairing_enter_pin</item>
         <item>@string/ui_extras_nothing_found_ignition</item>
         <item>@string/ui_extras_tap_the_obd_adapter</item>
         <item>@string/ui_extras_not_connected_phone</item>
+        <item>@string/ui_extras_pairing_with_pin_n</item>
+        <item>@string/ui_extras_trying_pin_n</item>
+        <item>@string/ui_extras_pairing_failed_all_pins</item>
     </string-array>
 </resources>

@@ -669,6 +669,7 @@ final class Extras {
         final android.widget.ArrayAdapter<String> list = new android.widget.ArrayAdapter<>(a, android.R.layout.simple_list_item_1);
         final AlertDialog[] dlg = new AlertDialog[1];
         final android.bluetooth.BluetoothDevice[] pairing = new android.bluetooth.BluetoothDevice[1];
+        final int[] pinAt = {0};   // which of Obd.PINS this pairing attempt answers with
         final android.content.BroadcastReceiver r = new android.content.BroadcastReceiver() {
             @Override
             public void onReceive(android.content.Context c, Intent i) {
@@ -693,15 +694,44 @@ final class Extras {
                 } else if (android.bluetooth.BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(act)) {
                     if (dlg[0] != null && pairing[0] == null)
                         dlg[0].setTitle(Hindi.t(found.isEmpty() ? "Nothing found. Ignition on? Phone's Bluetooth off?" : "Tap the OBD-II adapter"));
+                } else if (android.bluetooth.BluetoothDevice.ACTION_PAIRING_REQUEST.equals(act) && d != null
+                        && pairing[0] != null && d.getAddress().equals(pairing[0].getAddress())) {
+                    // Many units have no PIN box (or answer with their own PIN), so give the adapter's PIN here
+                    int variant = i.getIntExtra(android.bluetooth.BluetoothDevice.EXTRA_PAIRING_VARIANT, -1);
+                    if (variant == android.bluetooth.BluetoothDevice.PAIRING_VARIANT_PIN || variant == 7 /* PIN_16_DIGITS */) {
+                        try {
+                            d.setPin(Obd.PINS[pinAt[0]].getBytes("US-ASCII"));
+                            if (isOrderedBroadcast()) abortBroadcast();   // no PIN box over the top
+                        } catch (Throwable e) {
+                            Diag.note("OBD pin", e);
+                        }
+                    }
                 } else if (android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(act) && d != null
                         && pairing[0] != null && d.getAddress().equals(pairing[0].getAddress())) {
                     int st = i.getIntExtra(android.bluetooth.BluetoothDevice.EXTRA_BOND_STATE, -1);
                     if (st == android.bluetooth.BluetoothDevice.BOND_BONDED) {
                         if (dlg[0] != null) dlg[0].dismiss();
                         useBluetooth(a, d.getName() == null ? d.getAddress() : d.getName(), d.getAddress());
+                    } else if (st == android.bluetooth.BluetoothDevice.BOND_NONE && pinAt[0] + 1 < Obd.PINS.length) {
+                        // wrong PIN: try the next usual one
+                        pinAt[0]++;
+                        final android.bluetooth.BluetoothDevice again = d;
+                        if (dlg[0] != null) dlg[0].setTitle(Hindi.f("Trying PIN %1$s…", Obd.PINS[pinAt[0]]));
+                        a.dash.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    if (pairing[0] != null && !again.createBond()) throw new IllegalStateException("createBond refused");
+                                } catch (Throwable e) {
+                                    pairing[0] = null;
+                                    Diag.note("OBD pair", e);
+                                    Toast.makeText(a, Hindi.t("Pairing failed with PINs 1234, 0000, 6789 and 1111. Unplug the adapter for ten seconds and try again."), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }, 1500);
                     } else if (st == android.bluetooth.BluetoothDevice.BOND_NONE) {
                         pairing[0] = null;
-                        Toast.makeText(a, Hindi.t("Pairing failed. Try again; the PIN is usually 1234 or 0000."), Toast.LENGTH_LONG).show();
+                        Toast.makeText(a, Hindi.t("Pairing failed with PINs 1234, 0000, 6789 and 1111. Unplug the adapter for ten seconds and try again."), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -709,6 +739,8 @@ final class Extras {
         android.content.IntentFilter f = new android.content.IntentFilter(android.bluetooth.BluetoothDevice.ACTION_FOUND);
         f.addAction(android.bluetooth.BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         f.addAction(android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+        f.addAction(android.bluetooth.BluetoothDevice.ACTION_PAIRING_REQUEST);
+        f.setPriority(android.content.IntentFilter.SYSTEM_HIGH_PRIORITY - 1);   // ahead of the unit's own PIN handling
         try {
             Compat.fromSystem(a, r, f);
             bt.cancelDiscovery();
@@ -752,12 +784,13 @@ final class Extras {
                         return;
                     }
                     pairing[0] = d;
-                    dlg[0].setTitle(Hindi.t("Pairing… enter 1234 (or 0000) if asked"));
+                    pinAt[0] = 0;
+                    dlg[0].setTitle(Hindi.f("Pairing with PIN %1$s…", Obd.PINS[0]));
                     if (!d.createBond()) throw new IllegalStateException("createBond refused");
                 } catch (Throwable e) {
                     pairing[0] = null;
                     Diag.note("OBD pair", e);
-                    Toast.makeText(a, Hindi.t("Pairing failed. Try again; the PIN is usually 1234 or 0000."), Toast.LENGTH_LONG).show();
+                    Toast.makeText(a, Hindi.t("Pairing failed with PINs 1234, 0000, 6789 and 1111. Unplug the adapter for ten seconds and try again."), Toast.LENGTH_LONG).show();
                 }
             }
         });

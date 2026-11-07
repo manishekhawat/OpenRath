@@ -22,6 +22,9 @@ import java.util.UUID;
  */
 final class Obd {
 
+    /** The PINs cheap ELM327 adapters ship with, most common first. */
+    static final String[] PINS = {"1234", "0000", "6789", "1111"};
+
     private static final UUID SPP = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     // latest readings; -1 = not known
