@@ -277,6 +277,23 @@
     <string name="ui_extras_navigation" formatted="false">Navigation</string>
     <string name="ui_extras_bluetooth" formatted="false">Bluetooth</string>
     <string name="ui_extras_all_apps" formatted="false">All apps</string>
+    <string name="ui_extras_obd_pair_with_unit" formatted="false">The OBD-II adapter has to be paired with this unit, not with your phone. Plug it into the socket under the steering wheel and switch the ignition on. If your phone is connected to the adapter, turn the phone\'s Bluetooth off for a minute: these adapters take only one connection at a time. Then find it from here (the PIN is usually 1234 or 0000).</string>
+    <string name="ui_extras_no_obd_adapter_paired" formatted="false">No OBD-II adapter is paired with this unit</string>
+    <string name="ui_extras_find_the_adapter" formatted="false">Find the adapter</string>
+    <string name="ui_extras_show_paired" formatted="false">Show paired</string>
+    <string name="ui_extras_phone_kind" formatted="false">phone</string>
+    <string name="ui_extras_audio_kind" formatted="false">audio</string>
+    <string name="ui_extras_not_listed_find_adapter" formatted="false">Not listed? Find and pair a new adapter</string>
+    <string name="ui_extras_no_bluetooth_for_apps" formatted="false">This unit has no Bluetooth that apps can use</string>
+    <string name="ui_extras_allow_bluetooth_find_again" formatted="false">Allow Bluetooth access, then tap Find the adapter again</string>
+    <string name="ui_extras_couldnt_search_bluetooth" formatted="false">Couldn\'t search for Bluetooth devices; pair the adapter in Bluetooth settings</string>
+    <string name="ui_extras_looking_for_adapter" formatted="false">Looking for the adapter…</string>
+    <string name="ui_extras_nothing_found_ignition" formatted="false">Nothing found. Ignition on? Phone\'s Bluetooth off?</string>
+    <string name="ui_extras_tap_the_obd_adapter" formatted="false">Tap the OBD-II adapter</string>
+    <string name="ui_extras_not_connected_phone" formatted="false">Not connected: that is a phone, not the OBD-II adapter. Pair the adapter with this unit and pick it.</string>
+    <string name="ui_extras_pairing_with_pin_n" formatted="false">Pairing with PIN %1$s…</string>
+    <string name="ui_extras_trying_pin_n" formatted="false">Trying PIN %1$s…</string>
+    <string name="ui_extras_pairing_failed_all_pins" formatted="false">Pairing failed with PINs 1234, 0000, 6789 and 1111. Unplug the adapter for ten seconds and try again.</string>
     <string-array name="ui_extras">
         <item>@string/ui_extras_carrying_on_where_you_left_off</item>
         <item>@string/ui_extras_switch_on_widgets_from_other_apps</item>
@@ -553,5 +570,22 @@
         <item>@string/ui_extras_navigation</item>
         <item>@string/ui_extras_bluetooth</item>
         <item>@string/ui_extras_all_apps</item>
+        <item>@string/ui_extras_obd_pair_with_unit</item>
+        <item>@string/ui_extras_no_obd_adapter_paired</item>
+        <item>@string/ui_extras_find_the_adapter</item>
+        <item>@string/ui_extras_show_paired</item>
+        <item>@string/ui_extras_phone_kind</item>
+        <item>@string/ui_extras_audio_kind</item>
+        <item>@string/ui_extras_not_listed_find_adapter</item>
+        <item>@string/ui_extras_no_bluetooth_for_apps</item>
+        <item>@string/ui_extras_allow_bluetooth_find_again</item>
+        <item>@string/ui_extras_couldnt_search_bluetooth</item>
+        <item>@string/ui_extras_looking_for_adapter</item>
+        <item>@string/ui_extras_nothing_found_ignition</item>
+        <item>@string/ui_extras_tap_the_obd_adapter</item>
+        <item>@string/ui_extras_not_connected_phone</item>
+        <item>@string/ui_extras_pairing_with_pin_n</item>
+        <item>@string/ui_extras_trying_pin_n</item>
+        <item>@string/ui_extras_pairing_failed_all_pins</item>
     </string-array>
 </resources>

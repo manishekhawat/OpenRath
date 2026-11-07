@@ -22,6 +22,9 @@ import java.util.UUID;
  */
 final class Obd {
 
+    /** The PINs cheap ELM327 adapters ship with, most common first. */
+    static final String[] PINS = {"1234", "0000", "6789", "1111"};
+
     private static final UUID SPP = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     // latest readings; -1 = not known
@@ -110,7 +113,10 @@ final class Obd {
         pending = "04";
     }
 
-    /** Paired Bluetooth devices as "name|mac", adapters with OBD-like names first. */
+    /**
+     * Paired Bluetooth devices as "name|mac|kind", adapters with OBD-like names first. The kind is
+     * "obd" for an adapter-like name, "phone" or "audio" for devices that can't be one, else "".
+     */
     static List<String> paired() {
         List<String> out = new ArrayList<>(), rest = new ArrayList<>();
         try {
@@ -118,15 +124,41 @@ final class Obd {
             if (a == null) return out;
             for (BluetoothDevice d : a.getBondedDevices()) {
                 String n = d.getName() == null ? d.getAddress() : d.getName();
-                String u = n.toUpperCase(Locale.US);
-                (u.contains("OBD") || u.contains("ELM") || u.contains("V-LINK") || u.contains("VLINK") || u.contains("KONNWEI")
-                        ? out : rest).add(n + "|" + d.getAddress());
+                int major = -1;
+                try {
+                    android.bluetooth.BluetoothClass k = d.getBluetoothClass();
+                    if (k != null) major = k.getMajorDeviceClass();
+                } catch (Throwable ignored) {
+                    // class unknown
+                }
+                String kind = kind(n, major);
+                ("obd".equals(kind) ? out : rest).add(n + "|" + d.getAddress() + "|" + kind);
             }
         } catch (Throwable ignored) {
             // no Bluetooth permission or adapter
         }
         out.addAll(rest);
         return out;
+    }
+
+    /** "obd", "phone", "audio" or "" for a Bluetooth device's name and major class (-1 when unknown). */
+    static String kind(String name, int major) {
+        String u = name == null ? "" : name.toUpperCase(Locale.US);
+        if (u.contains("OBD") || u.contains("ELM") || u.contains("V-LINK") || u.contains("VLINK") || u.contains("KONNWEI")
+                || u.contains("VGATE") || u.contains("ICAR") || u.contains("CHX")) return "obd";
+        if (major == android.bluetooth.BluetoothClass.Device.Major.PHONE) return "phone";
+        if (major == android.bluetooth.BluetoothClass.Device.Major.AUDIO_VIDEO) return "audio";
+        return "";
+    }
+
+    /** True when some entry of paired() could be the adapter: not every one is a phone or a speaker. */
+    static boolean anyAdapter(List<String> devs) {
+        for (String d : devs) {
+            String[] f = d.split("\\|", -1);
+            String k = f.length > 2 ? f[2] : "";
+            if (!"phone".equals(k) && !"audio".equals(k)) return true;
+        }
+        return false;
     }
 
     /** {host, port} for a Wi-Fi adapter saved as "wifi:host:port", or null for a Bluetooth one. */
@@ -162,6 +194,15 @@ final class Obd {
         java.net.Socket s = f.createSocket();
         s.connect(new java.net.InetSocketAddress(host, port), 8000);
         return s;
+    }
+
+    private static boolean isPhone(String mac) {
+        try {
+            android.bluetooth.BluetoothClass k = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(mac).getBluetoothClass();
+            return k != null && k.getMajorDeviceClass() == android.bluetooth.BluetoothClass.Device.Major.PHONE;
+        } catch (Throwable e) {
+            return false;
+        }
     }
 
     private static BluetoothSocket bluetooth(String mac) throws Exception {
@@ -285,7 +326,9 @@ final class Obd {
             } catch (Throwable e) {
                 if (stop.get()) break;   // stop() closed the socket: not a fault to show
                 connected = false;
-                status = Hindi.f("Not connected: %1$s", e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
+                status = wifi == null && isPhone(mac)
+                        ? Hindi.t("Not connected: that is a phone, not the OBD-II adapter. Pair the adapter with this unit and pick it.")
+                        : Hindi.f("Not connected: %1$s", e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
                 changed(c);
             } finally {
                 run.socket = null;

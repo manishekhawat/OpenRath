@@ -282,6 +282,14 @@ public final class Tests {
         String[] wd = Obd.wifiTarget("wifi:192.168.0.10");
         check("wifi default port", wd != null && "35000".equals(wd[1]));
         check("bluetooth isn't wifi", Obd.wifiTarget("00:11:22:33:44:55") == null);
+        eq("kind: adapter by name", "obd", Obd.kind("OBDII", -1));
+        eq("kind: elm by name", "obd", Obd.kind("ELM327 v1.5", 0x1F00));
+        eq("kind: phone", "phone", Obd.kind("MS S25 Ultra", android.bluetooth.BluetoothClass.Device.Major.PHONE));
+        eq("kind: speaker", "audio", Obd.kind("HD 4.50BTNC", android.bluetooth.BluetoothClass.Device.Major.AUDIO_VIDEO));
+        eq("kind: unknown", "", Obd.kind("Topway", -1));
+        check("only a phone paired: no adapter", !Obd.anyAdapter(java.util.Arrays.asList("MS S25 Ultra|5C:51:36:BE:1D:C6|phone")));
+        check("unknown device may be the adapter", Obd.anyAdapter(java.util.Arrays.asList("MS S25 Ultra|5C|phone", "Dongle|00:10|")));
+        check("nothing paired: no adapter", !Obd.anyAdapter(new java.util.ArrayList<String>()));
         // fuel and intake
         eq("fuel half", 50, Obd.fuel("41 2F 80"));
         eq("fuel none", -1, Obd.fuel("NO DATA"));
